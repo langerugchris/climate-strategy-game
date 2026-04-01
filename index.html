@@ -1,0 +1,3477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0d17">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<title>UK Climate Strategy 2025–2050</title>
+<style>
+/* ===== RESET + ROOT VARIABLES ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary:     #0b0d17;
+  --bg-secondary:   #131629;
+  --bg-tertiary:    #1c2035;
+  --bg-elevated:    #252a45;
+  --border-subtle:  #2a3050;
+  --border-strong:  #3a4570;
+  --text-primary:   #e8ecf5;
+  --text-secondary: #8892b0;
+  --text-muted:     #4a5578;
+  --accent-blue:    #1d70b8;
+  --accent-blue-lt: #5390d9;
+  --accent-green:   #00703c;
+  --accent-green-lt:#4caf81;
+  --status-good:    #00c853;
+  --status-warn:    #ffd600;
+  --status-danger:  #ff3d00;
+  --status-info:    #448aff;
+  --energy-wind:    #4caf81;
+  --energy-solar:   #ffd600;
+  --energy-nuclear: #b39ddb;
+  --energy-gas:     #ff7043;
+  --energy-storage: #448aff;
+  --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+  --gap-xs: 4px;
+  --gap-sm: 8px;
+  --gap-md: 16px;
+  --gap-lg: 24px;
+  --gap-xl: 32px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-system);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+#game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px var(--gap-lg);
+  background: var(--bg-secondary);
+  border-bottom: 3px solid var(--accent-blue);
+  flex-shrink: 0;
+  gap: var(--gap-md);
+}
+
+#header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+}
+
+#gov-crown {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+#game-title h1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+#game-title p {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+#header-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+#current-year {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  font-variant-numeric: tabular-nums;
+}
+
+#turn-counter {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ===== TURN PIPS ===== */
+#turn-pips {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.pip.done    { background: var(--status-good); }
+.pip.current { background: var(--accent-blue-lt); box-shadow: 0 0 6px var(--accent-blue-lt); }
+
+/* ===== MAIN LAYOUT ===== */
+#game-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 270px 1fr 300px;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm);
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ===== PANEL BASE ===== */
+.panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  padding: var(--gap-md) var(--gap-md) var(--gap-sm);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+/* ===== METRICS PANEL (LEFT) ===== */
+#metrics-panel {
+  padding: 0;
+}
+
+#metrics-inner {
+  padding: var(--gap-sm) var(--gap-md);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.metric-block {
+  margin-bottom: var(--gap-md);
+}
+
+.metric-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.metric-name {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.metric-value {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.metric-delta {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  margin-left: 4px;
+}
+.metric-delta.up   { color: var(--status-good); }
+.metric-delta.down { color: var(--status-danger); }
+.metric-delta.same { color: var(--text-muted); }
+
+.bar-track {
+  height: 10px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+  min-width: 2px;
+}
+
+.bar-fill.good   { background: var(--status-good); }
+.bar-fill.warn   { background: var(--status-warn); }
+.bar-fill.danger { background: var(--status-danger); box-shadow: 0 0 6px var(--status-danger)44; }
+.bar-fill.info   { background: var(--status-info); }
+
+/* Temperature bar — gradient track with needle */
+.bar-track.temp-track {
+  background: linear-gradient(90deg, var(--status-good) 0%, var(--status-warn) 40%, var(--status-danger) 100%);
+  overflow: visible;
+}
+
+.temp-needle {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: left 0.7s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 5px rgba(255,255,255,0.8);
+  transform: translateX(-50%);
+}
+
+/* Budget bar */
+.bar-track.budget-track {
+  height: 14px;
+}
+
+/* Threshold marker */
+.threshold-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--status-danger);
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ===== ENERGY MIX ===== */
+#energy-mix-section {
+  margin-top: var(--gap-md);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+
+#energy-mix-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+
+#energy-mix-bar {
+  display: flex;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: var(--gap-sm);
+}
+
+.energy-seg {
+  transition: flex-grow 0.8s cubic-bezier(0.4,0,0.2,1);
+  min-width: 2px;
+}
+.energy-seg.wind    { background: var(--energy-wind); }
+.energy-seg.solar   { background: var(--energy-solar); }
+.energy-seg.nuclear { background: var(--energy-nuclear); }
+.energy-seg.gas     { background: var(--energy-gas); }
+.energy-seg.storage { background: var(--energy-storage); }
+
+#energy-mix-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-val {
+  margin-left: auto;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== DECISIONS PANEL (CENTRE) ===== */
+#decisions-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+#decision-header {
+  padding: var(--gap-sm) var(--gap-md);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+#decision-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
+.decision-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+#budget-status {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+#budget-remaining-display {
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  font-size: 14px;
+}
+
+#budget-status.tight #budget-remaining-display { color: var(--status-warn); }
+#budget-status.depleted #budget-remaining-display { color: var(--status-danger); }
+
+#investment-cards {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--gap-sm) var(--gap-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.investment-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.investment-card.allocated {
+  border-color: var(--accent-blue-lt);
+  background: #192038;
+}
+
+.investment-card.maxed {
+  border-color: var(--accent-green-lt);
+  background: #182a22;
+}
+
+.investment-card.unaffordable {
+  opacity: 0.55;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  margin-bottom: 6px;
+}
+
+.card-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.card-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.card-cost-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  flex-shrink: 0;
+}
+
+.card-cost {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.block-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.block-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+  touch-action: manipulation;
+}
+
+.block-btn:hover:not(:disabled) {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue-lt);
+}
+
+.block-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.block-count {
+  font-size: 18px;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.card-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.effect-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.effect-tag.pos  { background: #0c2a1a; color: var(--status-good); }
+.effect-tag.neg  { background: #2a0e08; color: #ff7043; }
+.effect-tag.warn { background: #2a2000; color: var(--status-warn); }
+
+/* ===== NO-SPEND WARNING ===== */
+#no-spend-warning {
+  padding: 6px var(--gap-md);
+  background: #2a1500;
+  border-top: 1px solid var(--status-warn);
+  font-size: 12px;
+  color: var(--status-warn);
+  flex-shrink: 0;
+}
+
+#no-spend-warning.hidden { display: none; }
+
+/* ===== ACTION BAR ===== */
+#action-bar {
+  padding: var(--gap-sm) var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  flex-shrink: 0;
+}
+
+#spend-summary {
+  font-size: 12px;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+#total-spend {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+#end-turn-btn {
+  touch-action: manipulation;
+  padding: 10px 24px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+#end-turn-btn:hover {
+  background: var(--accent-blue-lt);
+}
+
+#end-turn-btn:active {
+  transform: scale(0.98);
+}
+
+/* ===== LOG PANEL (RIGHT) ===== */
+#log-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+#log-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--gap-sm) var(--gap-md);
+  scroll-behavior: smooth;
+}
+
+.log-entry {
+  border-left: 3px solid var(--border-strong);
+  padding: 6px 10px;
+  margin-bottom: var(--gap-sm);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.log-entry.good    { border-left-color: var(--status-good); }
+.log-entry.warn    { border-left-color: var(--status-warn); }
+.log-entry.danger  { border-left-color: var(--status-danger); }
+.log-entry.info    { border-left-color: var(--status-info); }
+.log-entry.event   { border-left-color: var(--status-danger); background: #1a0d0d; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.log-entry.welcome { border-left-color: var(--accent-blue); }
+
+.log-year {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 3px;
+}
+
+.log-text {
+  font-size: 12px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.log-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
+}
+
+.log-metric-chip {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--border-subtle);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.log-metric-chip.up   { background: #0c2a1a; color: var(--status-good); }
+.log-metric-chip.down { background: #2a0e08; color: #ff7043; }
+
+/* ===== EVENT MODAL ===== */
+#event-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  animation: fadeIn 0.25s ease;
+}
+
+#event-modal.hidden { display: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#event-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--status-danger);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 480px;
+  width: 90vw;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+#event-icon-display {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: var(--gap-md);
+}
+
+#event-title-display {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--gap-sm);
+  color: var(--status-danger);
+}
+
+#event-desc-display {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: var(--gap-md);
+  line-height: 1.6;
+}
+
+#event-effects-display {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  margin-bottom: var(--gap-lg);
+}
+
+.event-effect-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.event-effect-row:last-child { border-bottom: none; }
+
+.event-effect-label { color: var(--text-secondary); }
+.event-effect-val.neg { color: var(--status-danger); font-weight: 700; }
+.event-effect-val.pos { color: var(--status-good); font-weight: 700; }
+
+#event-dismiss-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#event-dismiss-btn:hover { background: var(--accent-blue-lt); }
+
+/* ===== END GAME OVERLAY ===== */
+#endgame-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.5s ease;
+}
+
+#endgame-overlay.hidden { display: none; }
+
+#endgame-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 700px;
+  width: 92vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.4s ease;
+}
+
+#endgame-card.orderly    { border-color: var(--status-good); }
+#endgame-card.disorderly { border-color: var(--status-warn); }
+#endgame-card.hothouse   { border-color: var(--status-danger); }
+#endgame-card.breakdown  { border-color: #b39ddb; }
+#endgame-card.managed    { border-color: var(--status-info); }
+
+#endgame-icon-display {
+  font-size: 56px;
+  text-align: center;
+  margin-bottom: var(--gap-md);
+}
+
+#endgame-title-display {
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--gap-sm);
+}
+
+.orderly    #endgame-title-display { color: var(--status-good); }
+.disorderly #endgame-title-display { color: var(--status-warn); }
+.hothouse   #endgame-title-display { color: var(--status-danger); }
+.breakdown  #endgame-title-display { color: #b39ddb; }
+.managed    #endgame-title-display { color: var(--status-info); }
+
+#endgame-subtitle-display {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: var(--gap-lg);
+}
+
+#endgame-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-lg);
+}
+
+.endgame-metric-tile {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  text-align: center;
+}
+
+.endgame-metric-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.endgame-metric-val {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.endgame-metric-val.good   { color: var(--status-good); }
+.endgame-metric-val.warn   { color: var(--status-warn); }
+.endgame-metric-val.danger { color: var(--status-danger); }
+
+#endgame-narrative-display {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--gap-lg);
+  border-left: 3px solid var(--border-strong);
+  padding-left: var(--gap-md);
+}
+
+#endgame-narrative-display p + p { margin-top: var(--gap-sm); }
+
+#endgame-ngfs-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: var(--gap-lg);
+  font-style: italic;
+}
+
+#restart-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#restart-btn:hover { background: var(--accent-blue-lt); }
+
+/* ===== ADVISOR OVERLAY ===== */
+#advisor-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+  animation: fadeIn 0.5s ease;
+}
+
+#advisor-overlay.hidden { display: none; }
+
+#advisor-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 520px;
+  width: 92vw;
+  animation: slideUp 0.4s ease;
+}
+
+#advisor-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-sm);
+}
+
+.advisor-icon {
+  font-size: 44px;
+  text-align: center;
+  margin-bottom: var(--gap-md);
+}
+
+#advisor-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  line-height: 1.6;
+}
+
+#advisor-card ul {
+  list-style: none;
+  margin-bottom: var(--gap-lg);
+}
+
+#advisor-card ul li {
+  font-size: 13px;
+  color: var(--text-primary);
+  padding: 8px 10px;
+  border-left: 3px solid var(--accent-blue);
+  margin-bottom: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  line-height: 1.5;
+}
+
+#advisor-dismiss-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#advisor-dismiss-btn:hover { background: var(--accent-blue-lt); }
+
+/* ===== SCROLLBARS ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+/* ===== SCENE SECTION ===== */
+#scene-section {
+  flex-shrink: 0;
+  border-top: 2px solid var(--border-subtle);
+  background: #040a16;
+  overflow: hidden;
+  height: 180px;
+}
+
+#scene-svg {
+  display: block;
+  width: 100%;
+  height: 180px;
+}
+
+.scene-preview {
+  animation: sceneConstruct 1.4s ease-in-out infinite;
+}
+
+@keyframes sceneConstruct {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.85; }
+}
+
+/* ===== iOS / MOBILE BASE ===== */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  /* Safe area padding for notch/Dynamic Island/home indicator */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Prevent rubber-band scroll on fixed overlays */
+#event-modal, #endgame-overlay, #advisor-overlay, #sim-overlay {
+  overscroll-behavior: contain;
+}
+
+/* Allow text selection only in log and narrative */
+#log-scroll, #endgame-narrative-display {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ===== FX: SHAKE ===== */
+@keyframes fx-shake-anim {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-6px) rotate(-0.4deg); }
+  40%     { transform: translateX(6px)  rotate(0.4deg); }
+  60%     { transform: translateX(-3px); }
+  80%     { transform: translateX(3px); }
+}
+.fx-shake { animation: fx-shake-anim 0.45s ease; }
+
+/* ===== FX: PULSE ===== */
+@keyframes fx-pulse-anim {
+  0%   { filter: none; }
+  40%  { filter: brightness(1.8) drop-shadow(0 0 5px currentColor); }
+  100% { filter: none; }
+}
+.fx-pulse { animation: fx-pulse-anim 0.75s ease; }
+
+/* ===== BODY HEAT FILTER ===== */
+body { transition: filter 2s ease; }
+
+/* ===== BUTTON ACTIVE SCALE ===== */
+.block-btn:active           { transform: scale(0.88) !important; }
+#end-turn-btn:active        { transform: scale(0.94) !important; }
+#event-dismiss-btn:active   { transform: scale(0.96) !important; }
+#advisor-dismiss-btn:active { transform: scale(0.96) !important; }
+.mini-btn:active            { transform: scale(0.95) !important; }
+
+/* ===== SIMULATION OVERLAY ===== */
+#sim-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 800;
+  animation: fadeIn 0.35s ease;
+}
+.sim-fade-out { animation: fadeIn 0.35s ease reverse forwards !important; }
+
+#sim-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  width: 340px;
+  max-width: 90vw;
+}
+
+#sim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--gap-md);
+}
+#sim-year-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+#sim-year {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  font-variant-numeric: tabular-nums;
+}
+#sim-progress-track {
+  height: 6px;
+  background: var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: var(--gap-md);
+}
+#sim-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-lt));
+  border-radius: 3px;
+  transition: width 0.55s ease;
+}
+#sim-status {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  min-height: 18px;
+}
+
+/* ===== MINI-EVENT PANEL ===== */
+#mini-event-panel {
+  margin-top: var(--gap-md);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--status-warn);
+  border-radius: var(--radius-md);
+  animation: slideUp 0.3s ease;
+}
+.mini-event-icon   { font-size: 28px; text-align: center; margin-bottom: 5px; }
+.mini-event-year   { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); text-align: center; }
+.mini-event-title  { font-size: 14px; font-weight: 700; color: var(--status-warn); text-align: center; margin: 4px 0 6px; }
+.mini-event-prompt { font-size: 12px; color: var(--text-secondary); text-align: center; line-height: 1.5; margin-bottom: var(--gap-md); }
+.mini-event-actions { display: flex; flex-direction: column; gap: 7px; }
+
+.mini-btn {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.yes-btn { background: var(--accent-blue); color: white; }
+.no-btn  { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border-strong); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  /* Release the viewport-lock so the whole page scrolls naturally */
+  body {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  #game-main {
+    flex: none;
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    overflow: visible;
+  }
+
+  .panel {
+    min-height: 0;
+    overflow: visible;
+    height: auto;
+  }
+
+  /* Let panels grow to their content height instead of scrolling internally */
+  #metrics-inner {
+    flex: none;
+    height: auto;
+    overflow: visible;
+  }
+
+  #investment-cards {
+    flex: none;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* Log stays capped so it doesn't dominate the page */
+  #log-scroll {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  #endgame-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  #game-header { flex-direction: column; align-items: flex-start; gap: var(--gap-sm); }
+  #endgame-metrics-grid { grid-template-columns: 1fr 1fr; }
+  .card-cost-controls { flex-direction: column; align-items: flex-end; gap: 4px; }
+}
+
+/* ===== iPhone OPTIMISATIONS (≤430px) ===== */
+@media (max-width: 430px) {
+
+  /* Compact header for small screens */
+  #game-header {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px var(--gap-sm);
+    gap: var(--gap-sm);
+  }
+
+  #gov-crown { width: 28px; height: 28px; }
+
+  #game-title h1 { font-size: 13px; }
+  #game-title p  { font-size: 10px; }
+
+  #header-right { text-align: right; }
+  #current-year { font-size: 18px; }
+  #turn-counter { font-size: 10px; }
+  #turn-pips    { gap: 4px; }
+  .pip          { width: 8px; height: 8px; }
+
+  /* Single column fills screen */
+  #game-main {
+    padding: var(--gap-xs);
+    gap: var(--gap-xs);
+  }
+
+  /* Metrics panel: compact two-column grid for bars */
+  #metrics-inner { padding: var(--gap-xs) var(--gap-sm); }
+  .metric-block  { margin-bottom: 10px; }
+  .metric-name   { font-size: 11px; }
+  .metric-value  { font-size: 12px; }
+
+  /* Cards: larger tap area, bigger count display */
+  .investment-card {
+    padding: var(--gap-sm);
+  }
+
+  .card-name { font-size: 14px; }
+  .card-sub  { font-size: 11px; }
+
+  .block-count {
+    font-size: 22px;
+    min-width: 28px;
+  }
+
+  /* Taller action bar for thumb reach */
+  #action-bar {
+    padding: var(--gap-sm) var(--gap-md);
+    padding-bottom: max(var(--gap-sm), env(safe-area-inset-bottom));
+  }
+
+  #end-turn-btn {
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+
+  /* Scene: slightly shorter on small screens */
+  #scene-section { height: 140px; }
+  #scene-svg     { height: 140px; }
+
+  /* Log panel: cap height so it doesn't dominate */
+  #log-scroll { max-height: 220px; }
+
+  /* Endgame overlay: full screen on iPhone */
+  #endgame-card {
+    padding: var(--gap-lg);
+    border-radius: var(--radius-md);
+  }
+
+  /* Mini-event buttons: extra tall for thumbs */
+  .mini-btn { padding: 14px; font-size: 13px; }
+
+  /* Sim overlay card: comfortable size */
+  #sim-card { padding: var(--gap-lg); }
+  #sim-year { font-size: 52px; }
+
+  /* Event modal: comfortable on small screen */
+  #event-card { padding: var(--gap-lg); }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header id="game-header">
+  <div id="header-left">
+    <svg id="gov-crown" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="30" r="29" fill="#1d70b8" opacity="0.15" stroke="#1d70b8" stroke-width="1.5"/>
+      <text x="30" y="42" text-anchor="middle" font-size="28" fill="#5390d9">♛</text>
+    </svg>
+    <div id="game-title">
+      <h1>UK Climate Strategy 2025–2050</h1>
+      <p>Climate Risk Simulation</p>
+    </div>
+  </div>
+  <div id="header-right">
+    <div id="turn-pips">
+      <div class="pip" id="pip-0"></div>
+      <div class="pip" id="pip-1"></div>
+      <div class="pip" id="pip-2"></div>
+      <div class="pip" id="pip-3"></div>
+      <div class="pip" id="pip-4"></div>
+      <div class="pip" id="pip-5"></div>
+    </div>
+    <span id="current-year">2025</span>
+    <span id="turn-counter">Turn 1 of 6</span>
+  </div>
+</header>
+
+<!-- ===== MAIN LAYOUT ===== -->
+<main id="game-main">
+
+  <!-- LEFT: METRICS PANEL -->
+  <aside class="panel" id="metrics-panel">
+    <div class="panel-title">National Indicators</div>
+    <div id="metrics-inner">
+
+      <!-- Temperature -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🌡️ Temperature</span>
+          <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span></span>
+        </div>
+        <div class="bar-track temp-track" style="position:relative">
+          <div class="temp-needle" id="bar-temp" style="left:5%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:2px;">
+          <span style="font-size:10px;color:var(--text-muted)">1.1°C</span>
+          <span style="font-size:10px;color:var(--status-warn)">▲ 2.0°C target</span>
+          <span style="font-size:10px;color:var(--text-muted)">3.0°C</span>
+        </div>
+      </div>
+
+      <!-- Budget -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">💷 Budget</span>
+          <span class="metric-value">£<span id="val-budget-rem">100</span>bn left</span>
+        </div>
+        <div class="bar-track budget-track">
+          <div class="bar-fill good" id="bar-budget" style="width:100%"></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">Budget: £<span id="val-budget-total">100</span>bn this turn</div>
+      </div>
+
+      <!-- Grid Reliability -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">⚡ Grid Reliability</span>
+          <span class="metric-value"><span id="val-grid">65</span>% <span class="metric-delta" id="delta-grid"></span></span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill" id="bar-grid" style="width:65%"></div>
+          <div class="threshold-marker" style="left:40%"></div>
+        </div>
+      </div>
+
+      <!-- Financial Stability -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🏦 Financial Stability</span>
+          <span class="metric-value"><span id="val-fin">70</span>% <span class="metric-delta" id="delta-fin"></span></span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill" id="bar-fin" style="width:70%"></div>
+          <div class="threshold-marker" style="left:40%"></div>
+        </div>
+      </div>
+
+      <!-- Social Stability -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🏘️ Social Stability</span>
+          <span class="metric-value"><span id="val-soc">75</span>% <span class="metric-delta" id="delta-soc"></span></span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill" id="bar-soc" style="width:75%"></div>
+          <div class="threshold-marker" style="left:40%"></div>
+        </div>
+      </div>
+
+      <!-- Net Zero Progress -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🌱 Net Zero Progress</span>
+          <span class="metric-value"><span id="val-nz">0</span>% <span class="metric-delta" id="delta-nz"></span></span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill info" id="bar-nz" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Energy Mix -->
+      <div id="energy-mix-section">
+        <div id="energy-mix-title">Live Energy Mix</div>
+        <div id="energy-mix-bar">
+          <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:25"></div>
+          <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:15"></div>
+          <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:20"></div>
+          <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:35"></div>
+        </div>
+        <div id="energy-mix-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-wind)"></div>
+            <span>Wind</span><span class="legend-val" id="leg-wind">25</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-solar)"></div>
+            <span>Solar</span><span class="legend-val" id="leg-solar">15</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-nuclear)"></div>
+            <span>Nuclear</span><span class="legend-val" id="leg-nuclear">20</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-gas)"></div>
+            <span>Gas</span><span class="legend-val" id="leg-gas">35</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- CENTRE: DECISIONS PANEL -->
+  <section class="panel" id="decisions-panel">
+    <div id="decision-header">
+      <div id="decision-header-top">
+        <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
+        <div id="budget-status">
+          <span id="budget-remaining-display">£100bn</span> remaining
+        </div>
+      </div>
+    </div>
+
+    <div id="investment-cards">
+
+      <!-- Energy Transition -->
+      <div class="investment-card" id="card-energyTransition">
+        <div class="card-top">
+          <div class="card-icon">⚡</div>
+          <div class="card-info">
+            <div class="card-name">Energy Transition</div>
+            <div class="card-sub">Wind, Solar &amp; Fossil Phase-out</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£30bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition">−</button>
+              <span class="block-count" id="count-energyTransition">0</span>
+              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-effects">
+          <span class="effect-tag pos">Wind +8, Solar +6, NZ +10</span>
+          <span class="effect-tag neg">Gas −7, Stranded +12</span>
+          <span class="effect-tag warn">Grid risk if no Storage</span>
+        </div>
+      </div>
+
+      <!-- Grid & Storage -->
+      <div class="investment-card" id="card-gridAndStorage">
+        <div class="card-top">
+          <div class="card-icon">🔋</div>
+          <div class="card-info">
+            <div class="card-name">Grid &amp; Storage</div>
+            <div class="card-sub">Battery, Pumped Hydro, Smart Grid</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£35bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage">−</button>
+              <span class="block-count" id="count-gridAndStorage">0</span>
+              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-effects">
+          <span class="effect-tag pos">Storage +10, Nuclear +5</span>
+          <span class="effect-tag pos">Grid Reliability ↑</span>
+          <span class="effect-tag pos">Enables high renewables</span>
+        </div>
+      </div>
+
+      <!-- Adaptation -->
+      <div class="investment-card" id="card-adaptation">
+        <div class="card-top">
+          <div class="card-icon">🌊</div>
+          <div class="card-info">
+            <div class="card-name">Climate Adaptation</div>
+            <div class="card-sub">Flood Defences, Heat Resilience</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£25bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-adaptation" data-cat="adaptation">−</button>
+              <span class="block-count" id="count-adaptation">0</span>
+              <button class="block-btn" id="plus-adaptation" data-cat="adaptation">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-effects">
+          <span class="effect-tag pos">Social +5/block</span>
+          <span class="effect-tag pos">Event damage −50%</span>
+          <span class="effect-tag pos">Protects infrastructure</span>
+        </div>
+      </div>
+
+      <!-- Social Support -->
+      <div class="investment-card" id="card-socialSupport">
+        <div class="card-top">
+          <div class="card-icon">🤝</div>
+          <div class="card-info">
+            <div class="card-name">Social Support</div>
+            <div class="card-sub">Just Transition, Public Services</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£20bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport">−</button>
+              <span class="block-count" id="count-socialSupport">0</span>
+              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-effects">
+          <span class="effect-tag pos">Social +8, Fin +3</span>
+          <span class="effect-tag pos">Reduces unrest risk</span>
+        </div>
+      </div>
+
+      <!-- Financial Resilience -->
+      <div class="investment-card" id="card-financialResilience">
+        <div class="card-top">
+          <div class="card-icon">📈</div>
+          <div class="card-info">
+            <div class="card-name">Financial Resilience</div>
+            <div class="card-sub">Green Finance, Pension Protection</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£30bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience">−</button>
+              <span class="block-count" id="count-financialResilience">0</span>
+              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-effects">
+          <span class="effect-tag pos">Fin Stability +10</span>
+          <span class="effect-tag pos">Stranded −8, Property +5</span>
+        </div>
+      </div>
+
+      <!-- Research & Development (6th card) -->
+      <div class="investment-card" id="card-research">
+        <div class="card-top">
+          <div class="card-icon">🔬</div>
+          <div class="card-info">
+            <div class="card-name">Research &amp; Development</div>
+            <div class="card-sub" id="research-upgrade-name">Solar Supply Chain</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£15bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-research" data-cat="research">−</button>
+              <span class="block-count" id="count-research">0</span>
+              <button class="block-btn" id="plus-research" data-cat="research">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-effects">
+          <span class="effect-tag pos" id="research-effect-tag">Solar blocks give 1.5× Net Zero progress</span>
+          <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SCENE VISUALISATION -->
+    <div id="scene-section">
+      <svg id="scene-svg" viewBox="0 0 800 175" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sg-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#030810"/>
+            <stop offset="100%" stop-color="#081628"/>
+          </linearGradient>
+          <linearGradient id="sg-batt" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#163050"/>
+            <stop offset="100%" stop-color="#080f1e"/>
+          </linearGradient>
+          <linearGradient id="sg-glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1d70b8" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#06111e" stop-opacity="0.95"/>
+          </linearGradient>
+        </defs>
+
+        <!-- SKY -->
+        <rect width="800" height="175" fill="url(#sg-sky)"/>
+
+        <!-- STARS -->
+        <circle cx="12"  cy="10" r="1"   fill="white" opacity="0.65"/>
+        <circle cx="38"  cy="6"  r="1.2" fill="white" opacity="0.5"/>
+        <circle cx="85"  cy="14" r="1"   fill="white" opacity="0.6"/>
+        <circle cx="165" cy="9"  r="1"   fill="white" opacity="0.8"/>
+        <circle cx="230" cy="16" r="1.2" fill="white" opacity="0.4"/>
+        <circle cx="310" cy="7"  r="1"   fill="white" opacity="0.7"/>
+        <circle cx="375" cy="13" r="1"   fill="white" opacity="0.5"/>
+        <circle cx="445" cy="8"  r="1.2" fill="white" opacity="0.6"/>
+        <circle cx="510" cy="17" r="1"   fill="white" opacity="0.7"/>
+        <circle cx="580" cy="6"  r="1"   fill="white" opacity="0.5"/>
+        <circle cx="650" cy="12" r="1.2" fill="white" opacity="0.8"/>
+        <circle cx="720" cy="8"  r="1"   fill="white" opacity="0.6"/>
+        <circle cx="775" cy="18" r="1"   fill="white" opacity="0.45"/>
+
+        <!-- CRESCENT MOON -->
+        <circle cx="758" cy="20" r="13" fill="#c8d8e8" opacity="0.75"/>
+        <circle cx="765" cy="16" r="11" fill="#030810"/>
+
+        <!-- HILLS -->
+        <path d="M0,158 Q60,132 120,148 Q200,118 280,145 Q360,122 440,150 Q520,128 600,148 Q680,120 760,142 L800,145 L800,175 L0,175Z" fill="#060f06" opacity="0.9"/>
+
+        <!-- GROUND -->
+        <rect x="0" y="162" width="800" height="13" fill="#091509"/>
+        <rect x="0" y="162" width="800" height="1"  fill="#123012" opacity="0.8"/>
+
+        <!-- ZONE DIVIDERS -->
+        <line x1="220" y1="0"  x2="220" y2="162" stroke="#131d30" stroke-width="1"/>
+        <line x1="430" y1="0"  x2="430" y2="162" stroke="#131d30" stroke-width="1"/>
+        <line x1="608" y1="0"  x2="608" y2="162" stroke="#131d30" stroke-width="1"/>
+
+        <!-- ZONE LABELS -->
+        <text x="110" y="171" text-anchor="middle" fill="#4caf81" font-size="8" font-family="monospace" opacity="0.55">ENERGY</text>
+        <text x="325" y="171" text-anchor="middle" fill="#448aff" font-size="8" font-family="monospace" opacity="0.55">GRID &amp; STORAGE</text>
+        <text x="519" y="171" text-anchor="middle" fill="#ffd600" font-size="8" font-family="monospace" opacity="0.55">COMMUNITY</text>
+        <text x="704" y="171" text-anchor="middle" fill="#b39ddb" font-size="8" font-family="monospace" opacity="0.55">FINANCE</text>
+
+        <!-- EMPTY HINT -->
+        <text id="scene-hint" x="400" y="82" text-anchor="middle" fill="#1e2a40" font-size="11" font-family="monospace">Allocate investment blocks to build your city ↑</text>
+
+        <!-- ===== ENERGY ZONE (x 0–219) ===== -->
+
+        <!-- TURBINE 1: hub at (50, 97) -->
+        <g id="turbine-1" transform="translate(50,97)" visibility="hidden">
+          <rect x="-3" y="2" width="6" height="61" rx="2" fill="#607d8b"/>
+          <circle cx="0" cy="0" r="5" fill="#cfd8dc"/>
+          <g>
+            <rect x="-2.5" y="-23" width="5" height="21" rx="2.5" fill="#90a4ae"/>
+            <rect x="-2.5" y="-23" width="5" height="21" rx="2.5" fill="#90a4ae" transform="rotate(120 0 0)"/>
+            <rect x="-2.5" y="-23" width="5" height="21" rx="2.5" fill="#90a4ae" transform="rotate(240 0 0)"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="4s" repeatCount="indefinite"/>
+          </g>
+        </g>
+
+        <!-- TURBINE 2: hub at (100, 87) taller -->
+        <g id="turbine-2" transform="translate(100,87)" visibility="hidden">
+          <rect x="-3" y="2" width="6" height="71" rx="2" fill="#607d8b"/>
+          <circle cx="0" cy="0" r="5.5" fill="#cfd8dc"/>
+          <g>
+            <rect x="-2.5" y="-26" width="5" height="24" rx="2.5" fill="#90a4ae"/>
+            <rect x="-2.5" y="-26" width="5" height="24" rx="2.5" fill="#90a4ae" transform="rotate(120 0 0)"/>
+            <rect x="-2.5" y="-26" width="5" height="24" rx="2.5" fill="#90a4ae" transform="rotate(240 0 0)"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="3.5s" repeatCount="indefinite"/>
+          </g>
+        </g>
+
+        <!-- TURBINE 3: hub at (155, 94) -->
+        <g id="turbine-3" transform="translate(155,94)" visibility="hidden">
+          <rect x="-3" y="2" width="6" height="64" rx="2" fill="#607d8b"/>
+          <circle cx="0" cy="0" r="5" fill="#cfd8dc"/>
+          <g>
+            <rect x="-2.5" y="-22" width="5" height="20" rx="2.5" fill="#90a4ae"/>
+            <rect x="-2.5" y="-22" width="5" height="20" rx="2.5" fill="#90a4ae" transform="rotate(120 0 0)"/>
+            <rect x="-2.5" y="-22" width="5" height="20" rx="2.5" fill="#90a4ae" transform="rotate(240 0 0)"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="4.5s" repeatCount="indefinite"/>
+          </g>
+        </g>
+
+        <!-- TURBINE 4: hub at (205, 102) shorter -->
+        <g id="turbine-4" transform="translate(205,102)" visibility="hidden">
+          <rect x="-3" y="2" width="6" height="56" rx="2" fill="#607d8b"/>
+          <circle cx="0" cy="0" r="4.5" fill="#cfd8dc"/>
+          <g>
+            <rect x="-2" y="-19" width="4" height="17" rx="2" fill="#90a4ae"/>
+            <rect x="-2" y="-19" width="4" height="17" rx="2" fill="#90a4ae" transform="rotate(120 0 0)"/>
+            <rect x="-2" y="-19" width="4" height="17" rx="2" fill="#90a4ae" transform="rotate(240 0 0)"/>
+            <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="3.8s" repeatCount="indefinite"/>
+          </g>
+        </g>
+
+        <!-- SOLAR ARRAY 1: front row -->
+        <g id="solar-1" visibility="hidden">
+          <g transform="translate(14,149) skewX(-14)"><rect width="23" height="12" rx="1" fill="#1565c0" stroke="#1976d2" stroke-width="0.8"/><line x1="11.5" y1="0" x2="11.5" y2="12" stroke="#1976d2" stroke-width="0.5"/><line x1="0" y1="6" x2="23" y2="6" stroke="#1976d2" stroke-width="0.5"/></g>
+          <g transform="translate(42,149) skewX(-14)"><rect width="23" height="12" rx="1" fill="#1565c0" stroke="#1976d2" stroke-width="0.8"/><line x1="11.5" y1="0" x2="11.5" y2="12" stroke="#1976d2" stroke-width="0.5"/><line x1="0" y1="6" x2="23" y2="6" stroke="#1976d2" stroke-width="0.5"/></g>
+          <g transform="translate(70,149) skewX(-14)"><rect width="23" height="12" rx="1" fill="#1565c0" stroke="#1976d2" stroke-width="0.8"/><line x1="11.5" y1="0" x2="11.5" y2="12" stroke="#1976d2" stroke-width="0.5"/><line x1="0" y1="6" x2="23" y2="6" stroke="#1976d2" stroke-width="0.5"/></g>
+        </g>
+
+        <!-- SOLAR ARRAY 2: second deeper row -->
+        <g id="solar-2" visibility="hidden">
+          <g transform="translate(16,138) skewX(-14)"><rect width="21" height="11" rx="1" fill="#0d47a1" stroke="#1565c0" stroke-width="0.7"/><line x1="10.5" y1="0" x2="10.5" y2="11" stroke="#1565c0" stroke-width="0.5"/><line x1="0" y1="5.5" x2="21" y2="5.5" stroke="#1565c0" stroke-width="0.5"/></g>
+          <g transform="translate(42,138) skewX(-14)"><rect width="21" height="11" rx="1" fill="#0d47a1" stroke="#1565c0" stroke-width="0.7"/><line x1="10.5" y1="0" x2="10.5" y2="11" stroke="#1565c0" stroke-width="0.5"/><line x1="0" y1="5.5" x2="21" y2="5.5" stroke="#1565c0" stroke-width="0.5"/></g>
+          <g transform="translate(68,138) skewX(-14)"><rect width="21" height="11" rx="1" fill="#0d47a1" stroke="#1565c0" stroke-width="0.7"/><line x1="10.5" y1="0" x2="10.5" y2="11" stroke="#1565c0" stroke-width="0.5"/><line x1="0" y1="5.5" x2="21" y2="5.5" stroke="#1565c0" stroke-width="0.5"/></g>
+          <g transform="translate(94,138) skewX(-14)"><rect width="21" height="11" rx="1" fill="#0d47a1" stroke="#1565c0" stroke-width="0.7"/><line x1="10.5" y1="0" x2="10.5" y2="11" stroke="#1565c0" stroke-width="0.5"/><line x1="0" y1="5.5" x2="21" y2="5.5" stroke="#1565c0" stroke-width="0.5"/></g>
+        </g>
+
+        <!-- SOLAR ARRAY 3: third farthest row -->
+        <g id="solar-3" visibility="hidden">
+          <g transform="translate(18,128) skewX(-14)"><rect width="18" height="10" rx="1" fill="#09348a" stroke="#0d47a1" stroke-width="0.7"/><line x1="9" y1="0" x2="9" y2="10" stroke="#0d47a1" stroke-width="0.5"/><line x1="0" y1="5" x2="18" y2="5" stroke="#0d47a1" stroke-width="0.5"/></g>
+          <g transform="translate(41,128) skewX(-14)"><rect width="18" height="10" rx="1" fill="#09348a" stroke="#0d47a1" stroke-width="0.7"/><line x1="9" y1="0" x2="9" y2="10" stroke="#0d47a1" stroke-width="0.5"/><line x1="0" y1="5" x2="18" y2="5" stroke="#0d47a1" stroke-width="0.5"/></g>
+          <g transform="translate(64,128) skewX(-14)"><rect width="18" height="10" rx="1" fill="#09348a" stroke="#0d47a1" stroke-width="0.7"/><line x1="9" y1="0" x2="9" y2="10" stroke="#0d47a1" stroke-width="0.5"/><line x1="0" y1="5" x2="18" y2="5" stroke="#0d47a1" stroke-width="0.5"/></g>
+          <g transform="translate(87,128) skewX(-14)"><rect width="18" height="10" rx="1" fill="#09348a" stroke="#0d47a1" stroke-width="0.7"/><line x1="9" y1="0" x2="9" y2="10" stroke="#0d47a1" stroke-width="0.5"/><line x1="0" y1="5" x2="18" y2="5" stroke="#0d47a1" stroke-width="0.5"/></g>
+          <g transform="translate(110,128) skewX(-14)"><rect width="18" height="10" rx="1" fill="#09348a" stroke="#0d47a1" stroke-width="0.7"/><line x1="9" y1="0" x2="9" y2="10" stroke="#0d47a1" stroke-width="0.5"/><line x1="0" y1="5" x2="18" y2="5" stroke="#0d47a1" stroke-width="0.5"/></g>
+        </g>
+
+        <!-- ===== GRID ZONE (x 220–429) ===== -->
+
+        <!-- POWER PYLON -->
+        <g id="pylon" visibility="hidden">
+          <line x1="236" y1="162" x2="250" y2="104" stroke="#455a64" stroke-width="2.5"/>
+          <line x1="264" y1="162" x2="250" y2="104" stroke="#455a64" stroke-width="2.5"/>
+          <line x1="239" y1="138" x2="261" y2="138" stroke="#455a64" stroke-width="2"/>
+          <line x1="234" y1="153" x2="266" y2="153" stroke="#455a64" stroke-width="2"/>
+          <line x1="247" y1="107" x2="253" y2="107" stroke="#455a64" stroke-width="1.5"/>
+          <path d="M250,104 Q292,96 322,100" stroke="#546e7a" stroke-width="1.2" fill="none" opacity="0.7"/>
+          <circle cx="250" cy="104" r="2.5" fill="#607d8b"/>
+        </g>
+
+        <!-- BATTERY 1: bottom-left -->
+        <g id="battery-1" transform="translate(292,128)" visibility="hidden">
+          <rect x="0" y="0" width="32" height="34" rx="3" fill="url(#sg-batt)" stroke="#1d70b8" stroke-width="1.5"/>
+          <rect x="13" y="-5" width="6" height="5" rx="1.5" fill="#1d70b8"/>
+          <rect x="3" y="8"  width="26" height="3" rx="1" fill="#1d70b8" opacity="0.55"/>
+          <rect x="3" y="15" width="26" height="3" rx="1" fill="#1d70b8" opacity="0.55"/>
+          <rect x="3" y="22" width="26" height="3" rx="1" fill="#1d70b8" opacity="0.55"/>
+          <rect x="3" y="26" width="18" height="4" rx="1" fill="#00c853" opacity="0.75"/>
+          <text x="16" y="33" text-anchor="middle" fill="#5390d9" font-size="6" font-family="monospace">PWR</text>
+        </g>
+
+        <!-- BATTERY 2: bottom-right -->
+        <g id="battery-2" transform="translate(332,128)" visibility="hidden">
+          <rect x="0" y="0" width="32" height="34" rx="3" fill="url(#sg-batt)" stroke="#1d70b8" stroke-width="1.5"/>
+          <rect x="13" y="-5" width="6" height="5" rx="1.5" fill="#1d70b8"/>
+          <rect x="3" y="8"  width="26" height="3" rx="1" fill="#1d70b8" opacity="0.55"/>
+          <rect x="3" y="15" width="26" height="3" rx="1" fill="#1d70b8" opacity="0.55"/>
+          <rect x="3" y="22" width="26" height="3" rx="1" fill="#1d70b8" opacity="0.55"/>
+          <rect x="3" y="26" width="24" height="4" rx="1" fill="#00c853" opacity="0.75"/>
+          <text x="16" y="33" text-anchor="middle" fill="#5390d9" font-size="6" font-family="monospace">PWR</text>
+        </g>
+
+        <!-- BATTERY 3: top-left (upper row) -->
+        <g id="battery-3" transform="translate(294,92)" visibility="hidden">
+          <rect x="0" y="0" width="30" height="32" rx="3" fill="#0c1e38" stroke="#0d47a1" stroke-width="1.5"/>
+          <rect x="12" y="-5" width="6" height="5" rx="1.5" fill="#0d47a1"/>
+          <rect x="3" y="8"  width="24" height="2.5" rx="1" fill="#1565c0" opacity="0.55"/>
+          <rect x="3" y="14" width="24" height="2.5" rx="1" fill="#1565c0" opacity="0.55"/>
+          <rect x="3" y="20" width="24" height="2.5" rx="1" fill="#1565c0" opacity="0.55"/>
+          <rect x="3" y="25" width="12" height="4" rx="1" fill="#00c853" opacity="0.65"/>
+          <text x="15" y="31" text-anchor="middle" fill="#448aff" font-size="6" font-family="monospace">PWR</text>
+        </g>
+
+        <!-- BATTERY 4: top-right (upper row) -->
+        <g id="battery-4" transform="translate(330,92)" visibility="hidden">
+          <rect x="0" y="0" width="30" height="32" rx="3" fill="#0c1e38" stroke="#0d47a1" stroke-width="1.5"/>
+          <rect x="12" y="-5" width="6" height="5" rx="1.5" fill="#0d47a1"/>
+          <rect x="3" y="8"  width="24" height="2.5" rx="1" fill="#1565c0" opacity="0.55"/>
+          <rect x="3" y="14" width="24" height="2.5" rx="1" fill="#1565c0" opacity="0.55"/>
+          <rect x="3" y="20" width="24" height="2.5" rx="1" fill="#1565c0" opacity="0.55"/>
+          <rect x="3" y="25" width="20" height="4" rx="1" fill="#00c853" opacity="0.65"/>
+          <text x="15" y="31" text-anchor="middle" fill="#448aff" font-size="6" font-family="monospace">PWR</text>
+        </g>
+
+        <!-- NUCLEAR COOLING TOWER -->
+        <g id="nuclear" visibility="hidden">
+          <path d="M380,162 L386,102 Q392,93 398,102 L404,162Z" fill="#2e3f4a" stroke="#455a64" stroke-width="1"/>
+          <path d="M381,162 L384,138 Q392,133 400,138 L403,162Z" fill="#37474f"/>
+          <ellipse cx="392" cy="94"  rx="9"  ry="7"  fill="#7890a0" opacity="0.18"/>
+          <ellipse cx="392" cy="85"  rx="6"  ry="5"  fill="#7890a0" opacity="0.13"/>
+          <ellipse cx="393" cy="77"  rx="4"  ry="4"  fill="#7890a0" opacity="0.09"/>
+          <text x="392" y="148" text-anchor="middle" fill="#b39ddb" font-size="8" font-family="monospace" opacity="0.5">☢</text>
+        </g>
+
+        <!-- ===== COMMUNITY ZONE (x 430–607) ===== -->
+
+        <!-- BASE TOWN — always visible -->
+        <rect x="440" y="141" width="20" height="21" fill="#1e3550" rx="1"/>
+        <polygon points="440,141 450,128 460,141" fill="#162a42"/>
+        <rect x="444" y="148" width="5" height="13" fill="#0d1e30"/>
+        <rect x="463" y="136" width="24" height="26" fill="#1e3550" rx="1"/>
+        <polygon points="463,136 475,122 487,136" fill="#162a42"/>
+        <rect x="469" y="146" width="5" height="11" fill="#0d1e30"/>
+        <rect x="476" y="141" width="6" height="6" fill="#1e3a52" opacity="0.7"/>
+        <rect x="492" y="138" width="22" height="24" fill="#1e3550" rx="1"/>
+        <polygon points="492,138 503,125 514,138" fill="#162a42"/>
+        <rect x="498" y="148" width="5" height="10" fill="#0d1e30"/>
+
+        <!-- FLOOD WALL 1: thin base wall -->
+        <g id="flood-wall-1" visibility="hidden">
+          <rect x="433" y="155" width="173" height="7" rx="2" fill="#3d4f5e" stroke="#546270" stroke-width="1"/>
+          <rect x="437" y="151" width="7" height="11" rx="1" fill="#4a5c6a"/>
+          <rect x="454" y="151" width="7" height="11" rx="1" fill="#4a5c6a"/>
+          <rect x="471" y="151" width="7" height="11" rx="1" fill="#4a5c6a"/>
+          <rect x="558" y="151" width="7" height="11" rx="1" fill="#4a5c6a"/>
+          <rect x="575" y="151" width="7" height="11" rx="1" fill="#4a5c6a"/>
+          <rect x="592" y="151" width="7" height="11" rx="1" fill="#4a5c6a"/>
+        </g>
+
+        <!-- FLOOD WALL 2: tall reinforced barrier -->
+        <g id="flood-wall-2" visibility="hidden">
+          <rect x="433" y="142" width="173" height="20" rx="2" fill="#2e3d4a" stroke="#3d4f5e" stroke-width="1.5"/>
+          <line x1="433" y1="152" x2="606" y2="152" stroke="#3d4f5e" stroke-width="1" opacity="0.7"/>
+          <rect x="436" y="137" width="8" height="25" rx="1" fill="#394d5a"/>
+          <rect x="455" y="137" width="8" height="25" rx="1" fill="#394d5a"/>
+          <rect x="474" y="137" width="8" height="25" rx="1" fill="#394d5a"/>
+          <rect x="558" y="137" width="8" height="25" rx="1" fill="#394d5a"/>
+          <rect x="577" y="137" width="8" height="25" rx="1" fill="#394d5a"/>
+          <rect x="596" y="137" width="8" height="25" rx="1" fill="#394d5a"/>
+          <text x="519" y="150" text-anchor="middle" fill="#607d8b" font-size="7" font-family="monospace" opacity="0.65">FLOOD DEFENCE</text>
+        </g>
+
+        <!-- BUILDING 1: apartment block -->
+        <g id="bldg-1" visibility="hidden">
+          <rect x="520" y="113" width="22" height="49" fill="#101d2e" rx="1"/>
+          <rect x="520" y="113" width="22" height="6"  fill="#182e46"/>
+          <rect x="523" y="122" width="5" height="4" fill="#183850" opacity="0.9"/>
+          <rect x="531" y="122" width="5" height="4" fill="#ffd600" opacity="0.5"/>
+          <rect x="523" y="130" width="5" height="4" fill="#ffd600" opacity="0.5"/>
+          <rect x="531" y="130" width="5" height="4" fill="#183850" opacity="0.9"/>
+          <rect x="523" y="138" width="5" height="4" fill="#183850" opacity="0.9"/>
+          <rect x="531" y="138" width="5" height="4" fill="#ffd600" opacity="0.5"/>
+          <rect x="523" y="146" width="5" height="4" fill="#183850" opacity="0.9"/>
+          <rect x="531" y="146" width="5" height="4" fill="#183850" opacity="0.9"/>
+          <rect x="526" y="152" width="10" height="10" fill="#060e1a"/>
+        </g>
+
+        <!-- BUILDING 2: taller office -->
+        <g id="bldg-2" visibility="hidden">
+          <rect x="547" y="98" width="26" height="64" fill="#0e1828" rx="1"/>
+          <rect x="547" y="98" width="26" height="8"  fill="#18284a"/>
+          <rect x="550" y="109" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="559" y="109" width="6" height="5" fill="#1d70b8" opacity="0.45"/>
+          <rect x="550" y="118" width="6" height="5" fill="#1d70b8" opacity="0.45"/>
+          <rect x="559" y="118" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="550" y="127" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="559" y="127" width="6" height="5" fill="#ffd600" opacity="0.5"/>
+          <rect x="550" y="136" width="6" height="5" fill="#ffd600" opacity="0.5"/>
+          <rect x="559" y="136" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="550" y="145" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="559" y="145" width="6" height="5" fill="#1d70b8" opacity="0.45"/>
+          <rect x="553" y="153" width="14" height="9" fill="#050c18"/>
+        </g>
+
+        <!-- BUILDING 3: civic community centre -->
+        <g id="bldg-3" visibility="hidden">
+          <rect x="438" y="105" width="36" height="57" fill="#0f1c2e" rx="1"/>
+          <rect x="438" y="105" width="36" height="9"  fill="#182e4a"/>
+          <rect x="442" y="114" width="4" height="48" fill="#0c1626"/>
+          <rect x="451" y="114" width="4" height="48" fill="#0c1626"/>
+          <rect x="460" y="114" width="4" height="48" fill="#0c1626"/>
+          <rect x="443" y="119" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="455" y="119" width="6" height="5" fill="#ffd600" opacity="0.5"/>
+          <rect x="443" y="128" width="6" height="5" fill="#ffd600" opacity="0.5"/>
+          <rect x="455" y="128" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="443" y="137" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="455" y="137" width="6" height="5" fill="#163a55" opacity="0.9"/>
+          <rect x="448" y="148" width="16" height="14" fill="#06101e"/>
+          <line x1="456" y1="96"  x2="456" y2="105" stroke="#546e7a" stroke-width="1.5"/>
+          <rect x="456" y="96"  width="12" height="7" fill="#1d70b8" opacity="0.75"/>
+        </g>
+
+        <!-- ===== FINANCE ZONE (x 608–800) ===== -->
+
+        <!-- FINANCE 1: small classical bank -->
+        <g id="fin-1" visibility="hidden">
+          <rect x="622" y="130" width="44" height="32" fill="#0d1c2e" rx="1"/>
+          <rect x="622" y="130" width="44" height="7"  fill="#1d70b8" opacity="0.65"/>
+          <rect x="626" y="137" width="4" height="25" fill="#0a1422"/>
+          <rect x="633" y="137" width="4" height="25" fill="#0a1422"/>
+          <rect x="640" y="137" width="4" height="25" fill="#0a1422"/>
+          <rect x="647" y="137" width="4" height="25" fill="#0a1422"/>
+          <rect x="654" y="137" width="4" height="25" fill="#0a1422"/>
+          <rect x="620" y="158" width="48" height="4" rx="1" fill="#12243a"/>
+          <rect x="629" y="148" width="10" height="14" fill="#050d1a"/>
+          <text x="648" y="152" text-anchor="middle" fill="#5390d9" font-size="8" font-family="monospace" opacity="0.7">£</text>
+        </g>
+
+        <!-- FINANCE 2: medium glass tower -->
+        <g id="fin-2" visibility="hidden">
+          <rect x="671" y="100" width="32" height="62" fill="url(#sg-glass)" stroke="#1d70b8" stroke-width="1"/>
+          <rect x="671" y="100" width="32" height="8"  fill="#1d70b8" opacity="0.55"/>
+          <rect x="674" y="111" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="684" y="111" width="7" height="5" fill="#5390d9" opacity="0.4"/>
+          <rect x="674" y="120" width="7" height="5" fill="#5390d9" opacity="0.4"/>
+          <rect x="684" y="120" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="674" y="129" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="684" y="129" width="7" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="674" y="138" width="7" height="5" fill="#5390d9" opacity="0.4"/>
+          <rect x="684" y="138" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="674" y="147" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="684" y="147" width="7" height="5" fill="#5390d9" opacity="0.4"/>
+          <rect x="675" y="154" width="14" height="8" fill="#050d1a"/>
+        </g>
+
+        <!-- FINANCE 3: tall tower with antenna -->
+        <g id="fin-3" visibility="hidden">
+          <rect x="718" y="60" width="46" height="102" fill="#0a1624"/>
+          <rect x="718" y="60" width="46" height="10"  fill="#1d70b8" opacity="0.75"/>
+          <line x1="741" y1="60"  x2="741" y2="44"  stroke="#1d70b8" stroke-width="2.5"/>
+          <circle cx="741" cy="43" r="3" fill="#5390d9"/>
+          <rect x="721" y="74"  width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="731" y="74"  width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="741" y="74"  width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="751" y="74"  width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="721" y="83"  width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="731" y="83"  width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="741" y="83"  width="7" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="751" y="83"  width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="721" y="92"  width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="731" y="92"  width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="741" y="92"  width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="751" y="92"  width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="721" y="101" width="7" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="731" y="101" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="741" y="101" width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="751" y="101" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="721" y="110" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="731" y="110" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="741" y="110" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="751" y="110" width="7" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="721" y="119" width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="731" y="119" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="741" y="119" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="751" y="119" width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="721" y="128" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="731" y="128" width="7" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="741" y="128" width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="751" y="128" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="721" y="137" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="731" y="137" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="741" y="137" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="751" y="137" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="721" y="146" width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="731" y="146" width="7" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="741" y="146" width="7" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="751" y="146" width="7" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="724" y="154" width="18" height="8" fill="#050d1a"/>
+        </g>
+
+        <!-- FINANCE 4: second tower completing the district -->
+        <g id="fin-4" visibility="hidden">
+          <rect x="613" y="82"  width="28" height="80" fill="#0c1826"/>
+          <rect x="613" y="82"  width="28" height="7"  fill="#1d70b8" opacity="0.6"/>
+          <rect x="616" y="93"  width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="625" y="93"  width="6" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="634" y="93"  width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="616" y="102" width="6" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="625" y="102" width="6" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="634" y="102" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="616" y="111" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="625" y="111" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="634" y="111" width="6" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="616" y="120" width="6" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="625" y="120" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="634" y="120" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="616" y="129" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="625" y="129" width="6" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="634" y="129" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="616" y="138" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="625" y="138" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="634" y="138" width="6" height="5" fill="#ffd600" opacity="0.45"/>
+          <rect x="616" y="147" width="6" height="5" fill="#5390d9" opacity="0.45"/>
+          <rect x="625" y="147" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="634" y="147" width="6" height="5" fill="#163a55" opacity="0.85"/>
+          <rect x="617" y="154" width="12" height="8" fill="#050d1a"/>
+        </g>
+
+      </svg>
+    </div>
+
+    <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
+    <div id="action-bar">
+      <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+    </div>
+  </section>
+
+  <!-- RIGHT: LOG PANEL -->
+  <aside class="panel" id="log-panel">
+    <div class="panel-title">Policy Record</div>
+    <div id="log-scroll">
+      <div class="log-entry welcome">
+        <div class="log-year">2025 — Briefing</div>
+        <div class="log-text">UK Climate Strategy simulation begins. Temperature: 1.1°C above pre-industrial. You have 6 five-year terms to shape the nation's response. Allocate investment blocks each turn — but watch the trade-offs.</div>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<!-- EVENT MODAL -->
+<div id="event-modal" class="hidden">
+  <div id="event-card">
+    <div id="event-icon-display">⚠️</div>
+    <h2 id="event-title-display">Climate Event</h2>
+    <p id="event-desc-display"></p>
+    <div id="event-effects-display"></div>
+    <button id="event-dismiss-btn">Acknowledge &amp; Continue</button>
+  </div>
+</div>
+
+<!-- END GAME OVERLAY -->
+<div id="endgame-overlay" class="hidden">
+  <div id="endgame-card">
+    <div id="endgame-icon-display"></div>
+    <h1 id="endgame-title-display"></h1>
+    <p id="endgame-subtitle-display"></p>
+    <div id="endgame-metrics-grid"></div>
+    <div id="endgame-narrative-display"></div>
+    <div id="endgame-ngfs-label"></div>
+    <button id="restart-btn">↺ Play Again</button>
+  </div>
+</div>
+
+<!-- ADVISOR OVERLAY -->
+<div id="advisor-overlay">
+  <div id="advisor-card">
+    <div class="advisor-icon">📋</div>
+    <h2>Chancellor's Briefing</h2>
+    <p>Welcome to UK Climate Strategy 2025–2050. You have 6 five-year terms and £100bn per turn to shape the nation's climate response. Three key rules:</p>
+    <ul>
+      <li>🔋 <strong>Balance investment</strong> — neglect Grid &amp; Storage or Social Support and instability cascades</li>
+      <li>⚠️ <strong>Watch the 40% line</strong> — metrics below this threshold trigger damaging feedback loops</li>
+      <li>🌡️ <strong>Temperature rises every turn</strong> — the longer you delay decarbonisation, the harder it becomes</li>
+    </ul>
+    <button id="advisor-dismiss-btn">Begin Simulation →</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   CONSTANTS
+============================================================ */
+
+const BLOCK_COSTS = {
+  energyTransition:    30,
+  gridAndStorage:      35,
+  adaptation:          25,
+  socialSupport:       20,
+  financialResilience: 30,
+  research:            15,
+};
+
+const MAX_BLOCKS_PER_CAT = 2;
+
+const RANDOM_EVENTS = [
+  {
+    id: 'FLOOD_MINOR', type: 'FLOOD', severity: 'MINOR', icon: '🌊',
+    title: 'Coastal Flooding — East Anglia',
+    description: 'Storm surge breaches flood defences along the Norfolk coast. Thousands displaced.',
+    effects: { propertyValue: -8, socialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+  },
+  {
+    id: 'FLOOD_MAJOR', type: 'FLOOD', severity: 'MAJOR', icon: '🌊',
+    title: 'Catastrophic Thames Flooding',
+    description: 'Record rainfall overwhelms the Thames Barrier. Central London districts flooded. National emergency declared.',
+    effects: { propertyValue: -20, socialStability: -12, financialStability: -10 },
+    infraDamage: true, budgetPenaltyNext: 30,
+  },
+  {
+    id: 'HEATWAVE_MOD', type: 'HEATWAVE', severity: 'MODERATE', icon: '🌡️',
+    title: 'Extended Heatwave — 40°C+',
+    description: 'Hospitals overwhelmed. Grid demand spikes to record levels. Emergency cooling centres opened across England.',
+    effects: { socialStability: -10, financialStability: -6, gridReliability: -8 },
+    infraDamage: false, budgetPenaltyNext: 0,
+  },
+  {
+    id: 'HEATWAVE_MAJOR', type: 'HEATWAVE', severity: 'MAJOR', icon: '🔥',
+    title: 'Extreme Heat Emergency',
+    description: 'Excess mortality reaches 10,000. National emergency declared. Crop failures spread. GDP contracts sharply.',
+    effects: { socialStability: -18, financialStability: -12, temperature: 0.05 },
+    infraDamage: false, budgetPenaltyNext: 30,
+  },
+  {
+    id: 'STORM', type: 'STORM', severity: 'MODERATE', icon: '⛈️',
+    title: 'Severe Atlantic Storm',
+    description: 'Storm Idris causes widespread damage across northern England and Scotland. Grid infrastructure takes a hit.',
+    effects: { socialStability: -8, propertyValue: -10 },
+    infraDamage: true, budgetPenaltyNext: 0,
+  },
+  {
+    id: 'FINANCIAL_SHOCK', type: 'FINANCIAL', severity: 'MODERATE', icon: '📉',
+    title: 'Fossil Asset Write-down',
+    description: 'International carbon accounting rules force rapid write-down of North Sea assets. Pension funds exposed.',
+    effects: { financialStability: -15, strandedAssets: 12 },
+    infraDamage: false, budgetPenaltyNext: 0,
+  },
+  {
+    id: 'SOCIAL_UNREST', type: 'SOCIAL', severity: 'MODERATE', icon: '✊',
+    title: 'Fuel Poverty Protests',
+    description: 'Rising energy costs trigger nationwide protests. Government approval collapses. Austerity demanded.',
+    effects: { socialStability: -18 },
+    infraDamage: false, budgetPenaltyNext: 15,
+  },
+  {
+    id: 'GRID_FAILURE', type: 'GRID', severity: 'MAJOR', icon: '⚡',
+    title: 'National Grid Blackout',
+    description: 'Insufficient backup capacity causes cascading grid failures across England. Hospitals on generators.',
+    effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
+    infraDamage: false, budgetPenaltyNext: 30,
+    condition: (s) => s.gridReliability < 50,
+  },
+];
+
+/* ============================================================
+   GAME ENGINE
+============================================================ */
+
+class GameEngine {
+  constructor() {
+    this._initState();
+  }
+
+  _initState() {
+    this.state = {
+      turn: 0,
+      year: 2025,
+      gameOver: false,
+      gameOverReason: null,
+      temperature: 1.1,
+      netZeroProgress: 0,
+      gridReliability: 65,
+      financialStability: 70,
+      socialStability: 75,
+      budget: 100,
+      nextTurnBudgetPenalty: 0,
+      energy: { wind: 25, solar: 15, nuclear: 20, gas: 35, storage: 10 },
+      infrastructure: {
+        energyTransition: 0,
+        gridAndStorage: 0,
+        adaptation: 0,
+        socialSupport: 0,
+        financialResilience: 0,
+      },
+      strandedAssets: 0,
+      propertyValue: 100,
+      currentDecisions: {
+        energyTransition: 0,
+        gridAndStorage: 0,
+        adaptation: 0,
+        socialSupport: 0,
+        financialResilience: 0,
+        research: 0,
+      },
+      spentThisTurn: 0,
+      netZeroAchieved: false,
+      socialBreakdownOccurred: false,
+      currentRandomEvent: null,
+      eventCount: 0,
+      log: [],
+      lastSnapshot: null,
+    };
+  }
+
+  getState() {
+    // Return a shallow copy sufficient for rendering
+    return Object.assign({}, this.state, {
+      energy: Object.assign({}, this.state.energy),
+      infrastructure: Object.assign({}, this.state.infrastructure),
+      currentDecisions: Object.assign({}, this.state.currentDecisions),
+    });
+  }
+
+  _clamp(val, min, max) {
+    return Math.max(min, Math.min(max, val));
+  }
+
+  getEffectiveBudget() {
+    let base = 100;
+    if (this.state.financialStability > 80) base += 20;
+    base -= this.state.nextTurnBudgetPenalty;
+    return Math.max(base, 20);
+  }
+
+  allocateBlock(category) {
+    const s = this.state;
+    const cost = BLOCK_COSTS[category];
+    const current = s.currentDecisions[category];
+    if (current >= MAX_BLOCKS_PER_CAT) return { success: false, reason: 'Max 2 blocks per category' };
+    if (s.spentThisTurn + cost > s.budget) return { success: false, reason: 'Insufficient budget' };
+    s.currentDecisions[category]++;
+    s.spentThisTurn += cost;
+    return { success: true };
+  }
+
+  deallocateBlock(category) {
+    const s = this.state;
+    if (s.currentDecisions[category] <= 0) return;
+    s.currentDecisions[category]--;
+    s.spentThisTurn -= BLOCK_COSTS[category];
+  }
+
+  resolveTurn() {
+    const s = this.state;
+    const prevYear = s.year;
+
+    // Phase 0: Snapshot
+    const snapshot = {
+      temperature: s.temperature,
+      netZeroProgress: s.netZeroProgress,
+      gridReliability: s.gridReliability,
+      financialStability: s.financialStability,
+      socialStability: s.socialStability,
+      energy: Object.assign({}, s.energy),
+    };
+
+    // Phase 1: Budget (already set at turn start; reset nextTurn penalty)
+    s.nextTurnBudgetPenalty = 0;
+
+    // Phase 2: Apply investments
+    this._applyInvestments();
+
+    // Phase 3: Grid formula
+    this._recalcGrid();
+
+    // Phase 4: Financial formula
+    this._recalcFinancial();
+
+    // Phase 5: Social formula
+    this._recalcSocial();
+
+    // Phase 6: Temperature
+    this._progressTemp();
+
+    // Phase 7: Random event
+    const event = this._resolveEvent();
+    s.currentRandomEvent = event;
+    if (event) {
+      s.eventCount++;
+      // Recalc formulas again after event damage
+      this._recalcGrid();
+      this._recalcFinancial();
+      this._recalcSocial();
+    }
+
+    // Phase 8: Breakdown check
+    if (s.gridReliability <= 0 || s.financialStability <= 0 || s.socialStability <= 0) {
+      s.gameOver = true;
+      s.gameOverReason = 'SOCIAL_BREAKDOWN';
+      s.socialBreakdownOccurred = true;
+    }
+
+    // Phase 9: Net Zero check
+    if (s.netZeroProgress >= 100 && !s.netZeroAchieved) {
+      s.netZeroAchieved = true;
+    }
+
+    // Phase 10: Build log entry
+    const decisions = this._describeDecisions(s.currentDecisions);
+    const logEntry = {
+      turn: s.turn,
+      year: prevYear,
+      decisions,
+      event: event ? event.title : null,
+      snapshot,
+      afterTemp:     s.temperature,
+      afterNZ:       s.netZeroProgress,
+      afterGrid:     s.gridReliability,
+      afterFin:      s.financialStability,
+      afterSoc:      s.socialStability,
+    };
+    s.log.push(logEntry);
+    s.lastSnapshot = snapshot;
+
+    // Phase 11: Advance turn
+    s.turn++;
+    s.year += 5;
+    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+    s.spentThisTurn = 0;
+
+    // Recalculate budget for next turn
+    s.budget = this.getEffectiveBudget();
+
+    // Check end game
+    let endgame = null;
+    if (s.gameOver || s.turn > 5) {
+      endgame = evaluateEndgame(s);
+    }
+
+    return { logEntry, event, endgame };
+  }
+
+  _applyInvestments() {
+    const s = this.state;
+    const d = s.currentDecisions;
+
+    // Energy Transition
+    const et = d.energyTransition;
+    if (et > 0) {
+      s.energy.wind    = this._clamp(s.energy.wind    + et * 8,  0, 120);
+      s.energy.solar   = this._clamp(s.energy.solar   + et * 6,  0, 100);
+      s.energy.gas     = this._clamp(s.energy.gas     - et * 7,  0, 100);
+      s.netZeroProgress = this._clamp(s.netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
+      s.strandedAssets  = this._clamp(s.strandedAssets  + et * 12, 0, 100);
+      s.infrastructure.energyTransition += et * 30;
+    }
+
+    // Grid & Storage
+    const gs = d.gridAndStorage;
+    if (gs > 0) {
+      s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
+      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
+      s.infrastructure.gridAndStorage += gs * 35;
+    }
+
+    // Adaptation
+    const ad = d.adaptation;
+    if (ad > 0) {
+      s.socialStability = this._clamp(s.socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
+      s.infrastructure.adaptation += ad * 25;
+    }
+
+    // Social Support
+    const ss = d.socialSupport;
+    if (ss > 0) {
+      s.socialStability    = this._clamp(s.socialStability    + ss * 8 * techTree.multipliers.socialGain, 0, 100);
+      s.financialStability = this._clamp(s.financialStability + ss * 3, 0, 100);
+      s.infrastructure.socialSupport += ss * 20;
+    }
+
+    // Financial Resilience
+    const fr = d.financialResilience;
+    if (fr > 0) {
+      s.financialStability = this._clamp(s.financialStability + fr * 10 * techTree.multipliers.finGain, 0, 100);
+      s.strandedAssets     = this._clamp(s.strandedAssets     - fr * 8,  0, 100);
+      s.propertyValue      = this._clamp(s.propertyValue      + fr * 5,  0, 100);
+      s.infrastructure.financialResilience += fr * 30;
+    }
+
+    // Research — purchases next TechTree upgrade; no infrastructure gain
+    const rs = d.research;
+    if (rs > 0) {
+      techTree.purchase();
+    }
+  }
+
+  _recalcGrid() {
+    const s = this.state;
+    const e = s.energy;
+    const gridFactor = 1 + (s.infrastructure.gridAndStorage / 300);
+    const backup  = e.nuclear + e.storage + (e.gas * 0.5);
+    const renew   = Math.max(e.wind + e.solar, 1);
+    const raw     = (backup / renew) * gridFactor * 50;
+    s.gridReliability = this._clamp(Math.round(raw), 0, 100);
+  }
+
+  _recalcFinancial() {
+    const s = this.state;
+    const strandedDrag  = s.strandedAssets * 0.4;
+    const propertyBonus = (s.propertyValue - 50) * 0.3;
+    const resBonus      = s.infrastructure.financialResilience * 0.2;
+    s.financialStability = this._clamp(
+      Math.round(70 - strandedDrag + propertyBonus + resBonus), 0, 100
+    );
+  }
+
+  _recalcSocial() {
+    const s = this.state;
+    const gridPenalty = s.gridReliability < 40 ? (40 - s.gridReliability) * 0.5 : 0;
+    const finPenalty  = s.financialStability < 40 ? (40 - s.financialStability) * 0.4 : 0;
+    const supBonus    = s.infrastructure.socialSupport * 0.3;
+    s.socialStability = this._clamp(
+      Math.round(75 + supBonus - gridPenalty - finPenalty), 0, 100
+    );
+  }
+
+  _progressTemp() {
+    const s = this.state;
+    const e = s.energy;
+    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
+    const gasShare     = total > 0 ? e.gas / total : 0;
+    const renewShare   = total > 0 ? (e.wind + e.solar) / total : 0;
+    let delta = 0.1 + (gasShare - renewShare) * 0.15;
+    delta = Math.max(delta, 0.02);
+    if (s.netZeroAchieved) delta *= 0.5;
+    s.temperature = Math.round((s.temperature + delta) * 100) / 100;
+  }
+
+  _resolveEvent() {
+    const s = this.state;
+    const excess = Math.max(s.temperature - 1.1, 0);
+    const prob   = Math.min(0.10 + (excess / 0.1) * 0.015, 0.70);
+
+    if (Math.random() >= prob) return null;
+
+    // Build weighted pool based on temperature
+    let pool = [];
+    if (s.temperature < 1.5) {
+      pool = [
+        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
+        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
+        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
+        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+      ];
+    } else if (s.temperature < 2.0) {
+      pool = [
+        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
+        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
+        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
+        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
+        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+      ];
+    } else {
+      pool = [
+        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
+        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
+        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
+        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
+        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+      ];
+    }
+
+    // Filter conditional events
+    pool = pool.filter(item => !item.e.condition || item.e.condition(s));
+    if (pool.length === 0) return null;
+
+    // Weighted random selection
+    const totalW = pool.reduce((sum, item) => sum + item.w, 0);
+    let roll = Math.random() * totalW;
+    let selectedEvent = pool[pool.length - 1].e;
+    for (const item of pool) {
+      roll -= item.w;
+      if (roll <= 0) { selectedEvent = item.e; break; }
+    }
+
+    // Mitigation factor from adaptation
+    const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+
+    // Apply effects
+    const applied = {};
+    for (const [key, val] of Object.entries(selectedEvent.effects)) {
+      const mitigated = Math.round(val * (1 - mitigate));
+      applied[key] = mitigated;
+      if (key === 'temperature') {
+        s.temperature = Math.round((s.temperature + mitigated) * 100) / 100;
+      } else if (key === 'strandedAssets') {
+        s.strandedAssets = this._clamp(s.strandedAssets + mitigated, 0, 100);
+      } else if (s[key] !== undefined) {
+        s[key] = this._clamp(s[key] + mitigated, 0, 100);
+      }
+    }
+
+    // Budget penalty next turn
+    if (selectedEvent.budgetPenaltyNext > 0) {
+      const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
+      s.nextTurnBudgetPenalty += penaltyMitigated;
+    }
+
+    // Infrastructure stickiness damage
+    if (selectedEvent.infraDamage && s.infrastructure.adaptation < 40) {
+      s.energy.wind  = this._clamp(s.energy.wind  - 10, 0, 120);
+      s.energy.solar = this._clamp(s.energy.solar - 10, 0, 100);
+    }
+
+    return { ...selectedEvent, appliedEffects: applied };
+  }
+
+  _describeDecisions(d) {
+    const out = [];
+    if (d.energyTransition > 0)   out.push(`Energy Transition ×${d.energyTransition} (£${d.energyTransition * 30}bn)`);
+    if (d.gridAndStorage > 0)     out.push(`Grid & Storage ×${d.gridAndStorage} (£${d.gridAndStorage * 35}bn)`);
+    if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)`);
+    if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
+    if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
+    if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
+    if (out.length === 0) out.push('No investment this turn');
+    return out;
+  }
+
+  reset() {
+    this._initState();
+    this.state.budget = this.getEffectiveBudget();
+  }
+}
+
+/* ============================================================
+   END GAME EVALUATION
+============================================================ */
+
+function evaluateEndgame(state) {
+  const s = state;
+
+  if (s.socialBreakdownOccurred) {
+    return {
+      scenario: 'SOCIAL_BREAKDOWN',
+      icon: '💀',
+      title: 'Social Breakdown',
+      subtitle: 'The fabric of society has collapsed under the weight of climate and transition stress.',
+      narrative: buildBreakdownNarrative(s),
+      ngfsLabel: 'Beyond NGFS modelling — a failed-state outcome. Climate risk and transition mismanagement have combined catastrophically.',
+      colour: 'breakdown',
+    };
+  }
+
+  const nzReached = s.netZeroProgress >= 100;
+  const stabilityOk = s.financialStability >= 70 && s.socialStability >= 70;
+
+  if (nzReached && stabilityOk) {
+    return {
+      scenario: 'ORDERLY',
+      icon: '🌱',
+      title: 'Orderly Transition',
+      subtitle: 'Net Zero achieved — with societal cohesion and financial stability intact.',
+      narrative: buildOrderlyNarrative(s),
+      ngfsLabel: 'NGFS Scenario: Orderly Transition — Net Zero 2050, low physical risk, managed transition cost.',
+      colour: 'orderly',
+    };
+  }
+
+  if (nzReached && (s.financialStability < 30 || s.socialStability < 30)) {
+    return {
+      scenario: 'DISORDERLY',
+      icon: '⚠️',
+      title: 'Disorderly Transition',
+      subtitle: 'Net Zero technically reached — but at enormous human and financial cost.',
+      narrative: buildDisorderlyNarrative(s),
+      ngfsLabel: 'NGFS Scenario: Disorderly — Late or abrupt action; high transition risk realised alongside stranded assets and social fracture.',
+      colour: 'disorderly',
+    };
+  }
+
+  if (!nzReached && s.temperature >= 2.0) {
+    return {
+      scenario: 'HOT_HOUSE',
+      icon: '🔥',
+      title: 'Hot House World',
+      subtitle: `Climate commitments abandoned. Temperature reached ${s.temperature.toFixed(1)}°C.`,
+      narrative: buildHotHouseNarrative(s),
+      ngfsLabel: 'NGFS Scenario: Hot House World — Climate commitments not met; severe physical climate risk materialises.',
+      colour: 'hothouse',
+    };
+  }
+
+  // Partial progress — Below 2°C but not Net Zero
+  return {
+    scenario: 'MANAGED',
+    icon: '🌤️',
+    title: 'Managed Transition',
+    subtitle: `Temperature held to ${s.temperature.toFixed(1)}°C, but Net Zero targets missed.`,
+    narrative: buildManagedNarrative(s),
+    ngfsLabel: 'NGFS Scenario: Below 2°C — Gradual policy action limits warming but falls short of Net Zero ambition.',
+    colour: 'managed',
+  };
+}
+
+function buildOrderlyNarrative(s) {
+  const parts = [];
+  parts.push(`By 2050, the UK has achieved Net Zero emissions while maintaining social and financial cohesion — a rare outcome among advanced economies. Temperature settled at ${s.temperature.toFixed(1)}°C above pre-industrial levels, within manageable bounds.`);
+
+  if (s.infrastructure.energyTransition > 60) {
+    parts.push(`Sustained investment in energy transition — particularly the accelerated wind and solar buildout — drove emissions to near-zero, though it required careful management of stranded North Sea assets.`);
+  }
+  if (s.infrastructure.gridAndStorage > 60) {
+    parts.push(`Grid and storage investment proved decisive. Battery and pumped hydro capacity kept the lights on through the renewable ramp-up, preventing the reliability crises that afflicted less-prepared nations.`);
+  }
+  if (s.infrastructure.socialSupport > 40) {
+    parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
+  }
+  return parts.map(p => `<p>${p}</p>`).join('');
+}
+
+function buildDisorderlyNarrative(s) {
+  const parts = [];
+  parts.push(`Net Zero targets were technically reached by 2050, but the transition was neither smooth nor fair. Temperature reached ${s.temperature.toFixed(1)}°C — within limits — but the human and financial cost was severe.`);
+
+  if (s.strandedAssets > 50) {
+    parts.push(`Rapid fossil phase-out generated enormous stranded asset losses, which cascaded through pension funds and regional banks. The financial system absorbed shocks it was never designed for.`);
+  }
+  if (s.socialStability < 30) {
+    parts.push(`Public trust collapsed as energy costs rose and workers in fossil-dependent communities were left without adequate support. Social unrest and political instability became defining features of the late 2030s.`);
+  }
+  if (s.infrastructure.adaptation < 40) {
+    parts.push(`Underinvestment in climate adaptation meant that every flood and heatwave caused disproportionate damage, compounding the transition disruption with physical climate losses.`);
+  }
+  return parts.map(p => `<p>${p}</p>`).join('');
+}
+
+function buildHotHouseNarrative(s) {
+  const parts = [];
+  parts.push(`The UK failed to meet its Net Zero commitments. By 2050, temperature has reached ${s.temperature.toFixed(1)}°C above pre-industrial levels — a trajectory that locks in decades of escalating physical climate risk.`);
+
+  if (s.energy.gas > 30) {
+    parts.push(`Gas remained a dominant part of the energy mix throughout the period, preventing the emissions reductions needed to bend the temperature curve. The fossil economy proved deeply entrenched.`);
+  }
+  parts.push(`Insurance markets are contracting as flood and heat risk becomes uninsurable across large areas. Property values in coastal and low-lying areas have collapsed. The NHS faces unprecedented pressure from heat-related illness.`);
+
+  if (s.eventCount > 2) {
+    parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, each event reset progress by years.`);
+  }
+  return parts.map(p => `<p>${p}</p>`).join('');
+}
+
+function buildBreakdownNarrative(s) {
+  const parts = [];
+  parts.push(`A core national indicator reached zero — the simulation's most severe outcome. The combination of climate physical shocks, transition disruption, and misallocated investment proved too much for UK institutions to bear.`);
+  parts.push(`This outcome reflects the NGFS "failed state" risk: not modelled in standard climate scenarios precisely because it represents a complete breakdown of the policy framework. It is a warning, not a prediction.`);
+  parts.push(`Key lessons: grid reliability, financial stability, and social stability are not optional — they are the foundations on which any transition must be built. Neglecting one destabilises the others.`);
+  return parts.map(p => `<p>${p}</p>`).join('');
+}
+
+function buildManagedNarrative(s) {
+  const parts = [];
+  parts.push(`The UK made meaningful progress but fell short of full Net Zero commitment. Temperature settled at ${s.temperature.toFixed(1)}°C — below the critical 2°C threshold — through a combination of partial decarbonisation and moderate physical risk management.`);
+  parts.push(`Net Zero Progress reached ${s.netZeroProgress}%. With more aggressive energy transition investment in earlier turns, the full target may have been achievable. The remaining emissions gap will require further policy action beyond 2050.`);
+  if (s.financialStability > 60 && s.socialStability > 60) {
+    parts.push(`Stability metrics held. The cautious approach preserved financial and social cohesion, but at the cost of climate ambition. A more balanced strategy — accepting more transition risk earlier — might have achieved both.`);
+  }
+  return parts.map(p => `<p>${p}</p>`).join('');
+}
+
+/* ============================================================
+   UI CLASS
+============================================================ */
+
+class UI {
+  constructor(engine) {
+    this.engine = engine;
+    this._lastLogLength = 0;
+    this._pendingEvent = null;
+    this._bindElements();
+    this._bindEvents();
+  }
+
+  _bindElements() {
+    this.elYear      = document.getElementById('current-year');
+    this.elTurnCount = document.getElementById('turn-counter');
+    this.elPeriod    = document.getElementById('decision-period');
+    this.elNextYear  = document.getElementById('next-year-label');
+
+    this.elValTemp   = document.getElementById('val-temp');
+    this.elDeltaTemp = document.getElementById('delta-temp');
+    this.elBarTemp   = document.getElementById('bar-temp');
+
+    this.elValBudRem  = document.getElementById('val-budget-rem');
+    this.elValBudTot  = document.getElementById('val-budget-total');
+    this.elBarBudget  = document.getElementById('bar-budget');
+
+    this.metrics = [
+      { key: 'grid',  valId: 'val-grid', barId: 'bar-grid', deltaId: 'delta-grid' },
+      { key: 'fin',   valId: 'val-fin',  barId: 'bar-fin',  deltaId: 'delta-fin' },
+      { key: 'soc',   valId: 'val-soc',  barId: 'bar-soc',  deltaId: 'delta-soc' },
+      { key: 'nz',    valId: 'val-nz',   barId: 'bar-nz',   deltaId: 'delta-nz' },
+    ];
+
+    this.elSegWind    = document.getElementById('seg-wind');
+    this.elSegSolar   = document.getElementById('seg-solar');
+    this.elSegNuclear = document.getElementById('seg-nuclear');
+    this.elSegGas     = document.getElementById('seg-gas');
+    this.elLegWind    = document.getElementById('leg-wind');
+    this.elLegSolar   = document.getElementById('leg-solar');
+    this.elLegNuclear = document.getElementById('leg-nuclear');
+    this.elLegGas     = document.getElementById('leg-gas');
+
+    this.elBudStatus  = document.getElementById('budget-status');
+    this.elBudDisplay = document.getElementById('budget-remaining-display');
+    this.elTotalSpend = document.getElementById('total-spend');
+    this.elEndTurnBtn = document.getElementById('end-turn-btn');
+
+    this.elLogScroll  = document.getElementById('log-scroll');
+
+    this.elEventModal   = document.getElementById('event-modal');
+    this.elEventIcon    = document.getElementById('event-icon-display');
+    this.elEventTitle   = document.getElementById('event-title-display');
+    this.elEventDesc    = document.getElementById('event-desc-display');
+    this.elEventEffects = document.getElementById('event-effects-display');
+    this.elEventDismiss = document.getElementById('event-dismiss-btn');
+
+    this.elEndgame        = document.getElementById('endgame-overlay');
+    this.elEndgameCard    = document.getElementById('endgame-card');
+    this.elEndgameIcon    = document.getElementById('endgame-icon-display');
+    this.elEndgameTitle   = document.getElementById('endgame-title-display');
+    this.elEndgameSub     = document.getElementById('endgame-subtitle-display');
+    this.elEndgameMetrics = document.getElementById('endgame-metrics-grid');
+    this.elEndgameNarr    = document.getElementById('endgame-narrative-display');
+    this.elEndgameNgfs    = document.getElementById('endgame-ngfs-label');
+    this.elRestartBtn     = document.getElementById('restart-btn');
+
+    this.categories = Object.keys(BLOCK_COSTS);
+  }
+
+  _bindEvents() {
+    // Block +/- buttons
+    document.querySelectorAll('.block-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.dataset.cat;
+        const isMinus = btn.id.startsWith('minus-');
+        if (isMinus) {
+          this.engine.deallocateBlock(cat);
+        } else {
+          this.engine.allocateBlock(cat);
+        }
+        // Hide no-spend warning if any block is allocated
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        this.render(this.engine.getState());
+      });
+    });
+
+    // Advisor overlay dismiss
+    const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
+    if (advisorDismissBtn) {
+      advisorDismissBtn.addEventListener('click', () => {
+        document.getElementById('advisor-overlay').classList.add('hidden');
+      });
+    }
+
+    // No-spend warning element
+    this._noSpendWarned = false;
+    this.elNoSpendWarning = document.getElementById('no-spend-warning');
+
+    // End turn
+    this.elEndTurnBtn.addEventListener('click', async () => {
+      const s = this.engine.getState();
+      if (s.gameOver) return;
+
+      // Warn on zero spend (soft gate — second click proceeds)
+      if (s.spentThisTurn === 0 && !this._noSpendWarned) {
+        this._noSpendWarned = true;
+        this.elNoSpendWarning.classList.remove('hidden');
+        return;
+      }
+      this._noSpendWarned = false;
+      this.elNoSpendWarning.classList.add('hidden');
+
+      this.elEndTurnBtn.disabled = true;
+      await runSimulationPhase(this.engine, this, effectsMgr);
+      this.elEndTurnBtn.disabled = false;
+    });
+
+    // Event dismiss
+    this.elEventDismiss.addEventListener('click', () => {
+      this.hideEventModal();
+      if (this._pendingEndgame) {
+        this.showEndgame(this._pendingEndgame);
+        this._pendingEndgame = null;
+      } else {
+        this.render(this.engine.getState());
+      }
+    });
+
+    // Restart
+    this.elRestartBtn.addEventListener('click', () => {
+      this.engine.reset();
+      techTree.reset();
+      this.elEndgame.classList.add('hidden');
+      this._lastLogLength = 0;
+      this.elLogScroll.innerHTML = `
+        <div class="log-entry welcome">
+          <div class="log-year">2025 — Briefing</div>
+          <div class="log-text">UK Climate Strategy simulation begins. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
+        </div>`;
+      this.render(this.engine.getState());
+    });
+  }
+
+  render(state) {
+    this._renderHeader(state);
+    this._renderMetrics(state);
+    this._renderEnergyMix(state);
+    this._renderBudget(state);
+    this._renderCards(state);
+    this._renderScene(state);
+    effectsMgr.applyHeat(state.temperature);
+  }
+
+  _renderHeader(state) {
+    this.elYear.textContent      = state.year;
+    this.elTurnCount.textContent = `Turn ${state.turn + 1} of 6`;
+    const nextYr = state.year + 5;
+    this.elPeriod.textContent    = `${state.year}–${nextYr}`;
+    this.elNextYear.textContent  = nextYr;
+    if (state.turn >= 5) {
+      this.elEndTurnBtn.innerHTML = 'Complete Simulation &rarr;';
+    } else {
+      this.elEndTurnBtn.innerHTML = `Advance to <span id="next-year-label">${nextYr}</span> &rarr;`;
+      this.elNextYear = document.getElementById('next-year-label');
+    }
+
+    // Update turn pips
+    for (let i = 0; i < 6; i++) {
+      const pip = document.getElementById(`pip-${i}`);
+      if (!pip) continue;
+      pip.className = 'pip' + (i < state.turn ? ' done' : i === state.turn ? ' current' : '');
+    }
+  }
+
+  _renderMetrics(state) {
+    // Temperature: map 1.1–3.0°C to 0–100% — needle position
+    const tempPct = Math.round(((state.temperature - 1.1) / 1.9) * 100);
+    this.elValTemp.textContent  = state.temperature.toFixed(1);
+    this.elBarTemp.style.left   = Math.max(1, Math.min(99, tempPct)) + '%';
+    this._renderDelta(this.elDeltaTemp, state.temperature, state.lastSnapshot ? state.lastSnapshot.temperature : null, true, 2);
+
+    // Other metrics
+    const metricMap = {
+      grid: { val: state.gridReliability, snap: state.lastSnapshot ? state.lastSnapshot.gridReliability : null },
+      fin:  { val: state.financialStability, snap: state.lastSnapshot ? state.lastSnapshot.financialStability : null },
+      soc:  { val: state.socialStability, snap: state.lastSnapshot ? state.lastSnapshot.socialStability : null },
+      nz:   { val: state.netZeroProgress, snap: state.lastSnapshot ? state.lastSnapshot.netZeroProgress : null },
+    };
+
+    for (const m of this.metrics) {
+      const { val, snap } = metricMap[m.key];
+      document.getElementById(m.valId).textContent = Math.round(val);
+      const bar = document.getElementById(m.barId);
+      bar.style.width = Math.max(0, val) + '%';
+      // Status colour
+      const status = m.key === 'nz'
+        ? (val >= 100 ? 'good' : val >= 60 ? 'info' : val >= 30 ? 'warn' : 'danger')
+        : (val >= 60 ? 'good' : val >= 35 ? 'warn' : 'danger');
+      bar.className = 'bar-fill ' + status;
+      if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
+    }
+  }
+
+  _renderDelta(el, current, previous, invertBad, decimals) {
+    if (previous === null || previous === undefined) { el.textContent = ''; return; }
+    const diff = current - previous;
+    if (Math.abs(diff) < (decimals > 0 ? 0.05 : 1)) {
+      el.textContent = '';
+      el.className = 'metric-delta same';
+      return;
+    }
+    const sign = diff > 0 ? '+' : '';
+    el.textContent = sign + diff.toFixed(decimals);
+    // For temp, going up is bad
+    const isGood = invertBad ? diff < 0 : diff > 0;
+    el.className = 'metric-delta ' + (isGood ? 'up' : 'down');
+  }
+
+  _renderEnergyMix(state) {
+    const e = state.energy;
+    this.elSegWind.style.flexGrow    = e.wind;
+    this.elSegSolar.style.flexGrow   = e.solar;
+    this.elSegNuclear.style.flexGrow = e.nuclear;
+    this.elSegGas.style.flexGrow     = e.gas;
+    this.elLegWind.textContent    = Math.round(e.wind);
+    this.elLegSolar.textContent   = Math.round(e.solar);
+    this.elLegNuclear.textContent = Math.round(e.nuclear);
+    this.elLegGas.textContent     = Math.round(e.gas);
+  }
+
+  _renderBudget(state) {
+    const rem   = state.budget - state.spentThisTurn;
+    const spent = state.spentThisTurn;
+    const total = state.budget;
+    const remPct = total > 0 ? (rem / total) * 100 : 100;
+
+    this.elValBudRem.textContent  = rem;
+    this.elValBudTot.textContent  = total;
+    this.elBudDisplay.textContent = `\u00A3${rem}bn`;
+    this.elTotalSpend.innerHTML   = `&pound;${spent}bn`;
+    this.elBarBudget.style.width  = Math.max(0, remPct) + '%';
+
+    // Bar colour: green while healthy, warn when tight
+    const barCls = rem < 20 ? 'bar-fill danger' : rem < 40 ? 'bar-fill warn' : 'bar-fill good';
+    this.elBarBudget.className = barCls;
+
+    // Budget status class
+    this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+  }
+
+  _renderCards(state) {
+    for (const cat of this.categories) {
+      const count   = state.currentDecisions[cat];
+      const cost    = BLOCK_COSTS[cat];
+      const rem     = state.budget - state.spentThisTurn;
+      const canAdd  = count < MAX_BLOCKS_PER_CAT && rem >= cost;
+      const canRem  = count > 0;
+
+      document.getElementById(`count-${cat}`).textContent = count;
+      document.getElementById(`plus-${cat}`).disabled     = !canAdd;
+      document.getElementById(`minus-${cat}`).disabled    = !canRem;
+
+      const card = document.getElementById(`card-${cat}`);
+      card.classList.toggle('allocated',      count > 0 && count < MAX_BLOCKS_PER_CAT);
+      card.classList.toggle('maxed',          count >= MAX_BLOCKS_PER_CAT);
+      card.classList.toggle('unaffordable',   count === 0 && !canAdd);
+    }
+    this._renderResearchCard();
+  }
+
+  _renderResearchCard() {
+    const nextUpgrade = techTree.nextUpgrade();
+    const plusBtn = document.getElementById('plus-research');
+    if (!nextUpgrade || techTree.isComplete()) {
+      const nameEl = document.getElementById('research-upgrade-name');
+      if (nameEl) nameEl.textContent = 'All upgrades purchased';
+      const tagEl = document.getElementById('research-effect-tag');
+      if (tagEl) tagEl.style.display = 'none';
+      const doneEl = document.getElementById('research-all-done');
+      if (doneEl) doneEl.style.display = '';
+      if (plusBtn) plusBtn.disabled = true;
+    } else {
+      const nameEl = document.getElementById('research-upgrade-name');
+      if (nameEl) nameEl.textContent = nextUpgrade.name;
+      const tagEl = document.getElementById('research-effect-tag');
+      if (tagEl) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
+      const doneEl = document.getElementById('research-all-done');
+      if (doneEl) doneEl.style.display = 'none';
+    }
+  }
+
+  _renderScene(state) {
+    const infra = state.infrastructure;
+    const dec   = state.currentDecisions;
+
+    // Total blocks ever allocated (resolved) + this turn's preview
+    const res = {
+      energy:  Math.floor(infra.energyTransition   / 30),
+      grid:    Math.floor(infra.gridAndStorage      / 35),
+      adapt:   Math.floor(infra.adaptation          / 25),
+      social:  Math.floor(infra.socialSupport       / 20),
+      finance: Math.floor(infra.financialResilience / 30),
+    };
+    const lvl = {
+      energy:  res.energy  + dec.energyTransition,
+      grid:    res.grid    + dec.gridAndStorage,
+      adapt:   res.adapt   + dec.adaptation,
+      social:  res.social  + dec.socialSupport,
+      finance: res.finance + dec.financialResilience,
+    };
+
+    // Hide hint once anything has been built or allocated
+    const hint = document.getElementById('scene-hint');
+    if (hint) {
+      const anyBuilt = Object.values(lvl).some(v => v > 0);
+      hint.setAttribute('visibility', anyBuilt ? 'hidden' : 'visible');
+    }
+
+    // show(id, visible, isPreview)
+    const show = (id, visible, isPreview) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.setAttribute('visibility', visible ? 'visible' : 'hidden');
+      el.classList.toggle('scene-preview', visible && isPreview);
+    };
+
+    const preview = (resolvedLvl, totalLvl, threshold) =>
+      totalLvl >= threshold && resolvedLvl < threshold;
+
+    // TURBINES — 1 per energy block (max 4)
+    for (let i = 1; i <= 4; i++) {
+      show(`turbine-${i}`, lvl.energy >= i, preview(res.energy, lvl.energy, i));
+    }
+
+    // SOLAR ARRAYS — appear at block 1, 3, 5
+    [[1,1],[2,3],[3,5]].forEach(([idx, threshold]) => {
+      show(`solar-${idx}`, lvl.energy >= threshold, preview(res.energy, lvl.energy, threshold));
+    });
+
+    // PYLON — grid block 1+
+    show('pylon', lvl.grid >= 1, preview(res.grid, lvl.grid, 1));
+
+    // BATTERIES — 1 per grid block (max 4)
+    for (let i = 1; i <= 4; i++) {
+      show(`battery-${i}`, lvl.grid >= i, preview(res.grid, lvl.grid, i));
+    }
+
+    // NUCLEAR — grid block 3+
+    show('nuclear', lvl.grid >= 3, preview(res.grid, lvl.grid, 3));
+
+    // FLOOD WALLS — adapt block 1 and 3
+    show('flood-wall-1', lvl.adapt >= 1, preview(res.adapt, lvl.adapt, 1));
+    show('flood-wall-2', lvl.adapt >= 3, preview(res.adapt, lvl.adapt, 3));
+
+    // COMMUNITY BUILDINGS — social blocks 2, 4, 6
+    [[1,2],[2,4],[3,6]].forEach(([idx, threshold]) => {
+      show(`bldg-${idx}`, lvl.social >= threshold, preview(res.social, lvl.social, threshold));
+    });
+
+    // FINANCE TOWERS — finance blocks 1, 2, 4, 6
+    [[1,1],[2,2],[3,4],[4,6]].forEach(([idx, threshold]) => {
+      show(`fin-${idx}`, lvl.finance >= threshold, preview(res.finance, lvl.finance, threshold));
+    });
+  }
+
+  _addLogEntry(entry) {
+    const div = document.createElement('div');
+
+    // Colour-code by outcome
+    const tempDelta = entry.afterTemp - entry.snapshot.temperature;
+    const socDelta  = entry.afterSoc  - entry.snapshot.socialStability;
+    const overallGood = socDelta > 0 && tempDelta < 0.15;
+    div.className = 'log-entry ' + (entry.event ? 'event' : overallGood ? 'good' : 'warn');
+
+    let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
+
+    // Decisions
+    html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+
+    // Event notice
+    if (entry.event) {
+      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+    }
+
+    // Metric chips
+    html += '<div class="log-metrics">';
+    html += this._chip('Temp', entry.snapshot.temperature.toFixed(1), entry.afterTemp.toFixed(1), true, '°C');
+    html += this._chip('Grid', Math.round(entry.snapshot.gridReliability), Math.round(entry.afterGrid), false, '%');
+    html += this._chip('Fin',  Math.round(entry.snapshot.financialStability), Math.round(entry.afterFin), false, '%');
+    html += this._chip('Soc',  Math.round(entry.snapshot.socialStability), Math.round(entry.afterSoc), false, '%');
+    html += this._chip('NZ',   Math.round(entry.snapshot.netZeroProgress), Math.round(entry.afterNZ), false, '%');
+    html += '</div>';
+
+    div.innerHTML = html;
+    this.elLogScroll.appendChild(div);
+    this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
+  }
+
+  _chip(label, before, after, invertBad, unit) {
+    const diff = parseFloat(after) - parseFloat(before);
+    const significant = Math.abs(diff) >= (unit === '°C' ? 0.05 : 1);
+    if (!significant) return `<span class="log-metric-chip">${label}: ${after}${unit}</span>`;
+    const sign = diff > 0 ? '+' : '';
+    const isGood = invertBad ? diff < 0 : diff > 0;
+    const cls = isGood ? 'up' : 'down';
+    return `<span class="log-metric-chip ${cls}">${label}: ${sign}${diff.toFixed(unit === '°C' ? 1 : 0)}${unit}</span>`;
+  }
+
+  showEventModal(event) {
+    this.elEventIcon.textContent  = event.icon;
+    this.elEventTitle.textContent = event.title;
+    this.elEventDesc.textContent  = event.description;
+
+    let effectsHtml = '';
+    const labelMap = {
+      propertyValue:       'Property Value',
+      socialStability:     'Social Stability',
+      financialStability:  'Financial Stability',
+      gridReliability:     'Grid Reliability',
+      temperature:         'Temperature',
+      strandedAssets:      'Stranded Assets',
+    };
+    for (const [key, val] of Object.entries(event.appliedEffects)) {
+      const label = labelMap[key] || key;
+      const cls = key === 'temperature' || key === 'strandedAssets'
+        ? (val > 0 ? 'neg' : 'pos')
+        : (val < 0 ? 'neg' : 'pos');
+      const sign = val > 0 ? '+' : '';
+      const suffix = key === 'temperature' ? '°C' : '%';
+      effectsHtml += `
+        <div class="event-effect-row">
+          <span class="event-effect-label">${label}</span>
+          <span class="event-effect-val ${cls}">${sign}${val}${suffix}</span>
+        </div>`;
+    }
+    if (event.budgetPenaltyNext > 0) {
+      effectsHtml += `
+        <div class="event-effect-row">
+          <span class="event-effect-label">Next Turn Budget</span>
+          <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
+        </div>`;
+    }
+    this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
+
+    this.elEventModal.classList.remove('hidden');
+  }
+
+  hideEventModal() {
+    this.elEventModal.classList.add('hidden');
+  }
+
+  showEndgame(result) {
+    const s = this.engine.state;
+
+    this.elEndgameCard.className = result.colour;
+    this.elEndgameIcon.textContent  = result.icon;
+    this.elEndgameTitle.textContent = result.title;
+    this.elEndgameSub.textContent   = result.subtitle;
+
+    // Metrics grid
+    const tempStatus  = s.temperature < 1.8 ? 'good' : s.temperature < 2.2 ? 'warn' : 'danger';
+    const nzStatus    = s.netZeroProgress >= 100 ? 'good' : s.netZeroProgress >= 60 ? 'warn' : 'danger';
+    const gridStatus  = s.gridReliability >= 60 ? 'good' : s.gridReliability >= 35 ? 'warn' : 'danger';
+    const finStatus   = s.financialStability >= 60 ? 'good' : s.financialStability >= 35 ? 'warn' : 'danger';
+    const socStatus   = s.socialStability >= 60 ? 'good' : s.socialStability >= 35 ? 'warn' : 'danger';
+
+    this.elEndgameMetrics.innerHTML = `
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Final Temperature</div>
+        <div class="endgame-metric-val ${tempStatus}">${s.temperature.toFixed(1)}°C</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Net Zero Progress</div>
+        <div class="endgame-metric-val ${nzStatus}">${Math.round(s.netZeroProgress)}%</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Grid Reliability</div>
+        <div class="endgame-metric-val ${gridStatus}">${Math.round(s.gridReliability)}%</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Financial Stability</div>
+        <div class="endgame-metric-val ${finStatus}">${Math.round(s.financialStability)}%</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Social Stability</div>
+        <div class="endgame-metric-val ${socStatus}">${Math.round(s.socialStability)}%</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Climate Events</div>
+        <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
+      </div>`;
+
+    this.elEndgameNarr.innerHTML = result.narrative;
+    this.elEndgameNgfs.textContent = result.ngfsLabel;
+    this.elEndgame.classList.remove('hidden');
+  }
+}
+
+/* ============================================================
+   MODULE: EFFECTS MANAGER
+============================================================ */
+
+class EffectsManager {
+  constructor() {
+    this._shakeTimer = null;
+  }
+
+  applyHeat(temperature) {
+    const t = Math.max(0, Math.min(1, (temperature - 1.1) / 1.9));
+    const sepia    = Math.round(t * 40);
+    const contrast = Math.round(100 + t * 20);
+    const saturate = Math.round(100 - t * 22);
+    document.body.style.filter =
+      `sepia(${sepia}%) contrast(${contrast}%) saturate(${saturate}%)`;
+  }
+
+  shake() {
+    const el = document.getElementById('game-header');
+    if (!el) return;
+    el.classList.remove('fx-shake');
+    void el.offsetWidth;
+    el.classList.add('fx-shake');
+    clearTimeout(this._shakeTimer);
+    this._shakeTimer = setTimeout(() => el.classList.remove('fx-shake'), 500);
+  }
+
+  pulse(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('fx-pulse');
+    void el.offsetWidth;
+    el.classList.add('fx-pulse');
+    setTimeout(() => el.classList.remove('fx-pulse'), 800);
+  }
+
+  pulseAll() {
+    const ids = ['bar-temp', 'bar-budget', 'bar-grid', 'bar-fin', 'bar-soc', 'bar-nz'];
+    ids.forEach((id, i) => setTimeout(() => this.pulse(id), i * 90));
+  }
+
+  haptic(style = 'medium') {
+    if (window.Capacitor?.Plugins?.Haptics) {
+      const map = { light: 'LIGHT', medium: 'MEDIUM', heavy: 'HEAVY' };
+      window.Capacitor.Plugins.Haptics.impact({ style: map[style] || 'MEDIUM' });
+      return;
+    }
+    if (navigator.vibrate) {
+      const patterns = { light: [15], medium: [35], heavy: [55, 25, 55] };
+      navigator.vibrate(patterns[style] || [35]);
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: TECH TREE MANAGER
+============================================================ */
+
+const RESEARCH_UPGRADES = [
+  {
+    id:   'solar_supply_chain',
+    name: 'Solar Supply Chain',
+    desc: 'Energy blocks give 1.5× Net Zero progress',
+    apply(m) { m.energyNZ = 1.5; },
+  },
+  {
+    id:   'battery_density',
+    name: 'Battery Energy Density',
+    desc: 'Grid blocks give 1.4× Storage per block',
+    apply(m) { m.gridStorage = 1.4; },
+  },
+  {
+    id:   'community_networks',
+    name: 'Community Resilience Hubs',
+    desc: 'Social Support blocks give 1.5× Social Stability',
+    apply(m) { m.socialGain = 1.5; },
+  },
+  {
+    id:   'green_finance_regs',
+    name: 'Green Finance Regulations',
+    desc: 'Financial Resilience blocks give 1.5× Stability gain',
+    apply(m) { m.finGain = 1.5; },
+  },
+  {
+    id:   'ai_flood_prediction',
+    name: 'AI Flood Prediction',
+    desc: 'Adaptation blocks give 1.6× event damage mitigation',
+    apply(m) { m.adaptMitigate = 1.6; },
+  },
+];
+
+class TechTreeManager {
+  constructor() {
+    this.multipliers = {
+      energyNZ:      1.0,
+      gridStorage:   1.0,
+      socialGain:    1.0,
+      finGain:       1.0,
+      adaptMitigate: 1.0,
+    };
+    this._purchased = new Set();
+  }
+
+  nextUpgrade() {
+    return RESEARCH_UPGRADES.find(u => !this._purchased.has(u.id)) || null;
+  }
+
+  purchase() {
+    const upgrade = this.nextUpgrade();
+    if (!upgrade) return null;
+    upgrade.apply(this.multipliers);
+    this._purchased.add(upgrade.id);
+    return upgrade;
+  }
+
+  isComplete() {
+    return this._purchased.size >= RESEARCH_UPGRADES.length;
+  }
+
+  reset() {
+    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this._purchased.clear();
+  }
+}
+
+/* ============================================================
+   MODULE: SIMULATION RUNNER
+============================================================ */
+
+const MINI_EVENTS_POOL = [
+  {
+    id: 'mini_heatwave',
+    icon: '🌡️',
+    title: 'Heatwave Warning',
+    prompt: 'Deploy emergency cooling centres across England?',
+    yesLabel: 'Deploy — costs £5bn next turn',
+    noLabel: 'Hold (−4 Social Stability)',
+    onYes: (s) => { s.nextTurnBudgetPenalty += 5; },
+    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 4); },
+    condition: (s) => s.temperature > 1.3,
+  },
+  {
+    id: 'mini_grid_stress',
+    icon: '⚡',
+    title: 'Grid Under Stress',
+    prompt: 'Commission emergency gas peaker plant?',
+    yesLabel: 'Commission — costs £8bn next turn',
+    noLabel: 'Risk it (−5 Grid Reliability)',
+    onYes: (s) => { s.nextTurnBudgetPenalty += 8; },
+    onNo:  (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); },
+    condition: (s) => s.gridReliability < 65,
+  },
+  {
+    id: 'mini_protest',
+    icon: '✊',
+    title: 'Fuel Cost Protests',
+    prompt: 'Announce an emergency energy support package?',
+    yesLabel: 'Announce — costs £6bn next turn',
+    noLabel: 'No comment (−5 Social Stability)',
+    onYes: (s) => { s.nextTurnBudgetPenalty += 6; },
+    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 5); },
+    condition: (s) => s.socialStability < 75,
+  },
+  {
+    id: 'mini_flood',
+    icon: '🌊',
+    title: 'Flash Flood Response',
+    prompt: 'Mobilise emergency flood response teams?',
+    yesLabel: 'Mobilise — costs £5bn next turn',
+    noLabel: 'Stand down (−4 Financial Stability)',
+    onYes: (s) => { s.nextTurnBudgetPenalty += 5; },
+    onNo:  (s) => { s.financialStability = Math.max(0, s.financialStability - 4); },
+    condition: (s) => s.temperature > 1.2,
+  },
+];
+
+async function runSimulationPhase(engine, ui, fxMgr) {
+  const startYear = engine.getState().year;
+
+  // Resolve turn instantly behind the curtain
+  const result = engine.resolveTurn();
+
+  // Build and mount overlay
+  const overlay = _buildSimOverlay(startYear);
+  document.body.appendChild(overlay);
+
+  // Tick through years with possible mini-events
+  let minisFired = 0;
+  for (const offset of [1, 2, 3, 4]) {
+    _setSimYear(overlay, startYear + offset);
+    _setSimProgress(overlay, (offset / 5) * 80);
+    await _delay(520);
+
+    if (minisFired < 2 && Math.random() < 0.50) {
+      const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
+      if (eligible.length > 0) {
+        const evt = eligible[Math.floor(Math.random() * eligible.length)];
+        fxMgr.haptic('medium');
+        await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
+        minisFired++;
+      }
+    }
+  }
+
+  // Complete progress bar
+  _setSimYear(overlay, startYear + 5);
+  _setSimProgress(overlay, 100);
+  _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
+  await _delay(700);
+
+  // Dismiss overlay
+  overlay.classList.add('sim-fade-out');
+  await _delay(380);
+  overlay.remove();
+
+  // Recalculate next-turn budget to include any mini-event penalties
+  // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
+  engine.state.budget = engine.getEffectiveBudget();
+
+  // Hand off to normal UI flow
+  ui._addLogEntry(result.logEntry);
+
+  if (result.event) {
+    fxMgr.haptic('heavy');
+    fxMgr.shake();
+    ui._pendingEndgame = result.endgame;
+    ui.showEventModal(result.event);
+  } else if (result.endgame) {
+    ui.showEndgame(result.endgame);
+  } else {
+    ui.render(engine.getState());
+    fxMgr.pulseAll();
+  }
+}
+
+function _buildSimOverlay(startYear) {
+  const d = document.createElement('div');
+  d.id = 'sim-overlay';
+  d.innerHTML = `
+    <div id="sim-card">
+      <div id="sim-header">
+        <span id="sim-year-label">SIMULATING</span>
+        <span id="sim-year">${startYear + 1}</span>
+      </div>
+      <div id="sim-progress-track">
+        <div id="sim-progress-fill" style="width:0%"></div>
+      </div>
+      <div id="sim-status">Running 5-year policy simulation\u2026</div>
+    </div>`;
+  return d;
+}
+
+function _setSimYear(overlay, year) {
+  const el = overlay.querySelector('#sim-year');
+  if (el) el.textContent = year;
+}
+
+function _setSimProgress(overlay, pct) {
+  const el = overlay.querySelector('#sim-progress-fill');
+  if (el) el.style.width = pct + '%';
+}
+
+function _setSimStatus(overlay, text) {
+  const el = overlay.querySelector('#sim-status');
+  if (el) el.textContent = text;
+}
+
+function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
+  return new Promise(resolve => {
+    const panel = document.createElement('div');
+    panel.id = 'mini-event-panel';
+    panel.innerHTML = `
+      <div class="mini-event-icon">${evt.icon}</div>
+      <div class="mini-event-year">${year}</div>
+      <div class="mini-event-title">${evt.title}</div>
+      <div class="mini-event-prompt">${evt.prompt}</div>
+      <div class="mini-event-actions">
+        <button class="mini-btn yes-btn">${evt.yesLabel}</button>
+        <button class="mini-btn no-btn">${evt.noLabel}</button>
+      </div>`;
+
+    overlay.querySelector('#sim-card').appendChild(panel);
+
+    const cleanup = (handler) => {
+      handler(engine.state);
+      fxMgr.haptic('light');
+      panel.classList.add('sim-fade-out');
+      setTimeout(() => { panel.remove(); resolve(); }, 300);
+    };
+
+    panel.querySelector('.yes-btn').addEventListener('click', () => cleanup(evt.onYes), { once: true });
+    panel.querySelector('.no-btn').addEventListener('click',  () => cleanup(evt.onNo),  { once: true });
+  });
+}
+
+function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ============================================================
+   MODULE: LEGACY SYSTEM
+============================================================ */
+
+class LegacySystem {
+  constructor() {
+    this._KEY = 'uk_climate_legacy_v1';
+    this.data  = this._load();
+  }
+
+  _load() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      return raw ? JSON.parse(raw) : { runs: 0, xp: 0, bestScore: 0 };
+    } catch { return { runs: 0, xp: 0, bestScore: 0 }; }
+  }
+
+  _save() {
+    try { localStorage.setItem(this._KEY, JSON.stringify(this.data)); } catch {}
+  }
+
+  recordRun(finalState) {
+    const score = Math.round(
+      finalState.socialStability +
+      finalState.financialStability +
+      finalState.netZeroProgress
+    );
+    this.data.runs++;
+    this.data.xp += score;
+    if (score > this.data.bestScore) this.data.bestScore = score;
+    this._save();
+    return { score, level: this.level(), title: this.title() };
+  }
+
+  level() {
+    const xp = this.data.xp;
+    if (xp >= 900) return 10;
+    if (xp >= 600) return 7;
+    if (xp >= 350) return 5;
+    if (xp >= 150) return 3;
+    return 1;
+  }
+
+  title() {
+    const lvl = this.level();
+    if (lvl >= 10) return 'Prime Minister';
+    if (lvl >= 5)  return 'Chancellor';
+    if (lvl >= 3)  return 'Secretary of State';
+    return 'Shadow Minister';
+  }
+
+  startingBonuses() {
+    const lvl = this.level();
+    return {
+      budgetBonus:     lvl >= 5  ? 20 : 0,
+      nuclearUnlocked: lvl >= 10,
+      title:           this.title(),
+    };
+  }
+}
+
+/* ============================================================
+   INITIALISATION
+============================================================ */
+
+const engine       = new GameEngine();
+const techTree     = new TechTreeManager();
+const effectsMgr   = new EffectsManager();
+const legacySystem = new LegacySystem();
+
+// Apply legacy starting bonuses
+engine.state.budget = engine.getEffectiveBudget();
+const _bonuses = legacySystem.startingBonuses();
+if (_bonuses.budgetBonus > 0) {
+  engine.state.budget += _bonuses.budgetBonus;
+}
+
+// Set header subtitle
+const _titleEl = document.querySelector('#game-title p');
+if (_titleEl) _titleEl.textContent = 'HM Government \u00B7 Climate Risk Simulation';
+
+// Move scene section to full-width strip below game-main
+const sceneSection = document.getElementById('scene-section');
+const gameMain     = document.getElementById('game-main');
+if (sceneSection && gameMain) gameMain.after(sceneSection);
+
+const ui = new UI(engine);
+ui.render(engine.getState());
+
+// Register service worker for PWA offline support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
