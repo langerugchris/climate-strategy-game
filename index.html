@@ -2122,6 +2122,7 @@ class GameEngine {
       year: 2025,
       gameOver: false,
       gameOverReason: null,
+      isResolvingTurn: false,
       temperature: 1.1,
       netZeroProgress: 0,
       gridReliability: 65,
@@ -2179,6 +2180,7 @@ class GameEngine {
 
   allocateBlock(category) {
     const s = this.state;
+    if (s.isResolvingTurn) return { success: false, reason: 'Turn in progress' };
     const cost = BLOCK_COSTS[category];
     const current = s.currentDecisions[category];
     if (current >= MAX_BLOCKS_PER_CAT) return { success: false, reason: 'Max 2 blocks per category' };
@@ -2190,6 +2192,7 @@ class GameEngine {
 
   deallocateBlock(category) {
     const s = this.state;
+    if (s.isResolvingTurn) return;
     if (s.currentDecisions[category] <= 0) return;
     s.currentDecisions[category]--;
     s.spentThisTurn -= BLOCK_COSTS[category];
@@ -2687,11 +2690,13 @@ class UI {
   }
 
   _bindEvents() {
-    // Block +/- buttons
+    // Block +/- buttons — pointerdown for zero-latency input
     document.querySelectorAll('.block-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
         const cat = btn.dataset.cat;
         const isMinus = btn.id.startsWith('minus-');
+        effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
         } else {
@@ -2702,6 +2707,19 @@ class UI {
         this._noSpendWarned = false;
         this.render(this.engine.getState());
       });
+    });
+
+    // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
+    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
+    document.addEventListener('keydown', (e) => {
+      if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
+      if (keyMap[e.key]) {
+        if (e.shiftKey) this.engine.deallocateBlock(keyMap[e.key]);
+        else this.engine.allocateBlock(keyMap[e.key]);
+        this.render(this.engine.getState());
+      } else if (e.key === 'Enter' && !e.repeat) {
+        this.elEndTurnBtn.click();
+      }
     });
 
     // Advisor overlay dismiss
@@ -2795,7 +2813,8 @@ class UI {
   _renderMetrics(state) {
     // Temperature: map 1.1–3.0°C to 0–100% — needle position
     const tempPct = Math.round(((state.temperature - 1.1) / 1.9) * 100);
-    this.elValTemp.textContent  = state.temperature.toFixed(1);
+    const prevTemp = state.lastSnapshot ? state.lastSnapshot.temperature : state.temperature;
+    this._rollNumber(this.elValTemp, prevTemp, state.temperature, 800, 1);
     this.elBarTemp.style.left   = Math.max(1, Math.min(99, tempPct)) + '%';
     this._renderDelta(this.elDeltaTemp, state.temperature, state.lastSnapshot ? state.lastSnapshot.temperature : null, true, 2);
 
@@ -2809,7 +2828,9 @@ class UI {
 
     for (const m of this.metrics) {
       const { val, snap } = metricMap[m.key];
-      document.getElementById(m.valId).textContent = Math.round(val);
+      const el = document.getElementById(m.valId);
+      const startVal = snap !== null ? Math.round(snap) : Math.round(val);
+      this._rollNumber(el, startVal, Math.round(val), 800, 0);
       const bar = document.getElementById(m.barId);
       bar.style.width = Math.max(0, val) + '%';
       // Status colour
@@ -2834,6 +2855,28 @@ class UI {
     // For temp, going up is bad
     const isGood = invertBad ? diff < 0 : diff > 0;
     el.className = 'metric-delta ' + (isGood ? 'up' : 'down');
+  }
+
+  _rollNumber(element, startVal, endVal, duration, decimals = 0) {
+    if (startVal === endVal) { element.textContent = endVal.toFixed(decimals); return; }
+    // Cancel any existing roll on this element
+    if (element._rollRAF) cancelAnimationFrame(element._rollRAF);
+    const startTime = performance.now();
+    const step = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOutExpo — snappy start, slow finish
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const currentVal = startVal + (endVal - startVal) * ease;
+      element.textContent = currentVal.toFixed(decimals);
+      if (progress < 1) {
+        element._rollRAF = requestAnimationFrame(step);
+      } else {
+        element.textContent = endVal.toFixed(decimals);
+        element._rollRAF = null;
+      }
+    };
+    element._rollRAF = requestAnimationFrame(step);
   }
 
   _renderEnergyMix(state) {
@@ -3318,6 +3361,9 @@ const MINI_EVENTS_POOL = [
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
 
+  // Lock inputs during simulation
+  engine.state.isResolvingTurn = true;
+
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
 
@@ -3357,6 +3403,9 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Recalculate next-turn budget to include any mini-event penalties
   // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
   engine.state.budget = engine.getEffectiveBudget();
+
+  // Unlock inputs — simulation complete
+  engine.state.isResolvingTurn = false;
 
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
