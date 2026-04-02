@@ -38,6 +38,7 @@
   --energy-storage: #448aff;
   --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'Courier New', Courier, monospace;
+  --font-editorial: Georgia, 'Times New Roman', serif;
   --gap-xs: 4px;
   --gap-sm: 8px;
   --gap-md: 16px;
@@ -609,6 +610,7 @@ body {
   font-size: 12px;
   color: var(--text-primary);
   line-height: 1.5;
+  font-family: var(--font-editorial);
 }
 
 .log-metrics {
@@ -683,6 +685,7 @@ body {
   text-align: center;
   margin-bottom: var(--gap-md);
   line-height: 1.6;
+  font-family: var(--font-editorial);
 }
 
 #event-effects-display {
@@ -818,6 +821,7 @@ body {
   margin-bottom: var(--gap-lg);
   border-left: 3px solid var(--border-strong);
   padding-left: var(--gap-md);
+  font-family: var(--font-editorial);
 }
 
 #endgame-narrative-display p + p { margin-top: var(--gap-sm); }
@@ -888,6 +892,26 @@ body {
   color: var(--text-secondary);
   margin-bottom: var(--gap-md);
   line-height: 1.6;
+  font-family: var(--font-editorial);
+}
+
+.advisor-from {
+  font-size: 11px !important;
+  font-family: var(--font-mono) !important;
+  color: var(--text-muted) !important;
+  border-left: 2px solid var(--border-strong);
+  padding-left: var(--gap-sm);
+  margin-bottom: var(--gap-lg) !important;
+  line-height: 1.8 !important;
+}
+
+.advisor-note {
+  font-size: 12px !important;
+  color: var(--text-muted) !important;
+  font-style: italic;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--gap-sm);
+  margin-top: var(--gap-sm) !important;
 }
 
 #advisor-card ul {
@@ -1119,7 +1143,8 @@ body { transition: filter 2s ease; }
 .mini-event-icon   { font-size: 28px; text-align: center; margin-bottom: 5px; }
 .mini-event-year   { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); text-align: center; }
 .mini-event-title  { font-size: 14px; font-weight: 700; color: var(--status-warn); text-align: center; margin: 4px 0 6px; }
-.mini-event-prompt { font-size: 12px; color: var(--text-secondary); text-align: center; line-height: 1.5; margin-bottom: var(--gap-md); }
+.mini-event-prompt { font-size: 12px; color: var(--text-secondary); text-align: center; line-height: 1.5; margin-bottom: 8px; }
+.mini-event-explain { font-size: 11px; color: var(--text-muted); text-align: left; line-height: 1.6; background: rgba(255,255,255,0.04); border-left: 2px solid var(--status-warn); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 7px 10px; margin-bottom: var(--gap-md); }
 .mini-event-actions { display: flex; flex-direction: column; gap: 7px; }
 
 .mini-btn {
@@ -1270,6 +1295,224 @@ body { transition: filter 2s ease; }
   /* Event modal: comfortable on small screen */
   #event-card { padding: var(--gap-lg); }
 }
+
+/* ===== HOOK SCREEN ===== */
+#hook-screen {
+  position: fixed;
+  inset: 0;
+  background: #04080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--gap-xl);
+}
+#hook-screen.hidden { display: none; }
+#hook-content {
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+}
+#hook-year {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-md);
+}
+#hook-headline {
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-lg);
+  letter-spacing: -0.02em;
+}
+#hook-body {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #c8d0e0;
+  margin-bottom: var(--gap-xl);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+#hook-stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-xl);
+  margin-bottom: var(--gap-xl);
+  flex-wrap: wrap;
+}
+.hook-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.hook-stat-num {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  font-variant-numeric: tabular-nums;
+}
+.hook-stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  max-width: 120px;
+  text-align: center;
+}
+#hook-btn {
+  display: inline-block;
+  padding: 16px 40px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-bottom: var(--gap-lg);
+  touch-action: manipulation;
+}
+#hook-btn:hover { background: var(--accent-blue-lt); }
+#hook-btn:active { transform: scale(0.97); }
+#hook-source {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ===== EVENT STORY BLOCKQUOTE ===== */
+#event-story-display {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--text-secondary);
+  border-left: 3px solid var(--status-danger);
+  padding: var(--gap-sm) var(--gap-md);
+  margin: var(--gap-md) 0;
+  line-height: 1.65;
+  background: rgba(255,61,0,0.04);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+#event-story-display:empty { display: none; }
+
+/* ===== SKY COLOR TRANSITION ===== */
+#scene-sky { transition: fill 2s ease; }
+
+/* ===== FLOOD WATER ===== */
+#flood-water { transition: opacity 0.5s ease; }
+
+/* ===== ENDGAME SCORE SECTION ===== */
+#endgame-score-section {
+  text-align: center;
+  margin-bottom: var(--gap-lg);
+  padding: var(--gap-lg);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-strong);
+}
+#endgame-score-total {
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--accent-blue-lt);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+#endgame-score-max {
+  font-size: 28px;
+  color: var(--text-muted);
+}
+#endgame-score-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin: var(--gap-sm) 0 var(--gap-md);
+}
+#endgame-score-breakdown {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-lg);
+  margin-bottom: var(--gap-md);
+  flex-wrap: wrap;
+}
+.score-dim {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.score-dim-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.score-dim-name {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+#endgame-score-benchmark {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+/* ===== SHARE BUTTON ===== */
+#share-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-bottom: var(--gap-sm);
+  touch-action: manipulation;
+}
+#share-btn:hover { background: var(--border-strong); }
+
+/* ===== THRESHOLD MARKER TOOLTIP ===== */
+.threshold-marker::after {
+  content: '40%';
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: var(--status-danger);
+  white-space: nowrap;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ===== CARD CITATION ===== */
+.card-citation {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* ===== LOG NARRATIVE ===== */
+.log-narrative {
+  font-size: 12px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-family: Georgia, 'Times New Roman', serif;
+  margin-bottom: 4px;
+}
 </style>
 </head>
 <body>
@@ -1311,7 +1554,7 @@ body { transition: filter 2s ease; }
       <!-- Temperature -->
       <div class="metric-block">
         <div class="metric-label-row">
-          <span class="metric-name">🌡️ Temperature</span>
+          <span class="metric-name">🌡️ UK Warming Pathway</span>
           <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span></span>
         </div>
         <div class="bar-track temp-track" style="position:relative">
@@ -1319,9 +1562,10 @@ body { transition: filter 2s ease; }
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:2px;">
           <span style="font-size:10px;color:var(--text-muted)">1.1°C</span>
-          <span style="font-size:10px;color:var(--status-warn)">▲ 2.0°C target</span>
+          <span style="font-size:10px;color:var(--status-warn)">▲ 2.0°C Paris limit</span>
           <span style="font-size:10px;color:var(--text-muted)">3.0°C</span>
         </div>
+        <div style="font-size:9px;color:var(--text-muted);margin-top:3px;line-height:1.4;">UK domestic pathway · if replicated globally → global temp</div>
       </div>
 
       <!-- Budget -->
@@ -1344,7 +1588,7 @@ body { transition: filter 2s ease; }
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-grid" style="width:65%"></div>
-          <div class="threshold-marker" style="left:40%"></div>
+          <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
         </div>
       </div>
 
@@ -1356,7 +1600,7 @@ body { transition: filter 2s ease; }
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-fin" style="width:70%"></div>
-          <div class="threshold-marker" style="left:40%"></div>
+          <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
         </div>
       </div>
 
@@ -1368,7 +1612,7 @@ body { transition: filter 2s ease; }
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-soc" style="width:75%"></div>
-          <div class="threshold-marker" style="left:40%"></div>
+          <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
         </div>
       </div>
 
@@ -1387,27 +1631,27 @@ body { transition: filter 2s ease; }
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
         <div id="energy-mix-bar">
-          <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:25"></div>
-          <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:15"></div>
-          <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:20"></div>
-          <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:35"></div>
+          <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:29"></div>
+          <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
+          <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
+          <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-wind)"></div>
-            <span>Wind</span><span class="legend-val" id="leg-wind">25</span>
+            <span>Wind</span><span class="legend-val" id="leg-wind">29</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-solar)"></div>
-            <span>Solar</span><span class="legend-val" id="leg-solar">15</span>
+            <span>Solar</span><span class="legend-val" id="leg-solar">6</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-nuclear)"></div>
-            <span>Nuclear</span><span class="legend-val" id="leg-nuclear">20</span>
+            <span>Nuclear</span><span class="legend-val" id="leg-nuclear">13</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
-            <span>Gas</span><span class="legend-val" id="leg-gas">35</span>
+            <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
         </div>
       </div>
@@ -1450,6 +1694,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag neg">Gas −7, Stranded +12</span>
           <span class="effect-tag warn">Grid risk if no Storage</span>
         </div>
+        <div class="card-citation">Based on CCC Sixth Carbon Budget renewable build rates</div>
       </div>
 
       <!-- Grid & Storage -->
@@ -1474,6 +1719,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Grid Reliability ↑</span>
           <span class="effect-tag pos">Enables high renewables</span>
         </div>
+        <div class="card-citation">Based on National Grid ESO Future Energy Scenarios</div>
       </div>
 
       <!-- Adaptation -->
@@ -1498,6 +1744,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Event damage −50%</span>
           <span class="effect-tag pos">Protects infrastructure</span>
         </div>
+        <div class="card-citation">Based on UK Climate Risk Assessment 2022</div>
       </div>
 
       <!-- Social Support -->
@@ -1521,6 +1768,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Social +8, Fin +3</span>
           <span class="effect-tag pos">Reduces unrest risk</span>
         </div>
+        <div class="card-citation">Based on CCC Just Transition Commission report</div>
       </div>
 
       <!-- Financial Resilience -->
@@ -1544,6 +1792,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Fin Stability +10</span>
           <span class="effect-tag pos">Stranded −8, Property +5</span>
         </div>
+        <div class="card-citation">Based on Bank of England Climate Stress Testing 2022</div>
       </div>
 
       <!-- Research & Development (6th card) -->
@@ -1567,6 +1816,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos" id="research-effect-tag">Solar blocks give 1.5× Net Zero progress</span>
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
         </div>
+        <div class="card-citation">Based on UKRI Net Zero Innovation portfolio</div>
       </div>
 
     </div>
@@ -1588,6 +1838,9 @@ body { transition: filter 2s ease; }
             <stop offset="100%" stop-color="#06111e" stop-opacity="0.95"/>
           </linearGradient>
         </defs>
+
+        <!-- SKY GRADIENT — color updated by JS based on temperature -->
+        <rect id="scene-sky" x="0" y="0" width="800" height="162" fill="#040a16"/>
 
         <!-- SKY -->
         <rect width="800" height="175" fill="url(#sg-sky)"/>
@@ -1863,6 +2116,25 @@ body { transition: filter 2s ease; }
 
         <!-- ===== FINANCE ZONE (x 608–800) ===== -->
 
+        <!-- SMOKE STACKS — visible when gas > 15, fade as gas reduces -->
+        <g id="smoke-group">
+          <ellipse id="smoke-1" cx="630" cy="95" rx="4" ry="6" fill="#4a5060" opacity="0">
+            <animate attributeName="cy" values="95;72;55" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.35;0.2;0" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="rx" values="4;7;10" dur="3s" repeatCount="indefinite"/>
+          </ellipse>
+          <ellipse id="smoke-2" cx="645" cy="90" rx="3" ry="5" fill="#3a4050" opacity="0">
+            <animate attributeName="cy" values="90;68;50" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.3;0.15;0" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+            <animate attributeName="rx" values="3;6;9" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+          </ellipse>
+          <ellipse id="smoke-3" cx="735" cy="45" rx="5" ry="7" fill="#4a5060" opacity="0">
+            <animate attributeName="cy" values="45;28;12" dur="3.5s" begin="0.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.4;0.2;0" dur="3.5s" begin="0.4s" repeatCount="indefinite"/>
+            <animate attributeName="rx" values="5;8;12" dur="3.5s" begin="0.4s" repeatCount="indefinite"/>
+          </ellipse>
+        </g>
+
         <!-- FINANCE 1: small classical bank -->
         <g id="fin-1" visibility="hidden">
           <rect x="622" y="130" width="44" height="32" fill="#0d1c2e" rx="1"/>
@@ -1967,6 +2239,11 @@ body { transition: filter 2s ease; }
           <rect x="617" y="154" width="12" height="8" fill="#050d1a"/>
         </g>
 
+        <!-- FLOOD WATER OVERLAY — shown when adaptation fails -->
+        <rect id="flood-water" x="0" y="200" width="800" height="80" fill="#1565c0" opacity="0.55" rx="0">
+          <animate id="flood-anim" attributeName="y" from="200" to="148" dur="2s" fill="freeze" begin="indefinite"/>
+        </rect>
+
       </svg>
     </div>
 
@@ -1983,12 +2260,28 @@ body { transition: filter 2s ease; }
     <div id="log-scroll">
       <div class="log-entry welcome">
         <div class="log-year">2025 — Briefing</div>
-        <div class="log-text">UK Climate Strategy simulation begins. Temperature: 1.1°C above pre-industrial. You have 6 five-year terms to shape the nation's response. Allocate investment blocks each turn — but watch the trade-offs.</div>
+        <div class="log-text">UK Climate Strategy simulation begins. Warming pathway: 1.1°C above pre-industrial. UK has already cut emissions 50% since 1990 — Net Zero Progress starts at 35%. You have 6 five-year terms to shape the nation's response. Allocate investment blocks each turn — but watch the trade-offs.</div>
       </div>
     </div>
   </aside>
 
 </main>
+
+<!-- HOOK SCREEN -->
+<div id="hook-screen">
+  <div id="hook-content">
+    <div id="hook-year">2025</div>
+    <h1 id="hook-headline">Britain's climate future<br>is in your hands.</h1>
+    <p id="hook-body">It is 2025. The UK has a legal commitment to reach Net Zero by 2050. You have six five-year terms, a limited budget, and a public that can only be pushed so far.<br><br>Every decision you make is grounded in real climate economics. There are no easy answers — only trade-offs.</p>
+    <div id="hook-stats">
+      <div class="hook-stat"><span class="hook-stat-num">1.1°C</span><span class="hook-stat-label">current warming above pre-industrial</span></div>
+      <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
+      <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
+    </div>
+    <button id="hook-btn">Take control →</button>
+    <p id="hook-source">Based on NGFS climate scenarios · UK Climate Change Committee modelling · Met Office projections</p>
+  </div>
+</div>
 
 <!-- EVENT MODAL -->
 <div id="event-modal" class="hidden">
@@ -1996,6 +2289,7 @@ body { transition: filter 2s ease; }
     <div id="event-icon-display">⚠️</div>
     <h2 id="event-title-display">Climate Event</h2>
     <p id="event-desc-display"></p>
+    <blockquote id="event-story-display"></blockquote>
     <div id="event-effects-display"></div>
     <button id="event-dismiss-btn">Acknowledge &amp; Continue</button>
   </div>
@@ -2010,22 +2304,25 @@ body { transition: filter 2s ease; }
     <div id="endgame-metrics-grid"></div>
     <div id="endgame-narrative-display"></div>
     <div id="endgame-ngfs-label"></div>
+    <button id="share-btn">📤 Share your result</button>
     <button id="restart-btn">↺ Play Again</button>
   </div>
 </div>
 
 <!-- ADVISOR OVERLAY -->
-<div id="advisor-overlay">
+<div id="advisor-overlay" class="hidden">
   <div id="advisor-card">
     <div class="advisor-icon">📋</div>
     <h2>Chancellor's Briefing</h2>
-    <p>Welcome to UK Climate Strategy 2025–2050. You have 6 five-year terms and £100bn per turn to shape the nation's climate response. Three key rules:</p>
+    <p class="advisor-from">From: Cabinet Office Permanent Secretary<br>Classification: OFFICIAL — For Minister's Eyes Only</p>
+    <p>Minister, your advisors have flagged three systemic risks that have derailed previous climate programmes:</p>
     <ul>
-      <li>🔋 <strong>Balance investment</strong> — neglect Grid &amp; Storage or Social Support and instability cascades</li>
-      <li>⚠️ <strong>Watch the 40% line</strong> — metrics below this threshold trigger damaging feedback loops</li>
-      <li>🌡️ <strong>Temperature rises every turn</strong> — the longer you delay decarbonisation, the harder it becomes</li>
+      <li>🔋 <strong>Grid stability</strong> — every wind farm you build needs backup storage. Without it, blackouts follow and the public turns against the whole programme</li>
+      <li>🤝 <strong>Public consent</strong> — the transition raises energy bills. Workers in oil &amp; gas face redundancy. Ignore the social cost and you lose the political mandate to continue</li>
+      <li>🌡️ <strong>Delay is compounding</strong> — above 1.5°C, tipping points accelerate warming beyond your control. Early action is far cheaper than late action</li>
     </ul>
-    <button id="advisor-dismiss-btn">Begin Simulation →</button>
+    <p class="advisor-note">Each five-year term you allocate £100bn across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
+    <button id="advisor-dismiss-btn">I understand — Begin →</button>
   </div>
 </div>
 
@@ -2052,6 +2349,7 @@ const RANDOM_EVENTS = [
     id: 'FLOOD_MINOR', type: 'FLOOD', severity: 'MINOR', icon: '🌊',
     title: 'Coastal Flooding — East Anglia',
     description: 'Storm surge breaches flood defences along the Norfolk coast. Thousands displaced.',
+    story: 'Sarah Okafor, a care worker in King\'s Lynn, spent three nights evacuating elderly residents from flooded ground-floor flats before flood defences were reinforced. "We had 20 minutes of warning," she said.',
     effects: { propertyValue: -8, socialStability: -5 },
     infraDamage: false, budgetPenaltyNext: 0,
   },
@@ -2059,6 +2357,7 @@ const RANDOM_EVENTS = [
     id: 'FLOOD_MAJOR', type: 'FLOOD', severity: 'MAJOR', icon: '🌊',
     title: 'Catastrophic Thames Flooding',
     description: 'Record rainfall overwhelms the Thames Barrier. Central London districts flooded. National emergency declared.',
+    story: 'The Thames Barrier overtopped for the first time in its history. Bethnal Green community centre — shelter to 400 people — took on a metre of water by Tuesday morning.',
     effects: { propertyValue: -20, socialStability: -12, financialStability: -10 },
     infraDamage: true, budgetPenaltyNext: 30,
   },
@@ -2066,6 +2365,7 @@ const RANDOM_EVENTS = [
     id: 'HEATWAVE_MOD', type: 'HEATWAVE', severity: 'MODERATE', icon: '🌡️',
     title: 'Extended Heatwave — 40°C+',
     description: 'Hospitals overwhelmed. Grid demand spikes to record levels. Emergency cooling centres opened across England.',
+    story: 'Dr. Priya Sharma at Leeds General worked 19 consecutive hours as the emergency department admitted 340 heat-related cases in a single day. Blood pressure medication ran out by Thursday.',
     effects: { socialStability: -10, financialStability: -6, gridReliability: -8 },
     infraDamage: false, budgetPenaltyNext: 0,
   },
@@ -2073,6 +2373,7 @@ const RANDOM_EVENTS = [
     id: 'HEATWAVE_MAJOR', type: 'HEATWAVE', severity: 'MAJOR', icon: '🔥',
     title: 'Extreme Heat Emergency',
     description: 'Excess mortality reaches 10,000. National emergency declared. Crop failures spread. GDP contracts sharply.',
+    story: 'In Birmingham\'s Handsworth district, community volunteers conducted welfare checks on 2,400 elderly residents with no air conditioning. Thirty-one were found requiring immediate hospital care.',
     effects: { socialStability: -18, financialStability: -12, temperature: 0.05 },
     infraDamage: false, budgetPenaltyNext: 30,
   },
@@ -2080,6 +2381,7 @@ const RANDOM_EVENTS = [
     id: 'STORM', type: 'STORM', severity: 'MODERATE', icon: '⛈️',
     title: 'Severe Atlantic Storm',
     description: 'Storm Idris causes widespread damage across northern England and Scotland. Grid infrastructure takes a hit.',
+    story: 'Storm Idris tore the roof from Harrogate\'s primary school gymnasium overnight. No injuries — the building was empty — but 180 pupils were displaced for three months during the coldest term.',
     effects: { socialStability: -8, propertyValue: -10 },
     infraDamage: true, budgetPenaltyNext: 0,
   },
@@ -2087,6 +2389,7 @@ const RANDOM_EVENTS = [
     id: 'FINANCIAL_SHOCK', type: 'FINANCIAL', severity: 'MODERATE', icon: '📉',
     title: 'Fossil Asset Write-down',
     description: 'International carbon accounting rules force rapid write-down of North Sea assets. Pension funds exposed.',
+    story: 'The Transport and General Workers\' pension fund disclosed £1.2bn exposure to North Sea assets now classified as stranded. Trustees voted to inform 180,000 beneficiaries of reduced projected payouts.',
     effects: { financialStability: -15, strandedAssets: 12 },
     infraDamage: false, budgetPenaltyNext: 0,
   },
@@ -2094,6 +2397,7 @@ const RANDOM_EVENTS = [
     id: 'SOCIAL_UNREST', type: 'SOCIAL', severity: 'MODERATE', icon: '✊',
     title: 'Fuel Poverty Protests',
     description: 'Rising energy costs trigger nationwide protests. Government approval collapses. Austerity demanded.',
+    story: 'Outside Manchester\'s Piccadilly Gardens, Jake Holloway, a former factory worker from Salford, told reporters he had not turned his heating on since October. "I\'m not a protester. I\'m just cold."',
     effects: { socialStability: -18 },
     infraDamage: false, budgetPenaltyNext: 15,
   },
@@ -2101,6 +2405,7 @@ const RANDOM_EVENTS = [
     id: 'GRID_FAILURE', type: 'GRID', severity: 'MAJOR', icon: '⚡',
     title: 'National Grid Blackout',
     description: 'Insufficient backup capacity causes cascading grid failures across England. Hospitals on generators.',
+    story: 'St. Mary\'s Hospital ran on generators for 11 hours. Two elective surgeries were cancelled; one premature baby unit transferred by ambulance to Nottingham. The National Grid apologised.',
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
@@ -2124,13 +2429,13 @@ class GameEngine {
       gameOverReason: null,
       isResolvingTurn: false,
       temperature: 1.1,
-      netZeroProgress: 0,
+      netZeroProgress: 35,
       gridReliability: 65,
       financialStability: 70,
       socialStability: 75,
       budget: 100,
       nextTurnBudgetPenalty: 0,
-      energy: { wind: 25, solar: 15, nuclear: 20, gas: 35, storage: 10 },
+      energy: { wind: 29, solar: 6, nuclear: 13, gas: 28, storage: 5 },
       infrastructure: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -2140,6 +2445,7 @@ class GameEngine {
       },
       strandedAssets: 0,
       propertyValue: 100,
+      socialCapital: 0,
       currentDecisions: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -2153,6 +2459,7 @@ class GameEngine {
       socialBreakdownOccurred: false,
       currentRandomEvent: null,
       eventCount: 0,
+      lastEventTurn: -1,
       log: [],
       lastSnapshot: null,
     };
@@ -2272,7 +2579,7 @@ class GameEngine {
 
     // Phase 11: Advance turn
     s.turn++;
-    s.year += 5;
+    s.year = Math.min(s.year + 5, 2050); // cap at Net Zero target year
     s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
     s.spentThisTurn = 0;
 
@@ -2324,6 +2631,7 @@ class GameEngine {
       s.socialStability    = this._clamp(s.socialStability    + ss * 8 * techTree.multipliers.socialGain, 0, 100);
       s.financialStability = this._clamp(s.financialStability + ss * 3, 0, 100);
       s.infrastructure.socialSupport += ss * 20;
+      s.socialCapital = this._clamp(s.socialCapital + ss * 4, 0, 60); // accumulates across turns
     }
 
     // Financial Resilience
@@ -2354,38 +2662,60 @@ class GameEngine {
 
   _recalcFinancial() {
     const s = this.state;
-    const strandedDrag  = s.strandedAssets * 0.4;
+    const strandedDrag  = s.strandedAssets * 0.55; // heavier pension/bank exposure
     const propertyBonus = (s.propertyValue - 50) * 0.3;
     const resBonus      = s.infrastructure.financialResilience * 0.2;
     s.financialStability = this._clamp(
-      Math.round(70 - strandedDrag + propertyBonus + resBonus), 0, 100
+      Math.round(68 - strandedDrag + propertyBonus + resBonus), 0, 100
     );
   }
 
   _recalcSocial() {
     const s = this.state;
-    const gridPenalty = s.gridReliability < 40 ? (40 - s.gridReliability) * 0.5 : 0;
-    const finPenalty  = s.financialStability < 40 ? (40 - s.financialStability) * 0.4 : 0;
-    const supBonus    = s.infrastructure.socialSupport * 0.3;
+    const gridPenalty = s.gridReliability < 50 ? (50 - s.gridReliability) * 0.6 : 0;
+    const finPenalty  = s.financialStability < 45 ? (45 - s.financialStability) * 0.5 : 0;
+    const capBonus    = s.socialCapital * 0.35; // persistent trust built over time
+    const supBonus    = s.infrastructure.socialSupport * 0.15; // reduced since capital accumulates
+    // Energy burden: rapid decarbonisation raises bills — if not cushioned by social support, public anger grows
+    const energyBurden = Math.max(0, (s.infrastructure.energyTransition - s.infrastructure.socialSupport) * 0.07);
+    // Temperature drag: sustained high temperatures directly damage wellbeing and housing
+    const tempDrag = Math.max(0, (s.temperature - 1.3) * 8);
     s.socialStability = this._clamp(
-      Math.round(75 + supBonus - gridPenalty - finPenalty), 0, 100
+      Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100
     );
   }
 
   _progressTemp() {
     const s = this.state;
     const e = s.energy;
+
+    // If player ignored energy transition this turn, gas demand rebounds (existing infrastructure keeps running)
+    if (s.currentDecisions.energyTransition === 0) {
+      e.gas = this._clamp(e.gas + 6, 0, 100);
+    }
+
     const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
-    const gasShare     = total > 0 ? e.gas / total : 0;
-    const renewShare   = total > 0 ? (e.wind + e.solar) / total : 0;
-    let delta = 0.1 + (gasShare - renewShare) * 0.15;
-    delta = Math.max(delta, 0.02);
-    if (s.netZeroAchieved) delta *= 0.5;
+    const gasShare   = total > 0 ? e.gas / total : 0;
+    const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
+
+    // Base rate 0.20 represents global locked-in warming from existing emissions
+    let delta = 0.20 + (gasShare - renewShare) * 0.22;
+    delta = Math.max(delta, 0.03); // residual warming even at Net Zero
+
+    // Tipping point feedback: above 1.5°C warming compounds faster (permafrost methane, Arctic ice loss)
+    if (s.temperature > 1.5) {
+      delta *= 1 + (s.temperature - 1.5) * 1.2;
+    }
+
+    if (s.netZeroAchieved) delta *= 0.45;
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
   }
 
   _resolveEvent() {
     const s = this.state;
+    // Cooldown: no event if one fired last turn
+    if (s.turn > 0 && s.turn - 1 === s.lastEventTurn) return null;
+
     const excess = Math.max(s.temperature - 1.1, 0);
     const prob   = Math.min(0.10 + (excess / 0.1) * 0.015, 0.70);
 
@@ -2463,6 +2793,7 @@ class GameEngine {
       s.energy.solar = this._clamp(s.energy.solar - 10, 0, 100);
     }
 
+    s.lastEventTurn = s.turn;
     return { ...selectedEvent, appliedEffects: applied };
   }
 
@@ -2485,6 +2816,31 @@ class GameEngine {
 }
 
 /* ============================================================
+   SCORE CALCULATION
+============================================================ */
+
+function calculateScore(state) {
+  const s = state;
+  // Climate Score (0-30): based on how low temperature stayed
+  const tempScore = Math.round(Math.max(0, 30 - (s.temperature - 1.1) * 18));
+
+  // Transition Score (0-30): Net Zero progress
+  const nzScore = Math.round((s.netZeroProgress / 100) * 30);
+
+  // Stability Score (0-30): financial + social average
+  const stabAvg = (s.financialStability + s.socialStability) / 2;
+  const stabScore = Math.round((stabAvg / 100) * 30);
+
+  // Resilience Score (0-10): adaptation built, events survived
+  const adaptLevel = s.infrastructure.adaptation / 100;
+  const eventPenalty = s.eventCount * 1.5;
+  const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
+
+  const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
+  return { total, tempScore, nzScore, stabScore, resScore };
+}
+
+/* ============================================================
    END GAME EVALUATION
 ============================================================ */
 
@@ -2504,9 +2860,10 @@ function evaluateEndgame(state) {
   }
 
   const nzReached = s.netZeroProgress >= 100;
-  const stabilityOk = s.financialStability >= 70 && s.socialStability >= 70;
+  const stabilityStrong = s.financialStability >= 70 && s.socialStability >= 70;
+  const stabilityCollapsed = s.financialStability < 30 || s.socialStability < 30;
 
-  if (nzReached && stabilityOk) {
+  if (nzReached && stabilityStrong) {
     return {
       scenario: 'ORDERLY',
       icon: '🌱',
@@ -2518,7 +2875,7 @@ function evaluateEndgame(state) {
     };
   }
 
-  if (nzReached && (s.financialStability < 30 || s.socialStability < 30)) {
+  if (nzReached && stabilityCollapsed) {
     return {
       scenario: 'DISORDERLY',
       icon: '⚠️',
@@ -2526,6 +2883,19 @@ function evaluateEndgame(state) {
       subtitle: 'Net Zero technically reached — but at enormous human and financial cost.',
       narrative: buildDisorderlyNarrative(s),
       ngfsLabel: 'NGFS Scenario: Disorderly — Late or abrupt action; high transition risk realised alongside stranded assets and social fracture.',
+      colour: 'disorderly',
+    };
+  }
+
+  if (nzReached && !stabilityStrong && !stabilityCollapsed) {
+    // NZ achieved but stability took a hit — a real-world likely outcome
+    return {
+      scenario: 'TURBULENT',
+      icon: '🌊',
+      title: 'Turbulent Transition',
+      subtitle: `Net Zero reached by 2050 — but the road was rocky. Temperature: ${s.temperature.toFixed(1)}°C.`,
+      narrative: buildTurbulentNarrative(s),
+      ngfsLabel: 'NGFS Scenario: Disorderly (moderate) — Net Zero achieved but transition disruption left social or financial scars.',
       colour: 'disorderly',
     };
   }
@@ -2542,12 +2912,12 @@ function evaluateEndgame(state) {
     };
   }
 
-  // Partial progress — Below 2°C but not Net Zero
+  // Partial decarbonisation — Below 2°C but Net Zero not achieved
   return {
     scenario: 'MANAGED',
     icon: '🌤️',
     title: 'Managed Transition',
-    subtitle: `Temperature held to ${s.temperature.toFixed(1)}°C, but Net Zero targets missed.`,
+    subtitle: `Temperature held to ${s.temperature.toFixed(1)}°C — below 2°C — but UK Net Zero targets were not fully met.`,
     narrative: buildManagedNarrative(s),
     ngfsLabel: 'NGFS Scenario: Below 2°C — Gradual policy action limits warming but falls short of Net Zero ambition.',
     colour: 'managed',
@@ -2588,15 +2958,16 @@ function buildDisorderlyNarrative(s) {
 
 function buildHotHouseNarrative(s) {
   const parts = [];
-  parts.push(`The UK failed to meet its Net Zero commitments. By 2050, temperature has reached ${s.temperature.toFixed(1)}°C above pre-industrial levels — a trajectory that locks in decades of escalating physical climate risk.`);
+  const trajTemp = (s.temperature + (s.temperature - 1.1) * 1.5).toFixed(1); // rough 2100 trajectory
+  parts.push(`The UK failed to meet its Net Zero commitments. By 2050, temperature has reached ${s.temperature.toFixed(1)}°C above pre-industrial levels. Tipping points — Arctic ice loss, permafrost methane release, Amazon dieback — are now self-reinforcing. Global temperature is on track for ${trajTemp}°C by 2100.`);
 
   if (s.energy.gas > 30) {
-    parts.push(`Gas remained a dominant part of the energy mix throughout the period, preventing the emissions reductions needed to bend the temperature curve. The fossil economy proved deeply entrenched.`);
+    parts.push(`Gas remained a dominant part of the energy mix throughout the period. Each year of inaction allowed fossil infrastructure to entrench further, making the eventual transition both more expensive and more disruptive.`);
   }
-  parts.push(`Insurance markets are contracting as flood and heat risk becomes uninsurable across large areas. Property values in coastal and low-lying areas have collapsed. The NHS faces unprecedented pressure from heat-related illness.`);
+  parts.push(`Insurance markets are contracting as flood and heat risk becomes uninsurable across large areas of the UK. Property values in coastal and low-lying areas have collapsed. The NHS faces unprecedented pressure from heat-related illness and infectious disease spread.`);
 
   if (s.eventCount > 2) {
-    parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, each event reset progress by years.`);
+    parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, recovery time between shocks shrank until resilience collapsed entirely.`);
   }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
@@ -2611,12 +2982,43 @@ function buildBreakdownNarrative(s) {
 
 function buildManagedNarrative(s) {
   const parts = [];
-  parts.push(`The UK made meaningful progress but fell short of full Net Zero commitment. Temperature settled at ${s.temperature.toFixed(1)}°C — below the critical 2°C threshold — through a combination of partial decarbonisation and moderate physical risk management.`);
-  parts.push(`Net Zero Progress reached ${s.netZeroProgress}%. With more aggressive energy transition investment in earlier turns, the full target may have been achievable. The remaining emissions gap will require further policy action beyond 2050.`);
+  parts.push(`The UK limited warming to ${s.temperature.toFixed(1)}°C — well below the 2°C Paris Agreement threshold — through a combination of partial decarbonisation and steady physical risk management. However, Net Zero was not fully achieved by 2050, with progress at ${Math.round(s.netZeroProgress)}%.`);
+  parts.push(`The remaining emissions gap means the UK will need continued policy action beyond 2050 to meet its legal Net Zero commitment. The hard work of full decarbonisation has been deferred, not avoided.`);
   if (s.financialStability > 60 && s.socialStability > 60) {
-    parts.push(`Stability metrics held. The cautious approach preserved financial and social cohesion, but at the cost of climate ambition. A more balanced strategy — accepting more transition risk earlier — might have achieved both.`);
+    parts.push(`The cautious approach preserved financial and social cohesion — a genuinely difficult balance. But the cost is that more aggressive transition investment in earlier terms would have closed the emissions gap without sacrificing stability.`);
   }
   return parts.map(p => `<p>${p}</p>`).join('');
+}
+
+function buildTurbulentNarrative(s) {
+  const parts = [];
+  parts.push(`The UK reached Net Zero by 2050 — meeting its legal commitment — and held temperature to ${s.temperature.toFixed(1)}°C. But the transition was turbulent, and its costs were not evenly shared.`);
+  if (s.socialStability < 70) {
+    parts.push(`Social stability took a significant hit. Rising energy costs, disrupted communities, and insufficient public investment in the Just Transition eroded public trust. Political volatility in the late 2030s nearly derailed the programme entirely.`);
+  }
+  if (s.financialStability < 70) {
+    parts.push(`The financial system absorbed painful shocks from stranded fossil assets. Pension funds and regional lenders required government support, tightening future fiscal space at exactly the moment adaptation spending was needed most.`);
+  }
+  parts.push(`This is a recognisable real-world outcome: the climate target met, but the transition's distributional costs left deep marks. A more balanced investment strategy — combining energy transition with stronger social and financial buffers — could have reached the same destination with less damage.`);
+  return parts.map(p => `<p>${p}</p>`).join('');
+}
+
+/* ============================================================
+   SHARE HELPER
+============================================================ */
+
+function buildShareText(state, result) {
+  const score = calculateScore(state);
+  const scenarios = {
+    ORDERLY: '🌱 Orderly Transition',
+    TURBULENT: '🌊 Turbulent Transition',
+    DISORDERLY: '⚠️ Disorderly Transition',
+    HOT_HOUSE: '🔥 Hot House World',
+    SOCIAL_BREAKDOWN: '💀 Social Breakdown',
+    MANAGED: '🌤️ Managed Transition',
+  };
+  const label = scenarios[result.scenario] || result.title;
+  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
 }
 
 /* ============================================================
@@ -2722,6 +3124,15 @@ class UI {
       }
     });
 
+    // Hook screen → advisor overlay
+    const hookBtn = document.getElementById('hook-btn');
+    if (hookBtn) {
+      hookBtn.addEventListener('click', () => {
+        document.getElementById('hook-screen').classList.add('hidden');
+        document.getElementById('advisor-overlay').classList.remove('hidden');
+      });
+    }
+
     // Advisor overlay dismiss
     const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
     if (advisorDismissBtn) {
@@ -2764,11 +3175,32 @@ class UI {
       }
     });
 
+    // Share button
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        const s = this.engine.state;
+        const result = evaluateEndgame(s);
+        const text = buildShareText(s, result);
+        if (navigator.share) {
+          navigator.share({ title: 'UK Climate Strategy', text }).catch(() => {});
+        } else {
+          navigator.clipboard?.writeText(text).then(() => {
+            shareBtn.textContent = '✓ Copied to clipboard!';
+            setTimeout(() => shareBtn.textContent = '📤 Share your result', 2500);
+          }).catch(() => {
+            alert(text);
+          });
+        }
+      });
+    }
+
     // Restart
     this.elRestartBtn.addEventListener('click', () => {
       this.engine.reset();
       techTree.reset();
       this.elEndgame.classList.add('hidden');
+      document.getElementById('endgame-score-section')?.remove();
       this._lastLogLength = 0;
       this.elLogScroll.innerHTML = `
         <div class="log-entry welcome">
@@ -2787,6 +3219,7 @@ class UI {
     this._renderCards(state);
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
+    effectsMgr.updateSky(state.temperature);
   }
 
   _renderHeader(state) {
@@ -3029,6 +3462,43 @@ class UI {
     [[1,1],[2,2],[3,4],[4,6]].forEach(([idx, threshold]) => {
       show(`fin-${idx}`, lvl.finance >= threshold, preview(res.finance, lvl.finance, threshold));
     });
+
+    // Smoke: visible when gas is dominant, fades as gas reduces
+    const smokeGroup = document.getElementById('smoke-group');
+    if (smokeGroup) {
+      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1);
+      const smokeOpacity = Math.max(0, (gasShare - 0.15) / 0.4);
+      smokeGroup.style.opacity = smokeOpacity;
+    }
+  }
+
+  _buildTurnNarrative(entry) {
+    const d = {
+      energyTransition: 0, gridAndStorage: 0, adaptation: 0,
+      socialSupport: 0, financialResilience: 0, research: 0
+    };
+    // Parse decisions back from description strings
+    entry.decisions.forEach(dec => {
+      if (dec.includes('Energy Transition')) d.energyTransition = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Grid')) d.gridAndStorage = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Adaptation')) d.adaptation = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Social')) d.socialSupport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Financial')) d.financialResilience = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('R&D')) d.research = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+    });
+
+    const parts = [];
+    if (d.energyTransition > 0) parts.push(`backed ${d.energyTransition === 2 ? 'major' : 'targeted'} renewable expansion`);
+    if (d.gridAndStorage > 0) parts.push(`invested in grid modernisation and storage`);
+    if (d.adaptation > 0) parts.push(`strengthened flood and heat resilience`);
+    if (d.socialSupport > 0) parts.push(`funded the just transition for affected communities`);
+    if (d.financialResilience > 0) parts.push(`reinforced financial sector stability`);
+    if (d.research > 0) parts.push(`commissioned strategic research`);
+
+    if (parts.length === 0) return 'No investment was made this term.';
+    if (parts.length === 1) return `This term, government ${parts[0]}.`;
+    const last = parts.pop();
+    return `This term, government ${parts.join(', ')} and ${last}.`;
   }
 
   _addLogEntry(entry) {
@@ -3078,6 +3548,21 @@ class UI {
     this.elEventIcon.textContent  = event.icon;
     this.elEventTitle.textContent = event.title;
     this.elEventDesc.textContent  = event.description;
+    const storyEl = document.getElementById('event-story-display');
+    if (storyEl) storyEl.textContent = event.story || '';
+
+    // Flood visual effect
+    if (event.type === 'FLOOD') {
+      const floodAnim = document.getElementById('flood-anim');
+      if (floodAnim) floodAnim.beginElement();
+      setTimeout(() => {
+        const water = document.getElementById('flood-water');
+        if (water) {
+          water.setAttribute('y', '200');
+          water.style.opacity = '0';
+        }
+      }, 8000); // recede after 8 seconds
+    }
 
     let effectsHtml = '';
     const labelMap = {
@@ -3164,6 +3649,24 @@ class UI {
     // Record run in LegacySystem (XP + scoring)
     legacySystem.recordRun(s);
 
+    // Calculate and display score
+    const score = calculateScore(s);
+    const scoreHtml = `
+      <div id="endgame-score-section">
+        <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
+        <div id="endgame-score-label">Your Climate Score</div>
+        <div id="endgame-score-breakdown">
+          <div class="score-dim"><span class="score-dim-val">${score.tempScore}/30</span><span class="score-dim-name">Climate</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.nzScore}/30</span><span class="score-dim-name">Net Zero</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.stabScore}/30</span><span class="score-dim-name">Stability</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
+        </div>
+        <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
+      </div>`;
+
+    // Insert before the metrics grid
+    this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
+
     this.elEndgame.classList.remove('hidden');
 
     // Staggered reveal of metric tiles
@@ -3221,6 +3724,35 @@ class EffectsManager {
   pulseAll() {
     const ids = ['bar-temp', 'bar-budget', 'bar-grid', 'bar-fin', 'bar-soc', 'bar-nz'];
     ids.forEach((id, i) => setTimeout(() => this.pulse(id), i * 90));
+  }
+
+  updateSky(temperature) {
+    const sky = document.getElementById('scene-sky');
+    if (!sky) return;
+    // Interpolate sky colour based on temperature 1.1→3.0
+    const t = Math.max(0, Math.min(1, (temperature - 1.1) / 1.9));
+    // Cool night blue → hazy amber → hot orange-red
+    let r, g, b;
+    if (t < 0.4) {
+      // 1.1°C → 1.86°C: night blue to hazy purple-blue
+      const tt = t / 0.4;
+      r = Math.round(4  + tt * 20);
+      g = Math.round(10 + tt * 8);
+      b = Math.round(22 + tt * 18);
+    } else if (t < 0.75) {
+      // 1.86°C → 2.48°C: hazy blue to amber
+      const tt = (t - 0.4) / 0.35;
+      r = Math.round(24 + tt * 50);
+      g = Math.round(18 + tt * 22);
+      b = Math.round(40 - tt * 20);
+    } else {
+      // 2.48°C → 3.0°C: amber to deep orange-red
+      const tt = (t - 0.75) / 0.25;
+      r = Math.round(74 + tt * 40);
+      g = Math.round(40 - tt * 15);
+      b = Math.round(20 - tt * 10);
+    }
+    sky.setAttribute('fill', `rgb(${r},${g},${b})`);
   }
 
   haptic(style = 'medium') {
@@ -3317,10 +3849,11 @@ const MINI_EVENTS_POOL = [
     icon: '🌡️',
     title: 'Heatwave Warning',
     prompt: 'Deploy emergency cooling centres across England?',
+    explanation: 'As temperatures rise, extreme heat becomes a public health crisis — particularly for the elderly and low-income households who can\'t afford air conditioning. Cooling centres are short-term relief, but they cost money that reduces next term\'s budget. Doing nothing erodes public trust and social cohesion.',
     yesLabel: 'Deploy — costs £5bn next turn',
-    noLabel: 'Hold (−4 Social Stability)',
+    noLabel: 'Hold (−6 Social Stability)',
     onYes: (s) => { s.nextTurnBudgetPenalty += 5; },
-    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 4); },
+    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 6); },
     condition: (s) => s.temperature > 1.3,
   },
   {
@@ -3328,10 +3861,11 @@ const MINI_EVENTS_POOL = [
     icon: '⚡',
     title: 'Grid Under Stress',
     prompt: 'Commission emergency gas peaker plant?',
+    explanation: 'As wind and solar grow, the grid needs backup power for calm or cloudy days — otherwise supply can\'t meet demand and blackouts follow. Gas "peaker" plants switch on instantly to fill the gap, but they burn fossil fuels and cost money. Without enough battery storage or nuclear baseload, this tension is unavoidable during the transition.',
     yesLabel: 'Commission — costs £8bn next turn',
-    noLabel: 'Risk it (−5 Grid Reliability)',
+    noLabel: 'Risk it (−8 Grid Reliability)',
     onYes: (s) => { s.nextTurnBudgetPenalty += 8; },
-    onNo:  (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); },
+    onNo:  (s) => { s.gridReliability = Math.max(0, s.gridReliability - 8); },
     condition: (s) => s.gridReliability < 65,
   },
   {
@@ -3339,10 +3873,11 @@ const MINI_EVENTS_POOL = [
     icon: '✊',
     title: 'Fuel Cost Protests',
     prompt: 'Announce an emergency energy support package?',
-    yesLabel: 'Announce — costs £6bn next turn',
-    noLabel: 'No comment (−5 Social Stability)',
-    onYes: (s) => { s.nextTurnBudgetPenalty += 6; },
-    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 5); },
+    explanation: 'The shift away from fossil fuels can push up household energy bills in the short term, especially for lower-income families. This is sometimes called the "just transition" problem — the costs of going green must not fall disproportionately on those least able to pay. Public anger, left unaddressed, can stall or reverse climate policy entirely.',
+    yesLabel: 'Announce — costs £12bn next turn',
+    noLabel: 'No comment (−8 Social Stability)',
+    onYes: (s) => { s.nextTurnBudgetPenalty += 12; },
+    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 8); },
     condition: (s) => s.socialStability < 75,
   },
   {
@@ -3350,11 +3885,48 @@ const MINI_EVENTS_POOL = [
     icon: '🌊',
     title: 'Flash Flood Response',
     prompt: 'Mobilise emergency flood response teams?',
+    explanation: 'Climate change makes extreme rainfall more frequent and intense. Flooding damages homes, infrastructure and businesses — and the financial fallout can last years. Rapid emergency response limits the damage and signals government competence. Without it, insurance costs rise, property values fall, and public finances take a direct hit.',
     yesLabel: 'Mobilise — costs £5bn next turn',
-    noLabel: 'Stand down (−4 Financial Stability)',
+    noLabel: 'Stand down (−6 Financial Stability)',
     onYes: (s) => { s.nextTurnBudgetPenalty += 5; },
-    onNo:  (s) => { s.financialStability = Math.max(0, s.financialStability - 4); },
+    onNo:  (s) => { s.financialStability = Math.max(0, s.financialStability - 6); },
     condition: (s) => s.temperature > 1.2,
+  },
+  {
+    id: 'mini_stranded_shock',
+    icon: '🏚️',
+    title: 'Stranded Asset Crisis',
+    prompt: 'Bail out pension funds exposed to collapsing fossil fuel valuations?',
+    explanation: 'Many UK pension funds invested heavily in oil, gas and coal companies. As the energy transition accelerates, those assets are rapidly losing value — a process called "stranding." If the government does nothing, pensioners face losses. But a bailout is expensive and controversial, potentially crowding out climate investment.',
+    yesLabel: 'Bail out — costs £20bn next turn',
+    noLabel: 'No bailout (−12 Financial Stability)',
+    onYes: (s) => { s.nextTurnBudgetPenalty += 20; s.strandedAssets = Math.max(0, s.strandedAssets - 10); },
+    onNo:  (s) => { s.financialStability = Math.max(0, s.financialStability - 12); },
+    condition: (s) => s.strandedAssets > 30,
+  },
+  {
+    id: 'mini_workers',
+    icon: '🔧',
+    title: 'North Sea Redundancies',
+    prompt: 'Fund an emergency retraining programme for displaced oil and gas workers?',
+    explanation: 'The UK\'s North Sea oil and gas industry still employs tens of thousands of workers in Scotland and north-east England. As the energy transition accelerates, platforms are decommissioned and contracts dry up. Without active government support, these workers — and the communities around them — face long-term unemployment and turn against the green agenda. Retraining for offshore wind, carbon capture or hydrogen can convert opponents into allies.',
+    yesLabel: 'Fund retraining — costs £3bn next turn',
+    noLabel: 'Leave to the market (−7 Social Stability)',
+    onYes: (s) => { s.nextTurnBudgetPenalty += 3; s.socialStability = Math.min(100, s.socialStability + 3); },
+    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 7); },
+    condition: (s) => s.energy.gas < 28 || s.infrastructure.energyTransition > 60,
+  },
+  {
+    id: 'mini_nuclear_delay',
+    icon: '⚛️',
+    title: 'Nuclear Plant Delay',
+    prompt: 'Fast-track planning approval to keep the reactor timeline on track?',
+    explanation: 'Nuclear power provides reliable, low-carbon electricity 24/7 — unlike wind or solar which vary with weather. UK nuclear projects frequently face planning delays that push costs up and leave grid gaps. Fast-tracking approval speeds construction but bypasses local consultation, which can damage community trust.',
+    yesLabel: 'Fast-track — costs £6bn next turn',
+    noLabel: 'Normal process (−6 Grid Reliability)',
+    onYes: (s) => { s.nextTurnBudgetPenalty += 6; s.energy.nuclear = Math.min(80, s.energy.nuclear + 3); },
+    onNo:  (s) => { s.gridReliability = Math.max(0, s.gridReliability - 6); },
+    condition: (s) => s.energy.nuclear > 20,
   },
 ];
 
@@ -3464,6 +4036,7 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
       <div class="mini-event-year">${year}</div>
       <div class="mini-event-title">${evt.title}</div>
       <div class="mini-event-prompt">${evt.prompt}</div>
+      ${evt.explanation ? `<div class="mini-event-explain">${evt.explanation}</div>` : ''}
       <div class="mini-event-actions">
         <button class="mini-btn yes-btn">${evt.yesLabel}</button>
         <button class="mini-btn no-btn">${evt.noLabel}</button>
