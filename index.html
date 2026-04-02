@@ -1536,7 +1536,6 @@ body { transition: filter 2s ease; }
       <div class="pip" id="pip-2"></div>
       <div class="pip" id="pip-3"></div>
       <div class="pip" id="pip-4"></div>
-      <div class="pip" id="pip-5"></div>
     </div>
     <span id="current-year">2025</span>
     <span id="turn-counter">Turn 1 of 6</span>
@@ -2260,7 +2259,7 @@ body { transition: filter 2s ease; }
     <div id="log-scroll">
       <div class="log-entry welcome">
         <div class="log-year">2025 — Briefing</div>
-        <div class="log-text">UK Climate Strategy simulation begins. Warming pathway: 1.1°C above pre-industrial. UK has already cut emissions 50% since 1990 — Net Zero Progress starts at 35%. You have 6 five-year terms to shape the nation's response. Allocate investment blocks each turn — but watch the trade-offs.</div>
+        <div class="log-text">UK Climate Strategy simulation begins. Warming pathway: 1.1°C above pre-industrial. UK has already cut emissions 50% since 1990 — Net Zero Progress starts at 35%. You have 5 five-year terms to shape the nation's response. Allocate investment blocks each turn — but watch the trade-offs.</div>
       </div>
     </div>
   </aside>
@@ -2272,7 +2271,7 @@ body { transition: filter 2s ease; }
   <div id="hook-content">
     <div id="hook-year">2025</div>
     <h1 id="hook-headline">Britain's climate future<br>is in your hands.</h1>
-    <p id="hook-body">It is 2025. The UK has a legal commitment to reach Net Zero by 2050. You have six five-year terms, a limited budget, and a public that can only be pushed so far.<br><br>Every decision you make is grounded in real climate economics. There are no easy answers — only trade-offs.</p>
+    <p id="hook-body">It is 2025. The UK has a legal commitment to reach Net Zero by 2050. You have 25 years, a limited budget, and a public that can only be pushed so far.<br><br>Every decision you make is grounded in real climate economics. There are no easy answers — only trade-offs.</p>
     <div id="hook-stats">
       <div class="hook-stat"><span class="hook-stat-num">1.1°C</span><span class="hook-stat-label">current warming above pre-industrial</span></div>
       <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
@@ -2321,7 +2320,7 @@ body { transition: filter 2s ease; }
       <li>🤝 <strong>Public consent</strong> — the transition raises energy bills. Workers in oil &amp; gas face redundancy. Ignore the social cost and you lose the political mandate to continue</li>
       <li>🌡️ <strong>Delay is compounding</strong> — above 1.5°C, tipping points accelerate warming beyond your control. Early action is far cheaper than late action</li>
     </ul>
-    <p class="advisor-note">Each five-year term you allocate £100bn across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
+    <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
   </div>
 </div>
@@ -2579,16 +2578,16 @@ class GameEngine {
 
     // Phase 11: Advance turn
     s.turn++;
-    s.year = Math.min(s.year + 5, 2050); // cap at Net Zero target year
+    s.year += 5;
     s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
     s.spentThisTurn = 0;
 
     // Recalculate budget for next turn
     s.budget = this.getEffectiveBudget();
 
-    // Check end game
+    // Check end game — 5 turns total (2025→2030→2035→2040→2045→2050)
     let endgame = null;
-    if (s.gameOver || s.turn > 5) {
+    if (s.gameOver || s.turn >= 5) {
       endgame = evaluateEndgame(s);
     }
 
@@ -3224,19 +3223,19 @@ class UI {
 
   _renderHeader(state) {
     this.elYear.textContent      = state.year;
-    this.elTurnCount.textContent = `Turn ${state.turn + 1} of 6`;
+    this.elTurnCount.textContent = `Turn ${state.turn + 1} of 5`;
     const nextYr = state.year + 5;
     this.elPeriod.textContent    = `${state.year}–${nextYr}`;
     this.elNextYear.textContent  = nextYr;
-    if (state.turn >= 5) {
-      this.elEndTurnBtn.innerHTML = 'Complete Simulation &rarr;';
+    if (state.turn >= 4) {
+      this.elEndTurnBtn.innerHTML = `Complete 2045–2050 &rarr;`;
     } else {
       this.elEndTurnBtn.innerHTML = `Advance to <span id="next-year-label">${nextYr}</span> &rarr;`;
       this.elNextYear = document.getElementById('next-year-label');
     }
 
     // Update turn pips
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 5; i++) {
       const pip = document.getElementById(`pip-${i}`);
       if (!pip) continue;
       pip.className = 'pip' + (i < state.turn ? ' done' : i === state.turn ? ' current' : '');
