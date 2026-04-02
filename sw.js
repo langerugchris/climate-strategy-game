@@ -1,4 +1,4 @@
-const CACHE = 'climate-game-v1';
+const CACHE = 'climate-game-v2';
 const ASSETS = [
   './index.html',
   './manifest.json',
@@ -24,6 +24,21 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+  // Network-first for HTML — ensures updates reach users quickly
+  if (e.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+    e.respondWith(
+      fetch(e.request)
+        .then(r => {
+          const clone = r.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+          return r;
+        })
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
+  // Cache-first for static assets (icons, manifest)
   e.respondWith(
     caches.match(e.request).then(r => r || fetch(e.request))
   );

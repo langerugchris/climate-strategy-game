@@ -237,6 +237,34 @@ body {
 .bar-fill.danger { background: var(--status-danger); box-shadow: 0 0 6px var(--status-danger)44; }
 .bar-fill.info   { background: var(--status-info); }
 
+/* Projection ghost tick — vertical line at projected metric value */
+.bar-ghost {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  border-radius: 2px;
+  pointer-events: none;
+  transition: left 0.25s ease, background 0.25s ease;
+  transform: translateX(-50%);
+  display: none;
+}
+.bar-ghost.proj-up   { background: var(--status-good); box-shadow: 0 0 5px var(--status-good); }
+.bar-ghost.proj-down { background: var(--status-danger); box-shadow: 0 0 5px var(--status-danger); }
+.bar-ghost.proj-same { background: var(--text-muted); }
+
+/* Projected delta label shown next to current value */
+.proj-label {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  margin-left: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.proj-label.visible  { opacity: 1; }
+.proj-label.proj-up  { color: var(--status-good); }
+.proj-label.proj-down { color: var(--status-danger); }
+
 /* Temperature bar — gradient track with needle */
 .bar-track.temp-track {
   background: linear-gradient(90deg, var(--status-good) 0%, var(--status-warn) 40%, var(--status-danger) 100%);
@@ -1559,7 +1587,7 @@ body { transition: filter 2s ease; }
       <div class="pip" id="pip-4"></div>
     </div>
     <span id="current-year">2025</span>
-    <span id="turn-counter">Turn 1 of 6</span>
+    <span id="turn-counter">Turn 1 of 5</span>
   </div>
 </header>
 
@@ -1604,11 +1632,12 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">⚡ Grid Reliability</span>
-          <span class="metric-value"><span id="val-grid">65</span>% <span class="metric-delta" id="delta-grid"></span></span>
+          <span class="metric-value"><span id="val-grid">65</span>% <span class="metric-delta" id="delta-grid"></span><span class="proj-label" id="proj-grid"></span></span>
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-grid" style="width:65%"></div>
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
+          <div class="bar-ghost" id="ghost-grid"></div>
         </div>
       </div>
 
@@ -1616,11 +1645,12 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🏦 Financial Stability</span>
-          <span class="metric-value"><span id="val-fin">70</span>% <span class="metric-delta" id="delta-fin"></span></span>
+          <span class="metric-value"><span id="val-fin">70</span>% <span class="metric-delta" id="delta-fin"></span><span class="proj-label" id="proj-fin"></span></span>
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-fin" style="width:70%"></div>
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
+          <div class="bar-ghost" id="ghost-fin"></div>
         </div>
       </div>
 
@@ -1628,11 +1658,12 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🏘️ Social Stability</span>
-          <span class="metric-value"><span id="val-soc">75</span>% <span class="metric-delta" id="delta-soc"></span></span>
+          <span class="metric-value"><span id="val-soc">75</span>% <span class="metric-delta" id="delta-soc"></span><span class="proj-label" id="proj-soc"></span></span>
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-soc" style="width:75%"></div>
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
+          <div class="bar-ghost" id="ghost-soc"></div>
         </div>
       </div>
 
@@ -1640,10 +1671,11 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🌱 Net Zero Progress</span>
-          <span class="metric-value"><span id="val-nz">0</span>% <span class="metric-delta" id="delta-nz"></span></span>
+          <span class="metric-value"><span id="val-nz">0</span>% <span class="metric-delta" id="delta-nz"></span><span class="proj-label" id="proj-nz"></span></span>
         </div>
-        <div class="bar-track">
+        <div class="bar-track" style="position:relative">
           <div class="bar-fill info" id="bar-nz" style="width:0%"></div>
+          <div class="bar-ghost" id="ghost-nz"></div>
         </div>
       </div>
 
@@ -1788,7 +1820,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Social +8, Fin +3</span>
           <span class="effect-tag pos">Reduces unrest risk</span>
         </div>
-        <div class="card-citation">Based on CCC Just Transition Commission report</div>
+        <div class="card-citation">Illustrative figures — educational simulation</div>
       </div>
 
       <!-- Financial Resilience -->
@@ -2291,7 +2323,7 @@ body { transition: filter 2s ease; }
 <div id="hook-screen">
   <div id="hook-content">
     <div id="hook-year">2025</div>
-    <h1 id="hook-headline">Britain's climate future<br>is in your hands.</h1>
+    <h1 id="hook-headline">The UK's climate future<br>is in your hands.</h1>
     <p id="hook-body">It is 2025. The UK has a legal commitment to reach Net Zero by 2050. You have 25 years, a limited budget, and a public that can only be pushed so far.<br><br>Every decision you make is grounded in real climate economics. There are no easy answers — only trade-offs.</p>
     <div id="hook-stats">
       <div class="hook-stat"><span class="hook-stat-num">1.1°C</span><span class="hook-stat-label">current warming above pre-industrial</span></div>
@@ -2299,7 +2331,7 @@ body { transition: filter 2s ease; }
       <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
     </div>
     <button id="hook-btn">Take control →</button>
-    <p id="hook-source">Based on NGFS climate scenarios · UK Climate Change Committee modelling · Met Office projections</p>
+    <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
   </div>
 </div>
 
@@ -2525,6 +2557,81 @@ class GameEngine {
     s.spentThisTurn -= BLOCK_COSTS[category];
   }
 
+  // Returns projected metric values after applying current decisions — pure, no state mutation
+  getProjection() {
+    const s = this.state;
+    const d = s.currentDecisions;
+    const clamp = (v, mn, mx) => Math.min(mx, Math.max(mn, v));
+
+    const e = { ...s.energy };
+    let strandedAssets     = s.strandedAssets;
+    let propertyValue      = s.propertyValue;
+    let netZeroProgress    = s.netZeroProgress;
+    let socialStability    = s.socialStability;
+    let financialStability = s.financialStability;
+    let socialCapital      = s.socialCapital;
+    const infra = { ...s.infrastructure };
+
+    // Mirror _applyInvestments
+    const et = d.energyTransition;
+    if (et > 0) {
+      e.wind    = clamp(e.wind    + et * 8,  0, 120);
+      e.solar   = clamp(e.solar   + et * 6,  0, 100);
+      e.gas     = clamp(e.gas     - et * 7,  0, 100);
+      netZeroProgress = clamp(netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
+      strandedAssets  = clamp(strandedAssets  + et * 12, 0, 100);
+      infra.energyTransition += et * 30;
+    }
+    const gs = d.gridAndStorage;
+    if (gs > 0) {
+      e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
+      e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
+      infra.gridAndStorage += gs * 35;
+    }
+    const ad = d.adaptation;
+    if (ad > 0) {
+      socialStability = clamp(socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
+      infra.adaptation += ad * 25;
+    }
+    const ss = d.socialSupport;
+    if (ss > 0) {
+      socialStability    = clamp(socialStability    + ss * 8 * techTree.multipliers.socialGain, 0, 100);
+      financialStability = clamp(financialStability + ss * 3, 0, 100);
+      infra.socialSupport += ss * 20;
+      socialCapital = clamp(socialCapital + ss * 4, 0, 60);
+    }
+    const fr = d.financialResilience;
+    if (fr > 0) {
+      financialStability = clamp(financialStability + fr * 10 * techTree.multipliers.finGain, 0, 100);
+      strandedAssets     = clamp(strandedAssets     - fr * 8,  0, 100);
+      propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
+      infra.financialResilience += fr * 30;
+    }
+
+    // Mirror _recalcGrid
+    const gridFactor      = 1 + (infra.gridAndStorage / 300);
+    const backup          = e.nuclear + e.storage + (e.gas * 0.5);
+    const renew           = Math.max(e.wind + e.solar, 1);
+    const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
+
+    // Mirror _recalcFinancial
+    const strandedDrag  = strandedAssets * 0.55;
+    const propertyBonus = (propertyValue - 50) * 0.3;
+    const resBonus      = infra.financialResilience * 0.2;
+    financialStability  = clamp(Math.round(68 - strandedDrag + propertyBonus + resBonus), 0, 100);
+
+    // Mirror _recalcSocial
+    const gridPenalty  = gridReliability < 50 ? (50 - gridReliability) * 0.6 : 0;
+    const finPenalty   = financialStability < 45 ? (45 - financialStability) * 0.5 : 0;
+    const capBonus     = socialCapital * 0.35;
+    const supBonus     = infra.socialSupport * 0.15;
+    const energyBurden = Math.max(0, (infra.energyTransition - infra.socialSupport) * 0.07);
+    const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
+    socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
+
+    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
+  }
+
   resolveTurn() {
     const s = this.state;
     const prevYear = s.year;
@@ -2663,9 +2770,9 @@ class GameEngine {
       s.infrastructure.financialResilience += fr * 30;
     }
 
-    // Research — purchases next TechTree upgrade; no infrastructure gain
+    // Research — purchases next TechTree upgrade per block allocated
     const rs = d.research;
-    if (rs > 0) {
+    for (let i = 0; i < rs; i++) {
       techTree.purchase();
     }
   }
@@ -2832,6 +2939,9 @@ class GameEngine {
   reset() {
     this._initState();
     this.state.budget = this.getEffectiveBudget();
+    // Re-apply legacy starting bonuses
+    const bonuses = legacySystem.startingBonuses();
+    if (bonuses.budgetBonus > 0) this.state.budget += bonuses.budgetBonus;
   }
 }
 
@@ -3167,6 +3277,7 @@ class UI {
 
     // End turn
     this.elEndTurnBtn.addEventListener('click', async () => {
+      if (this.engine.state.isResolvingTurn) return;
       const s = this.engine.getState();
       if (s.gameOver) return;
 
@@ -3234,6 +3345,7 @@ class UI {
   render(state) {
     this._renderHeader(state);
     this._renderMetrics(state);
+    this._renderProjection(state);
     this._renderEnergyMix(state);
     this._renderBudget(state);
     this._renderCards(state);
@@ -3293,6 +3405,48 @@ class UI {
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
     }
+  }
+
+  _renderProjection(state) {
+    const ghosts = [
+      { ghostId: 'ghost-grid', projId: 'proj-grid', current: state.gridReliability,    projKey: 'gridReliability' },
+      { ghostId: 'ghost-fin',  projId: 'proj-fin',  current: state.financialStability, projKey: 'financialStability' },
+      { ghostId: 'ghost-soc',  projId: 'proj-soc',  current: state.socialStability,    projKey: 'socialStability' },
+      { ghostId: 'ghost-nz',   projId: 'proj-nz',   current: state.netZeroProgress,    projKey: 'netZeroProgress' },
+    ];
+
+    if (state.spentThisTurn === 0) {
+      ghosts.forEach(g => {
+        const ghost = document.getElementById(g.ghostId);
+        const label = document.getElementById(g.projId);
+        if (ghost) ghost.style.display = 'none';
+        if (label) { label.textContent = ''; label.className = 'proj-label'; }
+      });
+      return;
+    }
+
+    const proj = this.engine.getProjection();
+    ghosts.forEach(g => {
+      const ghost = document.getElementById(g.ghostId);
+      const label = document.getElementById(g.projId);
+      const projVal = proj[g.projKey];
+      const diff = projVal - g.current;
+
+      if (ghost) {
+        ghost.style.display = 'block';
+        ghost.style.left = Math.max(1, Math.min(99, projVal)) + '%';
+        ghost.className = 'bar-ghost ' + (diff > 1 ? 'proj-up' : diff < -1 ? 'proj-down' : 'proj-same');
+      }
+      if (label) {
+        if (Math.abs(diff) < 1) {
+          label.textContent = '';
+          label.className = 'proj-label';
+        } else {
+          label.textContent = (diff > 0 ? '→ +' : '→ ') + Math.round(diff);
+          label.className = 'proj-label visible ' + (diff > 0 ? 'proj-up' : 'proj-down');
+        }
+      }
+    });
   }
 
   _renderDelta(el, current, previous, invertBad, decimals) {

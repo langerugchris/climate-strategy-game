@@ -1,7 +1,7 @@
 {
   "name": "UK Climate Strategy 2025–2050",
   "short_name": "Climate Strategy",
-  "description": "Shape UK climate policy across six five-year terms. Achieve Net Zero or face the consequences.",
+  "description": "Shape UK climate policy across five terms to 2050. Achieve Net Zero or face the consequences.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0b0d17",
