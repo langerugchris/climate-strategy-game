@@ -21,8 +21,8 @@
   --border-subtle:  #2a3050;
   --border-strong:  #3a4570;
   --text-primary:   #e8ecf5;
-  --text-secondary: #8892b0;
-  --text-muted:     #4a5578;
+  --text-secondary: #a0adc8;
+  --text-muted:     #6a7a9a;
   --accent-blue:    #1d70b8;
   --accent-blue-lt: #5390d9;
   --accent-green:   #00703c;
@@ -447,7 +447,7 @@ body {
 
 .card-cost {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-align: right;
 }
 
@@ -1144,21 +1144,42 @@ body { transition: filter 2s ease; }
 .mini-event-year   { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); text-align: center; }
 .mini-event-title  { font-size: 14px; font-weight: 700; color: var(--status-warn); text-align: center; margin: 4px 0 6px; }
 .mini-event-prompt { font-size: 12px; color: var(--text-secondary); text-align: center; line-height: 1.5; margin-bottom: 8px; }
-.mini-event-explain { font-size: 11px; color: var(--text-muted); text-align: left; line-height: 1.6; background: rgba(255,255,255,0.04); border-left: 2px solid var(--status-warn); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 7px 10px; margin-bottom: var(--gap-md); }
-.mini-event-actions { display: flex; flex-direction: column; gap: 7px; }
+.mini-event-explain { font-size: 11px; color: var(--text-secondary); text-align: left; line-height: 1.6; background: rgba(255,255,255,0.04); border-left: 2px solid var(--status-warn); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 7px 10px; margin-bottom: var(--gap-md); }
+.mini-event-context {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  margin-bottom: var(--gap-md);
+  font-variant-numeric: tabular-nums;
+}
+.mini-event-context-label { color: var(--text-secondary); }
+.mini-event-context-value { font-weight: 700; color: var(--text-primary); }
+.mini-event-actions { display: flex; flex-direction: column; gap: 8px; }
 
 .mini-btn {
   width: 100%;
-  padding: 11px;
-  border: none;
+  padding: 10px 12px;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   font-size: 12px;
-  font-weight: 700;
   cursor: pointer;
   transition: opacity 0.15s, transform 0.1s;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
-.yes-btn { background: var(--accent-blue); color: white; }
-.no-btn  { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border-strong); }
+.mini-btn-label { font-weight: 700; font-size: 12px; }
+.mini-btn-consequence { font-size: 10px; opacity: 0.85; font-weight: 400; }
+.opt-a { background: rgba(29,112,184,0.18); color: var(--text-primary); border-color: var(--accent-blue); }
+.opt-b { background: rgba(255,214,0,0.10); color: var(--text-primary); border-color: rgba(255,214,0,0.4); }
+.opt-a:hover { background: rgba(29,112,184,0.30); }
+.opt-b:hover { background: rgba(255,214,0,0.20); }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
@@ -1498,8 +1519,8 @@ body { transition: filter 2s ease; }
 
 /* ===== CARD CITATION ===== */
 .card-citation {
-  font-size: 9px;
-  color: var(--text-muted);
+  font-size: 10px;
+  color: var(--text-secondary);
   margin-top: 4px;
   font-style: italic;
   line-height: 1.4;
@@ -1560,11 +1581,11 @@ body { transition: filter 2s ease; }
           <div class="temp-needle" id="bar-temp" style="left:5%"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:2px;">
-          <span style="font-size:10px;color:var(--text-muted)">1.1°C</span>
+          <span style="font-size:10px;color:var(--text-secondary)">1.1°C</span>
           <span style="font-size:10px;color:var(--status-warn)">▲ 2.0°C Paris limit</span>
-          <span style="font-size:10px;color:var(--text-muted)">3.0°C</span>
+          <span style="font-size:10px;color:var(--text-secondary)">3.0°C</span>
         </div>
-        <div style="font-size:9px;color:var(--text-muted);margin-top:3px;line-height:1.4;">UK domestic pathway · if replicated globally → global temp</div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:3px;line-height:1.4;">UK domestic pathway · if replicated globally → global temp</div>
       </div>
 
       <!-- Budget -->
@@ -1576,7 +1597,7 @@ body { transition: filter 2s ease; }
         <div class="bar-track budget-track">
           <div class="bar-fill good" id="bar-budget" style="width:100%"></div>
         </div>
-        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">Budget: £<span id="val-budget-total">100</span>bn this turn</div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">Budget: £<span id="val-budget-total">100</span>bn this turn</div>
       </div>
 
       <!-- Grid Reliability -->
@@ -3847,84 +3868,161 @@ const MINI_EVENTS_POOL = [
     id: 'mini_heatwave',
     icon: '🌡️',
     title: 'Heatwave Warning',
-    prompt: 'Deploy emergency cooling centres across England?',
-    explanation: 'As temperatures rise, extreme heat becomes a public health crisis — particularly for the elderly and low-income households who can\'t afford air conditioning. Cooling centres are short-term relief, but they cost money that reduces next term\'s budget. Doing nothing erodes public trust and social cohesion.',
-    yesLabel: 'Deploy — costs £5bn next turn',
-    noLabel: 'Hold (−6 Social Stability)',
-    onYes: (s) => { s.nextTurnBudgetPenalty += 5; },
-    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 6); },
+    prompt: 'How do you respond to dangerous heat across England?',
+    explanation: 'Extreme heat kills — particularly the elderly and those in poorly insulated homes. You have two options: deploy immediate relief that costs money but doesn\'t address the root cause, or fund home insulation which helps long-term but leaves people struggling this summer.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: s.socialStability < 60 ? '⚠ already fragile' : 'currently stable',
+    }),
+    optA: {
+      label: '🏥 Open NHS cooling centres now',
+      consequence: 'Costs £6bn next turn · +2 Social · no long-term benefit',
+      effect: (s) => { s.nextTurnBudgetPenalty += 6; s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    optB: {
+      label: '🏠 Fund emergency home insulation grants',
+      consequence: 'Costs £3bn next turn · −3 Social this crisis · +adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.socialStability = Math.max(0, s.socialStability - 3); s.infrastructure.adaptation += 15; },
+    },
     condition: (s) => s.temperature > 1.3,
   },
   {
     id: 'mini_grid_stress',
     icon: '⚡',
     title: 'Grid Under Stress',
-    prompt: 'Commission emergency gas peaker plant?',
-    explanation: 'As wind and solar grow, the grid needs backup power for calm or cloudy days — otherwise supply can\'t meet demand and blackouts follow. Gas "peaker" plants switch on instantly to fill the gap, but they burn fossil fuels and cost money. Without enough battery storage or nuclear baseload, this tension is unavoidable during the transition.',
-    yesLabel: 'Commission — costs £8bn next turn',
-    noLabel: 'Risk it (−8 Grid Reliability)',
-    onYes: (s) => { s.nextTurnBudgetPenalty += 8; },
-    onNo:  (s) => { s.gridReliability = Math.max(0, s.gridReliability - 8); },
+    prompt: 'Electricity demand is outstripping renewable supply. Choose your response.',
+    explanation: 'As wind and solar grow, the grid needs backup for calm or cloudy days. Gas peaker plants fix the immediate problem — but add emissions and cost money. Demand reduction (managed rota cuts) costs nothing financially but means planned outages that hit public trust hard.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: s.gridReliability < 50 ? '⚠ critical' : 'under pressure',
+    }),
+    optA: {
+      label: '🏭 Commission emergency gas peaker plant',
+      consequence: 'Costs £8bn next turn · maintains grid · +emissions, −4% Net Zero progress',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.energy.gas = Math.min(100, s.energy.gas + 5); s.netZeroProgress = Math.max(0, s.netZeroProgress - 4); },
+    },
+    optB: {
+      label: '📉 Implement demand reduction rota',
+      consequence: 'No cost · −6 Grid Reliability · −5 Social (rolling outages unpopular)',
+      effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 6); s.socialStability = Math.max(0, s.socialStability - 5); },
+    },
     condition: (s) => s.gridReliability < 65,
   },
   {
     id: 'mini_protest',
     icon: '✊',
     title: 'Fuel Cost Protests',
-    prompt: 'Announce an emergency energy support package?',
-    explanation: 'The shift away from fossil fuels can push up household energy bills in the short term, especially for lower-income families. This is sometimes called the "just transition" problem — the costs of going green must not fall disproportionately on those least able to pay. Public anger, left unaddressed, can stall or reverse climate policy entirely.',
-    yesLabel: 'Announce — costs £12bn next turn',
-    noLabel: 'No comment (−8 Social Stability)',
-    onYes: (s) => { s.nextTurnBudgetPenalty += 12; },
-    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 8); },
+    prompt: 'Rising energy bills are driving public unrest. How do you respond?',
+    explanation: 'The shift away from fossil fuels raises bills in the short term. You can subsidise energy bills directly — fast relief but it prolongs fossil dependency. Or accelerate green heating grants which address the root cause but take longer to feel, and cost less.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Budget next turn: £${Math.round(s.budget)}bn`,
+    }),
+    optA: {
+      label: '💷 Emergency energy price subsidy',
+      consequence: 'Costs £14bn next turn · +8 Social · prolongs fossil dependency (+8 Stranded Assets)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 14; s.socialStability = Math.min(100, s.socialStability + 8); s.strandedAssets = Math.min(100, s.strandedAssets + 8); },
+    },
+    optB: {
+      label: '♻️ Accelerate green heating grants',
+      consequence: 'Costs £6bn next turn · +3 Social · +6% Net Zero progress (addresses root cause)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 6; s.socialStability = Math.min(100, s.socialStability + 3); s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); },
+    },
     condition: (s) => s.socialStability < 75,
   },
   {
     id: 'mini_flood',
     icon: '🌊',
-    title: 'Flash Flood Response',
-    prompt: 'Mobilise emergency flood response teams?',
-    explanation: 'Climate change makes extreme rainfall more frequent and intense. Flooding damages homes, infrastructure and businesses — and the financial fallout can last years. Rapid emergency response limits the damage and signals government competence. Without it, insurance costs rise, property values fall, and public finances take a direct hit.',
-    yesLabel: 'Mobilise — costs £5bn next turn',
-    noLabel: 'Stand down (−6 Financial Stability)',
-    onYes: (s) => { s.nextTurnBudgetPenalty += 5; },
-    onNo:  (s) => { s.financialStability = Math.max(0, s.financialStability - 6); },
+    title: 'Flash Flood Crisis',
+    prompt: 'Severe flooding is causing widespread damage. What\'s your priority?',
+    explanation: 'Flooding damages homes and businesses and leaves lasting financial scars. Emergency response protects people now but rebuilds things exactly as they were. Managed retreat and permanent defences cost less but accept short-term pain — and protect communities for decades.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Adaptation built: ${Math.round(s.infrastructure.adaptation)}`,
+    }),
+    optA: {
+      label: '🚒 Full emergency response & rebuild',
+      consequence: 'Costs £9bn next turn · protects Financial Stability · same communities flood again',
+      effect: (s) => { s.nextTurnBudgetPenalty += 9; },
+    },
+    optB: {
+      label: '🏗️ Managed retreat & permanent defences',
+      consequence: 'Costs £4bn next turn · −5 Financial short-term · +adaptation infrastructure (prevents future events)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.financialStability = Math.max(0, s.financialStability - 5); s.infrastructure.adaptation += 20; },
+    },
     condition: (s) => s.temperature > 1.2,
   },
   {
     id: 'mini_stranded_shock',
     icon: '🏚️',
     title: 'Stranded Asset Crisis',
-    prompt: 'Bail out pension funds exposed to collapsing fossil fuel valuations?',
-    explanation: 'Many UK pension funds invested heavily in oil, gas and coal companies. As the energy transition accelerates, those assets are rapidly losing value — a process called "stranding." If the government does nothing, pensioners face losses. But a bailout is expensive and controversial, potentially crowding out climate investment.',
-    yesLabel: 'Bail out — costs £20bn next turn',
-    noLabel: 'No bailout (−12 Financial Stability)',
-    onYes: (s) => { s.nextTurnBudgetPenalty += 20; s.strandedAssets = Math.max(0, s.strandedAssets - 10); },
-    onNo:  (s) => { s.financialStability = Math.max(0, s.financialStability - 12); },
+    prompt: 'Pension funds heavily exposed to fossil fuels are facing collapse. Choose your response.',
+    explanation: 'Many UK pension funds bet heavily on oil and gas. As the transition accelerates, those assets are worthless. A full bailout stabilises things immediately but costs a huge amount and leaves the underlying problem unsolved. A managed resolution costs less and actually cleans up the system — but causes short-term financial pain.',
+    contextFn: (s) => ({
+      label: 'Stranded Assets',
+      value: `${Math.round(s.strandedAssets)}`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🏦 Full pension fund bailout',
+      consequence: 'Costs £20bn next turn · stabilises Financial · stranded assets remain (problem returns)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 20; },
+    },
+    optB: {
+      label: '⚖️ Managed resolution scheme',
+      consequence: 'Costs £8bn next turn · −6 Financial short-term · −20 Stranded Assets (fixes root cause)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.financialStability = Math.max(0, s.financialStability - 6); s.strandedAssets = Math.max(0, s.strandedAssets - 20); },
+    },
     condition: (s) => s.strandedAssets > 30,
   },
   {
     id: 'mini_workers',
     icon: '🔧',
     title: 'North Sea Redundancies',
-    prompt: 'Fund an emergency retraining programme for displaced oil and gas workers?',
-    explanation: 'The UK\'s North Sea oil and gas industry still employs tens of thousands of workers in Scotland and north-east England. As the energy transition accelerates, platforms are decommissioned and contracts dry up. Without active government support, these workers — and the communities around them — face long-term unemployment and turn against the green agenda. Retraining for offshore wind, carbon capture or hydrogen can convert opponents into allies.',
-    yesLabel: 'Fund retraining — costs £3bn next turn',
-    noLabel: 'Leave to the market (−7 Social Stability)',
-    onYes: (s) => { s.nextTurnBudgetPenalty += 3; s.socialStability = Math.min(100, s.socialStability + 3); },
-    onNo:  (s) => { s.socialStability = Math.max(0, s.socialStability - 7); },
+    prompt: 'Thousands of oil and gas workers face unemployment. How do you support them?',
+    explanation: 'North Sea decommissioning is displacing tens of thousands of skilled workers in Scotland and north-east England. Retraining them for offshore wind and hydrogen builds the green workforce — but takes longer to feel. Early retirement packages are more popular immediately but cost more and leave no lasting benefit to the transition.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Net Zero progress: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🎓 Fund green skills retraining',
+      consequence: 'Costs £5bn next turn · +4 Social · builds renewable workforce (long-term Net Zero benefit)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.socialStability = Math.min(100, s.socialStability + 4); s.socialCapital = Math.min(60, s.socialCapital + 4); },
+    },
+    optB: {
+      label: '🧓 Early retirement packages',
+      consequence: 'Costs £11bn next turn · +7 Social (more popular) · no workforce or climate benefit',
+      effect: (s) => { s.nextTurnBudgetPenalty += 11; s.socialStability = Math.min(100, s.socialStability + 7); },
+    },
     condition: (s) => s.energy.gas < 28 || s.infrastructure.energyTransition > 60,
   },
   {
     id: 'mini_nuclear_delay',
     icon: '⚛️',
     title: 'Nuclear Plant Delay',
-    prompt: 'Fast-track planning approval to keep the reactor timeline on track?',
-    explanation: 'Nuclear power provides reliable, low-carbon electricity 24/7 — unlike wind or solar which vary with weather. UK nuclear projects frequently face planning delays that push costs up and leave grid gaps. Fast-tracking approval speeds construction but bypasses local consultation, which can damage community trust.',
-    yesLabel: 'Fast-track — costs £6bn next turn',
-    noLabel: 'Normal process (−6 Grid Reliability)',
-    onYes: (s) => { s.nextTurnBudgetPenalty += 6; s.energy.nuclear = Math.min(80, s.energy.nuclear + 3); },
-    onNo:  (s) => { s.gridReliability = Math.max(0, s.gridReliability - 6); },
+    prompt: 'A new reactor is behind schedule due to planning objections. What do you do?',
+    explanation: 'Nuclear provides reliable low-carbon electricity 24/7. Fast-tracking gets it built faster — but bypassing local consultation breeds community resentment that can derail future projects. Letting the process run maintains public trust but leaves a grid gap for another term.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Nuclear capacity: ${Math.round(s.energy.nuclear)}`,
+    }),
+    optA: {
+      label: '⚡ Fast-track planning approval',
+      consequence: 'Costs £6bn next turn · nuclear +5 · −4 Social Capital (community trust damaged)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 6; s.energy.nuclear = Math.min(80, s.energy.nuclear + 5); s.socialCapital = Math.max(0, s.socialCapital - 4); },
+    },
+    optB: {
+      label: '🗣️ Full public consultation process',
+      consequence: 'No cost · −5 Grid Reliability this term · +3 Social Capital (builds long-term public consent)',
+      effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
+    },
     condition: (s) => s.energy.nuclear > 20,
   },
 ];
@@ -4030,15 +4128,32 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
   return new Promise(resolve => {
     const panel = document.createElement('div');
     panel.id = 'mini-event-panel';
+
+    const contextHTML = evt.contextFn ? (() => {
+      const ctx = evt.contextFn(engine.state);
+      return `<div class="mini-event-context">
+        <span class="mini-event-context-label">${ctx.label}:</span>
+        <span class="mini-event-context-value">${ctx.value}</span>
+        <span class="mini-event-context-label" style="margin-left:auto">${ctx.note || ''}</span>
+      </div>`;
+    })() : '';
+
     panel.innerHTML = `
       <div class="mini-event-icon">${evt.icon}</div>
       <div class="mini-event-year">${year}</div>
       <div class="mini-event-title">${evt.title}</div>
       <div class="mini-event-prompt">${evt.prompt}</div>
       ${evt.explanation ? `<div class="mini-event-explain">${evt.explanation}</div>` : ''}
+      ${contextHTML}
       <div class="mini-event-actions">
-        <button class="mini-btn yes-btn">${evt.yesLabel}</button>
-        <button class="mini-btn no-btn">${evt.noLabel}</button>
+        <button class="mini-btn opt-a">
+          <span class="mini-btn-label">${evt.optA.label}</span>
+          <span class="mini-btn-consequence">${evt.optA.consequence}</span>
+        </button>
+        <button class="mini-btn opt-b">
+          <span class="mini-btn-label">${evt.optB.label}</span>
+          <span class="mini-btn-consequence">${evt.optB.consequence}</span>
+        </button>
       </div>`;
 
     overlay.querySelector('#sim-card').appendChild(panel);
@@ -4050,8 +4165,8 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
       setTimeout(() => { panel.remove(); resolve(); }, 300);
     };
 
-    panel.querySelector('.yes-btn').addEventListener('click', () => cleanup(evt.onYes), { once: true });
-    panel.querySelector('.no-btn').addEventListener('click',  () => cleanup(evt.onNo),  { once: true });
+    panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
+    panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
   });
 }
 
