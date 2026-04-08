@@ -1427,6 +1427,91 @@ body { transition: filter 2s ease; }
 }
 #hook-btn:hover { background: var(--accent-blue-lt); }
 #hook-btn:active { transform: scale(0.97); }
+
+/* ===== DIFFICULTY SELECTOR (HOOK SCREEN) ===== */
+#difficulty-section {
+  margin-bottom: var(--gap-lg);
+  text-align: center;
+}
+#difficulty-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-sm);
+}
+#difficulty-options {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--gap-sm);
+}
+.difficulty-btn {
+  flex: 1 1 140px;
+  max-width: 170px;
+  padding: 12px 14px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  touch-action: manipulation;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.difficulty-btn .difficulty-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+.difficulty-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+.difficulty-btn:active { transform: scale(0.97); }
+.difficulty-btn.selected {
+  background: rgba(83, 144, 217, 0.15);
+  border-color: var(--accent-blue-lt);
+  color: var(--text-primary);
+}
+.difficulty-btn.selected .difficulty-icon {
+  filter: drop-shadow(0 0 6px rgba(83,144,217,0.6));
+}
+#difficulty-tagline {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', serif;
+  min-height: 1.4em;
+}
+
+/* ===== DIFFICULTY BADGE (HEADER) ===== */
+#difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+#difficulty-badge .badge-icon { font-size: 11px; }
+#difficulty-badge.cautious { color: var(--energy-wind); border-color: rgba(76,175,129,0.4); }
+#difficulty-badge.standard { color: var(--accent-blue-lt); border-color: rgba(83,144,217,0.4); }
+#difficulty-badge.crisis { color: var(--energy-gas); border-color: rgba(255,112,67,0.5); }
 #hook-source {
   font-size: 10px;
   color: var(--text-muted);
@@ -1576,6 +1661,7 @@ body { transition: filter 2s ease; }
     <div id="game-title">
       <h1>UK Climate Strategy 2025–2050</h1>
       <p>Climate Risk Simulation</p>
+      <div id="difficulty-badge" class="standard"><span class="badge-icon">⚖️</span><span id="difficulty-badge-label">Standard</span></div>
     </div>
   </div>
   <div id="header-right">
@@ -2328,7 +2414,22 @@ body { transition: filter 2s ease; }
     <div id="hook-stats">
       <div class="hook-stat"><span class="hook-stat-num">1.1°C</span><span class="hook-stat-label">current warming above pre-industrial</span></div>
       <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
-      <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
+      <div class="hook-stat"><span class="hook-stat-num" id="hook-budget-stat">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
+    </div>
+    <div id="difficulty-section">
+      <div id="difficulty-label">Choose your difficulty</div>
+      <div id="difficulty-options" role="radiogroup" aria-label="Difficulty">
+        <button type="button" class="difficulty-btn" data-difficulty="cautious" role="radio" aria-checked="false">
+          <span class="difficulty-icon">🌿</span><span>Cautious</span>
+        </button>
+        <button type="button" class="difficulty-btn" data-difficulty="standard" role="radio" aria-checked="true">
+          <span class="difficulty-icon">⚖️</span><span>Standard</span>
+        </button>
+        <button type="button" class="difficulty-btn" data-difficulty="crisis" role="radio" aria-checked="false">
+          <span class="difficulty-icon">🔥</span><span>Crisis</span>
+        </button>
+      </div>
+      <div id="difficulty-tagline">Balanced reality. The default UK pathway.</div>
     </div>
     <button id="hook-btn">Take control →</button>
     <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
@@ -2395,6 +2496,71 @@ const BLOCK_COSTS = {
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
+
+/* ============================================================
+   DIFFICULTY PRESETS — Phase 1 of phased development.
+   Each mode adjusts starting conditions, budget, event chance,
+   and the strength of the >1.5°C tipping-point feedback.
+============================================================ */
+
+const DIFFICULTY_PRESETS = {
+  cautious: {
+    key:                'cautious',
+    label:              'Cautious',
+    icon:               '🌿',
+    tagline:            'More resources, gentler events. For first plays.',
+    baseBudget:         120,
+    startTemp:          1.1,
+    startNZ:            40,
+    startStranded:      0,
+    eventProbMul:       0.7,
+    eventDamageMul:     0.85,
+    tippingMul:         0.8,
+    budgetBonusOver80:  25,
+  },
+  standard: {
+    key:                'standard',
+    label:              'Standard',
+    icon:               '⚖️',
+    tagline:            'Balanced reality. The default UK pathway.',
+    baseBudget:         100,
+    startTemp:          1.1,
+    startNZ:            35,
+    startStranded:      0,
+    eventProbMul:       1.0,
+    eventDamageMul:     1.0,
+    tippingMul:         1.0,
+    budgetBonusOver80:  20,
+  },
+  crisis: {
+    key:                'crisis',
+    label:              'Crisis',
+    icon:               '🔥',
+    tagline:            'Higher stakes, fewer resources. Late start, harder ground.',
+    baseBudget:         85,
+    startTemp:          1.2,
+    startNZ:            30,
+    startStranded:      8,
+    eventProbMul:       1.3,
+    eventDamageMul:     1.15,
+    tippingMul:         1.3,
+    budgetBonusOver80:  15,
+  },
+};
+
+const DIFFICULTY_STORAGE_KEY = 'uk_climate_difficulty_v1';
+
+function loadPreferredDifficulty() {
+  try {
+    const raw = localStorage.getItem(DIFFICULTY_STORAGE_KEY);
+    if (raw && DIFFICULTY_PRESETS[raw]) return raw;
+  } catch {}
+  return 'standard';
+}
+
+function savePreferredDifficulty(key) {
+  try { localStorage.setItem(DIFFICULTY_STORAGE_KEY, key); } catch {}
+}
 
 const RANDOM_EVENTS = [
   {
@@ -2469,23 +2635,36 @@ const RANDOM_EVENTS = [
 ============================================================ */
 
 class GameEngine {
-  constructor() {
+  constructor(difficultyKey = 'standard') {
+    this.difficultyKey = DIFFICULTY_PRESETS[difficultyKey] ? difficultyKey : 'standard';
     this._initState();
   }
 
+  get difficulty() {
+    return DIFFICULTY_PRESETS[this.difficultyKey] || DIFFICULTY_PRESETS.standard;
+  }
+
+  setDifficulty(key) {
+    if (!DIFFICULTY_PRESETS[key]) return;
+    this.difficultyKey = key;
+    this._initState();
+    this.state.budget = this.getEffectiveBudget();
+  }
+
   _initState() {
+    const diff = this.difficulty;
     this.state = {
       turn: 0,
       year: 2025,
       gameOver: false,
       gameOverReason: null,
       isResolvingTurn: false,
-      temperature: 1.1,
-      netZeroProgress: 35,
+      temperature: diff.startTemp,
+      netZeroProgress: diff.startNZ,
       gridReliability: 65,
       financialStability: 70,
       socialStability: 75,
-      budget: 100,
+      budget: diff.baseBudget,
       nextTurnBudgetPenalty: 0,
       energy: { wind: 29, solar: 6, nuclear: 13, gas: 28, storage: 5 },
       infrastructure: {
@@ -2495,7 +2674,7 @@ class GameEngine {
         socialSupport: 0,
         financialResilience: 0,
       },
-      strandedAssets: 0,
+      strandedAssets: diff.startStranded,
       propertyValue: 100,
       socialCapital: 0,
       currentDecisions: {
@@ -2531,8 +2710,9 @@ class GameEngine {
   }
 
   getEffectiveBudget() {
-    let base = 100;
-    if (this.state.financialStability > 80) base += 20;
+    const diff = this.difficulty;
+    let base = diff.baseBudget;
+    if (this.state.financialStability > 80) base += diff.budgetBonusOver80;
     base -= this.state.nextTurnBudgetPenalty;
     return Math.max(base, 20);
   }
@@ -2830,8 +3010,9 @@ class GameEngine {
     delta = Math.max(delta, 0.03); // residual warming even at Net Zero
 
     // Tipping point feedback: above 1.5°C warming compounds faster (permafrost methane, Arctic ice loss)
+    // Difficulty modifies the strength of this feedback loop.
     if (s.temperature > 1.5) {
-      delta *= 1 + (s.temperature - 1.5) * 1.2;
+      delta *= 1 + (s.temperature - 1.5) * 1.2 * this.difficulty.tippingMul;
     }
 
     if (s.netZeroAchieved) delta *= 0.45;
@@ -2844,7 +3025,7 @@ class GameEngine {
     if (s.turn > 0 && s.turn - 1 === s.lastEventTurn) return null;
 
     const excess = Math.max(s.temperature - 1.1, 0);
-    const prob   = Math.min(0.10 + (excess / 0.1) * 0.015, 0.70);
+    const prob   = Math.min((0.10 + (excess / 0.1) * 0.015) * this.difficulty.eventProbMul, 0.85);
 
     if (Math.random() >= prob) return null;
 
@@ -2893,11 +3074,13 @@ class GameEngine {
 
     // Mitigation factor from adaptation
     const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+    // Difficulty scales raw event damage before adaptation mitigation is applied.
+    const damageMul = this.difficulty.eventDamageMul;
 
     // Apply effects
     const applied = {};
     for (const [key, val] of Object.entries(selectedEvent.effects)) {
-      const mitigated = Math.round(val * (1 - mitigate));
+      const mitigated = Math.round(val * damageMul * (1 - mitigate));
       applied[key] = mitigated;
       if (key === 'temperature') {
         s.temperature = Math.round((s.temperature + mitigated) * 100) / 100;
@@ -2936,7 +3119,10 @@ class GameEngine {
     return out;
   }
 
-  reset() {
+  reset(difficultyKey) {
+    if (difficultyKey && DIFFICULTY_PRESETS[difficultyKey]) {
+      this.difficultyKey = difficultyKey;
+    }
     this._initState();
     this.state.budget = this.getEffectiveBudget();
     // Re-apply legacy starting bonuses
@@ -3148,7 +3334,9 @@ function buildShareText(state, result) {
     MANAGED: '🌤️ Managed Transition',
   };
   const label = scenarios[result.scenario] || result.title;
-  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
+  const diff = engine.difficulty;
+  const diffLabel = `${diff.icon} ${diff.label}`;
+  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nDifficulty: ${diffLabel}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
 }
 
 /* ============================================================
@@ -4391,7 +4579,8 @@ class LegacySystem {
    INITIALISATION
 ============================================================ */
 
-const engine       = new GameEngine();
+const _initialDifficulty = loadPreferredDifficulty();
+const engine       = new GameEngine(_initialDifficulty);
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
@@ -4402,6 +4591,50 @@ const _bonuses = legacySystem.startingBonuses();
 if (_bonuses.budgetBonus > 0) {
   engine.state.budget += _bonuses.budgetBonus;
 }
+
+/* ============================================================
+   DIFFICULTY HOOK-SCREEN BINDINGS
+============================================================ */
+function _applyDifficultySelectionUI(key) {
+  const preset = DIFFICULTY_PRESETS[key] || DIFFICULTY_PRESETS.standard;
+  // Selector buttons
+  document.querySelectorAll('.difficulty-btn').forEach(btn => {
+    const isSel = btn.dataset.difficulty === preset.key;
+    btn.classList.toggle('selected', isSel);
+    btn.setAttribute('aria-checked', isSel ? 'true' : 'false');
+  });
+  // Tagline
+  const tagline = document.getElementById('difficulty-tagline');
+  if (tagline) tagline.textContent = preset.tagline;
+  // Hook stat: budget figure
+  const budgetStat = document.getElementById('hook-budget-stat');
+  if (budgetStat) budgetStat.textContent = `\u00A3${preset.baseBudget}bn`;
+  // Header badge
+  const badge = document.getElementById('difficulty-badge');
+  const badgeLabel = document.getElementById('difficulty-badge-label');
+  const badgeIcon = badge ? badge.querySelector('.badge-icon') : null;
+  if (badge) badge.className = preset.key;
+  if (badgeIcon) badgeIcon.textContent = preset.icon;
+  if (badgeLabel) badgeLabel.textContent = preset.label;
+}
+
+document.querySelectorAll('.difficulty-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.difficulty;
+    if (!DIFFICULTY_PRESETS[key]) return;
+    engine.setDifficulty(key);
+    // Re-apply legacy bonuses since setDifficulty re-inits state
+    const lb = legacySystem.startingBonuses();
+    if (lb.budgetBonus > 0) engine.state.budget += lb.budgetBonus;
+    savePreferredDifficulty(key);
+    _applyDifficultySelectionUI(key);
+    // If the game is already in progress (e.g. user re-opens hook), re-render.
+    if (typeof ui !== 'undefined') ui.render(engine.getState());
+  });
+});
+
+// Initial UI sync for the persisted difficulty
+_applyDifficultySelectionUI(_initialDifficulty);
 
 // Set header subtitle
 const _titleEl = document.querySelector('#game-title p');
