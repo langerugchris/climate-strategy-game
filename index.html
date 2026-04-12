@@ -1562,6 +1562,88 @@ body { transition: filter 2s ease; }
   font-family: Georgia, 'Times New Roman', serif;
   margin-bottom: 4px;
 }
+
+/* ===== LOG DECISIONS DETAIL ===== */
+.log-decisions-detail {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.log-decisions-detail summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+  list-style: none;
+  -webkit-appearance: none;
+  outline: none;
+  user-select: none;
+}
+.log-decisions-detail summary::-webkit-details-marker { display: none; }
+.log-decisions-detail summary::before { content: '+ '; font-weight: 700; }
+.log-decisions-detail[open] summary::before { content: '− '; font-weight: 700; }
+
+/* ===== ENDGAME TRAJECTORY CHART ===== */
+#endgame-trajectory {
+  margin-bottom: var(--gap-lg);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+#endgame-trajectory.revealed { opacity: 1; }
+#endgame-trajectory-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+  font-weight: 700;
+}
+.trajectory-svg { display: block; width: 100%; overflow: visible; }
+.traj-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 6px;
+}
+.traj-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.traj-legend-swatch {
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* ===== HOOK LEGACY BADGE ===== */
+#hook-legacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: rgba(29,112,184,0.12);
+  border: 1px solid rgba(83,144,217,0.4);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-lg);
+  font-weight: 600;
+}
+
+/* ===== METRIC DANGER ZONE ===== */
+@keyframes danger-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+.metric-name.in-danger  { color: var(--status-danger); animation: danger-pulse 1.4s ease infinite; }
+.metric-name.in-warning { color: var(--status-warn); animation: none; }
 </style>
 </head>
 <body>
@@ -2330,6 +2412,7 @@ body { transition: filter 2s ease; }
       <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
       <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
     </div>
+    <div id="hook-legacy-badge" style="display:none">♛ <span id="hook-legacy-text"></span></div>
     <button id="hook-btn">Take control →</button>
     <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
   </div>
@@ -3332,6 +3415,7 @@ class UI {
       techTree.reset();
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-trajectory')?.remove();
       this._lastLogLength = 0;
       this.elLogScroll.innerHTML = `
         <div class="log-entry welcome">
@@ -3404,6 +3488,18 @@ class UI {
         : (val >= 60 ? 'good' : val >= 35 ? 'warn' : 'danger');
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
+
+      // Danger / warning pulse on the metric name label
+      const block = bar.closest('.metric-block');
+      if (block) {
+        const nameEl = block.querySelector('.metric-name');
+        if (nameEl) {
+          const inDanger  = m.key !== 'nz' && val < 40;
+          const inWarning = m.key !== 'nz' && val >= 40 && val < 60;
+          nameEl.classList.toggle('in-danger',  inDanger);
+          nameEl.classList.toggle('in-warning', !inDanger && inWarning);
+        }
+      }
     }
   }
 
@@ -3675,6 +3771,83 @@ class UI {
     return `This term, government ${parts.join(', ')} and ${last}.`;
   }
 
+  _buildTrajectoryChart(s) {
+    const log = s.log;
+    if (!log || log.length === 0) return '';
+
+    // Build data series: initial snapshot + one point per resolved turn
+    const years = [log[0].year, ...log.map(e => e.year + 5)];
+    const n = years.length;
+    const init = log[0].snapshot;
+    const ser = {
+      grid: [Math.round(init.gridReliability),   ...log.map(e => Math.round(e.afterGrid))],
+      fin:  [Math.round(init.financialStability), ...log.map(e => Math.round(e.afterFin))],
+      soc:  [Math.round(init.socialStability),    ...log.map(e => Math.round(e.afterSoc))],
+      nz:   [Math.round(init.netZeroProgress),    ...log.map(e => Math.round(e.afterNZ))],
+    };
+
+    const W = 460, H = 110, pL = 28, pR = 8, pT = 8, pB = 22;
+    const cW = W - pL - pR, cH = H - pT - pB;
+    const xOf = i       => pL + (i / Math.max(n - 1, 1)) * cW;
+    const yOf = (v, mx) => pT + (1 - v / mx) * cH;
+
+    const path = (vals, mx) =>
+      vals.map((v, i) => `${i === 0 ? 'M' : 'L'}${xOf(i).toFixed(1)},${yOf(v, mx).toFixed(1)}`).join(' ');
+    const dots = (vals, mx, fill) =>
+      vals.map((v, i) =>
+        `<circle cx="${xOf(i).toFixed(1)}" cy="${yOf(v, mx).toFixed(1)}" r="2.5" fill="${fill}"/>`
+      ).join('');
+
+    // Grid lines at 0, 50, 100
+    const gridLines = [0, 50, 100].map(v => {
+      const y = yOf(v, 100).toFixed(1);
+      return `<line x1="${pL}" y1="${y}" x2="${W - pR}" y2="${y}" stroke="#2a3050" stroke-width="0.5"/>
+              <text x="${pL - 3}" y="${(parseFloat(y) + 3).toFixed(1)}" text-anchor="end" fill="#909cb8"
+                    font-size="7" font-family="monospace">${v}</text>`;
+    }).join('');
+
+    // 40% danger threshold
+    const dY = yOf(40, 100).toFixed(1);
+
+    // Year labels on X axis
+    const xLabels = years.map((yr, i) =>
+      `<text x="${xOf(i).toFixed(1)}" y="${H - 3}" text-anchor="middle" fill="#909cb8"
+             font-size="8" font-family="monospace">${yr}</text>`
+    ).join('');
+
+    return `<div id="endgame-trajectory">
+      <div id="endgame-trajectory-title">Metric Trajectories — 2025 to 2050</div>
+      <svg class="trajectory-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+        ${gridLines}
+        <line x1="${pL}" y1="${dY}" x2="${W - pR}" y2="${dY}"
+              stroke="#ff3d0044" stroke-width="1" stroke-dasharray="3,2"/>
+        <path d="${path(ser.nz,  100)}" fill="none" stroke="#448aff" stroke-width="1.5"
+              stroke-dasharray="5,3" opacity="0.85"/>
+        <path d="${path(ser.grid,100)}" fill="none" stroke="#4caf81" stroke-width="1.5" opacity="0.9"/>
+        <path d="${path(ser.fin, 100)}" fill="none" stroke="#ffd600" stroke-width="1.5" opacity="0.9"/>
+        <path d="${path(ser.soc, 100)}" fill="none" stroke="#b39ddb" stroke-width="1.5" opacity="0.9"/>
+        ${dots(ser.grid,100,'#4caf81')}
+        ${dots(ser.fin, 100,'#ffd600')}
+        ${dots(ser.soc, 100,'#b39ddb')}
+        ${xLabels}
+      </svg>
+      <div class="traj-legend">
+        <div class="traj-legend-item">
+          <div class="traj-legend-swatch" style="background:#4caf81"></div>Grid
+        </div>
+        <div class="traj-legend-item">
+          <div class="traj-legend-swatch" style="background:#ffd600"></div>Financial
+        </div>
+        <div class="traj-legend-item">
+          <div class="traj-legend-swatch" style="background:#b39ddb"></div>Social
+        </div>
+        <div class="traj-legend-item">
+          <div class="traj-legend-swatch" style="background:#448aff"></div>Net Zero
+        </div>
+      </div>
+    </div>`;
+  }
+
   _addLogEntry(entry) {
     const div = document.createElement('div');
 
@@ -3686,13 +3859,16 @@ class UI {
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
-    // Decisions
-    html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+    // Narrative prose
+    html += `<div class="log-narrative">${this._buildTurnNarrative(entry)}</div>`;
 
     // Event notice
     if (entry.event) {
       html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
     }
+
+    // Collapsible investment breakdown
+    html += `<details class="log-decisions-detail"><summary>Investment breakdown</summary>${entry.decisions.join(' · ')}</details>`;
 
     // Metric chips
     html += '<div class="log-metrics">';
@@ -3855,6 +4031,17 @@ class UI {
     const narrativeDelay = 200 + tiles.length * 200 + 300;
     setTimeout(() => this.elEndgameNarr.classList.add('revealed'), narrativeDelay);
     setTimeout(() => this.elEndgameNgfs.classList.add('revealed'), narrativeDelay + 400);
+
+    // Trajectory chart — insert after narrative, reveal after NGFS label
+    document.getElementById('endgame-trajectory')?.remove();
+    const trajHtml = this._buildTrajectoryChart(s);
+    if (trajHtml) {
+      this.elEndgameNgfs.insertAdjacentHTML('afterend', trajHtml);
+      setTimeout(
+        () => document.getElementById('endgame-trajectory')?.classList.add('revealed'),
+        narrativeDelay + 900
+      );
+    }
   }
 }
 
@@ -4414,6 +4601,17 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Show legacy level badge in hook screen if player has prior runs
+{
+  const _badge = document.getElementById('hook-legacy-badge');
+  const _text  = document.getElementById('hook-legacy-text');
+  if (_badge && _text && legacySystem.data.runs > 0) {
+    const runs = legacySystem.data.runs;
+    _text.textContent = `${legacySystem.title()} · Best: ${legacySystem.data.bestScore}/100 · ${runs} run${runs !== 1 ? 's' : ''}`;
+    _badge.style.display = 'inline-flex';
+  }
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
