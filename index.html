@@ -102,9 +102,19 @@ body {
   letter-spacing: 0.08em;
 }
 
+#header-center {
+  flex: 1;
+  text-align: center;
+}
 #header-right {
   text-align: right;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+#turn-info {
+  text-align: right;
 }
 
 #current-year {
@@ -1279,6 +1289,7 @@ body { transition: filter 2s ease; }
   #game-title h1 { font-size: 13px; }
   #game-title p  { font-size: 10px; }
 
+  #header-center { display: none; }
   #header-right { text-align: right; }
   #current-year { font-size: 18px; }
   #turn-counter { font-size: 10px; }
@@ -1562,6 +1573,341 @@ body { transition: filter 2s ease; }
   font-family: Georgia, 'Times New Roman', serif;
   margin-bottom: 4px;
 }
+
+/* ===== SETTINGS BUTTON ===== */
+#settings-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+#settings-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+
+/* ===== SETTINGS MODAL ===== */
+#settings-modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1500;
+  padding: var(--gap-lg);
+}
+#settings-modal.hidden { display: none; }
+#settings-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 460px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+#settings-card h2 {
+  font-size: 18px;
+  margin-bottom: var(--gap-lg);
+  color: var(--text-primary);
+}
+.settings-section {
+  margin-bottom: var(--gap-lg);
+}
+.settings-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+.difficulty-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-sm);
+}
+.diff-option {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+.diff-option:hover { border-color: var(--border-strong); }
+.diff-option.selected { border-color: var(--accent-blue-lt); background: #192038; }
+.diff-option-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.diff-option-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+#settings-close-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: var(--gap-md);
+}
+#settings-close-btn:hover { background: var(--accent-blue-lt); }
+.diff-badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-weight: 600;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.diff-badge.easy { background: #0c2a1a; color: var(--status-good); }
+.diff-badge.normal { background: #1a2040; color: var(--accent-blue-lt); }
+.diff-badge.hard { background: #2a2000; color: var(--status-warn); }
+.diff-badge.extreme { background: #2a0e08; color: var(--status-danger); }
+#difficulty-indicator {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ===== SPARKLINE CHARTS ===== */
+.sparkline-container {
+  height: 24px;
+  margin-top: 3px;
+  position: relative;
+}
+.sparkline-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.sparkline-line {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sparkline-dot {
+  r: 2.5;
+  transition: r 0.2s;
+}
+.sparkline-dot:hover { r: 4; }
+.sparkline-area {
+  opacity: 0.12;
+}
+
+/* ===== ACHIEVEMENT SYSTEM ===== */
+#achievements-section {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+#achievements-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--gap-sm);
+}
+.achievement-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  opacity: 0.4;
+  transition: opacity 0.3s, border-color 0.3s;
+}
+.achievement-card.earned {
+  opacity: 1;
+  border-color: var(--accent-blue-lt);
+}
+.achievement-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.achievement-info {
+  min-width: 0;
+}
+.achievement-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.achievement-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+.achievement-card.earned .achievement-name { color: var(--accent-blue-lt); }
+
+/* ===== ENDGAME POLICY TIMELINE ===== */
+#endgame-timeline {
+  margin: var(--gap-lg) 0;
+}
+#endgame-timeline-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.timeline-track {
+  display: flex;
+  gap: var(--gap-sm);
+  overflow-x: auto;
+  padding-bottom: var(--gap-sm);
+}
+.timeline-turn {
+  flex: 1;
+  min-width: 120px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm);
+}
+.timeline-year {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: 4px;
+}
+.timeline-decisions {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.timeline-decisions .tl-invest {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.timeline-event {
+  font-size: 10px;
+  color: var(--status-danger);
+  margin-top: 4px;
+  font-weight: 600;
+}
+.timeline-metrics {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.tl-chip {
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.tl-chip.good { background: #0c2a1a; color: var(--status-good); }
+.tl-chip.warn { background: #2a2000; color: var(--status-warn); }
+.tl-chip.danger { background: #2a0e08; color: var(--status-danger); }
+
+/* ===== ENDGAME RADAR CHART ===== */
+#endgame-radar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--gap-lg);
+}
+#endgame-radar svg {
+  max-width: 220px;
+  width: 100%;
+}
+
+/* ===== MOBILE TAB NAVIGATION ===== */
+#mobile-tabs {
+  display: none;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.mobile-tab-bar {
+  display: flex;
+  justify-content: space-around;
+}
+.mobile-tab {
+  flex: 1;
+  padding: 10px 4px 6px;
+  text-align: center;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.mobile-tab-icon {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+.mobile-tab.active {
+  color: var(--accent-blue-lt);
+  border-top: 2px solid var(--accent-blue-lt);
+}
+
+@media (max-width: 768px) {
+  #mobile-tabs { display: block; }
+
+  #game-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    padding-bottom: 72px;
+  }
+
+  #metrics-panel,
+  #decisions-panel,
+  #log-panel {
+    display: none;
+  }
+
+  #metrics-panel.mobile-active,
+  #decisions-panel.mobile-active,
+  #log-panel.mobile-active {
+    display: flex;
+  }
+
+  .timeline-track {
+    flex-direction: column;
+  }
+  .timeline-turn { min-width: unset; }
+}
 </style>
 </head>
 <body>
@@ -1578,16 +1924,22 @@ body { transition: filter 2s ease; }
       <p>Climate Risk Simulation</p>
     </div>
   </div>
+  <div id="header-center">
+    <span id="difficulty-indicator"></span>
+  </div>
   <div id="header-right">
-    <div id="turn-pips">
-      <div class="pip" id="pip-0"></div>
-      <div class="pip" id="pip-1"></div>
-      <div class="pip" id="pip-2"></div>
-      <div class="pip" id="pip-3"></div>
-      <div class="pip" id="pip-4"></div>
+    <button id="settings-btn" title="Settings">⚙</button>
+    <div id="turn-info">
+      <div id="turn-pips">
+        <div class="pip" id="pip-0"></div>
+        <div class="pip" id="pip-1"></div>
+        <div class="pip" id="pip-2"></div>
+        <div class="pip" id="pip-3"></div>
+        <div class="pip" id="pip-4"></div>
+      </div>
+      <span id="current-year">2025</span>
+      <span id="turn-counter">Turn 1 of 5</span>
     </div>
-    <span id="current-year">2025</span>
-    <span id="turn-counter">Turn 1 of 5</span>
   </div>
 </header>
 
@@ -1614,6 +1966,7 @@ body { transition: filter 2s ease; }
           <span style="font-size:10px;color:var(--text-secondary)">3.0°C</span>
         </div>
         <div style="font-size:10px;color:var(--text-secondary);margin-top:3px;line-height:1.4;">UK domestic pathway · if replicated globally → global temp</div>
+        <div class="sparkline-container" id="spark-temp"></div>
       </div>
 
       <!-- Budget -->
@@ -1639,6 +1992,7 @@ body { transition: filter 2s ease; }
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
           <div class="bar-ghost" id="ghost-grid"></div>
         </div>
+        <div class="sparkline-container" id="spark-grid"></div>
       </div>
 
       <!-- Financial Stability -->
@@ -1652,6 +2006,7 @@ body { transition: filter 2s ease; }
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
           <div class="bar-ghost" id="ghost-fin"></div>
         </div>
+        <div class="sparkline-container" id="spark-fin"></div>
       </div>
 
       <!-- Social Stability -->
@@ -1665,6 +2020,7 @@ body { transition: filter 2s ease; }
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
           <div class="bar-ghost" id="ghost-soc"></div>
         </div>
+        <div class="sparkline-container" id="spark-soc"></div>
       </div>
 
       <!-- Net Zero Progress -->
@@ -1677,6 +2033,7 @@ body { transition: filter 2s ease; }
           <div class="bar-fill info" id="bar-nz" style="width:0%"></div>
           <div class="bar-ghost" id="ghost-nz"></div>
         </div>
+        <div class="sparkline-container" id="spark-nz"></div>
       </div>
 
       <!-- Energy Mix -->
@@ -2378,6 +2735,56 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- SETTINGS MODAL -->
+<div id="settings-modal" class="hidden">
+  <div id="settings-card">
+    <h2>⚙ Settings</h2>
+    <div class="settings-section">
+      <div class="settings-section-label">Difficulty</div>
+      <div class="difficulty-options">
+        <div class="diff-option" data-diff="easy">
+          <div class="diff-option-name">Easy <span class="diff-badge easy">Beginner</span></div>
+          <div class="diff-option-desc">£130bn budget · slower warming · fewer events</div>
+        </div>
+        <div class="diff-option selected" data-diff="normal">
+          <div class="diff-option-name">Normal <span class="diff-badge normal">Standard</span></div>
+          <div class="diff-option-desc">£100bn budget · balanced warming · standard events</div>
+        </div>
+        <div class="diff-option" data-diff="hard">
+          <div class="diff-option-name">Hard <span class="diff-badge hard">Expert</span></div>
+          <div class="diff-option-desc">£80bn budget · faster warming · more events</div>
+        </div>
+        <div class="diff-option" data-diff="extreme">
+          <div class="diff-option-name">Extreme <span class="diff-badge extreme">Crisis</span></div>
+          <div class="diff-option-desc">£60bn budget · rapid warming · relentless events</div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-label">Current Run</div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
+        Difficulty changes take effect on <strong>New Game</strong>. Your current run continues with the settings it started with.
+      </div>
+    </div>
+    <button id="settings-close-btn">Done</button>
+  </div>
+</div>
+
+<!-- MOBILE TAB BAR -->
+<div id="mobile-tabs">
+  <div class="mobile-tab-bar">
+    <button class="mobile-tab" data-panel="metrics-panel">
+      <span class="mobile-tab-icon">📊</span>Metrics
+    </button>
+    <button class="mobile-tab active" data-panel="decisions-panel">
+      <span class="mobile-tab-icon">💡</span>Decisions
+    </button>
+    <button class="mobile-tab" data-panel="log-panel">
+      <span class="mobile-tab-icon">📋</span>Log
+    </button>
+  </div>
+</div>
+
 <script>
 'use strict';
 
@@ -2465,6 +2872,117 @@ const RANDOM_EVENTS = [
 ];
 
 /* ============================================================
+   DIFFICULTY SYSTEM
+============================================================ */
+
+const DIFFICULTY_PRESETS = {
+  easy:    { label: 'Easy',    baseBudget: 130, warmingRate: 0.14, eventProbMod: 0.6,  badge: 'easy' },
+  normal:  { label: 'Normal',  baseBudget: 100, warmingRate: 0.20, eventProbMod: 1.0,  badge: 'normal' },
+  hard:    { label: 'Hard',    baseBudget: 80,  warmingRate: 0.26, eventProbMod: 1.3,  badge: 'hard' },
+  extreme: { label: 'Extreme', baseBudget: 60,  warmingRate: 0.32, eventProbMod: 1.6,  badge: 'extreme' },
+};
+
+class DifficultyManager {
+  constructor() {
+    this._KEY = 'uk_climate_difficulty';
+    this.selected = this._load();
+    this.active = this.selected;
+  }
+  _load() {
+    try { return localStorage.getItem(this._KEY) || 'normal'; } catch { return 'normal'; }
+  }
+  _save() {
+    try { localStorage.setItem(this._KEY, this.selected); } catch {}
+  }
+  select(diff) {
+    if (DIFFICULTY_PRESETS[diff]) { this.selected = diff; this._save(); }
+  }
+  activateForNewGame() {
+    this.active = this.selected;
+  }
+  get preset() { return DIFFICULTY_PRESETS[this.active]; }
+  get selectedPreset() { return DIFFICULTY_PRESETS[this.selected]; }
+}
+
+const difficultyMgr = new DifficultyManager();
+
+/* ============================================================
+   ACHIEVEMENT SYSTEM
+============================================================ */
+
+const ACHIEVEMENTS = [
+  { id: 'net_zero_pioneer', icon: '🌱', name: 'Net Zero Pioneer', desc: 'Achieve Net Zero in 3 turns or fewer', check: (s) => s.netZeroProgress >= 100 && s.turn <= 3 },
+  { id: 'steady_hand', icon: '⚖️', name: 'Steady Hand', desc: 'Finish with no metric below 50%', check: (s) => s.gridReliability >= 50 && s.financialStability >= 50 && s.socialStability >= 50 },
+  { id: 'weatherproof', icon: '🛡️', name: 'Weatherproof', desc: 'Survive the game with zero climate events', check: (s) => s.eventCount === 0 },
+  { id: 'paris_compliant', icon: '🌍', name: 'Paris Compliant', desc: 'Keep temperature below 1.5°C', check: (s) => s.temperature < 1.5 },
+  { id: 'peoples_champion', icon: '🤝', name: "People's Champion", desc: 'Finish with Social Stability above 85%', check: (s) => s.socialStability >= 85 },
+  { id: 'fiscal_hawk', icon: '🏦', name: 'Fiscal Hawk', desc: 'Finish with Financial Stability above 85%', check: (s) => s.financialStability >= 85 },
+  { id: 'grid_master', icon: '⚡', name: 'Grid Master', desc: 'Finish with Grid Reliability above 90%', check: (s) => s.gridReliability >= 90 },
+  { id: 'researcher', icon: '🔬', name: 'Chief Scientist', desc: 'Purchase all tech tree upgrades', check: (s, tt) => tt.isComplete() },
+  { id: 'perfect_score', icon: '💯', name: 'Perfect Score', desc: 'Score 90 or above', check: (s) => calculateScore(s).total >= 90 },
+  { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
+  { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
+  { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+];
+
+class AchievementManager {
+  constructor() {
+    this._KEY = 'uk_climate_achievements_v1';
+    this.unlocked = this._load();
+  }
+  _load() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      return raw ? new Set(JSON.parse(raw)) : new Set();
+    } catch { return new Set(); }
+  }
+  _save() {
+    try { localStorage.setItem(this._KEY, JSON.stringify([...this.unlocked])); } catch {}
+  }
+  checkAll(state, techTree) {
+    const newlyEarned = [];
+    for (const ach of ACHIEVEMENTS) {
+      if (!this.unlocked.has(ach.id) && ach.check(state, techTree)) {
+        this.unlocked.add(ach.id);
+        newlyEarned.push(ach);
+      }
+    }
+    this._save();
+    return newlyEarned;
+  }
+  isUnlocked(id) { return this.unlocked.has(id); }
+}
+
+const achievementMgr = new AchievementManager();
+
+/* ============================================================
+   TURN HISTORY TRACKER
+============================================================ */
+
+class TurnHistory {
+  constructor() {
+    this.data = [];
+  }
+  record(state) {
+    this.data.push({
+      turn: state.turn,
+      year: state.year,
+      temperature: state.temperature,
+      gridReliability: state.gridReliability,
+      financialStability: state.financialStability,
+      socialStability: state.socialStability,
+      netZeroProgress: state.netZeroProgress,
+    });
+  }
+  reset() { this.data = []; }
+  getSeriesFor(key) {
+    return this.data.map(d => d[key]);
+  }
+}
+
+const turnHistory = new TurnHistory();
+
+/* ============================================================
    GAME ENGINE
 ============================================================ */
 
@@ -2531,7 +3049,7 @@ class GameEngine {
   }
 
   getEffectiveBudget() {
-    let base = 100;
+    let base = difficultyMgr.preset.baseBudget;
     if (this.state.financialStability > 80) base += 20;
     base -= this.state.nextTurnBudgetPenalty;
     return Math.max(base, 20);
@@ -2704,7 +3222,10 @@ class GameEngine {
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
 
-    // Phase 11: Advance turn
+    // Phase 11: Record turn history
+    turnHistory.record(s);
+
+    // Phase 12: Advance turn
     s.turn++;
     s.year += 5;
     s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
@@ -2825,8 +3346,7 @@ class GameEngine {
     const gasShare   = total > 0 ? e.gas / total : 0;
     const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
 
-    // Base rate 0.20 represents global locked-in warming from existing emissions
-    let delta = 0.20 + (gasShare - renewShare) * 0.22;
+    let delta = difficultyMgr.preset.warmingRate + (gasShare - renewShare) * 0.22;
     delta = Math.max(delta, 0.03); // residual warming even at Net Zero
 
     // Tipping point feedback: above 1.5°C warming compounds faster (permafrost methane, Arctic ice loss)
@@ -2844,7 +3364,7 @@ class GameEngine {
     if (s.turn > 0 && s.turn - 1 === s.lastEventTurn) return null;
 
     const excess = Math.max(s.temperature - 1.1, 0);
-    const prob   = Math.min(0.10 + (excess / 0.1) * 0.015, 0.70);
+    const prob   = Math.min((0.10 + (excess / 0.1) * 0.015) * difficultyMgr.preset.eventProbMod, 0.70);
 
     if (Math.random() >= prob) return null;
 
@@ -2937,9 +3457,11 @@ class GameEngine {
   }
 
   reset() {
+    difficultyMgr.activateForNewGame();
+    turnHistory.reset();
     this._initState();
+    turnHistory.record(this.state);
     this.state.budget = this.getEffectiveBudget();
-    // Re-apply legacy starting bonuses
     const bonuses = legacySystem.startingBonuses();
     if (bonuses.budgetBonus > 0) this.state.budget += bonuses.budgetBonus;
   }
@@ -3326,26 +3848,81 @@ class UI {
       });
     }
 
+    // Settings modal
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsModal = document.getElementById('settings-modal');
+    const settingsCloseBtn = document.getElementById('settings-close-btn');
+    if (settingsBtn) {
+      settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
+    }
+    if (settingsCloseBtn) {
+      settingsCloseBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+    }
+    document.querySelectorAll('.diff-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.diff-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        difficultyMgr.select(opt.dataset.diff);
+        this._updateDifficultyIndicator();
+      });
+    });
+    // Init difficulty indicator and selected option
+    this._updateDifficultyIndicator();
+    const currentDiffOpt = document.querySelector(`.diff-option[data-diff="${difficultyMgr.selected}"]`);
+    if (currentDiffOpt) {
+      document.querySelectorAll('.diff-option').forEach(o => o.classList.remove('selected'));
+      currentDiffOpt.classList.add('selected');
+    }
+
+    // Mobile tab navigation
+    document.querySelectorAll('.mobile-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const panelId = tab.dataset.panel;
+        ['metrics-panel', 'decisions-panel', 'log-panel'].forEach(id => {
+          document.getElementById(id).classList.toggle('mobile-active', id === panelId);
+        });
+      });
+    });
+    // Init mobile: show decisions panel by default
+    if (window.innerWidth <= 768) {
+      document.getElementById('decisions-panel').classList.add('mobile-active');
+    }
+
     // Restart
     this.elRestartBtn.addEventListener('click', () => {
       this.engine.reset();
       techTree.reset();
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-timeline')?.remove();
+      document.getElementById('achievements-section')?.remove();
+      document.getElementById('endgame-radar')?.remove();
       this._lastLogLength = 0;
       this.elLogScroll.innerHTML = `
         <div class="log-entry welcome">
           <div class="log-year">2025 — Briefing</div>
           <div class="log-text">UK Climate Strategy simulation begins. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
         </div>`;
+      this._updateDifficultyIndicator();
       this.render(this.engine.getState());
     });
+  }
+
+  _updateDifficultyIndicator() {
+    const el = document.getElementById('difficulty-indicator');
+    if (!el) return;
+    const preset = difficultyMgr.selectedPreset;
+    const badge = difficultyMgr.selected;
+    el.innerHTML = `<span class="diff-badge ${badge}">${preset.label}</span>`;
   }
 
   render(state) {
     this._renderHeader(state);
     this._renderMetrics(state);
     this._renderProjection(state);
+    this._renderSparklines(state);
     this._renderEnergyMix(state);
     this._renderBudget(state);
     this._renderCards(state);
@@ -3404,6 +3981,49 @@ class UI {
         : (val >= 60 ? 'good' : val >= 35 ? 'warn' : 'danger');
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
+    }
+  }
+
+  _renderSparklines() {
+    const series = [
+      { containerId: 'spark-temp', key: 'temperature', color: '#ff7043', invert: true, min: 1.0, max: 3.0, decimals: 1 },
+      { containerId: 'spark-grid', key: 'gridReliability', color: '#4caf81', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-fin',  key: 'financialStability', color: '#5390d9', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-soc',  key: 'socialStability', color: '#ffd600', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-nz',   key: 'netZeroProgress', color: '#448aff', invert: false, min: 0, max: 100 },
+    ];
+
+    for (const s of series) {
+      const container = document.getElementById(s.containerId);
+      if (!container) continue;
+      const data = turnHistory.getSeriesFor(s.key);
+      if (data.length < 2) { container.innerHTML = ''; continue; }
+
+      const w = 200, h = 22, pad = 4;
+      const range = s.max - s.min || 1;
+      const points = data.map((v, i) => {
+        const x = pad + (i / (Math.max(data.length - 1, 1))) * (w - pad * 2);
+        const y = pad + (1 - (v - s.min) / range) * (h - pad * 2);
+        return { x, y, v };
+      });
+
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaPath = linePath + ` L${points[points.length - 1].x.toFixed(1)},${h} L${points[0].x.toFixed(1)},${h} Z`;
+
+      const lastVal = data[data.length - 1];
+      const firstVal = data[0];
+      const trend = s.invert ? (lastVal < firstVal ? '#00c853' : '#ff3d00') : (lastVal > firstVal ? '#00c853' : lastVal < firstVal ? '#ff3d00' : '#909cb8');
+
+      const dots = points.map(p => {
+        const label = s.decimals ? p.v.toFixed(s.decimals) : Math.round(p.v);
+        return `<circle class="sparkline-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" fill="${s.color}"><title>${label}</title></circle>`;
+      }).join('');
+
+      container.innerHTML = `<svg class="sparkline-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+        <path class="sparkline-area" d="${areaPath}" fill="${trend}"/>
+        <path class="sparkline-line" d="${linePath}" stroke="${trend}"/>
+        ${dots}
+      </svg>`;
     }
   }
 
@@ -3825,10 +4445,22 @@ class UI {
 
     // Calculate and display score
     const score = calculateScore(s);
+
+    // Build radar chart SVG
+    const radarHtml = this._buildRadarChart(score);
+
+    // Build policy timeline
+    const timelineHtml = this._buildPolicyTimeline(s);
+
+    // Check achievements
+    const newAchievements = achievementMgr.checkAll(s, techTree);
+    const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
         <div id="endgame-score-label">Your Climate Score</div>
+        ${radarHtml}
         <div id="endgame-score-breakdown">
           <div class="score-dim"><span class="score-dim-val">${score.tempScore}/30</span><span class="score-dim-name">Climate</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.nzScore}/30</span><span class="score-dim-name">Net Zero</span></div>
@@ -3838,8 +4470,8 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
-    // Insert before the metrics grid
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -3849,12 +4481,93 @@ class UI {
       tile.classList.remove('revealed');
       setTimeout(() => tile.classList.add('revealed'), 200 + i * 200);
     });
-    // Reveal narrative and NGFS label after metrics
     this.elEndgameNarr.classList.remove('revealed');
     this.elEndgameNgfs.classList.remove('revealed');
     const narrativeDelay = 200 + tiles.length * 200 + 300;
     setTimeout(() => this.elEndgameNarr.classList.add('revealed'), narrativeDelay);
     setTimeout(() => this.elEndgameNgfs.classList.add('revealed'), narrativeDelay + 400);
+  }
+
+  _buildRadarChart(score) {
+    const dims = [
+      { label: 'Climate', val: score.tempScore, max: 30 },
+      { label: 'Net Zero', val: score.nzScore, max: 30 },
+      { label: 'Stability', val: score.stabScore, max: 30 },
+      { label: 'Resilience', val: score.resScore, max: 10 },
+    ];
+    const cx = 110, cy = 110, r = 80;
+    const n = dims.length;
+    const angleStep = (2 * Math.PI) / n;
+    const startAngle = -Math.PI / 2;
+
+    const gridLines = [0.25, 0.5, 0.75, 1.0].map(frac => {
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const angle = startAngle + i * angleStep;
+        pts.push(`${(cx + Math.cos(angle) * r * frac).toFixed(1)},${(cy + Math.sin(angle) * r * frac).toFixed(1)}`);
+      }
+      return `<polygon points="${pts.join(' ')}" fill="none" stroke="var(--border-subtle)" stroke-width="0.5"/>`;
+    }).join('');
+
+    const axisLines = [];
+    const labels = [];
+    const dataPoints = [];
+    for (let i = 0; i < n; i++) {
+      const angle = startAngle + i * angleStep;
+      const ex = cx + Math.cos(angle) * r;
+      const ey = cy + Math.sin(angle) * r;
+      axisLines.push(`<line x1="${cx}" y1="${cy}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="var(--border-subtle)" stroke-width="0.5"/>`);
+      const lx = cx + Math.cos(angle) * (r + 16);
+      const ly = cy + Math.sin(angle) * (r + 16);
+      labels.push(`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" fill="var(--text-secondary)" font-size="9" font-family="var(--font-system)">${dims[i].label}</text>`);
+      const frac = dims[i].val / dims[i].max;
+      dataPoints.push(`${(cx + Math.cos(angle) * r * frac).toFixed(1)},${(cy + Math.sin(angle) * r * frac).toFixed(1)}`);
+    }
+
+    return `<div id="endgame-radar"><svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      ${gridLines}
+      ${axisLines.join('')}
+      <polygon points="${dataPoints.join(' ')}" fill="var(--accent-blue-lt)" fill-opacity="0.2" stroke="var(--accent-blue-lt)" stroke-width="2"/>
+      ${dataPoints.map(p => `<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="3" fill="var(--accent-blue-lt)"/>`).join('')}
+      ${labels.join('')}
+    </svg></div>`;
+  }
+
+  _buildPolicyTimeline(state) {
+    if (!state.log || state.log.length === 0) return '';
+    let html = `<div id="endgame-timeline"><div id="endgame-timeline-title">Policy Timeline</div><div class="timeline-track">`;
+    for (const entry of state.log) {
+      const chipStatus = (v) => v >= 60 ? 'good' : v >= 35 ? 'warn' : 'danger';
+      html += `<div class="timeline-turn">
+        <div class="timeline-year">${entry.year}–${entry.year + 5}</div>
+        <div class="timeline-decisions">${entry.decisions.map(d => `<span class="tl-invest">${d}</span>`).join('<br>')}</div>
+        ${entry.event ? `<div class="timeline-event">⚠ ${entry.event}</div>` : ''}
+        <div class="timeline-metrics">
+          <span class="tl-chip ${chipStatus(entry.afterGrid)}">Grid ${Math.round(entry.afterGrid)}%</span>
+          <span class="tl-chip ${chipStatus(entry.afterFin)}">Fin ${Math.round(entry.afterFin)}%</span>
+          <span class="tl-chip ${chipStatus(entry.afterSoc)}">Soc ${Math.round(entry.afterSoc)}%</span>
+        </div>
+      </div>`;
+    }
+    html += `</div></div>`;
+    return html;
+  }
+
+  _buildAchievementsDisplay(newlyEarned) {
+    let html = `<div id="achievements-section"><div id="achievements-title">Achievements (${achievementMgr.unlocked.size}/${ACHIEVEMENTS.length})</div><div class="achievements-grid">`;
+    for (const ach of ACHIEVEMENTS) {
+      const earned = achievementMgr.isUnlocked(ach.id);
+      const isNew = newlyEarned.some(a => a.id === ach.id);
+      html += `<div class="achievement-card ${earned ? 'earned' : ''}${isNew ? ' new' : ''}">
+        <div class="achievement-icon">${earned ? ach.icon : '🔒'}</div>
+        <div class="achievement-info">
+          <div class="achievement-name">${ach.name}</div>
+          <div class="achievement-desc">${earned ? ach.desc : '???'}</div>
+        </div>
+      </div>`;
+    }
+    html += `</div></div>`;
+    return html;
   }
 }
 
@@ -4395,6 +5108,12 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+
+// Activate difficulty for initial game
+difficultyMgr.activateForNewGame();
+
+// Record initial state for sparklines
+turnHistory.record(engine.state);
 
 // Apply legacy starting bonuses
 engine.state.budget = engine.getEffectiveBudget();
