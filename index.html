@@ -548,6 +548,36 @@ body {
 .effect-tag.neg  { background: #2a0e08; color: #ff7043; }
 .effect-tag.warn { background: #2a2000; color: var(--status-warn); }
 
+/* ===== CARD RATIONALE ===== */
+.card-rationale {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 6px;
+  border-left: 2px solid var(--border-subtle);
+  padding-left: 8px;
+  font-style: italic;
+}
+
+/* ===== DECISION HEADER HINT ===== */
+#decision-header-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle);
+}
+#decision-header-hint kbd {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
 /* ===== NO-SPEND WARNING ===== */
 #no-spend-warning {
   padding: 6px var(--gap-md);
@@ -2281,6 +2311,7 @@ body { transition: filter 2s ease; }
           <span id="budget-remaining-display">£100bn</span> remaining
         </div>
       </div>
+      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
     </div>
 
     <div id="investment-cards">
@@ -2302,6 +2333,7 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
+        <div class="card-rationale">The core engine of decarbonisation. Each block builds wind and solar capacity and phases out gas — but accelerates stranded asset losses in North Sea infrastructure. Without grid storage, a rapidly greened grid becomes unreliable.</div>
         <div class="card-effects">
           <span class="effect-tag pos">Wind +8, Solar +6, NZ +10</span>
           <span class="effect-tag neg">Gas −7, Stranded +12</span>
@@ -2327,6 +2359,7 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
+        <div class="card-rationale">Intermittent renewables need firm backup. Batteries, pumped hydro, and smart-grid upgrades provide dispatchable capacity — allowing you to run high wind and solar shares without blackouts. Enables nuclear to function as reliable low-carbon baseload.</div>
         <div class="card-effects">
           <span class="effect-tag pos">Storage +10, Nuclear +5</span>
           <span class="effect-tag pos">Grid Reliability ↑</span>
@@ -2352,6 +2385,7 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
+        <div class="card-rationale">Climate change is already locked in — physical impacts will intensify regardless of Net Zero progress. Flood defences, heat-resilient housing, and early-warning systems cut event damage by up to 50% and protect the energy and transport infrastructure the transition depends on.</div>
         <div class="card-effects">
           <span class="effect-tag pos">Social +5/block</span>
           <span class="effect-tag pos">Event damage −50%</span>
@@ -2377,6 +2411,7 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
+        <div class="card-rationale">The transition concentrates costs on lower-income households and fossil-fuel workers. Without active support — retraining, energy bill relief, community investment — rising bills and redundancies erode the public consent the programme needs to survive. Builds durable "social capital" across turns.</div>
         <div class="card-effects">
           <span class="effect-tag pos">Social +8, Fin +3</span>
           <span class="effect-tag pos">Reduces unrest risk</span>
@@ -2401,6 +2436,7 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
+        <div class="card-rationale">UK pension funds hold over £100bn in fossil fuel assets that become worthless as gas is phased out. Green finance regulation, mandatory disclosure, and managed portfolio wind-down reduce stranded asset losses and protect the financial system from climate-related contagion.</div>
         <div class="card-effects">
           <span class="effect-tag pos">Fin Stability +10</span>
           <span class="effect-tag pos">Stranded −8, Property +5</span>
@@ -2425,6 +2461,7 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
+        <div class="card-rationale">R&amp;D investment unlocks permanent technology multipliers applied to all future spending in that area. Cheap — £15bn per block — but the payoff compounds over remaining turns. Prioritise the upgrade that amplifies your weakest investment area.</div>
         <div class="card-effects">
           <span class="effect-tag pos" id="research-effect-tag">Solar blocks give 1.5× Net Zero progress</span>
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
@@ -2946,7 +2983,8 @@ body { transition: filter 2s ease; }
       <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
       <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
     </div>
-    <button id="hook-btn">Take control →</button>
+    <button id="hook-btn">New Game →</button>
+    <button id="hook-continue-btn" class="hidden" style="display:none;margin-top:10px;width:100%;padding:12px 24px;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;">↺ Continue saved game — <span id="hook-continue-label"></span></button>
     <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
   </div>
 </div>
@@ -3335,6 +3373,132 @@ const STARTER_SCENARIOS = {
     },
   },
 };
+
+/* ============================================================
+   TURN HISTORY TRACKER
+============================================================ */
+
+/* ============================================================
+   SAVE / LOAD SYSTEM
+============================================================ */
+
+class SaveManager {
+  constructor() {
+    this._KEY = 'uk_climate_save_v2';
+  }
+
+  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
+    try {
+      const payload = {
+        version: 2,
+        savedAt: Date.now(),
+        engineState: JSON.parse(JSON.stringify(engineState)),
+        historyData: JSON.parse(JSON.stringify(historyData)),
+        techPurchased: [...techPurchased],
+        activeScenario,
+        activeDifficulty,
+      };
+      localStorage.setItem(this._KEY, JSON.stringify(payload));
+    } catch (e) { /* storage full or unavailable */ }
+  }
+
+  hasSave() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      if (!raw) return false;
+      const d = JSON.parse(raw);
+      return d.version === 2 && d.engineState && d.engineState.turn > 0 && d.engineState.turn < 5 && !d.engineState.gameOver;
+    } catch { return false; }
+  }
+
+  load() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }
+
+  clear() {
+    try { localStorage.removeItem(this._KEY); } catch {}
+  }
+
+  savedTurn() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      if (!raw) return null;
+      const d = JSON.parse(raw);
+      return d.engineState ? { turn: d.engineState.turn, year: d.engineState.year } : null;
+    } catch { return null; }
+  }
+}
+
+const saveMgr = new SaveManager();
+
+/* ============================================================
+   ANALYTICS TRACKER
+============================================================ */
+
+class AnalyticsTracker {
+  constructor() {
+    this._KEY = 'uk_climate_analytics_v1';
+    this.data = this._load();
+  }
+
+  _load() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      return raw ? JSON.parse(raw) : this._blank();
+    } catch { return this._blank(); }
+  }
+
+  _blank() {
+    return {
+      totalRuns: 0,
+      completedRuns: 0,
+      scenarioCounts: {},
+      difficultyCounts: {},
+      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0 },
+      scoreTotal: 0,
+      eventTotal: 0,
+    };
+  }
+
+  _save() {
+    try { localStorage.setItem(this._KEY, JSON.stringify(this.data)); } catch {}
+  }
+
+  recordStart() {
+    this.data.totalRuns++;
+    this._save();
+  }
+
+  recordEnd(engineState, scenarioResult, difficulty) {
+    this.data.completedRuns++;
+    const sc = scenarioResult.scenario;
+    this.data.scenarioCounts[sc] = (this.data.scenarioCounts[sc] || 0) + 1;
+    this.data.difficultyCounts[difficulty] = (this.data.difficultyCounts[difficulty] || 0) + 1;
+    // Tally investment blocks from log
+    for (const entry of (engineState.log || [])) {
+      for (const dec of entry.decisions) {
+        const m = dec.match(/^(.+?) ×(\d)/);
+        if (!m) continue;
+        const cat = Object.keys(this.data.investmentTotals).find(k =>
+          dec.toLowerCase().includes(k.toLowerCase().replace(/([A-Z])/g, ' $1').trim().toLowerCase())
+        );
+        if (cat) this.data.investmentTotals[cat] += parseInt(m[2]);
+      }
+    }
+    this.data.scoreTotal += calculateScore(engineState).total;
+    this.data.eventTotal += engineState.eventCount || 0;
+    this._save();
+  }
+
+  getStats() { return this.data; }
+
+  clear() { this.data = this._blank(); this._save(); }
+}
+
+const analyticsMgr = new AnalyticsTracker();
 
 /* ============================================================
    TURN HISTORY TRACKER
@@ -4167,6 +4331,43 @@ class UI {
     });
 
     // Hook screen → advisor overlay
+    // Check for saved game and show continue button
+    const hookContinueBtn = document.getElementById('hook-continue-btn');
+    if (saveMgr.hasSave() && hookContinueBtn) {
+      const saved = saveMgr.savedTurn();
+      const label = saved ? `Turn ${saved.turn + 1} / Year ${saved.year}` : 'in progress';
+      document.getElementById('hook-continue-label').textContent = label;
+      hookContinueBtn.style.display = 'block';
+      hookContinueBtn.addEventListener('click', () => {
+        const payload = saveMgr.load();
+        if (!payload) return;
+        // Restore engine state
+        Object.assign(engine.state, payload.engineState);
+        // Restore tech tree
+        techTree.reset();
+        for (const id of payload.techPurchased) {
+          const upgrade = RESEARCH_UPGRADES.find(u => u.id === id);
+          if (upgrade) { upgrade.apply(techTree.multipliers); techTree._purchased.add(id); }
+        }
+        // Restore history
+        turnHistory.data = payload.historyData || [];
+        this._activeScenario = payload.activeScenario || 'standard';
+        if (payload.activeDifficulty) difficultyMgr.active = payload.activeDifficulty;
+        // Restore log entries
+        this.elLogScroll.innerHTML = `
+          <div class="log-entry welcome">
+            <div class="log-year">Game Restored</div>
+            <div class="log-text">Continuing from Turn ${engine.state.turn + 1} (${engine.state.year}). Your previous progress has been restored.</div>
+          </div>`;
+        for (const entry of engine.state.log) {
+          this._addLogEntry(entry);
+        }
+        document.getElementById('hook-screen').classList.add('hidden');
+        this._updateDifficultyIndicator();
+        this.render(engine.getState());
+      });
+    }
+
     const hookBtn = document.getElementById('hook-btn');
     if (hookBtn) {
       hookBtn.addEventListener('click', () => {
@@ -4298,6 +4499,9 @@ class UI {
       scenarioStartBtn.addEventListener('click', () => {
         document.getElementById('scenario-screen').classList.add('hidden');
         document.getElementById('advisor-overlay').classList.remove('hidden');
+        // Clear any existing save and start fresh
+        saveMgr.clear();
+        analyticsMgr.recordStart();
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
@@ -4366,7 +4570,41 @@ class UI {
     }
     section.innerHTML = `
       <div class="settings-section-label">Best Scores</div>
-      ${this._buildHighScoreHTML()}`;
+      ${this._buildHighScoreHTML()}
+      <div style="margin-top:var(--gap-md)">
+        <div class="settings-section-label">Your Statistics</div>
+        ${this._buildAnalyticsHTML()}
+      </div>`;
+  }
+
+  _buildAnalyticsHTML() {
+    const d = analyticsMgr.getStats();
+    if (d.completedRuns === 0) {
+      return `<div class="hs-empty">Complete a game to see your statistics.</div>`;
+    }
+    const avgScore = Math.round(d.scoreTotal / d.completedRuns);
+    const avgEvents = (d.eventTotal / d.completedRuns).toFixed(1);
+
+    // Most invested category
+    const invTotals = d.investmentTotals;
+    const topCat = Object.entries(invTotals).sort((a, b) => b[1] - a[1])[0];
+    const catLabels = { energyTransition: 'Energy Transition', gridAndStorage: 'Grid & Storage', adaptation: 'Adaptation', socialSupport: 'Social Support', financialResilience: 'Financial Resilience', research: 'R&D' };
+    const topCatLabel = topCat ? catLabels[topCat[0]] || topCat[0] : '—';
+
+    // Most common scenario
+    const scenarioCounts = d.scenarioCounts;
+    const topScenario = Object.entries(scenarioCounts).sort((a, b) => b[1] - a[1])[0];
+    const scenLabels = { ORDERLY: '🌱 Orderly', TURBULENT: '🌊 Turbulent', DISORDERLY: '⚠️ Disorderly', HOT_HOUSE: '🔥 Hot House', SOCIAL_BREAKDOWN: '💀 Breakdown', MANAGED: '🌤️ Managed' };
+    const topScenLabel = topScenario ? (scenLabels[topScenario[0]] || topScenario[0]) : '—';
+
+    return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12px;">
+      <div style="color:var(--text-muted)">Games played</div><div style="color:var(--text-primary);font-weight:600">${d.totalRuns}</div>
+      <div style="color:var(--text-muted)">Completed</div><div style="color:var(--text-primary);font-weight:600">${d.completedRuns}</div>
+      <div style="color:var(--text-muted)">Avg score</div><div style="color:var(--text-primary);font-weight:600">${avgScore}/100</div>
+      <div style="color:var(--text-muted)">Avg events</div><div style="color:var(--text-primary);font-weight:600">${avgEvents}</div>
+      <div style="color:var(--text-muted)">Favourite investment</div><div style="color:var(--accent-blue-lt);font-weight:600">${topCatLabel}</div>
+      <div style="color:var(--text-muted)">Most common outcome</div><div style="color:var(--text-primary);font-weight:600">${topScenLabel}</div>
+    </div>`;
   }
 
   render(state) {
@@ -5506,7 +5744,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
-    await _delay(520);
+    await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
@@ -5523,11 +5761,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
-  await _delay(700);
+  await _delay(1500);
 
   // Dismiss overlay
   overlay.classList.add('sim-fade-out');
-  await _delay(380);
+  await _delay(500);
   overlay.remove();
 
   // Recalculate next-turn budget to include any mini-event penalties
@@ -5540,14 +5778,29 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
-  if (result.event) {
+  if (result.endgame) {
+    // Game over — clear save, record analytics
+    saveMgr.clear();
+    analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
+    if (result.event) {
+      fxMgr.haptic('heavy');
+      fxMgr.shake();
+      ui._pendingEndgame = result.endgame;
+      ui.showEventModal(result.event);
+    } else {
+      ui.showEndgame(result.endgame);
+    }
+  } else if (result.event) {
     fxMgr.haptic('heavy');
     fxMgr.shake();
-    ui._pendingEndgame = result.endgame;
+    ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-  } else if (result.endgame) {
-    ui.showEndgame(result.endgame);
+    // Auto-save after event shown (state is post-event)
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    ui.render(engine.getState());
   } else {
+    // Auto-save mid-game progress
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
