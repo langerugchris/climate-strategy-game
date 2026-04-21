@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
+<script src="https://game-cdn.poki.com/scripts/v2/poki-sdk.js"></script>
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -3087,6 +3088,25 @@ body { transition: filter 2s ease; }
 'use strict';
 
 /* ============================================================
+   POKI SDK INTEGRATION
+============================================================ */
+
+function _pokiGameplayStart() {
+  if (typeof PokiSDK === 'undefined') return;
+  try { PokiSDK.gameplayStart(); } catch(e) {}
+}
+
+function _pokiGameplayStop() {
+  if (typeof PokiSDK === 'undefined') return;
+  try { PokiSDK.gameplayStop(); } catch(e) {}
+}
+
+async function _pokiCommercialBreak() {
+  if (typeof PokiSDK === 'undefined') return;
+  try { await PokiSDK.commercialBreak(); } catch(e) {}
+}
+
+/* ============================================================
    CONSTANTS
 ============================================================ */
 
@@ -4512,6 +4532,7 @@ class UI {
             <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard'}</strong>. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
           </div>`;
         this.render(this.engine.getState());
+        _pokiGameplayStart();
       });
     }
 
@@ -4532,7 +4553,8 @@ class UI {
     }
 
     // Restart — show scenario screen rather than jumping straight in
-    this.elRestartBtn.addEventListener('click', () => {
+    this.elRestartBtn.addEventListener('click', async () => {
+      await _pokiCommercialBreak();
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
       document.getElementById('endgame-timeline')?.remove();
@@ -5731,6 +5753,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
+  _pokiGameplayStop();
 
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
@@ -5775,11 +5798,14 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
 
+  // Show ad between turns (gameplay is paused during the break)
+  await _pokiCommercialBreak();
+
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
   if (result.endgame) {
-    // Game over — clear save, record analytics
+    // Game over — stay stopped, clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
     if (result.event) {
@@ -5798,11 +5824,13 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     // Auto-save after event shown (state is post-event)
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
+    _pokiGameplayStart();
   } else {
     // Auto-save mid-game progress
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
+    _pokiGameplayStart();
   }
 }
 
@@ -5981,6 +6009,11 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Initialise Poki SDK (graceful no-op if SDK not loaded)
+if (typeof PokiSDK !== 'undefined') {
+  PokiSDK.init().catch(() => {});
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
