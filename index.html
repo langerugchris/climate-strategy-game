@@ -2142,6 +2142,214 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== NEWSPAPER HEADLINE OVERLAY ===== */
+#newspaper-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 850;
+  animation: fadeIn 0.4s ease;
+  cursor: pointer;
+}
+#newspaper-card {
+  background: #f5f0e8;
+  color: #1a1a1a;
+  width: 420px;
+  max-width: 92vw;
+  border-radius: 2px;
+  padding: 0;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  font-family: Georgia, 'Times New Roman', serif;
+  overflow: hidden;
+  animation: slideUp 0.4s ease;
+}
+#newspaper-masthead {
+  text-align: center;
+  padding: 14px 20px 10px;
+  border-bottom: 3px double #1a1a1a;
+}
+#newspaper-name {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #1a1a1a;
+  line-height: 1;
+}
+#newspaper-date {
+  font-size: 10px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+#newspaper-body {
+  padding: 16px 20px 20px;
+}
+#newspaper-headline {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+#newspaper-subhead {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+#newspaper-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #333;
+}
+.newspaper-col p { margin-bottom: 8px; text-align: justify; }
+#newspaper-ticker {
+  background: #1a1a1a;
+  color: #f5f0e8;
+  padding: 8px 16px;
+  font-size: 10px;
+  font-family: var(--font-system);
+  letter-spacing: 0.04em;
+  display: flex;
+  gap: 16px;
+  overflow: hidden;
+}
+.ticker-item { white-space: nowrap; }
+.ticker-item.good { color: #4caf50; }
+.ticker-item.bad  { color: #f44336; }
+.ticker-item.neutral { color: #ffd600; }
+#newspaper-dismiss {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 10px;
+  font-family: var(--font-system);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+@media (max-width: 430px) {
+  #newspaper-card { max-width: 96vw; }
+  #newspaper-name { font-size: 22px; }
+  #newspaper-headline { font-size: 18px; }
+  #newspaper-columns { grid-template-columns: 1fr; }
+}
+
+/* ===== POLICY INFO TOOLTIPS ===== */
+.policy-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: help;
+  margin-left: 6px;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1;
+  vertical-align: middle;
+}
+.policy-info-btn:hover {
+  background: var(--accent-blue);
+  color: var(--text-primary);
+  border-color: var(--accent-blue-lt);
+}
+#policy-tooltip {
+  position: fixed;
+  z-index: 900;
+  width: 280px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+#policy-tooltip.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.policy-tt-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: 6px;
+}
+.policy-tt-body {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.policy-tt-real {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 6px;
+  font-style: italic;
+}
+
+/* ===== WEATHER PARTICLES ===== */
+#weather-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+#weather-particles.active { opacity: 1; }
+
+.rain-drop {
+  position: absolute;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(100,160,255,0.5));
+  animation: rainFall linear infinite;
+}
+@keyframes rainFall {
+  0%   { transform: translateY(-10px); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+.heat-particle {
+  position: absolute;
+  bottom: 0;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255,100,30,0.4);
+  animation: heatRise linear infinite;
+}
+@keyframes heatRise {
+  0%   { transform: translateY(0) scale(1); opacity: 0; }
+  20%  { opacity: 0.6; }
+  100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -2917,6 +3125,16 @@ body { transition: filter 2s ease; }
 
 </main>
 
+<!-- WEATHER PARTICLES -->
+<div id="weather-particles"></div>
+
+<!-- POLICY INFO TOOLTIP -->
+<div id="policy-tooltip">
+  <div class="policy-tt-title" id="ptt-title"></div>
+  <div class="policy-tt-body" id="ptt-body"></div>
+  <div class="policy-tt-real" id="ptt-real"></div>
+</div>
+
 <!-- METRIC TOOLTIP -->
 <div id="metric-tooltip">
   <div class="tooltip-title" id="tt-title"></div>
@@ -2963,6 +3181,28 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="industrial_heartland">
+        <span class="scenario-card-icon">🏭</span>
+        <div class="scenario-card-name">Industrial Heartland</div>
+        <div class="scenario-card-desc">The UK's industrial base runs on gas. Strong communities and high social capital — but the transition will hit hard unless you manage it carefully.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Gas dependency: <span>40 (high)</span></div>
+          <div class="scenario-stat">Social Capital: <span>+25 bonus</span></div>
+          <div class="scenario-stat">Grid Reliability: <span>75%</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="tech_optimist">
+        <span class="scenario-card-icon">🔬</span>
+        <div class="scenario-card-name">Tech Optimist</div>
+        <div class="scenario-card-desc">A previous government invested heavily in R&D. Two research upgrades are already unlocked — but public engagement was neglected and social stability is fragile.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Research: <span>2 upgrades unlocked</span></div>
+          <div class="scenario-stat">Social Stability: <span>60% (fragile)</span></div>
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
         </div>
       </div>
 
@@ -3167,6 +3407,40 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '🏜️',
+    title: 'Severe Drought — South East England',
+    description: 'Reservoirs at critical levels. Hosepipe bans across the south. Agricultural output drops sharply as crops fail.',
+    story: 'Tom Haworth, a third-generation farmer in Kent, watched his wheat yield fall 60% in a single season. "My grandfather never saw anything like this," he said. "The soil just turns to dust."',
+    effects: { socialStability: -8, financialStability: -6 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'CLIMATE_MIGRATION', type: 'SOCIAL', severity: 'MODERATE', icon: '🏠',
+    title: 'Climate-Driven Housing Crisis',
+    description: 'Internal migration from flood-prone and overheating areas overwhelms housing stock in the Midlands and North. Rents spike.',
+    story: 'Nottingham City Council reported a 340% increase in emergency housing applications in Q3 alone. Many families had relocated from coastal Essex and the Thames Estuary after repeated flooding.',
+    effects: { socialStability: -10, propertyValue: -8 },
+    infraDamage: false, budgetPenaltyNext: 12,
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'INTL_DEAL', type: 'DIPLOMATIC', severity: 'POSITIVE', icon: '🤝',
+    title: 'International Climate Cooperation Pact',
+    description: 'The UK co-leads a breakthrough G7 agreement on shared carbon pricing and green technology transfer. Markets rally.',
+    story: 'The "Edinburgh Accord" — signed by all G7 nations plus India and Brazil — established the world\'s first cross-border carbon price floor. UK negotiators called it "the most significant climate deal since Paris."',
+    effects: { financialStability: 8, socialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.netZeroProgress >= 60 && s.financialStability >= 50,
+  },
+  {
+    id: 'CYBER_ATTACK', type: 'GRID', severity: 'MODERATE', icon: '💻',
+    title: 'Cyber Attack on Energy Infrastructure',
+    description: 'A state-sponsored cyber attack disrupts smart grid systems and wind farm control networks across northern England.',
+    story: 'GCHQ confirmed the attack originated from a hostile state actor. "They targeted the SCADA systems controlling 2,400 wind turbines," said the National Cyber Security Centre. Sixty percent went offline for 72 hours.',
+    effects: { gridReliability: -12, socialStability: -6 },
+    infraDamage: true, budgetPenaltyNext: 15,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3495,11 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'balanced_portfolio', icon: '📊', name: 'Balanced Portfolio', desc: 'Invest in all 6 categories in a single game', check: (s) => s.log.length > 0 && (() => { const cats = new Set(); s.log.forEach(e => e.decisions.forEach(d => { if (d.includes('Energy')) cats.add('e'); if (d.includes('Grid')) cats.add('g'); if (d.includes('Adapt')) cats.add('a'); if (d.includes('Social')) cats.add('s'); if (d.includes('Financial')) cats.add('f'); if (d.includes('R&D')) cats.add('r'); })); return cats.size >= 6; })() },
+  { id: 'cool_headed', icon: '❄️', name: 'Cool Headed', desc: 'Finish with temperature below 1.4°C', check: (s) => s.temperature < 1.4 },
+  { id: 'iron_grid', icon: '🔌', name: 'Iron Grid', desc: 'Never let Grid Reliability drop below 50%', check: (s) => !s.log.some(e => e.afterGrid < 50) && s.gridReliability >= 50 },
+  { id: 'diplomat', icon: '🌐', name: 'Climate Diplomat', desc: 'Trigger the International Cooperation event', check: (s) => s.log.some(e => e.event && e.event.includes('International')) },
+  { id: 'five_star', icon: '⭐', name: 'Five Star Chancellor', desc: 'Finish with all metrics above 60%', check: (s) => s.gridReliability >= 60 && s.financialStability >= 60 && s.socialStability >= 60 && s.netZeroProgress >= 60 },
 ];
 
 class AchievementManager {
@@ -3370,6 +3649,25 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  industrial_heartland: {
+    label: 'Industrial Heartland',
+    apply(state) {
+      state.energy.gas = 40;
+      state.energy.wind = 18;
+      state.energy.solar = 4;
+      state.socialCapital = 25;
+      state.gridReliability = 75;
+      state.socialStability = 80;
+    },
+  },
+  tech_optimist: {
+    label: 'Tech Optimist',
+    apply(state) {
+      state.socialStability = 60;
+      state._budgetOverride = 90;
+      state._preUnlockResearch = 2;
     },
   },
 };
@@ -3923,29 +4221,36 @@ class GameEngine {
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
+        { e: RANDOM_EVENTS[5], w: 25 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
+        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
         { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
         { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[10], w: 8 }, // INTL_DEAL
+        { e: RANDOM_EVENTS[11], w: 7 }, // CYBER_ATTACK
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
+        { e: RANDOM_EVENTS[0], w: 16 },  // FLOOD_MINOR
         { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[2], w: 16 },  // HEATWAVE_MOD
+        { e: RANDOM_EVENTS[4], w: 16 },  // STORM
+        { e: RANDOM_EVENTS[6], w: 12 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[5], w: 10 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 8 },   // DROUGHT
+        { e: RANDOM_EVENTS[9], w: 7 },   // CLIMATE_MIGRATION
+        { e: RANDOM_EVENTS[10], w: 5 },  // INTL_DEAL
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[1], w: 16 },  // FLOOD_MAJOR
+        { e: RANDOM_EVENTS[3], w: 16 },  // HEATWAVE_MAJOR
+        { e: RANDOM_EVENTS[4], w: 14 },  // STORM
+        { e: RANDOM_EVENTS[7], w: 12 },  // GRID_FAILURE
+        { e: RANDOM_EVENTS[6], w: 12 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[5], w: 10 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 10 },  // DROUGHT
+        { e: RANDOM_EVENTS[9], w: 10 }, // CLIMATE_MIGRATION
       ];
     }
 
@@ -4011,9 +4316,12 @@ class GameEngine {
     difficultyMgr.activateForNewGame();
     turnHistory.reset();
     this._initState();
-    // Apply starter scenario mutations
     const scenario = STARTER_SCENARIOS[scenarioKey] || STARTER_SCENARIOS.standard;
     scenario.apply(this.state);
+    if (this.state._preUnlockResearch) {
+      for (let i = 0; i < this.state._preUnlockResearch; i++) techTree.purchase();
+      delete this.state._preUnlockResearch;
+    }
     turnHistory.record(this.state);
     this.state.budget = this.getEffectiveBudget();
     const bonuses = legacySystem.startingBonuses();
@@ -4618,6 +4926,7 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    if (window._weatherSystem) window._weatherSystem.update(state.temperature);
   }
 
   _renderHeader(state) {
@@ -5724,6 +6033,52 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_carbon_tariff',
+    icon: '🌐',
+    title: 'Carbon Border Tariff Dispute',
+    prompt: 'The EU is imposing carbon tariffs on UK exports. How do you respond?',
+    explanation: 'The EU\'s Carbon Border Adjustment Mechanism (CBAM) taxes imports from countries with weaker carbon pricing. Matching their carbon price accelerates the transition and maintains trade access, but raises costs for UK industry. A diplomatic challenge buys time but risks a prolonged trade dispute.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '💰 Match EU carbon price',
+      consequence: 'Costs £7bn next turn · +5% Net Zero progress · −3 Financial short-term (industry adjustment)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '🤝 Diplomatic challenge at WTO',
+      consequence: 'No cost · −4 Financial (trade uncertainty) · maintains current pace · dispute may escalate',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    condition: (s) => s.netZeroProgress < 80 && s.turn >= 1,
+  },
+  {
+    id: 'mini_nhs_heat',
+    icon: '🏥',
+    title: 'NHS Heat Health Crisis',
+    prompt: 'Heat-related hospital admissions have doubled. The NHS needs emergency support.',
+    explanation: 'Rising temperatures are a direct public health threat. Heat stroke, respiratory illness, and cardiovascular events spike during prolonged heat. You can fund emergency NHS capacity (expensive, immediate relief) or invest in long-term public health adaptation (cheaper, but the next heatwave still hits hard).',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Social: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🚑 Emergency NHS surge funding',
+      consequence: 'Costs £10bn next turn · +5 Social Stability · no lasting infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.socialStability = Math.min(100, s.socialStability + 5); },
+    },
+    optB: {
+      label: '🌳 Public health adaptation programme',
+      consequence: 'Costs £4bn next turn · −2 Social this crisis · +15 adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.socialStability = Math.max(0, s.socialStability - 2); s.infrastructure.adaptation += 15; },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5775,11 +6130,16 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
 
+  // Show newspaper headline before proceeding
+  await showNewspaper(result.logEntry, engine.state, result.event);
+
+  // Update weather particles
+  if (window._weatherSystem) window._weatherSystem.update(engine.state.temperature);
+
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
   if (result.endgame) {
-    // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
     if (result.event) {
@@ -5795,11 +6155,9 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     fxMgr.shake();
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
   } else {
-    // Auto-save mid-game progress
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
@@ -5885,6 +6243,282 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ============================================================
+   MODULE: NEWSPAPER HEADLINE GENERATOR
+============================================================ */
+
+const NEWSPAPER_NAMES = [
+  'The National Observer',
+  'The Climate Chronicle',
+  'The Westminster Gazette',
+  'The British Standard',
+  'The Daily Outlook',
+];
+
+function generateNewspaper(logEntry, state, event) {
+  const year = logEntry.year;
+  const endYear = year + 5;
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const month = monthNames[Math.floor(Math.random() * 12)];
+  const day = Math.floor(Math.random() * 28) + 1;
+  const pubYear = year + Math.floor(Math.random() * 5) + 1;
+  const dateStr = `${day} ${month} ${pubYear}`;
+  const paper = NEWSPAPER_NAMES[Math.floor(Math.random() * NEWSPAPER_NAMES.length)];
+
+  const headline = _pickHeadline(logEntry, state, event);
+  const subhead = _pickSubhead(logEntry, state, event);
+  const { colA, colB } = _pickColumns(logEntry, state);
+  const tickers = _pickTickers(logEntry, state);
+
+  return { paper, dateStr, headline, subhead, colA, colB, tickers };
+}
+
+function _pickHeadline(entry, state, event) {
+  if (event) {
+    const evtHeadlines = {
+      FLOOD: ['Floods Devastate Communities Across England', 'Waters Rise: National Emergency Declared'],
+      HEATWAVE: ['Extreme Heat Kills Hundreds Across Britain', 'Record Temperatures Push NHS to Breaking Point'],
+      STORM: ['Storm Destruction: Billions in Damage', 'Atlantic Superstorm Batters Northern England'],
+      FINANCIAL: ['Pension Funds Reel From Fossil Asset Collapse', 'Stranded Assets Crisis Hits City of London'],
+      SOCIAL: ['Fuel Poverty Protests Sweep the Nation', 'Public Anger Boils Over as Energy Bills Soar'],
+      GRID: ['Blackout Britain: Grid Fails Millions', 'National Grid Emergency — Hospitals on Generators'],
+      DROUGHT: ['Reservoirs Run Dry Across Southern England', 'Drought Emergency: Crops Fail, Water Rationed'],
+      DIPLOMATIC: ['Historic Climate Deal Signed in Edinburgh', 'Britain Leads Breakthrough G7 Climate Pact'],
+    };
+    const pool = evtHeadlines[event.type] || [`Crisis: ${event.title}`];
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  const tempDelta = entry.afterTemp - entry.snapshot.temperature;
+  const nzDelta = entry.afterNZ - entry.snapshot.netZeroProgress;
+
+  if (nzDelta > 15) return 'Net Zero Push Accelerates as Renewables Surge';
+  if (state.netZeroProgress >= 100) return 'Britain Achieves Net Zero — Historic Milestone';
+  if (tempDelta > 0.3) return 'Warming Accelerates Despite Government Pledges';
+  if (state.gridReliability < 40) return 'Grid on the Brink: Reliability Hits New Low';
+  if (state.socialStability < 40) return 'Public Trust Collapses — Transition in Jeopardy';
+  if (state.financialStability < 40) return 'Financial Stability Warning: Markets Turbulent';
+  if (entry.afterGrid > 80 && entry.afterFin > 70) return 'Steady Progress: UK Transition on Track';
+  return `${entry.year}–${entry.year + 5}: Government Sets Course on Climate`;
+}
+
+function _pickSubhead(entry, state, event) {
+  if (event && event.story) return event.story.split('.')[0] + '.';
+  const parts = [];
+  if (entry.afterNZ > entry.snapshot.netZeroProgress + 5) parts.push(`Net Zero progress advances to ${Math.round(entry.afterNZ)}%`);
+  if (entry.afterTemp > entry.snapshot.temperature + 0.1) parts.push(`temperature rises to ${entry.afterTemp.toFixed(1)}°C`);
+  if (entry.afterSoc < entry.snapshot.socialStability - 5) parts.push('social stability falls amid transition pressures');
+  if (parts.length === 0) parts.push(`policy period ${entry.year}–${entry.year + 5} concludes`);
+  return parts.join(' — ');
+}
+
+function _pickColumns(entry, state) {
+  const colALines = [];
+  const colBLines = [];
+
+  const tempDelta = entry.afterTemp - entry.snapshot.temperature;
+  if (tempDelta > 0.2) {
+    colALines.push(`Temperature rose ${tempDelta.toFixed(1)}°C this period, now standing at ${entry.afterTemp.toFixed(1)}°C above pre-industrial levels. Scientists warned that tipping point thresholds are drawing closer.`);
+  } else if (tempDelta > 0) {
+    colALines.push(`Temperature edged up to ${entry.afterTemp.toFixed(1)}°C. The rate of warming ${tempDelta < 0.1 ? 'has slowed considerably' : 'remains a concern for climate scientists'}.`);
+  }
+
+  const nzDelta = entry.afterNZ - entry.snapshot.netZeroProgress;
+  if (nzDelta > 10) {
+    colALines.push(`Net Zero progress surged ${Math.round(nzDelta)} points to ${Math.round(entry.afterNZ)}%, driven by aggressive renewable investment and fossil fuel phase-out.`);
+  } else if (nzDelta > 0) {
+    colALines.push(`Net Zero progress stands at ${Math.round(entry.afterNZ)}%, a modest ${Math.round(nzDelta)}-point advance this period.`);
+  }
+
+  const gridDelta = entry.afterGrid - entry.snapshot.gridReliability;
+  if (Math.abs(gridDelta) > 5) {
+    colBLines.push(`Grid reliability ${gridDelta > 0 ? 'improved' : 'declined'} to ${Math.round(entry.afterGrid)}%. ${gridDelta < 0 ? 'Energy analysts called for urgent storage investment.' : 'Backup capacity has strengthened significantly.'}`);
+  }
+
+  const socDelta = entry.afterSoc - entry.snapshot.socialStability;
+  if (Math.abs(socDelta) > 5) {
+    colBLines.push(`Social stability ${socDelta > 0 ? 'recovered' : 'fell'} to ${Math.round(entry.afterSoc)}%. ${socDelta < 0 ? 'Communities affected by the transition demanded greater support.' : 'Government investment in social programmes has begun to pay off.'}`);
+  }
+
+  if (colALines.length === 0) colALines.push(`The government continued its climate strategy through the ${entry.year}–${entry.year + 5} period, balancing competing priorities across energy, finance, and social cohesion.`);
+  if (colBLines.length === 0) colBLines.push(`Analysts noted that the UK's transition trajectory remains ${state.netZeroProgress > 60 ? 'broadly on track' : 'behind the pace required'} to meet its 2050 Net Zero commitment.`);
+
+  return { colA: colALines.join(' '), colB: colBLines.join(' ') };
+}
+
+function _pickTickers(entry, state) {
+  const items = [];
+  items.push({ text: `TEMP ${entry.afterTemp.toFixed(1)}°C`, cls: entry.afterTemp > 1.8 ? 'bad' : 'good' });
+  items.push({ text: `NET ZERO ${Math.round(entry.afterNZ)}%`, cls: entry.afterNZ >= 60 ? 'good' : entry.afterNZ >= 30 ? 'neutral' : 'bad' });
+  items.push({ text: `GRID ${Math.round(entry.afterGrid)}%`, cls: entry.afterGrid >= 60 ? 'good' : entry.afterGrid >= 35 ? 'neutral' : 'bad' });
+  items.push({ text: `SOCIAL ${Math.round(entry.afterSoc)}%`, cls: entry.afterSoc >= 60 ? 'good' : 'bad' });
+  items.push({ text: `FINANCIAL ${Math.round(entry.afterFin)}%`, cls: entry.afterFin >= 60 ? 'good' : 'bad' });
+  return items;
+}
+
+function showNewspaper(logEntry, state, event) {
+  return new Promise(resolve => {
+    const data = generateNewspaper(logEntry, state, event);
+    const overlay = document.createElement('div');
+    overlay.id = 'newspaper-overlay';
+    overlay.innerHTML = `
+      <div id="newspaper-card">
+        <div id="newspaper-masthead">
+          <div id="newspaper-name">${data.paper}</div>
+          <div id="newspaper-date">${data.dateStr}</div>
+        </div>
+        <div id="newspaper-body">
+          <div id="newspaper-headline">${data.headline}</div>
+          <div id="newspaper-subhead">${data.subhead}</div>
+          <div id="newspaper-columns">
+            <div class="newspaper-col"><p>${data.colA}</p></div>
+            <div class="newspaper-col"><p>${data.colB}</p></div>
+          </div>
+        </div>
+        <div id="newspaper-ticker">
+          ${data.tickers.map(t => `<span class="ticker-item ${t.cls}">${t.text}</span>`).join('')}
+        </div>
+        <button id="newspaper-dismiss">Click to continue</button>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    const dismiss = () => {
+      overlay.style.animation = 'fadeIn 0.3s ease reverse forwards';
+      setTimeout(() => { overlay.remove(); resolve(); }, 300);
+    };
+    overlay.addEventListener('click', dismiss);
+    overlay.querySelector('#newspaper-dismiss').addEventListener('click', (e) => { e.stopPropagation(); dismiss(); });
+  });
+}
+
+/* ============================================================
+   MODULE: POLICY INFO TOOLTIPS
+============================================================ */
+
+const POLICY_INFO = {
+  energyTransition: {
+    title: 'Energy Transition',
+    body: 'Builds new wind farms, solar arrays, and decommissions gas plants. Each block adds ~8GW wind and ~6GW solar capacity while retiring ~7GW gas. Accelerates Net Zero but creates stranded assets in fossil fuel sectors.',
+    real: 'Real-world parallel: the UK\'s Contracts for Difference (CfD) auction system — the mechanism that made UK offshore wind the cheapest in the world by 2023.',
+  },
+  gridAndStorage: {
+    title: 'Grid & Storage',
+    body: 'Invests in battery storage, pumped hydro, new nuclear capacity, and grid interconnectors. Essential to keep the lights on as intermittent renewables grow — without backup, blackouts follow.',
+    real: 'Real-world parallel: the Hinkley Point C nuclear project and the UK\'s Capacity Market mechanism for ensuring backup generation.',
+  },
+  adaptation: {
+    title: 'Climate Adaptation',
+    body: 'Builds flood defences, heat-resilient infrastructure, and emergency systems. Reduces damage when climate events strike. Doesn\'t prevent warming — but limits its human cost.',
+    real: 'Real-world parallel: the Thames Barrier, Environment Agency flood defence programme, and the UK Climate Change Committee\'s Adaptation Reports.',
+  },
+  socialSupport: {
+    title: 'Social Support',
+    body: 'Funds the Just Transition: retraining displaced workers, energy bill support, and community investment. Maintains public consent for the transition — without it, political mandate collapses.',
+    real: 'Real-world parallel: the UK\'s Warm Home Discount, Community Renewal Fund, and Levelling Up programmes targeting post-industrial communities.',
+  },
+  financialResilience: {
+    title: 'Financial Resilience',
+    body: 'Manages stranded fossil assets in pension funds and banks, supports property values, and builds financial sector buffers. Prevents the transition from triggering a financial crisis.',
+    real: 'Real-world parallel: the Bank of England\'s Climate Biennial Exploratory Scenario (CBES) stress tests and TCFD mandatory disclosure requirements.',
+  },
+  research: {
+    title: 'Research & Development',
+    body: 'Unlocks technology upgrades that permanently improve the effectiveness of other investments. Each R&D block purchases the next upgrade in the tech tree — multiplying future returns.',
+    real: 'Real-world parallel: UK Research and Innovation (UKRI) Net Zero research funding and the Advanced Research + Invention Agency (ARIA).',
+  },
+};
+
+function initPolicyTooltips() {
+  const tooltip = document.getElementById('policy-tooltip');
+  if (!tooltip) return;
+
+  document.querySelectorAll('.investment-card').forEach(card => {
+    const cat = card.id.replace('card-', '');
+    const info = POLICY_INFO[cat];
+    if (!info) return;
+
+    const nameEl = card.querySelector('.card-name');
+    if (!nameEl) return;
+
+    const btn = document.createElement('span');
+    btn.className = 'policy-info-btn';
+    btn.textContent = '?';
+    btn.setAttribute('aria-label', `More info about ${info.title}`);
+    nameEl.appendChild(btn);
+
+    const show = (anchor) => {
+      document.getElementById('ptt-title').textContent = info.title;
+      document.getElementById('ptt-body').textContent = info.body;
+      document.getElementById('ptt-real').textContent = info.real;
+      const rect = anchor.getBoundingClientRect();
+      let left = rect.right + 8;
+      if (left + 280 > window.innerWidth) left = rect.left - 288;
+      if (left < 4) left = 4;
+      let top = rect.top;
+      if (top + 200 > window.innerHeight) top = window.innerHeight - 210;
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+      tooltip.classList.add('visible');
+    };
+    const hide = () => tooltip.classList.remove('visible');
+
+    btn.addEventListener('mouseenter', (e) => show(e.target));
+    btn.addEventListener('mouseleave', hide);
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (tooltip.classList.contains('visible')) hide();
+      else show(e.target);
+    });
+  });
+  document.addEventListener('click', () => tooltip.classList.remove('visible'));
+}
+
+/* ============================================================
+   MODULE: WEATHER PARTICLES
+============================================================ */
+
+class WeatherParticleSystem {
+  constructor() {
+    this.container = document.getElementById('weather-particles');
+    this._particles = [];
+    this._mode = null;
+  }
+
+  update(temperature) {
+    const newMode = temperature >= 1.8 ? 'heat' : temperature >= 1.4 ? 'mild' : null;
+    if (newMode === this._mode) return;
+    this._mode = newMode;
+    this._clear();
+
+    if (!newMode) {
+      this.container.classList.remove('active');
+      return;
+    }
+
+    this.container.classList.add('active');
+
+    if (newMode === 'heat') {
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'heat-particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (4 + Math.random() * 6) + 's';
+        p.style.animationDelay = Math.random() * 5 + 's';
+        p.style.width = (2 + Math.random() * 3) + 'px';
+        p.style.height = p.style.width;
+        p.style.background = `rgba(255,${80 + Math.random() * 60},${Math.random() * 40},${0.2 + Math.random() * 0.3})`;
+        this.container.appendChild(p);
+        this._particles.push(p);
+      }
+    }
+  }
+
+  _clear() {
+    this._particles.forEach(p => p.remove());
+    this._particles = [];
+  }
+}
 
 /* ============================================================
    MODULE: LEGACY SYSTEM
@@ -5981,6 +6615,12 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Init policy education tooltips
+initPolicyTooltips();
+
+// Init weather particle system
+window._weatherSystem = new WeatherParticleSystem();
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
