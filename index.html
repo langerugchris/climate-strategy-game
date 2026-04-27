@@ -2142,6 +2142,204 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== PHASE 5: CAREER PROGRESSION ===== */
+#career-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+#career-badge .career-title {
+  color: var(--accent-blue-lt);
+  font-weight: 700;
+}
+#career-badge .career-level {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+#hook-career {
+  margin-top: 14px;
+  padding: 10px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+#hook-career .career-rank {
+  font-size: 13px;
+  color: var(--accent-blue-lt);
+  font-weight: 700;
+}
+#hook-career .career-detail {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.xp-bar-track {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-primary);
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-lt));
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.settings-career-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  font-size: 12px;
+}
+.settings-career-grid .career-stat-label {
+  color: var(--text-muted);
+}
+.settings-career-grid .career-stat-val {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.career-bonus-list {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.career-bonus-list .unlocked {
+  color: var(--status-good);
+}
+.career-bonus-list .locked {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* ===== PHASE 5: NEWSPAPER HEADLINES ===== */
+.log-newspaper {
+  margin: 8px 0;
+  padding: 10px 14px;
+  background: #f5f0e6;
+  border: 1px solid #c8b88a;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-editorial);
+  color: #1a1a1a;
+  position: relative;
+}
+.log-newspaper::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: #1a1a1a;
+}
+.newspaper-masthead {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #666;
+  border-bottom: 1px solid #999;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+.newspaper-headline {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #111;
+  margin-bottom: 4px;
+}
+.newspaper-subhead {
+  font-size: 11px;
+  color: #444;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* ===== PHASE 5: NGFS PATHWAY CHART ===== */
+#endgame-pathways {
+  margin: 16px 0;
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+#pathways-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  text-align: center;
+}
+.pathway-chart-container {
+  display: flex;
+  gap: 16px;
+}
+.pathway-chart-container svg {
+  flex: 1;
+}
+.pathway-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 10px;
+}
+.pathway-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+.pathway-legend-swatch {
+  width: 16px;
+  height: 3px;
+  border-radius: 1px;
+}
+
+/* ===== PHASE 5: LEVEL UP NOTIFICATION ===== */
+#level-up-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-lt));
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 9999;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  text-align: center;
+}
+#level-up-toast.visible {
+  transform: translateX(-50%) translateY(0);
+}
+#level-up-toast .toast-title {
+  font-size: 11px;
+  opacity: 0.85;
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+
+@media (max-width: 768px) {
+  .pathway-chart-container {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 <body>
@@ -2160,6 +2358,7 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <span id="career-badge"></span>
   </div>
   <div id="header-right">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -2985,6 +3184,7 @@ body { transition: filter 2s ease; }
     </div>
     <button id="hook-btn">New Game →</button>
     <button id="hook-continue-btn" class="hidden" style="display:none;margin-top:10px;width:100%;padding:12px 24px;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;">↺ Continue saved game — <span id="hook-continue-label"></span></button>
+    <div id="hook-career"></div>
     <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
   </div>
 </div>
@@ -3063,6 +3263,7 @@ body { transition: filter 2s ease; }
         Difficulty changes take effect on <strong>New Game</strong>. Your current run continues with the settings it started with.
       </div>
     </div>
+    <div id="settings-career-section" class="settings-section"></div>
     <!-- High scores injected here by JS -->
     <button id="settings-close-btn">Done</button>
   </div>
@@ -3082,6 +3283,9 @@ body { transition: filter 2s ease; }
     </button>
   </div>
 </div>
+
+<!-- LEVEL UP TOAST -->
+<div id="level-up-toast"></div>
 
 <script>
 'use strict';
@@ -4457,6 +4661,7 @@ class UI {
     if (settingsBtn) {
       settingsBtn.addEventListener('click', () => {
         this._refreshHighScoreInSettings();
+        renderSettingsCareer(legacySystem);
         settingsModal.classList.remove('hidden');
       });
     }
@@ -4538,6 +4743,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('endgame-pathways')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -5015,6 +5221,16 @@ class UI {
     div.innerHTML = html;
     this.elLogScroll.appendChild(div);
 
+    // Inject newspaper headline
+    const news = generateNewspaperHeadline(entry, this.engine.state);
+    const newsDiv = document.createElement('div');
+    newsDiv.innerHTML = `<div class="log-newspaper">
+      <div class="newspaper-masthead">${news.paper} · ${news.date}</div>
+      <div class="newspaper-headline">${news.headline}</div>
+      <div class="newspaper-subhead">${news.subhead}</div>
+    </div>`;
+    this.elLogScroll.appendChild(newsDiv);
+
     // Inject advisor briefing for next turn (based on post-turn state)
     this._injectAdvisorBriefing(this.engine.state);
 
@@ -5134,14 +5350,26 @@ class UI {
     this.elEndgameNgfs.textContent = result.ngfsLabel;
 
     // Record run in LegacySystem (XP + scoring)
-    legacySystem.recordRun(s);
+    const legacyResult = legacySystem.recordRun(s);
     highScoreMgr.record(s, result, difficultyMgr.active);
+
+    // Show level-up toast if promoted
+    if (legacyResult.leveledUp) {
+      setTimeout(() => showLevelUpToast(legacyResult.level, legacyResult.title), 1500);
+    }
+
+    // Refresh career UI
+    renderCareerBadge(legacySystem);
+    renderSettingsCareer(legacySystem);
 
     // Calculate and display score
     const score = calculateScore(s);
 
     // Build radar chart SVG
     const radarHtml = this._buildRadarChart(score);
+
+    // Build NGFS pathway comparison chart
+    const pathwayHtml = buildNGFSPathwayChart(turnHistory.data);
 
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
@@ -5165,7 +5393,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', pathwayHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5724,6 +5952,121 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_water_shortage',
+    icon: '💧',
+    title: 'Water Shortage Emergency',
+    prompt: 'Prolonged drought has depleted reservoirs across southern England. How do you respond?',
+    explanation: 'Climate change is shifting rainfall patterns. Desalination provides immediate water security but is extremely energy-intensive — increasing grid demand and emissions. Water rationing is cheaper and faster but deeply unpopular and disrupts businesses.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: s.temperature > 1.5 ? '⚠ drought risk elevated' : 'within historical range',
+    }),
+    optA: {
+      label: '🏭 Build emergency desalination plants',
+      consequence: 'Costs £10bn next turn · secures water supply · +3 Grid demand stress · −2% Net Zero',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.gridReliability = Math.max(0, s.gridReliability - 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 2); },
+    },
+    optB: {
+      label: '🚿 Implement water rationing',
+      consequence: 'No cost · −6 Social Stability · preserves grid and emissions trajectory',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 6); },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'mini_trade_deal',
+    icon: '🌍',
+    title: 'International Climate Pact',
+    prompt: 'The EU and US are forming a climate trade bloc. The UK must decide whether to join.',
+    explanation: 'Joining the pact means adopting stricter carbon border tariffs, which accelerates Net Zero but raises costs for fossil-dependent industries. Staying out preserves short-term trade flexibility but risks carbon leakage and diplomatic isolation.',
+    contextFn: (s) => ({
+      label: 'Net Zero',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🤝 Join the climate trade pact',
+      consequence: '+8% Net Zero progress · −4 Financial Stability (tariff adjustment costs)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    optB: {
+      label: '🏴 Maintain independent trade policy',
+      consequence: '+3 Financial Stability · −3% Net Zero progress (carbon leakage increases)',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); },
+    },
+    condition: (s) => s.netZeroProgress > 30,
+  },
+  {
+    id: 'mini_battery_factory',
+    icon: '🔋',
+    title: 'Gigafactory Opportunity',
+    prompt: 'A major battery manufacturer wants to build a UK gigafactory. They need government co-investment.',
+    explanation: 'Battery manufacturing is critical for energy storage and electric vehicles. Co-investing secures the factory and creates thousands of jobs, but the upfront cost is substantial. Declining means the factory goes to a European competitor — cheaper now, but a strategic loss.',
+    contextFn: (s) => ({
+      label: 'Grid & Storage',
+      value: `${Math.round(s.infrastructure.gridAndStorage)}`,
+      note: `Storage capacity: ${Math.round(s.energy.storage)}`,
+    }),
+    optA: {
+      label: '🏗️ Co-invest in the gigafactory',
+      consequence: 'Costs £12bn next turn · +8 Storage · +4 Social (new jobs) · long-term grid benefit',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.energy.storage = Math.min(100, s.energy.storage + 8); s.socialStability = Math.min(100, s.socialStability + 4); s.infrastructure.gridAndStorage += 12; },
+    },
+    optB: {
+      label: '✋ Decline — prioritise other spending',
+      consequence: 'No cost · factory goes to EU · no storage or jobs benefit',
+      effect: () => {},
+    },
+    condition: (s) => s.energy.storage < 40,
+  },
+  {
+    id: 'mini_winter_storm',
+    icon: '🌨️',
+    title: 'Extreme Winter Storm',
+    prompt: 'A polar vortex event has brought record cold and snow to the UK. Energy demand is surging.',
+    explanation: 'Extreme cold strains the grid as heating demand spikes. You can activate emergency gas reserves — fast and reliable, but it burns through fossil fuel and undermines Net Zero. Alternatively, deploy battery reserves and managed demand — greener, but risks localised outages if batteries are depleted.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Gas capacity: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '🔥 Activate emergency gas reserves',
+      consequence: '+5 Grid Reliability · −3% Net Zero · +5 Gas in energy mix',
+      effect: (s) => { s.gridReliability = Math.min(100, s.gridReliability + 5); s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); s.energy.gas = Math.min(100, s.energy.gas + 5); },
+    },
+    optB: {
+      label: '🔋 Deploy battery reserves + demand management',
+      consequence: '−4 Grid Reliability · −3 Social · preserves Net Zero trajectory',
+      effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 4); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    condition: (s) => s.temperature > 1.2,
+  },
+  {
+    id: 'mini_tech_breakthrough',
+    icon: '🔬',
+    title: 'Hydrogen Breakthrough',
+    prompt: 'UK researchers have achieved a green hydrogen cost breakthrough. Should the government scale it?',
+    explanation: 'Green hydrogen could decarbonise heavy industry and long-haul transport — sectors that batteries cannot reach. Scaling it now requires major upfront investment and diverts funds from proven technologies. Waiting means other nations capture the market but you keep your budget intact for this term.',
+    contextFn: (s) => ({
+      label: 'Net Zero',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Budget pressure: £${Math.round(s.nextTurnBudgetPenalty || 0)}bn committed`,
+    }),
+    optA: {
+      label: '🚀 Scale green hydrogen nationally',
+      consequence: 'Costs £15bn next turn · +10% Net Zero progress · +5 Grid Reliability (industrial flex)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 15; s.netZeroProgress = Math.min(100, s.netZeroProgress + 10); s.gridReliability = Math.min(100, s.gridReliability + 5); },
+    },
+    optB: {
+      label: '📋 Fund further research only',
+      consequence: 'Costs £3bn next turn · +3% Net Zero progress · slower but safer',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    },
+    condition: (s) => s.netZeroProgress > 40 && s.infrastructure.energyTransition > 30,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5887,8 +6230,21 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /* ============================================================
-   MODULE: LEGACY SYSTEM
+   MODULE: LEGACY SYSTEM (Enhanced Phase 5)
 ============================================================ */
+
+const CAREER_LEVELS = [
+  { level: 1,  xpMin: 0,    title: 'Shadow Minister',       bonus: null },
+  { level: 2,  xpMin: 80,   title: 'Backbench MP',          bonus: null },
+  { level: 3,  xpMin: 150,  title: 'Secretary of State',    bonus: null },
+  { level: 4,  xpMin: 250,  title: 'Cabinet Minister',      bonus: null },
+  { level: 5,  xpMin: 350,  title: 'Chancellor',            bonus: '+£20bn starting budget' },
+  { level: 6,  xpMin: 470,  title: 'Deputy Prime Minister', bonus: '+£20bn starting budget' },
+  { level: 7,  xpMin: 600,  title: 'Senior Statesperson',   bonus: '+£20bn starting budget' },
+  { level: 8,  xpMin: 720,  title: 'Privy Council Elder',   bonus: '+£20bn starting budget' },
+  { level: 9,  xpMin: 820,  title: 'Climate Champion',      bonus: '+£20bn starting budget' },
+  { level: 10, xpMin: 900,  title: 'Prime Minister',        bonus: '+£20bn budget + nuclear unlocked' },
+];
 
 class LegacySystem {
   constructor() {
@@ -5908,6 +6264,7 @@ class LegacySystem {
   }
 
   recordRun(finalState) {
+    const prevLevel = this.level();
     const score = Math.round(
       finalState.socialStability +
       finalState.financialStability +
@@ -5917,24 +6274,39 @@ class LegacySystem {
     this.data.xp += score;
     if (score > this.data.bestScore) this.data.bestScore = score;
     this._save();
-    return { score, level: this.level(), title: this.title() };
+    const newLevel = this.level();
+    return { score, level: newLevel, title: this.title(), leveledUp: newLevel > prevLevel, prevLevel };
   }
 
   level() {
     const xp = this.data.xp;
-    if (xp >= 900) return 10;
-    if (xp >= 600) return 7;
-    if (xp >= 350) return 5;
-    if (xp >= 150) return 3;
+    for (let i = CAREER_LEVELS.length - 1; i >= 0; i--) {
+      if (xp >= CAREER_LEVELS[i].xpMin) return CAREER_LEVELS[i].level;
+    }
     return 1;
   }
 
-  title() {
+  levelInfo() {
     const lvl = this.level();
-    if (lvl >= 10) return 'Prime Minister';
-    if (lvl >= 5)  return 'Chancellor';
-    if (lvl >= 3)  return 'Secretary of State';
-    return 'Shadow Minister';
+    return CAREER_LEVELS.find(c => c.level === lvl) || CAREER_LEVELS[0];
+  }
+
+  nextLevelInfo() {
+    const lvl = this.level();
+    return CAREER_LEVELS.find(c => c.level === lvl + 1) || null;
+  }
+
+  xpProgress() {
+    const current = this.levelInfo();
+    const next = this.nextLevelInfo();
+    if (!next) return 1.0;
+    const range = next.xpMin - current.xpMin;
+    const progress = this.data.xp - current.xpMin;
+    return Math.min(1, Math.max(0, progress / range));
+  }
+
+  title() {
+    return this.levelInfo().title;
   }
 
   startingBonuses() {
@@ -5945,6 +6317,237 @@ class LegacySystem {
       title:           this.title(),
     };
   }
+}
+
+/* ============================================================
+   MODULE: NEWSPAPER HEADLINE GENERATOR
+============================================================ */
+
+function generateNewspaperHeadline(logEntry, state) {
+  const year = logEntry.year;
+  const endYear = year + 5;
+  const papers = ['The Guardian', 'Financial Times', 'The Times', 'The Telegraph', 'BBC News', 'The Independent'];
+  const paper = papers[Math.floor(Math.random() * papers.length)];
+
+  const nzDelta = logEntry.afterNZ - logEntry.snapshot.netZeroProgress;
+  const socDelta = logEntry.afterSoc - logEntry.snapshot.socialStability;
+  const finDelta = logEntry.afterFin - logEntry.snapshot.financialStability;
+  const gridDelta = logEntry.afterGrid - logEntry.snapshot.gridReliability;
+  const tempDelta = logEntry.afterTemp - logEntry.snapshot.temperature;
+
+  const headlines = [];
+
+  if (logEntry.event) {
+    const evtName = logEntry.event.split('—')[0].trim();
+    const eventHeadlines = [
+      { h: `Climate disaster strikes as ${evtName} hits UK`, s: 'Government faces mounting pressure to act on climate resilience spending.' },
+      { h: `"We weren't prepared" — UK reels from ${evtName}`, s: 'Emergency services stretched as climate event exposes infrastructure gaps.' },
+    ];
+    headlines.push(eventHeadlines[Math.floor(Math.random() * eventHeadlines.length)]);
+  }
+
+  if (nzDelta > 15) {
+    headlines.push({ h: `UK Net Zero drive accelerates: progress jumps to ${Math.round(logEntry.afterNZ)}%`, s: `Analysts call the ${year}–${endYear} investment programme the most ambitious decarbonisation push in UK history.` });
+  } else if (nzDelta < 5 && state.turn >= 3) {
+    headlines.push({ h: `Net Zero stalls at ${Math.round(logEntry.afterNZ)}% — 2050 target at risk`, s: 'Climate advisory committee warns remaining carbon budget is being spent faster than replacements are built.' });
+  }
+
+  if (tempDelta > 0.2) {
+    headlines.push({ h: `UK warming accelerates: temperature passes ${logEntry.afterTemp.toFixed(1)}°C`, s: 'Met Office data confirms acceleration beyond IPCC central projections. Tipping point risks "materially higher."' });
+  }
+
+  if (socDelta < -8) {
+    headlines.push({ h: `Public anger erupts as social stability falls to ${Math.round(logEntry.afterSoc)}%`, s: 'Polling shows majority believe transition costs are being borne unfairly by working families.' });
+  } else if (socDelta > 5) {
+    headlines.push({ h: 'Government wins public backing as social programmes take hold', s: `Social stability rises to ${Math.round(logEntry.afterSoc)}% — the strongest reading in three terms.` });
+  }
+
+  if (finDelta < -8) {
+    headlines.push({ h: `Financial markets shaken — stability index drops to ${Math.round(logEntry.afterFin)}%`, s: 'Bank of England warns of systemic risk from stranded fossil assets cascading through pension funds.' });
+  }
+
+  if (gridDelta < -10) {
+    headlines.push({ h: `Blackout warnings issued as grid reliability plummets to ${Math.round(logEntry.afterGrid)}%`, s: 'National Grid declares "unprecedented stress" as renewable intermittency overwhelms backup capacity.' });
+  }
+
+  if (logEntry.afterNZ >= 100) {
+    headlines.push({ h: 'Historic: UK reaches Net Zero emissions target', s: 'After decades of policy effort, the UK has met its legal commitment to Net Zero — becoming one of the first major economies to do so.' });
+  }
+
+  if (headlines.length === 0) {
+    const neutral = [
+      { h: `Government holds steady on climate investment as ${year}–${endYear} term concludes`, s: 'Metrics remain stable. Analysts describe the policy programme as "competent if unspectacular."' },
+      { h: `${year}s defined by gradual progress on UK energy transition`, s: `Net Zero at ${Math.round(logEntry.afterNZ)}%, temperature at ${logEntry.afterTemp.toFixed(1)}°C. The path is clear — the question is pace.` },
+    ];
+    headlines.push(neutral[Math.floor(Math.random() * neutral.length)]);
+  }
+
+  const chosen = headlines[Math.floor(Math.random() * headlines.length)];
+  return { paper, date: `${endYear}`, headline: chosen.h, subhead: chosen.s };
+}
+
+/* ============================================================
+   MODULE: NGFS PATHWAY COMPARISON CHART
+============================================================ */
+
+const NGFS_REFERENCE_PATHS = {
+  orderly:    { label: 'Orderly (1.5°C)', color: '#4caf81', tempByTurn: [1.1, 1.18, 1.25, 1.32, 1.38, 1.42], nzByTurn: [35, 50, 65, 80, 92, 100] },
+  disorderly: { label: 'Disorderly (2°C)', color: '#ffd600', tempByTurn: [1.1, 1.22, 1.38, 1.56, 1.72, 1.85], nzByTurn: [35, 40, 48, 62, 82, 100] },
+  hotHouse:   { label: 'Hot House (3°C+)',  color: '#ff3d00', tempByTurn: [1.1, 1.30, 1.55, 1.85, 2.20, 2.60], nzByTurn: [35, 38, 42, 45, 48, 52] },
+};
+
+function buildNGFSPathwayChart(turnHistoryData) {
+  if (!turnHistoryData || turnHistoryData.length < 2) return '';
+
+  const playerTemp = turnHistoryData.map(d => d.temperature);
+  const playerNZ = turnHistoryData.map(d => d.netZeroProgress);
+  const numPoints = playerTemp.length;
+  const years = playerTemp.map((_, i) => 2025 + i * 5);
+
+  const tempChart = _buildPathSVG({
+    title: 'Temperature Pathway',
+    yLabel: '°C',
+    playerData: playerTemp,
+    references: Object.values(NGFS_REFERENCE_PATHS).map(r => ({ label: r.label, color: r.color, data: r.tempByTurn.slice(0, numPoints) })),
+    yMin: 1.0, yMax: 3.0,
+    years,
+    decimals: 1,
+    playerColor: '#5390d9',
+  });
+
+  const nzChart = _buildPathSVG({
+    title: 'Net Zero Progress',
+    yLabel: '%',
+    playerData: playerNZ,
+    references: Object.values(NGFS_REFERENCE_PATHS).map(r => ({ label: r.label, color: r.color, data: r.nzByTurn.slice(0, numPoints) })),
+    yMin: 0, yMax: 100,
+    years,
+    decimals: 0,
+    playerColor: '#5390d9',
+  });
+
+  const legendItems = [
+    { color: '#5390d9', label: 'Your pathway' },
+    ...Object.values(NGFS_REFERENCE_PATHS).map(r => ({ color: r.color, label: r.label })),
+  ];
+  const legendHtml = legendItems.map(l =>
+    `<div class="pathway-legend-item"><div class="pathway-legend-swatch" style="background:${l.color}"></div>${l.label}</div>`
+  ).join('');
+
+  return `<div id="endgame-pathways">
+    <div id="pathways-title">Your Pathway vs NGFS Reference Scenarios</div>
+    <div class="pathway-chart-container">${tempChart}${nzChart}</div>
+    <div class="pathway-legend">${legendHtml}</div>
+  </div>`;
+}
+
+function _buildPathSVG({ title, yLabel, playerData, references, yMin, yMax, years, decimals, playerColor }) {
+  const w = 260, h = 140, padL = 32, padR = 8, padT = 22, padB = 24;
+  const chartW = w - padL - padR;
+  const chartH = h - padT - padB;
+  const n = playerData.length;
+
+  const xScale = (i) => padL + (i / Math.max(n - 1, 1)) * chartW;
+  const yScale = (v) => padT + (1 - (v - yMin) / (yMax - yMin)) * chartH;
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--font-system)">`;
+  svg += `<text x="${w / 2}" y="14" text-anchor="middle" fill="var(--text-secondary)" font-size="10" font-weight="600">${title}</text>`;
+
+  const gridSteps = 4;
+  for (let i = 0; i <= gridSteps; i++) {
+    const val = yMin + (yMax - yMin) * (i / gridSteps);
+    const y = yScale(val);
+    svg += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border-subtle)" stroke-width="0.5" stroke-dasharray="2,2"/>`;
+    svg += `<text x="${padL - 4}" y="${y + 3}" text-anchor="end" fill="var(--text-muted)" font-size="8">${val.toFixed(decimals)}</text>`;
+  }
+
+  years.forEach((yr, i) => {
+    svg += `<text x="${xScale(i)}" y="${h - 4}" text-anchor="middle" fill="var(--text-muted)" font-size="7">${yr}</text>`;
+  });
+
+  for (const ref of references) {
+    const pts = ref.data.map((v, i) => `${xScale(i).toFixed(1)},${yScale(v).toFixed(1)}`).join(' ');
+    svg += `<polyline points="${pts}" fill="none" stroke="${ref.color}" stroke-width="1.2" stroke-dasharray="4,3" opacity="0.6"/>`;
+  }
+
+  const playerPts = playerData.map((v, i) => `${xScale(i).toFixed(1)},${yScale(v).toFixed(1)}`).join(' ');
+  svg += `<polyline points="${playerPts}" fill="none" stroke="${playerColor}" stroke-width="2.5"/>`;
+  playerData.forEach((v, i) => {
+    svg += `<circle cx="${xScale(i).toFixed(1)}" cy="${yScale(v).toFixed(1)}" r="3" fill="${playerColor}"><title>${years[i]}: ${v.toFixed(decimals)}${yLabel}</title></circle>`;
+  });
+
+  svg += '</svg>';
+  return svg;
+}
+
+/* ============================================================
+   MODULE: LEVEL UP TOAST
+============================================================ */
+
+function showLevelUpToast(newLevel, newTitle) {
+  const toast = document.getElementById('level-up-toast');
+  if (!toast) return;
+  toast.innerHTML = `<div class="toast-title">PROMOTED</div>Level ${newLevel}: ${newTitle}`;
+  toast.classList.add('visible');
+  setTimeout(() => toast.classList.remove('visible'), 4000);
+}
+
+/* ============================================================
+   MODULE: CAREER UI RENDERER
+============================================================ */
+
+function renderCareerBadge(legacySys) {
+  const badge = document.getElementById('career-badge');
+  if (!badge) return;
+  if (legacySys.data.runs === 0) { badge.innerHTML = ''; return; }
+  badge.innerHTML = `<span class="career-title">${legacySys.title()}</span><span class="career-level">Lv.${legacySys.level()}</span>`;
+}
+
+function renderHookCareer(legacySys) {
+  const el = document.getElementById('hook-career');
+  if (!el) return;
+  if (legacySys.data.runs === 0) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  const lvl = legacySys.level();
+  const xpPct = Math.round(legacySys.xpProgress() * 100);
+  const next = legacySys.nextLevelInfo();
+  const nextText = next ? `${legacySys.data.xp}/${next.xpMin} XP to Level ${next.level}` : 'Max level reached';
+  const bonuses = legacySys.startingBonuses();
+  let bonusText = '';
+  if (bonuses.budgetBonus > 0) bonusText += `+£${bonuses.budgetBonus}bn budget`;
+  if (bonuses.nuclearUnlocked) bonusText += bonusText ? ' · nuclear unlocked' : 'Nuclear unlocked';
+
+  el.innerHTML = `
+    <div class="career-rank">${legacySys.title()} — Level ${lvl}</div>
+    <div class="career-detail">${legacySys.data.runs} run${legacySys.data.runs !== 1 ? 's' : ''} completed · Best: ${legacySys.data.bestScore} XP${bonusText ? ` · ${bonusText}` : ''}</div>
+    <div class="xp-bar-track"><div class="xp-bar-fill" style="width:${xpPct}%"></div></div>
+    <div class="career-detail">${nextText}</div>`;
+}
+
+function renderSettingsCareer(legacySys) {
+  const el = document.getElementById('settings-career-section');
+  if (!el) return;
+  const lvl = legacySys.level();
+  const xpPct = Math.round(legacySys.xpProgress() * 100);
+  const next = legacySys.nextLevelInfo();
+
+  let bonusHTML = '<div class="career-bonus-list"><strong>Career Bonuses:</strong><br>';
+  bonusHTML += `<span class="${lvl >= 5 ? 'unlocked' : 'locked'}">${lvl >= 5 ? '✓' : '🔒'} Level 5 — +£20bn starting budget</span><br>`;
+  bonusHTML += `<span class="${lvl >= 10 ? 'unlocked' : 'locked'}">${lvl >= 10 ? '✓' : '🔒'} Level 10 — Nuclear capacity unlocked at start</span>`;
+  bonusHTML += '</div>';
+
+  el.innerHTML = `
+    <div class="settings-section-label">Career Progression</div>
+    <div class="settings-career-grid">
+      <span class="career-stat-label">Rank</span><span class="career-stat-val">${legacySys.title()}</span>
+      <span class="career-stat-label">Level</span><span class="career-stat-val">${lvl} / 10</span>
+      <span class="career-stat-label">Total XP</span><span class="career-stat-val">${legacySys.data.xp}</span>
+      <span class="career-stat-label">Games played</span><span class="career-stat-val">${legacySys.data.runs}</span>
+      <span class="career-stat-label">Best score</span><span class="career-stat-val">${legacySys.data.bestScore}</span>
+      <span class="career-stat-label">Next level</span><span class="career-stat-val">${next ? `${next.xpMin} XP (${next.title})` : 'Max'}</span>
+    </div>
+    <div class="xp-bar-track" style="margin-top:8px"><div class="xp-bar-fill" style="width:${xpPct}%"></div></div>
+    ${bonusHTML}`;
 }
 
 /* ============================================================
@@ -5981,6 +6584,11 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Render career progression UI
+renderCareerBadge(legacySystem);
+renderHookCareer(legacySystem);
+renderSettingsCareer(legacySystem);
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
