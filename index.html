@@ -2141,6 +2141,70 @@ body { transition: filter 2s ease; }
     flex-direction: column;
   }
   .timeline-turn { min-width: unset; }
+  #news-ticker { font-size: 11px; }
+}
+
+/* ===== NEWS TICKER ===== */
+#news-ticker {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--gap-md);
+  flex-shrink: 0;
+}
+#news-ticker-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--status-warn);
+  margin-right: var(--gap-sm);
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+#news-ticker-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+#news-ticker-text {
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  animation: ticker-scroll 22s linear infinite;
+  padding-left: 100%;
+}
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ===== LEGACY RANK BADGE ===== */
+#legacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 2px 8px;
+  letter-spacing: 0.04em;
+}
+#legacy-badge .rank-icon {
+  font-size: 12px;
 }
 </style>
 </head>
@@ -2160,6 +2224,7 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <span id="legacy-badge"><span class="rank-icon">♛</span> <span id="legacy-title">Shadow Minister</span></span>
   </div>
   <div id="header-right">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -2176,6 +2241,14 @@ body { transition: filter 2s ease; }
     </div>
   </div>
 </header>
+
+<!-- NEWS TICKER -->
+<div id="news-ticker">
+  <span id="news-ticker-label">Breaking</span>
+  <div id="news-ticker-track">
+    <span id="news-ticker-text">UK Climate Strategy simulation begins — Minister takes office with 1.1°C warming and a 2050 Net Zero mandate.</span>
+  </div>
+</div>
 
 <!-- ===== MAIN LAYOUT ===== -->
 <main id="game-main">
@@ -2963,6 +3036,28 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="global_headwinds">
+        <span class="scenario-card-icon">🌍</span>
+        <div class="scenario-card-name">Global Headwinds</div>
+        <div class="scenario-card-desc">International inaction has pushed global warming faster than expected. You inherit higher temperatures, stranded asset exposure, and weakened international cooperation.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temperature: <span>1.25°C (already elevated)</span></div>
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
+          <div class="scenario-stat">Stranded Assets: <span>25 (high exposure)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="tech_revolution">
+        <span class="scenario-card-icon">⚡</span>
+        <div class="scenario-card-name">Tech Revolution</div>
+        <div class="scenario-card-desc">A technology breakthrough in battery storage has given the UK a head start on grid reliability. Solar is booming, gas is already declining — but the financial system hasn't adapted.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Storage: <span>15 (triple normal)</span></div>
+          <div class="scenario-stat">Net Zero: <span>42% head start</span></div>
+          <div class="scenario-stat">Budget: <span>£95bn/turn</span></div>
         </div>
       </div>
 
@@ -5366,14 +5461,17 @@ class UI {
       else msgs.push('No critical risks identified this term. Maintain investment momentum.');
     }
 
-    return msgs[0];
+    return msgs.slice(0, 3);
   }
 
   _injectAdvisorBriefing(state) {
-    const briefing = this._buildAdvisorBriefing(state, state.turn);
-    if (!briefing) return;
+    const briefings = this._buildAdvisorBriefing(state, state.turn);
+    if (!briefings || briefings.length === 0) return;
+    const bulletHtml = briefings.length === 1
+      ? briefings[0]
+      : '<ul style="margin:4px 0 4px 16px;list-style:disc;">' + briefings.map(b => `<li>${b}</li>`).join('') + '</ul>';
     const div = document.createElement('div');
-    div.innerHTML = `<div class="log-advisor">${briefing}<span class="log-advisor-from">— Cabinet Office Permanent Secretary · Turn ${state.turn + 1} Briefing</span></div>`;
+    div.innerHTML = `<div class="log-advisor">${bulletHtml}<span class="log-advisor-from">— Cabinet Office Permanent Secretary · Turn ${state.turn + 1} Briefing</span></div>`;
     this.elLogScroll.appendChild(div);
     this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
   }
@@ -5775,6 +5873,25 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
 
+  // Track metric dips for "Comeback Kid" achievement
+  const st = engine.state;
+  if (st.gridReliability < 25 || st.financialStability < 25 || st.socialStability < 25) {
+    st._metricDippedBelow25 = true;
+  }
+
+  // Update news ticker
+  if (typeof newsTicker !== 'undefined') {
+    if (result.event) {
+      newsTicker.showEventHeadline(result.event.title);
+    } else {
+      newsTicker.update(engine.state);
+    }
+  }
+
+  // Update legacy badge
+  const _lb = document.getElementById('legacy-title');
+  if (_lb && typeof legacySystem !== 'undefined') _lb.textContent = legacySystem.title();
+
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
@@ -5948,6 +6065,237 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: NEWS TICKER
+============================================================ */
+
+const NEWS_HEADLINES = {
+  baseline: [
+    'UK pledges "decisive decade" of climate investment \u2014 Treasury confirms multi-year spending envelope.',
+    'Energy Secretary launches consultation on North Sea decommissioning timeline.',
+    'Bank of England warns pension funds of climate-related asset repricing risk.',
+    'IPCC releases updated carbon budget \u2014 window for 1.5\u00B0C narrowing rapidly.',
+    'National Grid ESO publishes Future Energy Scenarios \u2014 all pathways require massive storage buildout.',
+  ],
+  highTemp: [
+    'Met Office issues unprecedented heat warning \u2014 42\u00B0C forecast for south-east England.',
+    'WHO reports record excess mortality across European heatwave belt.',
+    'Arctic sea ice extent hits new record low \u2014 scientists warn of "blue ocean" event within decade.',
+    'UK crop yields fall 30% as drought conditions persist into third consecutive summer.',
+    'Insurance industry signals retreat from flood-prone postcodes \u2014 2 million homes at risk.',
+  ],
+  lowGrid: [
+    'National Grid declares "amber alert" \u2014 voltage reductions imposed across three regions.',
+    'Hospitals switch to backup generators as rolling blackouts enter second day.',
+    'Industry leaders warn grid instability is deterring manufacturing investment.',
+    'Energy regulator orders emergency review of interconnector capacity.',
+  ],
+  lowSocial: [
+    'Fuel poverty reaches 8 million households \u2014 charities warn of "heat or eat" crisis.',
+    'Trade unions ballot for general strike over energy transition job losses.',
+    'Poll: 62% of public say climate policy "moving too fast without support".',
+    'Communities Secretary announces emergency cost-of-living intervention package.',
+  ],
+  lowFinancial: [
+    'Pension fund consortium discloses \u00A340bn exposure to stranded North Sea assets.',
+    'Credit rating agency places UK sovereign debt on negative watch.',
+    'Property market correction accelerates in coastal and flood-risk areas.',
+    'Treasury warns of "fiscal hole" as climate transition costs exceed forecasts.',
+  ],
+  highNZ: [
+    'UK becomes first G7 nation to generate 90% of electricity from renewables.',
+    'Carbon capture deployment hits milestone \u2014 20Mt CO\u2082 sequestered annually.',
+    'Green hydrogen exports begin as UK leverages offshore wind surplus.',
+    'Net Zero target within reach \u2014 Climate Change Committee praises "exemplary progress".',
+  ],
+  events: [
+    'Emergency services deployed as climate event disrupts communities across the UK.',
+    'Prime Minister chairs COBRA meeting as severe weather causes widespread damage.',
+    'Recovery efforts underway \u2014 local authorities report significant infrastructure damage.',
+  ],
+  diplomacy: [
+    'COP summit opens \u2014 UK delegation pushes for binding global carbon price.',
+    'EU Carbon Border Adjustment Mechanism takes effect \u2014 UK exporters face new compliance costs.',
+    'China announces accelerated coal phase-out \u2014 global emissions trajectory revised downward.',
+    'G7 agrees $100bn climate finance package for developing nations.',
+  ],
+};
+
+class NewsTicker {
+  constructor() {
+    this._el = document.getElementById('news-ticker-text');
+    this._queue = [...NEWS_HEADLINES.baseline];
+    this._shuffleQueue();
+  }
+
+  _shuffleQueue() {
+    for (let i = this._queue.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this._queue[i], this._queue[j]] = [this._queue[j], this._queue[i]];
+    }
+  }
+
+  update(state) {
+    const pool = [];
+    if (state.temperature > 1.8) pool.push(...NEWS_HEADLINES.highTemp);
+    if (state.gridReliability < 50) pool.push(...NEWS_HEADLINES.lowGrid);
+    if (state.socialStability < 55) pool.push(...NEWS_HEADLINES.lowSocial);
+    if (state.financialStability < 50) pool.push(...NEWS_HEADLINES.lowFinancial);
+    if (state.netZeroProgress > 75) pool.push(...NEWS_HEADLINES.highNZ);
+    if (pool.length === 0) pool.push(...NEWS_HEADLINES.baseline);
+    pool.push(...NEWS_HEADLINES.diplomacy);
+
+    const selected = [];
+    const used = new Set();
+    while (selected.length < 3 && pool.length > 0) {
+      const idx = Math.floor(Math.random() * pool.length);
+      if (!used.has(pool[idx])) {
+        used.add(pool[idx]);
+        selected.push(pool[idx]);
+      }
+      pool.splice(idx, 1);
+    }
+    this._setHeadlines(selected);
+  }
+
+  showEventHeadline(eventTitle) {
+    const pool = NEWS_HEADLINES.events;
+    const headline = `${eventTitle} \u2014 ${pool[Math.floor(Math.random() * pool.length)]}`;
+    if (this._el) {
+      this._el.style.animation = 'none';
+      void this._el.offsetWidth;
+      this._el.textContent = headline;
+      this._el.style.animation = 'ticker-scroll 22s linear infinite';
+    }
+  }
+
+  _setHeadlines(headlines) {
+    if (!this._el) return;
+    const text = headlines.join('  \u00B7  ');
+    this._el.style.animation = 'none';
+    void this._el.offsetWidth;
+    this._el.textContent = text;
+    this._el.style.animation = 'ticker-scroll 22s linear infinite';
+  }
+}
+
+/* ============================================================
+   ADDITIONAL STARTER SCENARIOS
+============================================================ */
+
+STARTER_SCENARIOS.global_headwinds = {
+  label: 'Global Headwinds',
+  apply(state) {
+    state.temperature = 1.25;
+    state.strandedAssets = 25;
+    state.financialStability = 55;
+    state.socialStability = 70;
+    state.netZeroProgress = 30;
+    state._budgetOverride = 90;
+  },
+};
+
+STARTER_SCENARIOS.tech_revolution = {
+  label: 'Tech Revolution',
+  apply(state) {
+    state.energy.solar = 18;
+    state.energy.storage = 15;
+    state.energy.gas = 22;
+    state.netZeroProgress = 42;
+    state.gridReliability = 72;
+    state._budgetOverride = 95;
+  },
+};
+
+/* ============================================================
+   ADDITIONAL MINI-EVENTS (INTERNATIONAL)
+============================================================ */
+
+MINI_EVENTS_POOL.push(
+  {
+    id: 'mini_cop_summit',
+    icon: '\uD83C\uDF0D',
+    title: 'COP Climate Summit',
+    prompt: 'The UK is hosting the next COP summit. How ambitious is your pledge?',
+    explanation: 'International climate summits create binding expectations. An ambitious pledge signals global leadership and attracts green investment \u2014 but commits you to faster domestic action. A conservative pledge preserves flexibility but draws criticism and may reduce international cooperation.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}\u00B0C`,
+    }),
+    optA: {
+      label: '\uD83C\uDF31 Pledge accelerated 2040 Net Zero target',
+      consequence: '+8% Net Zero progress (international pressure drives action) \u00B7 \u22124 Social (public fears rushed transition)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialStability = Math.max(0, s.socialStability - 4); },
+    },
+    optB: {
+      label: '\uD83D\uDD4A\uFE0F Reaffirm existing 2050 commitment only',
+      consequence: 'No Net Zero boost \u00B7 +3 Social (public reassured) \u00B7 \u22123 Financial (investors perceive lack of ambition)',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_carbon_border',
+    icon: '\uD83C\uDFD7\uFE0F',
+    title: 'Carbon Border Tax Dispute',
+    prompt: 'The EU\'s carbon border adjustment is hitting UK exports. How do you respond?',
+    explanation: 'The EU now charges importers for embedded carbon in goods from countries without equivalent carbon pricing. UK manufacturers face a competitive disadvantage unless domestic carbon prices rise \u2014 but higher carbon prices accelerate the transition while raising costs.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Stranded Assets: ${Math.round(s.strandedAssets)}`,
+    }),
+    optA: {
+      label: '\uD83D\uDCB0 Match EU carbon price domestically',
+      consequence: '+6% Net Zero (carbon price drives decarbonisation) \u00B7 \u22125 Financial (industry adjustment costs) \u00B7 +\u00A34bn revenue next turn',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.financialStability = Math.max(0, s.financialStability - 5); s.nextTurnBudgetPenalty -= 4; },
+    },
+    optB: {
+      label: '\uD83E\uDD1D Negotiate bilateral exemption deal',
+      consequence: 'No NZ progress \u00B7 +4 Financial (protects exporters) \u00B7 costs \u00A37bn in trade concessions',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 4); s.nextTurnBudgetPenalty += 7; },
+    },
+    condition: (s) => s.turn >= 2 && s.netZeroProgress < 80,
+  },
+  {
+    id: 'mini_tech_transfer',
+    icon: '\uD83D\uDD2C',
+    title: 'International Tech Partnership',
+    prompt: 'A major economy offers to share breakthrough battery technology in exchange for offshore wind expertise.',
+    explanation: 'Technology transfer agreements can accelerate both parties\' transitions. Full IP sharing means your domestic companies lose competitive advantage but the grid benefits immediately. A limited partnership preserves IP value but slows deployment.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Storage: ${Math.round(s.energy.storage)}`,
+    }),
+    optA: {
+      label: '\uD83D\uDD13 Full IP sharing agreement',
+      consequence: '+12 Storage capacity immediately \u00B7 \u22124 Financial (domestic firms lose competitive edge)',
+      effect: (s) => { s.energy.storage = Math.min(100, s.energy.storage + 12); s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    optB: {
+      label: '\uD83D\uDCCB Limited partnership with licensing fees',
+      consequence: '+5 Storage \u00B7 +3 Financial (licensing revenue) \u00B7 slower deployment',
+      effect: (s) => { s.energy.storage = Math.min(100, s.energy.storage + 5); s.financialStability = Math.min(100, s.financialStability + 3); },
+    },
+    condition: (s) => s.energy.wind > 35,
+  },
+);
+
+/* ============================================================
+   ADDITIONAL ACHIEVEMENTS
+============================================================ */
+
+ACHIEVEMENTS.push(
+  { id: 'diplomat', icon: '\uD83C\uDF10', name: 'Climate Diplomat', desc: 'Reach Net Zero while keeping all metrics above 60%', check: (s) => s.netZeroProgress >= 100 && s.gridReliability >= 60 && s.financialStability >= 60 && s.socialStability >= 60 },
+  { id: 'speed_run', icon: '\u26A1', name: 'Speed Runner', desc: 'Reach 80% Net Zero by Turn 3', check: (s) => s.netZeroProgress >= 80 && s.turn <= 3 },
+  { id: 'no_gas', icon: '\uD83D\uDEAB', name: 'Gas-Free Grid', desc: 'Reduce gas to zero while grid stays above 60%', check: (s) => s.energy.gas <= 0 && s.gridReliability >= 60 },
+  { id: 'adaptation_hero', icon: '\uD83C\uDFF0', name: 'Fortress Britain', desc: 'Build adaptation infrastructure above 100', check: (s) => s.infrastructure.adaptation >= 100 },
+  { id: 'balanced', icon: '\u262F\uFE0F', name: 'Perfect Balance', desc: 'Finish with all metrics within 10 points of each other', check: (s) => { const vals = [s.gridReliability, s.financialStability, s.socialStability]; const range = Math.max(...vals) - Math.min(...vals); return range <= 10 && s.netZeroProgress >= 100; } },
+  { id: 'comeback', icon: '\uD83D\uDD04', name: 'Comeback Kid', desc: 'Win after any metric drops below 25% during the game', check: (s) => s._metricDippedBelow25 && s.netZeroProgress >= 100 && !s.socialBreakdownOccurred },
+);
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -5955,6 +6303,7 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const newsTicker   = new NewsTicker();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -5973,6 +6322,10 @@ if (_bonuses.budgetBonus > 0) {
 // Set header subtitle
 const _titleEl = document.querySelector('#game-title p');
 if (_titleEl) _titleEl.textContent = 'HM Government \u00B7 Climate Risk Simulation';
+
+// Set legacy badge
+const _legacyTitleEl = document.getElementById('legacy-title');
+if (_legacyTitleEl) _legacyTitleEl.textContent = legacySystem.title();
 
 // Move scene section to full-width strip below game-main
 const sceneSection = document.getElementById('scene-section');
