@@ -64,6 +64,359 @@ body {
   min-height: 100vh;
 }
 
+/* ===== NEWS TICKER ===== */
+#news-ticker {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 6px var(--gap-lg);
+  overflow: hidden;
+  position: relative;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+#news-ticker-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-lg);
+  animation: ticker-scroll 30s linear infinite;
+  white-space: nowrap;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#news-ticker-inner:hover {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ticker-item .ticker-icon {
+  font-size: 12px;
+}
+
+.ticker-item .ticker-flash {
+  color: var(--status-warn);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateY(-50%) translateX(0); }
+  100% { transform: translateY(-50%) translateX(-50%); }
+}
+
+/* ===== POLICY CARDS DRAWER ===== */
+#policy-cards-bar {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding: 8px var(--gap-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+#policy-cards-bar:empty {
+  display: none;
+}
+
+#policy-cards-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-right: var(--gap-sm);
+}
+
+.policy-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.policy-card:hover {
+  border-color: var(--accent-blue-lt);
+  background: var(--bg-tertiary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.policy-card.used {
+  opacity: 0.4;
+  pointer-events: none;
+  filter: grayscale(0.7);
+}
+
+.policy-card-icon {
+  font-size: 16px;
+}
+
+.policy-card-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.policy-card-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.policy-card-effect {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.policy-card-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  background: var(--status-info);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: white;
+}
+
+/* ===== COP SUMMIT OVERLAY ===== */
+#cop-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  animation: cop-fade-in 0.4s ease forwards;
+}
+
+@keyframes cop-fade-in {
+  to { opacity: 1; }
+}
+
+#cop-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 560px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(29,112,184,0.15);
+}
+
+#cop-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-lg);
+}
+
+#cop-icon {
+  font-size: 36px;
+}
+
+#cop-title-group {
+  flex: 1;
+}
+
+#cop-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+#cop-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+#cop-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-lg);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--accent-blue);
+}
+
+#cop-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.cop-option {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.cop-option:hover {
+  border-color: var(--accent-blue-lt);
+  background: var(--bg-tertiary);
+  transform: translateX(4px);
+}
+
+.cop-option-label {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.cop-option-effect {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ===== ENDGAME JOURNEY CHART ===== */
+#endgame-journey-chart {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+
+#timeline-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-md);
+}
+
+#timeline-track {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 80px;
+  position: relative;
+}
+
+.timeline-bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.timeline-bars {
+  display: flex;
+  gap: 1px;
+  align-items: flex-end;
+  width: 100%;
+  height: 60px;
+}
+
+.timeline-bar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+  transition: height 0.3s;
+}
+
+.timeline-bar.tl-grid { background: var(--status-info); }
+.timeline-bar.tl-fin  { background: var(--energy-nuclear); }
+.timeline-bar.tl-soc  { background: var(--status-good); }
+.timeline-bar.tl-nz   { background: var(--energy-solar); }
+
+.timeline-year {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline-event-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-danger);
+  margin-top: 2px;
+}
+
+#timeline-legend {
+  display: flex;
+  gap: var(--gap-md);
+  margin-top: var(--gap-sm);
+  justify-content: center;
+}
+
+.tl-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.tl-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+/* ===== DIPLOMACY REPUTATION BADGE ===== */
+#diplomacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  padding: 3px 8px;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+#diplomacy-badge .diplo-flag {
+  font-size: 12px;
+}
+
+#diplomacy-badge .diplo-score {
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+}
+
 /* ===== HEADER ===== */
 #game-header {
   display: flex;
@@ -2162,6 +2515,7 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
+    <span id="diplomacy-badge" title="International Diplomatic Reputation"><span class="diplo-flag">🌍</span> Rep: <span class="diplo-score" id="diplo-score-val">0</span></span>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2176,6 +2530,14 @@ body { transition: filter 2s ease; }
     </div>
   </div>
 </header>
+
+<!-- NEWS TICKER -->
+<div id="news-ticker">
+  <div id="news-ticker-inner"></div>
+</div>
+
+<!-- POLICY CARDS BAR -->
+<div id="policy-cards-bar"></div>
 
 <!-- ===== MAIN LAYOUT ===== -->
 <main id="game-main">
@@ -3083,6 +3445,8 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- COP SUMMIT OVERLAY (injected by JS) -->
+
 <script>
 'use strict';
 
@@ -3221,6 +3585,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'climate_diplomat', icon: '🌐', name: 'Climate Diplomat', desc: 'Finish with Diplomatic Reputation of +6 or higher', check: (s) => (s._diplomaticRep || 0) >= 6 },
+  { id: 'card_collector', icon: '🃏', name: 'Card Collector', desc: 'Play 3 or more policy cards in a single game', check: (s) => (policyCardMgr._used.length >= 3) },
 ];
 
 class AchievementManager {
@@ -4011,6 +4377,9 @@ class GameEngine {
     difficultyMgr.activateForNewGame();
     turnHistory.reset();
     this._initState();
+    // Initialize diplomatic state
+    this.state._diplomaticRep = 0;
+    this.state._warmingRateBonus = 0;
     // Apply starter scenario mutations
     const scenario = STARTER_SCENARIOS[scenarioKey] || STARTER_SCENARIOS.standard;
     scenario.apply(this.state);
@@ -4018,6 +4387,9 @@ class GameEngine {
     this.state.budget = this.getEffectiveBudget();
     const bonuses = legacySystem.startingBonuses();
     if (bonuses.budgetBonus > 0) this.state.budget += bonuses.budgetBonus;
+    // Reset new systems
+    diplomacyMgr.reset();
+    policyCardMgr.reset();
   }
 }
 
@@ -4511,6 +4883,8 @@ class UI {
             <div class="log-year">2025 — Briefing</div>
             <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard'}</strong>. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
           </div>`;
+        newsTicker.update(this.engine.getState());
+        policyCardMgr.renderBar();
         this.render(this.engine.getState());
       });
     }
@@ -4536,6 +4910,7 @@ class UI {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
       document.getElementById('endgame-timeline')?.remove();
+      document.getElementById('endgame-journey-chart')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
       // Reset scenario card selection to default
@@ -4556,6 +4931,14 @@ class UI {
     const preset = difficultyMgr.selectedPreset;
     const badge = difficultyMgr.selected;
     el.innerHTML = `<span class="diff-badge ${badge}">${preset.label}</span>`;
+  }
+
+  _updateDiploBadge() {
+    const el = document.getElementById('diplo-score-val');
+    if (!el) return;
+    const rep = this.engine.state._diplomaticRep || 0;
+    el.textContent = rep >= 0 ? `+${rep}` : `${rep}`;
+    el.style.color = rep >= 3 ? 'var(--status-good)' : rep >= 0 ? 'var(--accent-blue-lt)' : 'var(--status-danger)';
   }
 
   _refreshHighScoreInSettings() {
@@ -4616,6 +4999,7 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._updateDiploBadge();
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
   }
@@ -5164,8 +5548,11 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    // Build visual journey timeline
+    const journeyTimeline = buildEndgameTimeline(turnHistory.data, this.engine.state.log);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', journeyTimeline + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5559,6 +5946,496 @@ class TechTreeManager {
 }
 
 /* ============================================================
+   MODULE: NEWS TICKER
+============================================================ */
+
+const NEWS_HEADLINES = {
+  start: [
+    { icon: '📰', text: 'PM pledges "decisive climate action" in first King\'s Speech' },
+    { icon: '🌍', text: 'UN Secretary-General: "We are on thin ice — and the ice is melting fast"' },
+    { icon: '📊', text: 'ONS reports UK emissions 50% below 1990 levels — but the hardest cuts remain' },
+    { icon: '🏭', text: 'Last coal power station closes — but gas still provides 28% of electricity' },
+  ],
+  highTemp: [
+    { icon: '🌡️', flash: 'BREAKING', text: 'Met Office confirms hottest year on record for UK' },
+    { icon: '🔥', flash: 'ALERT', text: 'Wildfires spread across southern England as heatwave intensifies' },
+    { icon: '🏥', text: 'NHS declares "heat emergency" — A&E departments overwhelmed' },
+    { icon: '🌾', text: 'Crop failures force UK food imports to record highs' },
+  ],
+  lowGrid: [
+    { icon: '⚡', flash: 'BREAKING', text: 'National Grid issues "insufficient margin" warning — blackout risk elevated' },
+    { icon: '🏭', text: 'Emergency gas turbines activated as wind drops to record low' },
+    { icon: '🔌', text: 'Major industrial users told to cut demand immediately' },
+  ],
+  lowSocial: [
+    { icon: '✊', flash: 'BREAKING', text: 'Fuel poverty protests spread to 40 cities across England and Wales' },
+    { icon: '📉', text: 'Government approval rating hits historic low over energy costs' },
+    { icon: '🏘️', text: '"Left behind" communities demand emergency support packages' },
+  ],
+  lowFinancial: [
+    { icon: '📉', flash: 'URGENT', text: 'Bank of England warns of "systemic risk" from stranded fossil assets' },
+    { icon: '🏦', text: 'Major pension fund writes down £2.1bn in North Sea holdings' },
+    { icon: '💷', text: 'Sterling falls 3% on climate liability fears' },
+  ],
+  goodProgress: [
+    { icon: '🌱', text: 'UK on track for Net Zero — international observers praise "balanced approach"' },
+    { icon: '💚', text: 'Green bond issuance hits record as investors back UK transition' },
+    { icon: '🏗️', text: 'Offshore wind capacity surpasses all expectations — costs down 40%' },
+    { icon: '⚡', text: 'National Grid CEO: "System is performing beyond all models"' },
+  ],
+  diplomatic: [
+    { icon: '🌍', text: 'UK Climate Leadership Index rises — G7 allies increase collaboration' },
+    { icon: '🤝', text: 'EU proposes joint UK-EU carbon border mechanism' },
+    { icon: '🇺🇸', text: 'US follows UK lead on green finance regulation' },
+  ],
+  generic: [
+    { icon: '📊', text: 'Climate Change Committee publishes annual progress report' },
+    { icon: '🔬', text: 'UK research council announces breakthrough in battery chemistry' },
+    { icon: '🏠', text: 'Nationwide home insulation programme reaches 2 million households' },
+    { icon: '🚗', text: 'Electric vehicle sales overtake petrol for first time' },
+    { icon: '🌊', text: 'Environment Agency upgrades flood defences along Thames estuary' },
+    { icon: '⚛️', text: 'Sizewell C nuclear plant passes key construction milestone' },
+    { icon: '🌲', text: 'Forestry Commission reports largest annual tree planting since 1970s' },
+    { icon: '📈', text: 'Green jobs now outnumber fossil fuel employment 3:1 in UK' },
+  ],
+};
+
+class NewsTicker {
+  constructor() {
+    this.el = document.getElementById('news-ticker-inner');
+    this._headlines = [];
+  }
+
+  update(state) {
+    const pool = [];
+    if (state.turn === 0) {
+      pool.push(...NEWS_HEADLINES.start);
+    } else {
+      if (state.temperature > 1.7) pool.push(...NEWS_HEADLINES.highTemp);
+      if (state.gridReliability < 50) pool.push(...NEWS_HEADLINES.lowGrid);
+      if (state.socialStability < 55) pool.push(...NEWS_HEADLINES.lowSocial);
+      if (state.financialStability < 50) pool.push(...NEWS_HEADLINES.lowFinancial);
+      if (state.netZeroProgress > 65 && state.socialStability > 60) pool.push(...NEWS_HEADLINES.goodProgress);
+      if (state._diplomaticRep > 2) pool.push(...NEWS_HEADLINES.diplomatic);
+      pool.push(...NEWS_HEADLINES.generic);
+    }
+
+    // Pick 6 unique headlines
+    const shuffled = pool.sort(() => Math.random() - 0.5);
+    this._headlines = shuffled.slice(0, 6);
+    this._render();
+  }
+
+  _render() {
+    // Duplicate for seamless scroll
+    const items = [...this._headlines, ...this._headlines];
+    this.el.innerHTML = items.map(h => `
+      <span class="ticker-item">
+        <span class="ticker-icon">${h.icon}</span>
+        ${h.flash ? `<span class="ticker-flash">${h.flash}</span>` : ''}
+        ${h.text}
+      </span>
+    `).join('<span class="ticker-item" style="color:var(--border-strong)">•</span>');
+  }
+}
+
+/* ============================================================
+   MODULE: COP DIPLOMACY SYSTEM
+============================================================ */
+
+const COP_SUMMITS = [
+  {
+    id: 'cop31',
+    turn: 1,
+    title: 'COP31 — Bonn',
+    subtitle: '2030 · First Global Stocktake Review',
+    description: 'The first formal review since Paris. Nations are comparing commitments against reality. The UK delegation faces pressure to either lead by example — committing to an accelerated timeline — or build a broader coalition by sharing green technology freely with developing nations.',
+    options: [
+      {
+        label: '🏆 Announce accelerated UK Net Zero target (2045)',
+        effect: 'Warming rate −0.03/turn permanently · Budget −£10bn next turn (transition costs front-loaded)',
+        apply: (s) => { s._warmingRateBonus = (s._warmingRateBonus || 0) + 0.03; s.nextTurnBudgetPenalty += 10; s._diplomaticRep = (s._diplomaticRep || 0) + 2; },
+      },
+      {
+        label: '🤝 Green Technology Transfer Programme',
+        effect: '+2 Diplomatic Reputation · Unlocks "International Collaboration" policy card · No budget cost',
+        apply: (s) => { s._diplomaticRep = (s._diplomaticRep || 0) + 2; s._unlockCard = 'intl_collab'; },
+      },
+      {
+        label: '🛡️ Defend current commitments only',
+        effect: 'No cost, no bonus · −1 Diplomatic Reputation (seen as foot-dragging)',
+        apply: (s) => { s._diplomaticRep = (s._diplomaticRep || 0) - 1; },
+      },
+    ],
+  },
+  {
+    id: 'cop33',
+    turn: 2,
+    title: 'COP33 — Nairobi',
+    subtitle: '2035 · Climate Finance Reckoning',
+    description: 'Developing nations demand $200bn/year in loss and damage funding. The UK must choose: contribute generously (costly but builds coalition), propose innovative finance mechanisms (moderate), or prioritise domestic resilience (practical but isolating).',
+    options: [
+      {
+        label: '💷 Pledge generous loss & damage contribution',
+        effect: 'Budget −£15bn next turn · +3 Diplomatic Rep · Social Stability +5 (global solidarity popular domestically)',
+        apply: (s) => { s.nextTurnBudgetPenalty += 15; s._diplomaticRep = (s._diplomaticRep || 0) + 3; s.socialStability = Math.min(100, s.socialStability + 5); },
+      },
+      {
+        label: '🏦 Propose carbon border adjustment revenue sharing',
+        effect: '+2 Diplomatic Rep · Financial Stability +5 · Unlocks "Carbon Border" policy card',
+        apply: (s) => { s._diplomaticRep = (s._diplomaticRep || 0) + 2; s.financialStability = Math.min(100, s.financialStability + 5); s._unlockCard = 'carbon_border'; },
+      },
+      {
+        label: '🏠 Prioritise domestic adaptation spending',
+        effect: 'Adaptation infrastructure +30 · −2 Diplomatic Rep (seen as isolationist)',
+        apply: (s) => { s.infrastructure.adaptation += 30; s._diplomaticRep = (s._diplomaticRep || 0) - 2; },
+      },
+    ],
+  },
+  {
+    id: 'cop35',
+    turn: 3,
+    title: 'COP35 — Singapore',
+    subtitle: '2040 · The Tipping Point Summit',
+    description: 'With multiple climate tipping points now confirmed active, this emergency summit convenes to coordinate radical global action. The UK can join a binding "Climate Emergency Pact" with severe enforcement, lead a smaller coalition of willing nations, or maintain sovereignty and flexibility.',
+    options: [
+      {
+        label: '⚡ Sign the Climate Emergency Pact',
+        effect: 'Warming rate −0.05/turn · Budget −£10bn next turn · Net Zero Progress +10 · Requires all future energy blocks doubled',
+        apply: (s) => { s._warmingRateBonus = (s._warmingRateBonus || 0) + 0.05; s.nextTurnBudgetPenalty += 10; s.netZeroProgress = Math.min(100, s.netZeroProgress + 10); s._diplomaticRep = (s._diplomaticRep || 0) + 3; },
+      },
+      {
+        label: '🌐 Lead "Coalition of the Willing" (G7 + key allies)',
+        effect: '+2 Diplomatic Rep · Warming rate −0.02/turn · Unlocks "Coalition Synergy" policy card',
+        apply: (s) => { s._diplomaticRep = (s._diplomaticRep || 0) + 2; s._warmingRateBonus = (s._warmingRateBonus || 0) + 0.02; s._unlockCard = 'coalition_synergy'; },
+      },
+      {
+        label: '🏴 Maintain policy sovereignty',
+        effect: 'No constraints · −3 Diplomatic Rep · Budget +£10bn next turn (no international obligations)',
+        apply: (s) => { s._diplomaticRep = (s._diplomaticRep || 0) - 3; s.budget += 10; },
+      },
+    ],
+  },
+  {
+    id: 'cop37',
+    turn: 4,
+    title: 'COP37 — Dubai II',
+    subtitle: '2045 · Final Reckoning Before 2050',
+    description: 'The last major summit before the 2050 deadline. Nations are judged on delivery, not promises. Your diplomatic reputation from previous COPs determines what deals are available. High reputation unlocks a powerful alliance; low reputation means going it alone.',
+    options: [
+      {
+        label: '🌟 Claim Climate Leadership Mantle',
+        effect: 'If Diplomatic Rep ≥ 4: Net Zero +15, Social +8, warming −0.04/turn. Otherwise: reduced effect.',
+        apply: (s) => {
+          const rep = s._diplomaticRep || 0;
+          if (rep >= 4) { s.netZeroProgress = Math.min(100, s.netZeroProgress + 15); s.socialStability = Math.min(100, s.socialStability + 8); s._warmingRateBonus = (s._warmingRateBonus || 0) + 0.04; }
+          else { s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.min(100, s.socialStability + 3); }
+        },
+      },
+      {
+        label: '💼 Negotiate bilateral trade-for-climate deals',
+        effect: 'Financial Stability +8 · Budget +£15bn bonus · +1 Diplomatic Rep',
+        apply: (s) => { s.financialStability = Math.min(100, s.financialStability + 8); s.budget += 15; s._diplomaticRep = (s._diplomaticRep || 0) + 1; },
+      },
+      {
+        label: '📋 Submit compliance report and focus domestically',
+        effect: 'No international benefit or cost · Net Zero +5 from domestic focus',
+        apply: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); },
+      },
+    ],
+  },
+];
+
+class DiplomacyManager {
+  constructor() {
+    this._copDone = new Set();
+  }
+
+  getCOPForTurn(turn) {
+    if (this._copDone.has(turn)) return null;
+    return COP_SUMMITS.find(c => c.turn === turn) || null;
+  }
+
+  markDone(turn) {
+    this._copDone.add(turn);
+  }
+
+  reset() {
+    this._copDone.clear();
+  }
+
+  showCOP(cop, engineState) {
+    return new Promise(resolve => {
+      const overlay = document.createElement('div');
+      overlay.id = 'cop-overlay';
+      overlay.innerHTML = `
+        <div id="cop-card">
+          <div id="cop-header">
+            <div id="cop-icon">🌍</div>
+            <div id="cop-title-group">
+              <div id="cop-title">${cop.title}</div>
+              <div id="cop-subtitle">${cop.subtitle}</div>
+            </div>
+          </div>
+          <div id="cop-description">${cop.description}</div>
+          <div id="cop-options">
+            ${cop.options.map((opt, i) => `
+              <button class="cop-option" data-idx="${i}">
+                <div class="cop-option-label">${opt.label}</div>
+                <div class="cop-option-effect">${opt.effect}</div>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      overlay.querySelectorAll('.cop-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.idx);
+          cop.options[idx].apply(engineState);
+          this.markDone(cop.turn);
+          overlay.style.opacity = '0';
+          overlay.style.transition = 'opacity 0.3s';
+          setTimeout(() => { overlay.remove(); resolve(idx); }, 300);
+        }, { once: true });
+      });
+    });
+  }
+}
+
+/* ============================================================
+   MODULE: POLICY CARDS
+============================================================ */
+
+const POLICY_CARDS = [
+  {
+    id: 'emergency_budget',
+    icon: '💰',
+    name: 'Emergency Budget',
+    effect: '+£40bn budget this turn',
+    apply: (s) => { s.budget += 40; },
+    earnCondition: 'Earn by finishing a turn with £0 spent (austerity bonus)',
+  },
+  {
+    id: 'green_sprint',
+    icon: '⚡',
+    name: 'Green Sprint',
+    effect: 'Net Zero +15 instantly',
+    apply: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 15); },
+    earnCondition: 'Earn by reaching 60% Net Zero progress',
+  },
+  {
+    id: 'public_mandate',
+    icon: '🗳️',
+    name: 'Public Mandate',
+    effect: 'Social Stability +15 instantly',
+    apply: (s) => { s.socialStability = Math.min(100, s.socialStability + 15); },
+    earnCondition: 'Earn by keeping Social above 80% for 2 consecutive turns',
+  },
+  {
+    id: 'grid_override',
+    icon: '🔌',
+    name: 'Grid Override',
+    effect: 'Grid Reliability set to 75% (if below)',
+    apply: (s) => { if (s.gridReliability < 75) s.gridReliability = 75; },
+    earnCondition: 'Earn by investing in Grid & Storage for 3 turns',
+  },
+  {
+    id: 'financial_shield',
+    icon: '🛡️',
+    name: 'Financial Shield',
+    effect: 'Stranded Assets −30, Financial +10',
+    apply: (s) => { s.strandedAssets = Math.max(0, s.strandedAssets - 30); s.financialStability = Math.min(100, s.financialStability + 10); },
+    earnCondition: 'Earn by investing in Financial Resilience for 2 turns',
+  },
+  {
+    id: 'intl_collab',
+    icon: '🌐',
+    name: 'International Collaboration',
+    effect: 'All investments +20% effectiveness this turn',
+    apply: (s) => { s._investBoost = 1.2; },
+    earnCondition: 'Unlocked via COP diplomacy',
+  },
+  {
+    id: 'carbon_border',
+    icon: '🚧',
+    name: 'Carbon Border Adjustment',
+    effect: 'Budget +£20bn, Gas −5 (imports taxed)',
+    apply: (s) => { s.budget += 20; s.energy.gas = Math.max(0, s.energy.gas - 5); },
+    earnCondition: 'Unlocked via COP diplomacy',
+  },
+  {
+    id: 'coalition_synergy',
+    icon: '🤝',
+    name: 'Coalition Synergy',
+    effect: 'Net Zero +10, warming rate −0.03 permanently',
+    apply: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 10); s._warmingRateBonus = (s._warmingRateBonus || 0) + 0.03; },
+    earnCondition: 'Unlocked via COP diplomacy',
+  },
+];
+
+class PolicyCardManager {
+  constructor() {
+    this._hand = [];      // cards available to play
+    this._used = [];      // cards already played
+    this._earnChecks = {
+      _socialHighTurns: 0,
+      _gridInvestTurns: 0,
+      _finInvestTurns: 0,
+    };
+  }
+
+  checkEarnConditions(state, decisions) {
+    const earned = [];
+
+    // Emergency Budget: finish a turn with 0 spent
+    if (state.spentThisTurn === 0 && !this._has('emergency_budget')) {
+      this._hand.push('emergency_budget');
+      earned.push(POLICY_CARDS.find(c => c.id === 'emergency_budget'));
+    }
+
+    // Green Sprint: reach 60% Net Zero
+    if (state.netZeroProgress >= 60 && !this._has('green_sprint')) {
+      this._hand.push('green_sprint');
+      earned.push(POLICY_CARDS.find(c => c.id === 'green_sprint'));
+    }
+
+    // Public Mandate: social above 80 for 2 turns
+    if (state.socialStability >= 80) {
+      this._earnChecks._socialHighTurns++;
+    } else {
+      this._earnChecks._socialHighTurns = 0;
+    }
+    if (this._earnChecks._socialHighTurns >= 2 && !this._has('public_mandate')) {
+      this._hand.push('public_mandate');
+      earned.push(POLICY_CARDS.find(c => c.id === 'public_mandate'));
+    }
+
+    // Grid Override: invest in grid 3 turns
+    if (decisions.gridAndStorage > 0) {
+      this._earnChecks._gridInvestTurns++;
+    }
+    if (this._earnChecks._gridInvestTurns >= 3 && !this._has('grid_override')) {
+      this._hand.push('grid_override');
+      earned.push(POLICY_CARDS.find(c => c.id === 'grid_override'));
+    }
+
+    // Financial Shield: invest in finance 2 turns
+    if (decisions.financialResilience > 0) {
+      this._earnChecks._finInvestTurns++;
+    }
+    if (this._earnChecks._finInvestTurns >= 2 && !this._has('financial_shield')) {
+      this._hand.push('financial_shield');
+      earned.push(POLICY_CARDS.find(c => c.id === 'financial_shield'));
+    }
+
+    // COP-unlocked cards
+    if (state._unlockCard && !this._has(state._unlockCard)) {
+      this._hand.push(state._unlockCard);
+      const card = POLICY_CARDS.find(c => c.id === state._unlockCard);
+      if (card) earned.push(card);
+      delete state._unlockCard;
+    }
+
+    return earned;
+  }
+
+  _has(id) {
+    return this._hand.includes(id) || this._used.includes(id);
+  }
+
+  getHand() {
+    return this._hand.map(id => POLICY_CARDS.find(c => c.id === id)).filter(Boolean);
+  }
+
+  playCard(cardId, state) {
+    const idx = this._hand.indexOf(cardId);
+    if (idx === -1) return false;
+    const card = POLICY_CARDS.find(c => c.id === cardId);
+    if (!card) return false;
+    card.apply(state);
+    this._hand.splice(idx, 1);
+    this._used.push(cardId);
+    return true;
+  }
+
+  reset() {
+    this._hand = [];
+    this._used = [];
+    this._earnChecks = { _socialHighTurns: 0, _gridInvestTurns: 0, _finInvestTurns: 0 };
+  }
+
+  renderBar() {
+    const bar = document.getElementById('policy-cards-bar');
+    const hand = this.getHand();
+    if (hand.length === 0) {
+      bar.innerHTML = '';
+      return;
+    }
+    bar.innerHTML = `<span id="policy-cards-label">Policy Cards</span>` +
+      hand.map(card => `
+        <div class="policy-card" data-card-id="${card.id}" title="${card.earnCondition}">
+          <span class="policy-card-icon">${card.icon}</span>
+          <span class="policy-card-text">
+            <span class="policy-card-name">${card.name}</span>
+            <span class="policy-card-effect">${card.effect}</span>
+          </span>
+        </div>
+      `).join('');
+
+    bar.querySelectorAll('.policy-card').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = el.dataset.cardId;
+        if (engine.state.isResolvingTurn || engine.state.gameOver) return;
+        this.playCard(id, engine.state);
+        effectsMgr.haptic('medium');
+        this.renderBar();
+        ui.render(engine.getState());
+      });
+    });
+  }
+}
+
+/* ============================================================
+   MODULE: ENDGAME TIMELINE
+============================================================ */
+
+function buildEndgameTimeline(turnHistoryData, logEntries) {
+  if (!turnHistoryData || turnHistoryData.length < 2) return '';
+
+  const years = turnHistoryData.map((d, i) => 2025 + i * 5);
+  const bars = turnHistoryData.map((d, i) => {
+    const hasEvent = logEntries[i - 1]?.event ? true : false;
+    return `
+      <div class="timeline-bar-group">
+        <div class="timeline-bars">
+          <div class="timeline-bar tl-grid" style="height:${d.gridReliability || 0}%"></div>
+          <div class="timeline-bar tl-fin" style="height:${d.financialStability || 0}%"></div>
+          <div class="timeline-bar tl-soc" style="height:${d.socialStability || 0}%"></div>
+          <div class="timeline-bar tl-nz" style="height:${d.netZeroProgress || 0}%"></div>
+        </div>
+        <span class="timeline-year">${years[i]}</span>
+        ${hasEvent ? '<div class="timeline-event-dot" title="Climate event this turn"></div>' : ''}
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div id="endgame-journey-chart">
+      <div id="timeline-title">Your Journey: 2025–2050</div>
+      <div id="timeline-track">${bars}</div>
+      <div id="timeline-legend">
+        <span class="tl-legend-item"><span class="tl-legend-dot" style="background:var(--status-info)"></span>Grid</span>
+        <span class="tl-legend-item"><span class="tl-legend-dot" style="background:var(--energy-nuclear)"></span>Finance</span>
+        <span class="tl-legend-item"><span class="tl-legend-dot" style="background:var(--status-good)"></span>Social</span>
+        <span class="tl-legend-item"><span class="tl-legend-dot" style="background:var(--energy-solar)"></span>Net Zero</span>
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
    MODULE: SIMULATION RUNNER
 ============================================================ */
 
@@ -5728,12 +6605,24 @@ const MINI_EVENTS_POOL = [
 
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
+  const currentTurn = engine.state.turn;
+
+  // Check for policy card earn conditions before turn resolves
+  const prevDecisions = { ...engine.state.currentDecisions };
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
 
+  // Store warming rate bonus from diplomacy
+  const warmingBonus = engine.state._warmingRateBonus || 0;
+
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
+
+  // Apply diplomatic warming reduction post-resolution
+  if (warmingBonus > 0) {
+    engine.state.temperature = Math.max(1.1, engine.state.temperature - warmingBonus);
+  }
 
   // Build and mount overlay
   const overlay = _buildSimOverlay(startYear);
@@ -5769,11 +6658,19 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   overlay.remove();
 
   // Recalculate next-turn budget to include any mini-event penalties
-  // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
   engine.state.budget = engine.getEffectiveBudget();
+
+  // Check policy card earn conditions
+  policyCardMgr.checkEarnConditions(engine.state, prevDecisions);
 
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
+
+  // Update news ticker based on new state
+  newsTicker.update(engine.getState());
+
+  // Update policy cards bar
+  policyCardMgr.renderBar();
 
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
@@ -5803,6 +6700,21 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
+  }
+
+  // Show COP summit after turn resolves (if not game over)
+  if (!result.endgame) {
+    const cop = diplomacyMgr.getCOPForTurn(engine.state.turn);
+    if (cop) {
+      await _delay(800);
+      await diplomacyMgr.showCOP(cop, engine.state);
+      // Re-render after diplomacy choice
+      newsTicker.update(engine.getState());
+      policyCardMgr.checkEarnConditions(engine.state, prevDecisions);
+      policyCardMgr.renderBar();
+      ui.render(engine.getState());
+      ui._updateDiploBadge();
+    }
   }
 }
 
@@ -5955,10 +6867,17 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const newsTicker   = new NewsTicker();
+const diplomacyMgr = new DiplomacyManager();
+const policyCardMgr = new PolicyCardManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
 STARTER_SCENARIOS['standard'].apply(engine.state);
+
+// Initialize diplomatic reputation
+engine.state._diplomaticRep = 0;
+engine.state._warmingRateBonus = 0;
 
 // Record initial state for sparklines
 turnHistory.record(engine.state);
@@ -5981,6 +6900,12 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Initialize news ticker with starting headlines
+newsTicker.update(engine.getState());
+
+// Initialize policy cards bar
+policyCardMgr.renderBar();
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
