@@ -1101,7 +1101,7 @@ body {
 }
 
 /* Prevent rubber-band scroll on fixed overlays */
-#event-modal, #endgame-overlay, #advisor-overlay, #sim-overlay {
+#event-modal, #endgame-overlay, #advisor-overlay, #sim-overlay, #cop-modal {
   overscroll-behavior: contain;
 }
 
@@ -2142,6 +2142,174 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== NEWS HEADLINE ENTRIES ===== */
+.log-headline {
+  border-left: 3px solid var(--text-muted);
+  padding: 6px 10px;
+  margin-bottom: var(--gap-sm);
+  animation: slideIn 0.3s ease-out;
+  background: rgba(255,255,255,0.02);
+}
+.log-headline-source {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.log-headline-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.log-headline.positive { border-left-color: var(--status-good); }
+.log-headline.positive .log-headline-text { color: var(--accent-green-lt); }
+.log-headline.negative { border-left-color: var(--status-danger); }
+.log-headline.negative .log-headline-text { color: #ff7043; }
+.log-headline.neutral  { border-left-color: var(--accent-blue-lt); }
+
+/* ===== COP SUMMIT MODAL ===== */
+#cop-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 600;
+  animation: fadeIn 0.3s ease;
+}
+#cop-modal.hidden { display: none; }
+#cop-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 540px;
+  width: 92vw;
+  animation: slideUp 0.35s ease;
+}
+#cop-icon { font-size: 48px; text-align: center; margin-bottom: var(--gap-sm); }
+#cop-title {
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--accent-blue-lt);
+  margin-bottom: 4px;
+}
+#cop-subtitle {
+  font-size: 13px;
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  font-family: Georgia, serif;
+}
+#cop-context {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-lg);
+  padding: var(--gap-sm) var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--accent-blue-lt);
+}
+.cop-options { display: flex; flex-direction: column; gap: var(--gap-sm); }
+.cop-option {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.1s;
+  text-align: left;
+}
+.cop-option:hover {
+  border-color: var(--accent-blue-lt);
+  background: #192038;
+  transform: translateX(4px);
+}
+.cop-option-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.cop-option-consequence {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ===== NOTIFICATION TOAST ===== */
+#toast-container {
+  position: fixed;
+  top: 70px;
+  right: 16px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  pointer-events: none;
+}
+.toast {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in 3.2s forwards;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  max-width: 320px;
+  pointer-events: auto;
+}
+.toast-icon { font-size: 20px; flex-shrink: 0; }
+.toast-text { font-size: 12px; color: var(--text-primary); line-height: 1.4; }
+.toast.achievement { border-color: var(--accent-blue-lt); }
+.toast.crisis { border-color: var(--status-danger); }
+.toast.milestone { border-color: var(--status-good); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(60px); }
+}
+
+/* ===== SOUND TOGGLE ===== */
+#sound-toggle {
+  background: none;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, border-color 0.15s;
+}
+#sound-toggle:hover { color: var(--text-primary); border-color: var(--accent-blue-lt); }
+#sound-toggle.muted { opacity: 0.4; }
+
+/* ===== CASCADE WARNING PULSE ===== */
+@keyframes cascadePulse {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: inset 0 0 12px rgba(255,61,0,0.25); }
+}
+.metric-block.cascade-warning {
+  animation: cascadePulse 2s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
 </style>
 </head>
 <body>
@@ -2162,6 +2330,7 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
+    <button id="sound-toggle" title="Toggle sound">♪</button>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -3014,6 +3183,20 @@ body { transition: filter 2s ease; }
     <button id="restart-btn">↺ Play Again</button>
   </div>
 </div>
+
+<!-- COP SUMMIT MODAL -->
+<div id="cop-modal" class="hidden">
+  <div id="cop-card">
+    <div id="cop-icon">🌍</div>
+    <h2 id="cop-title">COP Climate Summit</h2>
+    <p id="cop-subtitle">The world is watching.</p>
+    <div id="cop-context"></div>
+    <div class="cop-options" id="cop-options"></div>
+  </div>
+</div>
+
+<!-- TOAST NOTIFICATIONS -->
+<div id="toast-container"></div>
 
 <!-- ADVISOR OVERLAY -->
 <div id="advisor-overlay" class="hidden">
@@ -4307,8 +4490,10 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          soundMgr.deallocate();
         } else {
-          this.engine.allocateBlock(cat);
+          const result = this.engine.allocateBlock(cat);
+          if (result.success) soundMgr.allocate();
         }
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
@@ -4322,8 +4507,8 @@ class UI {
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
-        if (e.shiftKey) this.engine.deallocateBlock(keyMap[e.key]);
-        else this.engine.allocateBlock(keyMap[e.key]);
+        if (e.shiftKey) { this.engine.deallocateBlock(keyMap[e.key]); soundMgr.deallocate(); }
+        else { const r = this.engine.allocateBlock(keyMap[e.key]); if (r.success) soundMgr.allocate(); }
         this.render(this.engine.getState());
       } else if (e.key === 'Enter' && !e.repeat) {
         this.elEndTurnBtn.click();
@@ -4449,6 +4634,17 @@ class UI {
 
     // Init metric tooltips
     this._initTooltips();
+
+    // Sound toggle
+    const soundToggle = document.getElementById('sound-toggle');
+    if (soundToggle) {
+      soundToggle.addEventListener('click', () => {
+        const enabled = soundMgr.toggle();
+        soundToggle.textContent = enabled ? '♪' : '♪';
+        soundToggle.classList.toggle('muted', !enabled);
+        if (enabled) soundMgr.allocate();
+      });
+    }
 
     // Settings modal
     const settingsBtn = document.getElementById('settings-btn');
@@ -4618,6 +4814,7 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    renderCascadeWarnings(state);
   }
 
   _renderHeader(state) {
@@ -5150,6 +5347,12 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    // Sound + toast for new achievements
+    if (newAchievements.length > 0) {
+      soundMgr.achievement();
+      newAchievements.forEach(a => toastMgr.show(a.icon, `Achievement: ${a.name}`, 'achievement'));
+    }
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
@@ -5374,6 +5577,31 @@ class UI {
     if (!briefing) return;
     const div = document.createElement('div');
     div.innerHTML = `<div class="log-advisor">${briefing}<span class="log-advisor-from">— Cabinet Office Permanent Secretary · Turn ${state.turn + 1} Briefing</span></div>`;
+    this.elLogScroll.appendChild(div);
+    this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
+  }
+
+  // ===== NEWS HEADLINES =====
+  _injectHeadlines(state) {
+    const headlines = generateHeadlines(state);
+    for (const h of headlines) {
+      const source = NEWS_SOURCES[Math.floor(Math.random() * NEWS_SOURCES.length)];
+      const div = document.createElement('div');
+      div.className = `log-headline ${h.tone}`;
+      div.innerHTML = `<div class="log-headline-source">${source} · ${state.year}</div><div class="log-headline-text">${h.text}</div>`;
+      this.elLogScroll.appendChild(div);
+    }
+    this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
+  }
+
+  // ===== COP SUMMIT LOG ENTRY =====
+  _injectCOPLogEntry(summit, choice) {
+    const div = document.createElement('div');
+    div.className = 'log-entry info';
+    div.innerHTML = `
+      <div class="log-year">🌍 ${summit.name} · ${summit.year}</div>
+      <div class="log-text" style="font-family:Georgia,serif;">${choice}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">International summit outcome recorded</div>`;
     this.elLogScroll.appendChild(div);
     this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
   }
@@ -5729,11 +5957,16 @@ const MINI_EVENTS_POOL = [
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
 
+  soundMgr.endTurn();
+
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
 
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
+
+  // Apply cascading crisis penalties for metrics below critical threshold
+  applyCascadingCrisis(engine.state, toastMgr, soundMgr);
 
   // Build and mount overlay
   const overlay = _buildSimOverlay(startYear);
@@ -5744,6 +5977,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
+    soundMgr.simTick();
     await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
@@ -5778,6 +6012,19 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
+  // Inject news headlines for this turn
+  ui._injectHeadlines(engine.state);
+
+  // Check for milestone toasts
+  if (engine.state.netZeroProgress >= 50 && result.logEntry.snapshot.netZeroProgress < 50) {
+    soundMgr.milestone();
+    toastMgr.show('🌱', 'Milestone: Net Zero progress passed 50%!', 'milestone');
+  }
+  if (engine.state.netZeroProgress >= 100 && result.logEntry.snapshot.netZeroProgress < 100) {
+    soundMgr.achievement();
+    toastMgr.show('🎯', 'Net Zero achieved! Emissions have reached zero.', 'milestone');
+  }
+
   if (result.endgame) {
     // Game over — clear save, record analytics
     saveMgr.clear();
@@ -5785,6 +6032,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     if (result.event) {
       fxMgr.haptic('heavy');
       fxMgr.shake();
+      soundMgr.eventWarning();
       ui._pendingEndgame = result.endgame;
       ui.showEventModal(result.event);
     } else {
@@ -5793,16 +6041,30 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   } else if (result.event) {
     fxMgr.haptic('heavy');
     fxMgr.shake();
+    soundMgr.eventWarning();
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
   } else {
-    // Auto-save mid-game progress
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
+  }
+
+  // Render cascade warnings on metric bars
+  renderCascadeWarnings(engine.state);
+
+  // COP Summit check — show after turn resolution UI, before next player input
+  const currentTurn = engine.state.turn;
+  const copSummit = COP_SUMMITS.find(c => c.turn === currentTurn);
+  if (copSummit && !result.endgame) {
+    await _delay(800);
+    const choice = await showCOPSummit(copSummit, engine, soundMgr);
+    engine.state.budget = engine.getEffectiveBudget();
+    ui._injectCOPLogEntry(copSummit, choice);
+    ui.render(engine.getState());
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
   }
 }
 
@@ -5875,6 +6137,7 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
     const cleanup = (handler) => {
       handler(engine.state);
       fxMgr.haptic('light');
+      soundMgr.miniChoice();
       panel.classList.add('sim-fade-out');
       setTimeout(() => { panel.remove(); resolve(); }, 300);
     };
@@ -5948,6 +6211,391 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: SOUND MANAGER
+============================================================ */
+
+class SoundManager {
+  constructor() {
+    this._ctx = null;
+    this._muted = false;
+    this._initialized = false;
+  }
+
+  _init() {
+    if (this._initialized) return;
+    try {
+      this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this._initialized = true;
+    } catch { this._muted = true; }
+  }
+
+  toggle() {
+    this._muted = !this._muted;
+    return !this._muted;
+  }
+
+  get muted() { return this._muted; }
+
+  _play(frequency, duration, type = 'sine', volume = 0.12, ramp = 0.02) {
+    if (this._muted) return;
+    this._init();
+    if (!this._ctx) return;
+    const osc = this._ctx.createOscillator();
+    const gain = this._ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(frequency, this._ctx.currentTime);
+    gain.gain.setValueAtTime(0, this._ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(volume, this._ctx.currentTime + ramp);
+    gain.gain.exponentialRampToValueAtTime(0.001, this._ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(this._ctx.destination);
+    osc.start(this._ctx.currentTime);
+    osc.stop(this._ctx.currentTime + duration + 0.05);
+  }
+
+  allocate() {
+    this._play(880, 0.08, 'sine', 0.08);
+    setTimeout(() => this._play(1100, 0.06, 'sine', 0.06), 40);
+  }
+
+  deallocate() {
+    this._play(660, 0.08, 'sine', 0.06);
+    setTimeout(() => this._play(440, 0.06, 'sine', 0.04), 40);
+  }
+
+  endTurn() {
+    this._play(440, 0.15, 'sine', 0.1);
+    setTimeout(() => this._play(554, 0.15, 'sine', 0.1), 100);
+    setTimeout(() => this._play(659, 0.2, 'sine', 0.1), 200);
+  }
+
+  eventWarning() {
+    this._play(330, 0.25, 'sawtooth', 0.06);
+    setTimeout(() => this._play(294, 0.25, 'sawtooth', 0.06), 200);
+    setTimeout(() => this._play(262, 0.35, 'sawtooth', 0.08), 400);
+  }
+
+  achievement() {
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((n, i) => setTimeout(() => this._play(n, 0.18, 'sine', 0.09), i * 80));
+  }
+
+  crisis() {
+    this._play(220, 0.4, 'square', 0.05);
+    setTimeout(() => this._play(196, 0.5, 'square', 0.06), 300);
+  }
+
+  milestone() {
+    this._play(523, 0.15, 'sine', 0.1);
+    setTimeout(() => this._play(659, 0.15, 'sine', 0.1), 120);
+    setTimeout(() => this._play(784, 0.25, 'sine', 0.12), 240);
+  }
+
+  copSummit() {
+    this._play(392, 0.2, 'sine', 0.08);
+    setTimeout(() => this._play(494, 0.2, 'sine', 0.08), 150);
+    setTimeout(() => this._play(587, 0.3, 'sine', 0.1), 300);
+    setTimeout(() => this._play(784, 0.4, 'sine', 0.1), 500);
+  }
+
+  simTick() {
+    this._play(600 + Math.random() * 200, 0.04, 'sine', 0.03);
+  }
+
+  miniChoice() {
+    this._play(700, 0.06, 'sine', 0.06);
+    setTimeout(() => this._play(880, 0.08, 'sine', 0.06), 50);
+  }
+}
+
+/* ============================================================
+   MODULE: TOAST NOTIFICATIONS
+============================================================ */
+
+class ToastManager {
+  constructor() {
+    this._container = document.getElementById('toast-container');
+  }
+
+  show(icon, text, type = '') {
+    if (!this._container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-text">${text}</span>`;
+    this._container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3600);
+  }
+}
+
+/* ============================================================
+   MODULE: NEWS HEADLINES
+============================================================ */
+
+const NEWS_SOURCES = [
+  'The Guardian', 'Financial Times', 'BBC News', 'The Times',
+  'The Telegraph', 'Sky News', 'The Independent', 'Reuters UK',
+];
+
+const HEADLINE_POOLS = {
+  temp_low: [
+    { text: 'UK on track to meet Paris Agreement targets, scientists confirm', tone: 'positive' },
+    { text: 'Climate models show UK pathway holding below 1.5°C threshold', tone: 'positive' },
+    { text: '"Green Britain" praised as model for G7 climate policy', tone: 'positive' },
+  ],
+  temp_mid: [
+    { text: 'Scientists warn 1.5°C target slipping as global emissions plateau too slowly', tone: 'neutral' },
+    { text: 'UK warming pathway raises concern at IPCC — "every tenth of a degree matters"', tone: 'negative' },
+    { text: 'Climate tipping points "uncomfortably close", Met Office warns', tone: 'negative' },
+  ],
+  temp_high: [
+    { text: 'Emergency COBRA meeting as UK temperatures break records for third year running', tone: 'negative' },
+    { text: '"Point of no return": scientists say 2°C breach could trigger irreversible feedbacks', tone: 'negative' },
+    { text: 'Insurance industry warns large parts of England becoming "uninsurable" due to flood risk', tone: 'negative' },
+  ],
+  grid_good: [
+    { text: 'UK grid stability rated "excellent" — battery storage up 400% in five years', tone: 'positive' },
+    { text: 'National Grid reports zero blackout risk as storage capacity exceeds peak demand', tone: 'positive' },
+  ],
+  grid_poor: [
+    { text: 'Rolling blackouts hit northern England as grid struggles with renewable intermittency', tone: 'negative' },
+    { text: 'National Grid issues emergency "code red" — gas backup shortfall threatens winter supply', tone: 'negative' },
+    { text: '"Lights out Britain": grid reliability falls to lowest level since 1970s', tone: 'negative' },
+  ],
+  finance_good: [
+    { text: 'Green bond market hits £200bn — UK financial sector leads global climate finance', tone: 'positive' },
+    { text: 'Bank of England: managed fossil divestment approach "avoided systemic risk"', tone: 'positive' },
+  ],
+  finance_poor: [
+    { text: 'Pension funds face £40bn shortfall as fossil assets marked to zero', tone: 'negative' },
+    { text: 'High street banks request emergency liquidity as stranded asset losses cascade', tone: 'negative' },
+    { text: 'Treasury warns of "fiscal cliff" as climate costs drain public finances', tone: 'negative' },
+  ],
+  social_good: [
+    { text: 'Public support for net zero reaches all-time high, new polling shows', tone: 'positive' },
+    { text: 'Just Transition programme wins global praise — retraining scheme exceeds targets', tone: 'positive' },
+  ],
+  social_poor: [
+    { text: 'Fuel poverty protests spread to 30 cities as energy costs bite harder', tone: 'negative' },
+    { text: '"Forgotten communities": ex-oil workers report two-year waits for retraining places', tone: 'negative' },
+    { text: 'Government loses key by-election in former coal seat on anti-green backlash', tone: 'negative' },
+  ],
+  nz_good: [
+    { text: 'UK celebrates Net Zero milestone — emissions fall to pre-industrial levels', tone: 'positive' },
+    { text: 'Renewable capacity now exceeds total energy demand — surplus exported to Europe', tone: 'positive' },
+  ],
+  nz_progress: [
+    { text: 'Net Zero progress "encouraging but insufficient" — CCC chair warns of remaining gap', tone: 'neutral' },
+    { text: 'Offshore wind delivers record output but industrial emissions remain stubborn', tone: 'neutral' },
+  ],
+  nz_behind: [
+    { text: 'CCC annual review: UK "significantly off track" for 2050 Net Zero commitment', tone: 'negative' },
+    { text: '"Lost decade" warning as Net Zero progress stalls below 40% with time running out', tone: 'negative' },
+  ],
+  events: [
+    { text: 'Emergency services stretch to breaking point as climate events intensify', tone: 'negative' },
+    { text: 'Climate adaptation spending gap "a national disgrace", says Environment Agency chief', tone: 'negative' },
+  ],
+  generic: [
+    { text: 'PM faces backbench pressure on pace of green transition', tone: 'neutral' },
+    { text: 'CBI: business confidence in climate policy framework "cautiously optimistic"', tone: 'neutral' },
+    { text: 'New ONS data shows green jobs now outnumber fossil sector for first time', tone: 'positive' },
+    { text: 'Planning approvals for onshore wind reach ten-year high after policy reform', tone: 'positive' },
+  ],
+};
+
+function generateHeadlines(state) {
+  const headlines = [];
+
+  if (state.temperature < 1.4) {
+    headlines.push(...HEADLINE_POOLS.temp_low);
+  } else if (state.temperature < 2.0) {
+    headlines.push(...HEADLINE_POOLS.temp_mid);
+  } else {
+    headlines.push(...HEADLINE_POOLS.temp_high);
+  }
+
+  if (state.gridReliability >= 70) headlines.push(...HEADLINE_POOLS.grid_good);
+  else if (state.gridReliability < 45) headlines.push(...HEADLINE_POOLS.grid_poor);
+
+  if (state.financialStability >= 70) headlines.push(...HEADLINE_POOLS.finance_good);
+  else if (state.financialStability < 40) headlines.push(...HEADLINE_POOLS.finance_poor);
+
+  if (state.socialStability >= 70) headlines.push(...HEADLINE_POOLS.social_good);
+  else if (state.socialStability < 45) headlines.push(...HEADLINE_POOLS.social_poor);
+
+  if (state.netZeroProgress >= 95) headlines.push(...HEADLINE_POOLS.nz_good);
+  else if (state.netZeroProgress >= 50) headlines.push(...HEADLINE_POOLS.nz_progress);
+  else if (state.turn >= 2) headlines.push(...HEADLINE_POOLS.nz_behind);
+
+  if (state.eventCount > 1) headlines.push(...HEADLINE_POOLS.events);
+  headlines.push(...HEADLINE_POOLS.generic);
+
+  const shuffled = headlines.sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 2);
+}
+
+/* ============================================================
+   MODULE: COP SUMMIT SYSTEM
+============================================================ */
+
+const COP_SUMMITS = [
+  {
+    turn: 2,
+    name: 'COP38',
+    year: 2035,
+    subtitle: 'Belém, Brazil — Global Stocktake',
+    context: (s) => `The first Global Stocktake since Paris finds the world ${s.temperature < 1.6 ? 'narrowly within' : 'drifting beyond'} the 1.5°C pathway. UK temperature stands at ${s.temperature.toFixed(1)}°C. As a major economy, your pledge sets the tone for developing nations.`,
+    options: [
+      {
+        label: '🌍 Ambitious Pledge — Lead by example',
+        consequence: 'Temperature trajectory slowed (−0.08°C bonus) · Unlocks £15bn international climate finance · Budget −£10bn next turn (costs of leadership)',
+        effect: (s) => {
+          s.temperature = Math.max(1.0, s.temperature - 0.08);
+          s.nextTurnBudgetPenalty += 10;
+          s._copBonus = 'ambitious';
+        },
+      },
+      {
+        label: '⚖️ Moderate Pledge — Balance ambition with realism',
+        consequence: 'Temperature trajectory slightly slowed (−0.03°C) · +5 Financial Stability (market confidence) · No budget penalty',
+        effect: (s) => {
+          s.temperature = Math.max(1.0, s.temperature - 0.03);
+          s.financialStability = Math.min(100, s.financialStability + 5);
+          s._copBonus = 'moderate';
+        },
+      },
+      {
+        label: '🛡️ Conservative Pledge — Protect domestic priorities',
+        consequence: 'No temperature benefit · +8 Financial Stability · −6 Social Stability (climate movement backlash) · International reputation damaged',
+        effect: (s) => {
+          s.financialStability = Math.min(100, s.financialStability + 8);
+          s.socialStability = Math.max(0, s.socialStability - 6);
+          s._copBonus = 'conservative';
+        },
+      },
+    ],
+  },
+  {
+    turn: 4,
+    name: 'COP40',
+    year: 2045,
+    subtitle: 'Final summit before 2050 deadline',
+    context: (s) => {
+      const pledge = s._copBonus || 'none';
+      const pledgeRef = pledge === 'ambitious' ? 'Your ambitious COP38 pledge built international credibility.'
+        : pledge === 'moderate' ? 'Your moderate COP38 stance kept options open.'
+        : pledge === 'conservative' ? 'Your conservative COP38 stance drew international criticism.'
+        : 'The international community has been watching your domestic progress.';
+      return `${pledgeRef} Temperature: ${s.temperature.toFixed(1)}°C. Net Zero progress: ${Math.round(s.netZeroProgress)}%. This is the last chance for coordinated global action before the 2050 deadline.`;
+    },
+    options: [
+      {
+        label: '🏛️ Champion Global Net Zero Treaty',
+        consequence: 'Major temperature benefit (−0.12°C) · +10 Social (national pride) · Budget −£15bn (treaty obligations)',
+        effect: (s) => {
+          s.temperature = Math.max(1.0, s.temperature - 0.12);
+          s.socialStability = Math.min(100, s.socialStability + 10);
+          s.nextTurnBudgetPenalty += 15;
+        },
+      },
+      {
+        label: '🤝 Join Coalition of the Willing',
+        consequence: 'Moderate temperature benefit (−0.05°C) · +5 Social · Budget −£5bn',
+        effect: (s) => {
+          s.temperature = Math.max(1.0, s.temperature - 0.05);
+          s.socialStability = Math.min(100, s.socialStability + 5);
+          s.nextTurnBudgetPenalty += 5;
+        },
+      },
+      {
+        label: '📊 Focus on Domestic Delivery',
+        consequence: 'No international benefit · +10 Financial Stability (fiscal preservation) · −8 Social (isolationist backlash)',
+        effect: (s) => {
+          s.financialStability = Math.min(100, s.financialStability + 10);
+          s.socialStability = Math.max(0, s.socialStability - 8);
+        },
+      },
+    ],
+  },
+];
+
+function showCOPSummit(summit, engine, soundMgr) {
+  return new Promise(resolve => {
+    soundMgr.copSummit();
+    const modal = document.getElementById('cop-modal');
+    const titleEl = document.getElementById('cop-title');
+    const subEl = document.getElementById('cop-subtitle');
+    const ctxEl = document.getElementById('cop-context');
+    const optEl = document.getElementById('cop-options');
+
+    titleEl.textContent = `${summit.name} Climate Summit`;
+    subEl.textContent = summit.subtitle;
+    ctxEl.textContent = typeof summit.context === 'function' ? summit.context(engine.state) : summit.context;
+
+    optEl.innerHTML = '';
+    summit.options.forEach(opt => {
+      const btn = document.createElement('div');
+      btn.className = 'cop-option';
+      btn.innerHTML = `<div class="cop-option-label">${opt.label}</div><div class="cop-option-consequence">${opt.consequence}</div>`;
+      btn.addEventListener('click', () => {
+        opt.effect(engine.state);
+        soundMgr.miniChoice();
+        modal.classList.add('hidden');
+        resolve(opt.label);
+      }, { once: true });
+      optEl.appendChild(btn);
+    });
+
+    modal.classList.remove('hidden');
+  });
+}
+
+/* ============================================================
+   MODULE: CASCADING CRISIS
+============================================================ */
+
+function applyCascadingCrisis(state, toastMgr, soundMgr) {
+  const CRISIS_THRESHOLD = 30;
+  const CASCADE_RATE = 4;
+  let crisisTriggered = false;
+
+  if (state.gridReliability > 0 && state.gridReliability < CRISIS_THRESHOLD) {
+    state.gridReliability = Math.max(0, state.gridReliability - CASCADE_RATE);
+    crisisTriggered = true;
+    toastMgr.show('⚡', `Grid crisis cascading — reliability falling (${Math.round(state.gridReliability)}%)`, 'crisis');
+  }
+
+  if (state.financialStability > 0 && state.financialStability < CRISIS_THRESHOLD) {
+    state.financialStability = Math.max(0, state.financialStability - CASCADE_RATE);
+    crisisTriggered = true;
+    toastMgr.show('🏦', `Financial contagion spreading — stability at ${Math.round(state.financialStability)}%`, 'crisis');
+  }
+
+  if (state.socialStability > 0 && state.socialStability < CRISIS_THRESHOLD) {
+    state.socialStability = Math.max(0, state.socialStability - CASCADE_RATE);
+    crisisTriggered = true;
+    toastMgr.show('🏘️', `Social unrest escalating — stability at ${Math.round(state.socialStability)}%`, 'crisis');
+  }
+
+  if (crisisTriggered) soundMgr.crisis();
+  return crisisTriggered;
+}
+
+function renderCascadeWarnings(state) {
+  const blocks = document.querySelectorAll('.metric-block');
+  const thresholds = [
+    { idx: 2, value: state.gridReliability },
+    { idx: 3, value: state.financialStability },
+    { idx: 4, value: state.socialStability },
+  ];
+  thresholds.forEach(t => {
+    if (blocks[t.idx]) {
+      blocks[t.idx].classList.toggle('cascade-warning', t.value > 0 && t.value < 30);
+    }
+  });
+}
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -5955,6 +6603,8 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const soundMgr     = new SoundManager();
+const toastMgr     = new ToastManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
