@@ -2075,6 +2075,55 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== RESET ALLOCATIONS BUTTON ===== */
+#reset-alloc-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+#reset-alloc-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); color: var(--text-secondary); }
+#reset-alloc-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ===== POSITIVE EVENT STYLING ===== */
+.log-entry.positive { border-left-color: var(--status-good); background: #0d1f14; }
+
+#event-card.positive-event {
+  border-color: var(--status-good);
+}
+#event-card.positive-event #event-title-display {
+  color: var(--status-good);
+}
+#event-card.positive-event #event-story-display {
+  border-left-color: var(--status-good);
+  background: rgba(0,200,83,0.04);
+}
+
+/* ===== ENDGAME LETTER GRADE ===== */
+#endgame-grade {
+  font-size: 64px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+#endgame-grade-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: var(--gap-md);
+}
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2278,6 +2327,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2345,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2899,6 +2953,7 @@ body { transition: filter 2s ease; }
 
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
+      <button id="reset-alloc-btn" disabled>Reset</button>
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
@@ -2963,6 +3018,28 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="climate_emergency">
+        <span class="scenario-card-icon">🚨</span>
+        <div class="scenario-card-name">Climate Emergency</div>
+        <div class="scenario-card-desc">Public pressure after devastating floods has created a strong mandate for action. Social support is high, but temperature is already elevated and the clock is ticking.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temperature: <span>1.3°C (elevated)</span></div>
+          <div class="scenario-stat">Social Capital: <span>+25 bonus</span></div>
+          <div class="scenario-stat">Adaptation: <span>+30 head start</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="industrial_heartland">
+        <span class="scenario-card-icon">🏭</span>
+        <div class="scenario-card-name">Industrial Heartland</div>
+        <div class="scenario-card-desc">Heavy industry dominates the economy. Gas infrastructure is deeply embedded and the workforce depends on fossil fuels — but the industrial base offers a strong financial position.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Gas: <span>45 (dominant)</span></div>
+          <div class="scenario-stat">Financial: <span>82% (strong)</span></div>
+          <div class="scenario-stat">Social: <span>60% (fragile)</span></div>
         </div>
       </div>
 
@@ -3169,6 +3246,51 @@ const RANDOM_EVENTS = [
   },
 ];
 
+const POSITIVE_EVENTS = [
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'TECH', icon: '🔬', positive: true,
+    title: 'Battery Storage Breakthrough',
+    description: 'UK researchers achieve a major advance in solid-state battery technology. Storage costs plummet and grid stability improves.',
+    story: 'Professor Amara Osei at Imperial College unveiled a solid-state battery with twice the energy density at half the cost. "This changes everything for grid storage," she told the Royal Society.',
+    effects: { gridReliability: 10, netZeroProgress: 5 },
+    condition: (s) => s.infrastructure.gridAndStorage > 20,
+  },
+  {
+    id: 'INTL_DEAL', type: 'DIPLOMATIC', icon: '🌍', positive: true,
+    title: 'International Climate Pact',
+    description: 'The UK leads a new international climate accord. Partner nations commit to shared carbon reduction targets and technology transfer.',
+    story: 'At the Glasgow+10 summit, 40 nations signed the "Clean Growth Compact" — a UK-led framework for shared decarbonisation investment. The Chancellor called it "the most significant climate deal since Paris."',
+    effects: { netZeroProgress: 8, financialStability: 5 },
+    budgetBonusNext: 15,
+    condition: (s) => s.netZeroProgress > 50,
+  },
+  {
+    id: 'GREEN_JOBS_BOOM', type: 'ECONOMIC', icon: '💼', positive: true,
+    title: 'Green Jobs Boom',
+    description: 'The renewable energy sector creates thousands of well-paid jobs across former industrial regions. Public support for the transition surges.',
+    story: 'In Teesside, the new hydrogen plant created 1,200 permanent jobs — three times what the old steelworks employed. "My daughter\'s an engineer here now," said former steelworker Dave Hartley. "That\'s progress."',
+    effects: { socialStability: 12, financialStability: 4 },
+    condition: (s) => s.infrastructure.energyTransition > 30 && s.infrastructure.socialSupport > 20,
+  },
+  {
+    id: 'WIND_RECORD', type: 'ENERGY', icon: '💨', positive: true,
+    title: 'Record Wind Generation',
+    description: 'An exceptionally windy quarter sees UK wind farms generate record output, reducing gas imports and boosting Net Zero progress.',
+    story: 'For 72 consecutive hours in March, wind turbines supplied 65% of UK electricity — a new record. Gas imports dropped to their lowest level since 2015.',
+    effects: { netZeroProgress: 6 },
+    condition: (s) => s.energy.wind > 40,
+  },
+  {
+    id: 'COMMUNITY_ACTION', type: 'SOCIAL', icon: '🏘️', positive: true,
+    title: 'Community Climate Action',
+    description: 'Grassroots community energy schemes and local resilience networks spring up across the country, building social capital and public engagement.',
+    story: 'The Transition Town network now covers 340 communities. In Bristol, a community solar co-operative paid dividends to 8,000 local shareholders while cutting local emissions by 15%.',
+    effects: { socialStability: 8 },
+    socialCapitalBonus: 6,
+    condition: (s) => s.socialCapital > 10,
+  },
+];
+
 /* ============================================================
    DIFFICULTY SYSTEM
 ============================================================ */
@@ -3298,6 +3420,14 @@ const METRIC_TOOLTIPS = {
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
   },
+  storage: {
+    title: '🔋 Energy Storage',
+    desc: 'Battery, pumped hydro, and other storage capacity that provides backup power when wind and solar output drops. Essential for grid reliability at high renewable penetration.',
+    drivers: '↑ Raised by: Grid & Storage investment (especially with Battery Density upgrade)\n↓ Not directly reduced — but insufficient storage causes grid instability',
+    threshold: 'Storage capacity must grow in line with wind and solar to prevent blackouts. A good rule of thumb: storage should be at least 30% of total renewable capacity.',
+    thresholdGood: true,
+    source: 'Based on National Grid ESO Future Energy Scenarios',
+  },
 };
 
 /* ============================================================
@@ -3370,6 +3500,27 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  climate_emergency: {
+    label: 'Climate Emergency',
+    apply(state) {
+      state.temperature = 1.3;
+      state.socialCapital = 25;
+      state.infrastructure.adaptation = 30;
+      state.socialStability = 80;
+    },
+  },
+  industrial_heartland: {
+    label: 'Industrial Heartland',
+    apply(state) {
+      state.energy.gas = 45;
+      state.energy.wind = 18;
+      state.energy.solar = 4;
+      state.financialStability = 82;
+      state.socialStability = 60;
+      state.strandedAssets = 20;
+      state.netZeroProgress = 20;
     },
   },
 };
@@ -3737,8 +3888,7 @@ class GameEngine {
     const event = this._resolveEvent();
     s.currentRandomEvent = event;
     if (event) {
-      s.eventCount++;
-      // Recalc formulas again after event damage
+      if (!event.positive) s.eventCount++;
       this._recalcGrid();
       this._recalcFinancial();
       this._recalcSocial();
@@ -3763,6 +3913,7 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      eventPositive: event ? !!event.positive : false,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -3914,6 +4065,12 @@ class GameEngine {
     // Cooldown: no event if one fired last turn
     if (s.turn > 0 && s.turn - 1 === s.lastEventTurn) return null;
 
+    // Check for positive event first (independent 25% chance)
+    if (Math.random() < 0.25) {
+      const posEvent = this._resolvePositiveEvent();
+      if (posEvent) return posEvent;
+    }
+
     const excess = Math.max(s.temperature - 1.1, 0);
     const prob   = Math.min((0.10 + (excess / 0.1) * 0.015) * difficultyMgr.preset.eventProbMod, 0.70);
 
@@ -3995,6 +4152,32 @@ class GameEngine {
     return { ...selectedEvent, appliedEffects: applied };
   }
 
+  _resolvePositiveEvent() {
+    const s = this.state;
+    const eligible = POSITIVE_EVENTS.filter(e => e.condition(s));
+    if (eligible.length === 0) return null;
+
+    const evt = eligible[Math.floor(Math.random() * eligible.length)];
+    const applied = {};
+    for (const [key, val] of Object.entries(evt.effects)) {
+      applied[key] = val;
+      if (key === 'netZeroProgress') {
+        s.netZeroProgress = this._clamp(s.netZeroProgress + val, 0, 100);
+      } else if (s[key] !== undefined) {
+        s[key] = this._clamp(s[key] + val, 0, 100);
+      }
+    }
+    if (evt.budgetBonusNext) {
+      s.nextTurnBudgetPenalty -= evt.budgetBonusNext;
+    }
+    if (evt.socialCapitalBonus) {
+      s.socialCapital = this._clamp(s.socialCapital + evt.socialCapitalBonus, 0, 60);
+    }
+
+    s.lastEventTurn = s.turn;
+    return { ...evt, appliedEffects: applied };
+  }
+
   _describeDecisions(d) {
     const out = [];
     if (d.energyTransition > 0)   out.push(`Energy Transition ×${d.energyTransition} (£${d.energyTransition * 30}bn)`);
@@ -4044,6 +4227,16 @@ function calculateScore(state) {
 
   const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
   return { total, tempScore, nzScore, stabScore, resScore };
+}
+
+function calculateGrade(score) {
+  if (score >= 90) return { letter: 'A+', color: 'var(--status-good)', desc: 'Exceptional — a model for the world' };
+  if (score >= 80) return { letter: 'A',  color: 'var(--status-good)', desc: 'Outstanding climate leadership' };
+  if (score >= 72) return { letter: 'B+', color: '#4caf81', desc: 'Strong performance — Paris-aligned' };
+  if (score >= 60) return { letter: 'B',  color: 'var(--status-info)', desc: 'Competent — room for improvement' };
+  if (score >= 50) return { letter: 'C',  color: 'var(--status-warn)', desc: 'Mixed results — significant gaps remain' };
+  if (score >= 35) return { letter: 'D',  color: '#ff7043', desc: 'Poor — major challenges unaddressed' };
+  return              { letter: 'F',  color: 'var(--status-danger)', desc: 'Failed — climate commitments abandoned' };
 }
 
 /* ============================================================
@@ -4265,10 +4458,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4316,6 +4511,21 @@ class UI {
         this.render(this.engine.getState());
       });
     });
+
+    // Reset allocations button
+    this.elResetAllocBtn = document.getElementById('reset-alloc-btn');
+    if (this.elResetAllocBtn) {
+      this.elResetAllocBtn.addEventListener('click', () => {
+        const s = this.engine.state;
+        if (s.isResolvingTurn || s.spentThisTurn === 0) return;
+        for (const cat of Object.keys(s.currentDecisions)) {
+          s.currentDecisions[cat] = 0;
+        }
+        s.spentThisTurn = 0;
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
+      });
+    }
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
     const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
@@ -4801,10 +5011,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4845,6 +5057,9 @@ class UI {
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
     }
     this._renderResearchCard();
+    if (this.elResetAllocBtn) {
+      this.elResetAllocBtn.disabled = state.spentThisTurn === 0;
+    }
   }
 
   _renderResearchCard() {
@@ -4987,20 +5202,27 @@ class UI {
   _addLogEntry(entry) {
     const div = document.createElement('div');
 
-    // Colour-code by outcome
+    // Colour-code by outcome — positive events get green styling
     const tempDelta = entry.afterTemp - entry.snapshot.temperature;
     const socDelta  = entry.afterSoc  - entry.snapshot.socialStability;
     const overallGood = socDelta > 0 && tempDelta < 0.15;
-    div.className = 'log-entry ' + (entry.event ? 'event' : overallGood ? 'good' : 'warn');
+    const isPositiveEvent = entry.event && entry.eventPositive;
+    div.className = 'log-entry ' + (isPositiveEvent ? 'positive' : entry.event ? 'event' : overallGood ? 'good' : 'warn');
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
+
+    // Narrative summary
+    const narrative = this._buildTurnNarrative(entry);
+    html += `<div class="log-narrative">${narrative}</div>`;
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
 
     // Event notice
     if (entry.event) {
-      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+      const evtColor = isPositiveEvent ? 'var(--status-good)' : 'var(--status-danger)';
+      const evtIcon = isPositiveEvent ? '✦' : '⚠';
+      html += `<div class="log-text" style="color:${evtColor};margin-top:4px;">${evtIcon} ${entry.event}</div>`;
     }
 
     // Metric chips
@@ -5037,6 +5259,8 @@ class UI {
     this.elEventDesc.textContent  = event.description;
     const storyEl = document.getElementById('event-story-display');
     if (storyEl) storyEl.textContent = event.story || '';
+    const eventCard = document.getElementById('event-card');
+    eventCard.classList.toggle('positive-event', !!event.positive);
 
     // Flood visual effect
     if (event.type === 'FLOOD') {
@@ -5077,7 +5301,21 @@ class UI {
       effectsHtml += `
         <div class="event-effect-row">
           <span class="event-effect-label">Next Turn Budget</span>
-          <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
+          <span class="event-effect-val neg">-£${event.budgetPenaltyNext}bn</span>
+        </div>`;
+    }
+    if (event.budgetBonusNext > 0) {
+      effectsHtml += `
+        <div class="event-effect-row">
+          <span class="event-effect-label">Next Turn Budget</span>
+          <span class="event-effect-val pos">+£${event.budgetBonusNext}bn</span>
+        </div>`;
+    }
+    if (event.socialCapitalBonus > 0) {
+      effectsHtml += `
+        <div class="event-effect-row">
+          <span class="event-effect-label">Social Capital</span>
+          <span class="event-effect-val pos">+${event.socialCapitalBonus}</span>
         </div>`;
     }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
@@ -5150,8 +5388,11 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    const grade = calculateGrade(score.total);
     const scoreHtml = `
       <div id="endgame-score-section">
+        <div id="endgame-grade" style="color:${grade.color}">${grade.letter}</div>
+        <div id="endgame-grade-label">${grade.desc}</div>
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
         <div id="endgame-score-label">Your Climate Score</div>
         ${radarHtml}
@@ -5724,6 +5965,52 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_carbon_tax',
+    icon: '💰',
+    title: 'Carbon Tax Debate',
+    prompt: 'Parliament is debating a carbon border tax. Do you support it?',
+    explanation: 'A carbon border adjustment mechanism would tax imports from high-carbon countries, protecting UK industry from being undercut. It raises revenue but risks trade retaliation and higher consumer prices.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🏛️ Implement carbon border tax',
+      consequence: '+£8bn next turn revenue · +5% Net Zero · −4 Social (higher import prices)',
+      effect: (s) => { s.nextTurnBudgetPenalty -= 8; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.max(0, s.socialStability - 4); },
+    },
+    optB: {
+      label: '🤝 Pursue voluntary trade agreements instead',
+      consequence: 'No cost · +3 Social · +3 Financial (trade stability)',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); s.financialStability = Math.min(100, s.financialStability + 3); },
+    },
+    condition: (s) => s.netZeroProgress > 30,
+  },
+  {
+    id: 'mini_drought',
+    icon: '☀️',
+    title: 'Summer Water Crisis',
+    prompt: 'A prolonged dry spell has triggered hosepipe bans across southern England. Water reservoirs are critically low.',
+    explanation: 'Climate change increases drought frequency. Emergency desalination plants provide water quickly but are energy-intensive. Water rationing preserves supply but is deeply unpopular.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: s.temperature > 1.5 ? '⚠ above tipping point' : 'within bounds',
+    }),
+    optA: {
+      label: '🏗️ Build emergency desalination plants',
+      consequence: 'Costs £7bn next turn · −2% Net Zero (energy intensive) · maintains Social',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.max(0, s.netZeroProgress - 2); },
+    },
+    optB: {
+      label: '🚿 Implement strict water rationing',
+      consequence: 'No cost · −6 Social (deeply unpopular) · +adaptation infrastructure',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 6); s.infrastructure.adaptation += 10; },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5783,19 +6070,26 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
     if (result.event) {
-      fxMgr.haptic('heavy');
-      fxMgr.shake();
+      if (result.event.positive) {
+        fxMgr.haptic('medium');
+      } else {
+        fxMgr.haptic('heavy');
+        fxMgr.shake();
+      }
       ui._pendingEndgame = result.endgame;
       ui.showEventModal(result.event);
     } else {
       ui.showEndgame(result.endgame);
     }
   } else if (result.event) {
-    fxMgr.haptic('heavy');
-    fxMgr.shake();
+    if (result.event.positive) {
+      fxMgr.haptic('medium');
+    } else {
+      fxMgr.haptic('heavy');
+      fxMgr.shake();
+    }
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
   } else {
