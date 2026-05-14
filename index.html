@@ -792,6 +792,13 @@ body {
 
 #event-dismiss-btn:hover { background: var(--accent-blue-lt); }
 
+#event-card.positive-event {
+  border-color: var(--status-good);
+}
+#event-card.positive-event #event-title-display {
+  color: var(--status-good);
+}
+
 /* ===== END GAME OVERLAY ===== */
 #endgame-overlay {
   position: fixed;
@@ -1685,6 +1692,28 @@ body { transition: filter 2s ease; }
   color: var(--text-secondary);
   line-height: 1.4;
 }
+.howto-collapsed { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+.howto-expanded  { max-height: 600px; overflow: hidden; transition: max-height 0.35s ease; }
+.howto-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.howto-text p { margin-bottom: var(--gap-sm); }
+.howto-text strong { color: var(--text-primary); }
+.howto-toggle {
+  background: none;
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  cursor: pointer;
+  margin-top: var(--gap-sm);
+  transition: color 0.15s, border-color 0.15s;
+}
+.howto-toggle:hover { color: var(--text-primary); border-color: var(--accent-blue-lt); }
+
 #settings-close-btn {
   width: 100%;
   padding: 12px;
@@ -2048,6 +2077,9 @@ body { transition: filter 2s ease; }
   margin-top: 4px;
   font-weight: 600;
 }
+.timeline-event.positive {
+  color: var(--status-good);
+}
 .timeline-metrics {
   display: flex;
   gap: 4px;
@@ -2278,6 +2310,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2328,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2966,6 +3003,17 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_security">
+        <span class="scenario-card-icon">⛽</span>
+        <div class="scenario-card-name">Energy Security</div>
+        <div class="scenario-card-desc">Geopolitical instability has made energy security the national priority. The grid is strong but heavily reliant on gas. Weaning the country off fossil fuels will be the challenge of a generation.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£95bn/turn</span></div>
+          <div class="scenario-stat">Gas dependency: <span>45 (high)</span></div>
+          <div class="scenario-stat">Net Zero: <span>20% (behind)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3064,6 +3112,22 @@ body { transition: filter 2s ease; }
       </div>
     </div>
     <!-- High scores injected here by JS -->
+    <div class="settings-section">
+      <div class="settings-section-label">How to Play</div>
+      <div id="howto-content" class="howto-collapsed">
+        <div class="howto-text">
+          <p><strong>Goal:</strong> Guide the UK to Net Zero by 2050 while keeping the grid running, the economy stable, and the public on side.</p>
+          <p><strong>Each turn</strong> covers 5 years. You have a budget (in £bn) to allocate across 6 investment categories. Click <strong>+</strong> to add blocks (or press keys 1-6). Each category costs a different amount per block, and you can allocate up to 2 blocks per category per turn.</p>
+          <p><strong>Trade-offs are real:</strong> Building renewables fast raises grid instability. Phasing out gas creates stranded assets that hurt pensions. Ignoring social support erodes public consent.</p>
+          <p><strong>Random events</strong> — floods, heatwaves, financial shocks — can strike between turns, especially as temperatures rise. Adaptation investment mitigates their damage.</p>
+          <p><strong>Mini-events</strong> present urgent dilemmas during the simulation. Both options have consequences — there are no free choices.</p>
+          <p><strong>Research</strong> unlocks permanent multipliers. Investing in R&D early compounds over the whole game.</p>
+          <p><strong>Temperature above 1.5°C</strong> triggers tipping point feedbacks that accelerate warming beyond your control. Act early.</p>
+          <p><strong>Keyboard shortcuts:</strong> 1-6 to add blocks, Shift+1-6 to remove, Enter to advance turn.</p>
+        </div>
+      </div>
+      <button id="howto-toggle-btn" class="howto-toggle">Show guide</button>
+    </div>
     <button id="settings-close-btn">Done</button>
   </div>
 </div>
@@ -3167,6 +3231,52 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '🏜️',
+    title: 'Severe Drought — South East England',
+    description: 'Three months without significant rainfall. Reservoirs at critical levels. Hosepipe bans escalate to emergency water rationing across the Home Counties.',
+    story: 'Farmer Helen Marsh watched her wheat crop wither in the July heat. "This is the third poor harvest in five years," she said. "The insurance won\'t cover it anymore. Nobody will."',
+    effects: { socialStability: -8, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'CYBER_ATTACK', type: 'GRID', severity: 'MODERATE', icon: '🔒',
+    title: 'Cyber Attack on Grid Infrastructure',
+    description: 'A coordinated cyber attack targets smart grid control systems. Emergency manual overrides prevent widespread blackout, but grid efficiency drops sharply.',
+    story: 'The National Cyber Security Centre traced the intrusion to a state-sponsored group. Three regional distribution centres operated on manual switching for 48 hours. The vulnerability report ran to 200 pages.',
+    effects: { gridReliability: -12, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 8,
+  },
+  {
+    id: 'ENERGY_CRISIS', type: 'FINANCIAL', severity: 'MAJOR', icon: '⛽',
+    title: 'International Energy Crisis',
+    description: 'Geopolitical instability triggers a global gas price spike. UK wholesale energy costs triple overnight. Households face crippling bills.',
+    story: 'Janet Okonkwo, a teaching assistant in Coventry, opened her quarterly energy bill and sat down. £2,400. More than a month\'s salary. "I\'ve already cut everything I can cut," she said.',
+    effects: { socialStability: -12, financialStability: -8 },
+    infraDamage: false, budgetPenaltyNext: 15,
+    condition: (s) => s.energy.gas > 15,
+  },
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'POSITIVE', severity: 'POSITIVE', icon: '🔬',
+    title: 'Green Hydrogen Breakthrough',
+    description: 'UK researchers achieve a major cost reduction in green hydrogen production. Industrial decarbonisation accelerates. International investment floods in.',
+    story: 'Professor Amir Chowdhury\'s team at Imperial College announced the breakthrough at 3am, after a 14-month sprint. "This changes the economics of industrial heat," she said. UK manufacturing shares surged 8% at market open.',
+    effects: { financialStability: 5, netZeroProgress: 6 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.energyTransition > 30 || s.netZeroProgress > 50,
+    isPositive: true,
+  },
+  {
+    id: 'COP_SUCCESS', type: 'POSITIVE', severity: 'POSITIVE', icon: '🌍',
+    title: 'COP Summit — UK Praised as Climate Leader',
+    description: 'The UK\'s climate programme is held up as a global model at the UN climate summit. International credibility unlocks £15bn in green bond investment.',
+    story: 'The UN Secretary-General singled out the UK during plenary. "If every nation followed this pathway, we would hold 1.5 degrees," she said. Sterling strengthened 2% on the news.',
+    effects: { financialStability: 8, socialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: -15,
+    condition: (s) => s.netZeroProgress > 60 && s.socialStability > 55,
+    isPositive: true,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3331,12 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'diplomat', icon: '🕊️', name: 'Diplomat', desc: 'Finish with all metrics above 60%', check: (s) => s.gridReliability >= 60 && s.financialStability >= 60 && s.socialStability >= 60 && s.netZeroProgress >= 60 },
+  { id: 'speed_runner', icon: '⏱️', name: 'Speed Runner', desc: 'Achieve Net Zero in 2 turns', check: (s) => s.netZeroProgress >= 100 && s.turn <= 2 },
+  { id: 'adaptation_master', icon: '🏰', name: 'Fortress Britain', desc: 'Build 100+ adaptation infrastructure', check: (s) => s.infrastructure.adaptation >= 100 },
+  { id: 'balanced_portfolio', icon: '📊', name: 'Balanced Portfolio', desc: 'Invest in all 6 categories across a game', check: (s) => { const cats = new Set(); for (const entry of s.log) { for (const d of entry.decisions) { if (d.includes('Energy')) cats.add('e'); if (d.includes('Grid')) cats.add('g'); if (d.includes('Adaptation')) cats.add('a'); if (d.includes('Social')) cats.add('s'); if (d.includes('Financial')) cats.add('f'); if (d.includes('R&D')) cats.add('r'); } } return cats.size >= 6; } },
+  { id: 'cool_headed', icon: '❄️', name: 'Cool Headed', desc: 'Keep temperature below 1.3°C', check: (s) => s.temperature < 1.3 },
+  { id: 'event_master', icon: '🎯', name: 'Crisis Manager', desc: 'Survive 6+ climate events', check: (s) => s.eventCount >= 6 && !s.socialBreakdownOccurred },
 ];
 
 class AchievementManager {
@@ -3372,6 +3488,19 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  energy_security: {
+    label: 'Energy Security',
+    apply(state) {
+      state.energy.gas = 45;
+      state.energy.nuclear = 20;
+      state.energy.wind = 18;
+      state.energy.solar = 4;
+      state.gridReliability = 80;
+      state.netZeroProgress = 20;
+      state.strandedAssets = 25;
+      state._budgetOverride = 95;
+    },
+  },
 };
 
 /* ============================================================
@@ -3414,7 +3543,17 @@ class SaveManager {
   load() {
     try {
       const raw = localStorage.getItem(this._KEY);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return null;
+      const d = JSON.parse(raw);
+      if (d.version !== 2 || !d.engineState) return null;
+      const s = d.engineState;
+      if (typeof s.turn !== 'number' || typeof s.temperature !== 'number') return null;
+      if (d.activeDifficulty && !DIFFICULTY_PRESETS[d.activeDifficulty]) d.activeDifficulty = 'normal';
+      if (d.techPurchased) {
+        const validIds = new Set(RESEARCH_UPGRADES.map(u => u.id));
+        d.techPurchased = d.techPurchased.filter(id => validIds.has(id));
+      }
+      return d;
     } catch { return null; }
   }
 
@@ -3763,6 +3902,7 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      eventPositive: event ? !!event.isPositive : false,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -3919,33 +4059,44 @@ class GameEngine {
 
     if (Math.random() >= prob) return null;
 
-    // Build weighted pool based on temperature
+    // Build weighted pool based on temperature — lookup by ID for safety
+    const eventById = (id) => RANDOM_EVENTS.find(e => e.id === id);
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: eventById('FINANCIAL_SHOCK'), w: 25 },
+        { e: eventById('STORM'),           w: 20 },
+        { e: eventById('FLOOD_MINOR'),     w: 20 },
+        { e: eventById('HEATWAVE_MOD'),    w: 10 },
+        { e: eventById('SOCIAL_UNREST'),   w: 8 },
+        { e: eventById('CYBER_ATTACK'),    w: 7 },
+        { e: eventById('TECH_BREAKTHROUGH'), w: 6 },
+        { e: eventById('COP_SUCCESS'),     w: 4 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: eventById('FLOOD_MINOR'),     w: 15 },
+        { e: eventById('FLOOD_MAJOR'),     w: 10 },
+        { e: eventById('HEATWAVE_MOD'),    w: 15 },
+        { e: eventById('STORM'),           w: 15 },
+        { e: eventById('SOCIAL_UNREST'),   w: 10 },
+        { e: eventById('FINANCIAL_SHOCK'), w: 10 },
+        { e: eventById('DROUGHT'),         w: 8 },
+        { e: eventById('ENERGY_CRISIS'),   w: 7 },
+        { e: eventById('TECH_BREAKTHROUGH'), w: 5 },
+        { e: eventById('COP_SUCCESS'),     w: 5 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: eventById('FLOOD_MAJOR'),     w: 18 },
+        { e: eventById('HEATWAVE_MAJOR'),  w: 18 },
+        { e: eventById('STORM'),           w: 14 },
+        { e: eventById('GRID_FAILURE'),    w: 12 },
+        { e: eventById('SOCIAL_UNREST'),   w: 10 },
+        { e: eventById('FINANCIAL_SHOCK'), w: 8 },
+        { e: eventById('DROUGHT'),         w: 8 },
+        { e: eventById('ENERGY_CRISIS'),   w: 6 },
+        { e: eventById('CYBER_ATTACK'),    w: 6 },
       ];
     }
 
@@ -3962,27 +4113,33 @@ class GameEngine {
       if (roll <= 0) { selectedEvent = item.e; break; }
     }
 
-    // Mitigation factor from adaptation
-    const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+    // Mitigation factor from adaptation (only applies to negative events)
+    const mitigate = selectedEvent.isPositive ? 0 : Math.min(s.infrastructure.adaptation / 200, 0.5);
 
     // Apply effects
     const applied = {};
     for (const [key, val] of Object.entries(selectedEvent.effects)) {
-      const mitigated = Math.round(val * (1 - mitigate));
+      const mitigated = selectedEvent.isPositive ? val : Math.round(val * (1 - mitigate));
       applied[key] = mitigated;
       if (key === 'temperature') {
         s.temperature = Math.round((s.temperature + mitigated) * 100) / 100;
       } else if (key === 'strandedAssets') {
         s.strandedAssets = this._clamp(s.strandedAssets + mitigated, 0, 100);
+      } else if (key === 'netZeroProgress') {
+        s.netZeroProgress = this._clamp(s.netZeroProgress + mitigated, 0, 100);
       } else if (s[key] !== undefined) {
         s[key] = this._clamp(s[key] + mitigated, 0, 100);
       }
     }
 
-    // Budget penalty next turn
-    if (selectedEvent.budgetPenaltyNext > 0) {
-      const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
-      s.nextTurnBudgetPenalty += penaltyMitigated;
+    // Budget penalty/bonus next turn
+    if (selectedEvent.budgetPenaltyNext !== 0) {
+      if (selectedEvent.isPositive) {
+        s.nextTurnBudgetPenalty += selectedEvent.budgetPenaltyNext;
+      } else {
+        const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
+        s.nextTurnBudgetPenalty += penaltyMitigated;
+      }
     }
 
     // Infrastructure stickiness damage
@@ -3992,7 +4149,10 @@ class GameEngine {
     }
 
     s.lastEventTurn = s.turn;
-    return { ...selectedEvent, appliedEffects: applied };
+    const appliedPenalty = selectedEvent.isPositive
+      ? selectedEvent.budgetPenaltyNext
+      : Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
+    return { ...selectedEvent, appliedEffects: applied, budgetPenaltyNext: appliedPenalty };
   }
 
   _describeDecisions(d) {
@@ -4265,10 +4425,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4462,6 +4624,16 @@ class UI {
     }
     if (settingsCloseBtn) {
       settingsCloseBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+    }
+    const howtoToggle = document.getElementById('howto-toggle-btn');
+    const howtoContent = document.getElementById('howto-content');
+    if (howtoToggle && howtoContent) {
+      howtoToggle.addEventListener('click', () => {
+        const isOpen = howtoContent.classList.contains('howto-expanded');
+        howtoContent.classList.toggle('howto-collapsed', isOpen);
+        howtoContent.classList.toggle('howto-expanded', !isOpen);
+        howtoToggle.textContent = isOpen ? 'Show guide' : 'Hide guide';
+      });
     }
     document.querySelectorAll('.diff-option').forEach(opt => {
       opt.addEventListener('click', () => {
@@ -4801,10 +4973,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4949,7 +5123,7 @@ class UI {
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
-      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1);
+      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + state.energy.storage + 1);
       const smokeOpacity = Math.max(0, (gasShare - 0.15) / 0.4);
       smokeGroup.style.opacity = smokeOpacity;
     }
@@ -4991,7 +5165,10 @@ class UI {
     const tempDelta = entry.afterTemp - entry.snapshot.temperature;
     const socDelta  = entry.afterSoc  - entry.snapshot.socialStability;
     const overallGood = socDelta > 0 && tempDelta < 0.15;
-    div.className = 'log-entry ' + (entry.event ? 'event' : overallGood ? 'good' : 'warn');
+    const logClass = entry.event
+      ? (entry.eventPositive ? 'good' : 'event')
+      : (overallGood ? 'good' : 'warn');
+    div.className = 'log-entry ' + logClass;
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
@@ -5000,7 +5177,10 @@ class UI {
 
     // Event notice
     if (entry.event) {
-      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+      const isPositive = entry.eventPositive;
+      const eventColor = isPositive ? 'var(--status-good)' : 'var(--status-danger)';
+      const eventPrefix = isPositive ? '★' : '⚠';
+      html += `<div class="log-text" style="color:${eventColor};margin-top:4px;">${eventPrefix} ${entry.event}</div>`;
     }
 
     // Metric chips
@@ -5037,6 +5217,8 @@ class UI {
     this.elEventDesc.textContent  = event.description;
     const storyEl = document.getElementById('event-story-display');
     if (storyEl) storyEl.textContent = event.story || '';
+    const eventCard = document.getElementById('event-card');
+    if (eventCard) eventCard.classList.toggle('positive-event', !!event.isPositive);
 
     // Flood visual effect
     if (event.type === 'FLOOD') {
@@ -5059,10 +5241,12 @@ class UI {
       gridReliability:     'Grid Reliability',
       temperature:         'Temperature',
       strandedAssets:      'Stranded Assets',
+      netZeroProgress:     'Net Zero Progress',
     };
     for (const [key, val] of Object.entries(event.appliedEffects)) {
       const label = labelMap[key] || key;
-      const cls = key === 'temperature' || key === 'strandedAssets'
+      const negativeKeys = ['temperature', 'strandedAssets'];
+      const cls = negativeKeys.includes(key)
         ? (val > 0 ? 'neg' : 'pos')
         : (val < 0 ? 'neg' : 'pos');
       const sign = val > 0 ? '+' : '';
@@ -5077,7 +5261,13 @@ class UI {
       effectsHtml += `
         <div class="event-effect-row">
           <span class="event-effect-label">Next Turn Budget</span>
-          <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
+          <span class="event-effect-val neg">-£${event.budgetPenaltyNext}bn</span>
+        </div>`;
+    } else if (event.budgetPenaltyNext < 0) {
+      effectsHtml += `
+        <div class="event-effect-row">
+          <span class="event-effect-label">Next Turn Budget</span>
+          <span class="event-effect-val pos">+£${Math.abs(event.budgetPenaltyNext)}bn</span>
         </div>`;
     }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
@@ -5235,7 +5425,8 @@ class UI {
       html += `<div class="timeline-turn">
         <div class="timeline-year">${entry.year}–${entry.year + 5}</div>
         <div class="timeline-decisions">${entry.decisions.map(d => `<span class="tl-invest">${d}</span>`).join('<br>')}</div>
-        ${entry.event ? `<div class="timeline-event">⚠ ${entry.event}</div>` : ''}
+        ${entry.event ? `<div class="timeline-event${entry.eventPositive ? ' positive' : ''}">
+          ${entry.eventPositive ? '★' : '⚠'} ${entry.event}</div>` : ''}
         <div class="timeline-metrics">
           <span class="tl-chip ${chipStatus(entry.afterGrid)}">Grid ${Math.round(entry.afterGrid)}%</span>
           <span class="tl-chip ${chipStatus(entry.afterFin)}">Fin ${Math.round(entry.afterFin)}%</span>
@@ -5724,6 +5915,75 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_hydrogen',
+    icon: '💨',
+    title: 'Hydrogen Strategy Decision',
+    prompt: 'The UK must choose its hydrogen pathway. Blue hydrogen (from gas with carbon capture) or green hydrogen (from renewable electrolysis)?',
+    explanation: 'Hydrogen is essential for decarbonising heavy industry and heating. Blue hydrogen is cheaper and faster to deploy, but relies on gas and imperfect carbon capture. Green hydrogen is truly zero-carbon but requires massive renewable electricity surplus — it\'s expensive and slow to scale.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Gas share: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '🏭 Back blue hydrogen (gas + CCS)',
+      consequence: 'Costs £4bn next turn · +5% Net Zero · +6 Stranded Assets (locks in gas dependency)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.strandedAssets = Math.min(100, s.strandedAssets + 6); },
+    },
+    optB: {
+      label: '♻️ Invest in green hydrogen',
+      consequence: 'Costs £10bn next turn · +8% Net Zero · −3 Grid Reliability (draws renewable power)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.gridReliability = Math.max(0, s.gridReliability - 3); },
+    },
+    condition: (s) => s.netZeroProgress > 30 && s.netZeroProgress < 85,
+  },
+  {
+    id: 'mini_ccs',
+    icon: '🏗️',
+    title: 'Carbon Capture Proposal',
+    prompt: 'Industry is lobbying for government-backed carbon capture and storage. Critics call it a fossil fuel lifeline.',
+    explanation: 'Carbon capture can reduce industrial emissions — but it\'s expensive, energy-intensive, and has never worked at scale. Backing it buys industry time and protects jobs, but diverts money from proven renewables. Rejecting it forces faster industrial transition — painful, but arguably more honest.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Stranded Assets: ${Math.round(s.strandedAssets)}`,
+    }),
+    optA: {
+      label: '🏭 Fund industrial CCS programme',
+      consequence: 'Costs £12bn next turn · +4% Net Zero · +3 Financial · delays full fossil phase-out',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); s.financialStability = Math.min(100, s.financialStability + 3); s.energy.gas = Math.min(100, s.energy.gas + 3); },
+    },
+    optB: {
+      label: '🚫 Reject CCS — accelerate renewables',
+      consequence: 'No budget cost · −4 Financial (industry hit) · gas −5 · +3 Social Capital (climate credibility)',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 4); s.energy.gas = Math.max(0, s.energy.gas - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
+    },
+    condition: (s) => s.energy.gas > 10 && s.strandedAssets > 15,
+  },
+  {
+    id: 'mini_migration',
+    icon: '🚢',
+    title: 'Climate Migration Pressure',
+    prompt: 'Rising global temperatures are driving migration to the UK. How do you respond to increasing asylum claims from climate-displaced communities?',
+    explanation: 'Climate migration is accelerating globally. Welcoming climate refugees strengthens the UK\'s moral authority and provides working-age population — but costs money and strains public services. A restrictive response is cheaper but damages international standing and social cohesion.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🤝 Expand climate refugee programme',
+      consequence: 'Costs £7bn next turn · +5 Social Capital · −3 Social Stability short-term (public services strain)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.socialCapital = Math.min(60, s.socialCapital + 5); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    optB: {
+      label: '🛑 Tighten immigration controls',
+      consequence: 'No cost · −3 Social Capital (international criticism) · +2 Social Stability short-term',
+      effect: (s) => { s.socialCapital = Math.max(0, s.socialCapital - 3); s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    condition: (s) => s.temperature > 1.5,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5783,16 +6043,24 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
     if (result.event) {
-      fxMgr.haptic('heavy');
-      fxMgr.shake();
+      if (result.event.isPositive) {
+        fxMgr.haptic('medium');
+      } else {
+        fxMgr.haptic('heavy');
+        fxMgr.shake();
+      }
       ui._pendingEndgame = result.endgame;
       ui.showEventModal(result.event);
     } else {
       ui.showEndgame(result.endgame);
     }
   } else if (result.event) {
-    fxMgr.haptic('heavy');
-    fxMgr.shake();
+    if (result.event.isPositive) {
+      fxMgr.haptic('medium');
+    } else {
+      fxMgr.haptic('heavy');
+      fxMgr.shake();
+    }
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
