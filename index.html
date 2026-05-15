@@ -2000,6 +2000,105 @@ body { transition: filter 2s ease; }
 }
 .achievement-card.earned .achievement-name { color: var(--accent-blue-lt); }
 
+/* ===== NAMED ADVISOR CARDS ===== */
+.advisor-portrait-row {
+  display: flex;
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-lg);
+}
+.advisor-mini-card {
+  flex: 1;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm);
+  text-align: center;
+}
+.advisor-mini-icon { font-size: 28px; }
+.advisor-mini-name { font-size: 11px; font-weight: 700; color: var(--text-primary); margin-top: 2px; }
+.advisor-mini-role { font-size: 10px; color: var(--text-secondary); }
+.log-advisor-name { font-weight: 700; color: var(--accent-blue-lt); font-style: normal; }
+
+/* ===== POLICY PLEDGE SYSTEM ===== */
+#pledge-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 850;
+  animation: fadeIn 0.3s ease;
+}
+#pledge-overlay.hidden { display: none; }
+#pledge-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-green);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 540px; width: 92vw;
+  max-height: 85vh; overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+#pledge-card h2 { font-size: 18px; font-weight: 700; color: var(--accent-green-lt); margin-bottom: var(--gap-sm); text-align: center; }
+.pledge-subtitle { font-size: 12px; color: var(--text-secondary); text-align: center; margin-bottom: var(--gap-lg); line-height: 1.5; }
+.pledge-options { display: flex; flex-direction: column; gap: var(--gap-sm); margin-bottom: var(--gap-lg); }
+.pledge-option {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+.pledge-option:hover { border-color: var(--accent-green-lt); }
+.pledge-option.selected { border-color: var(--accent-green-lt); background: rgba(0,112,60,0.12); }
+.pledge-option-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.pledge-option-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; margin-top: 2px; }
+.pledge-option-stakes { font-size: 10px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+#pledge-confirm-btn {
+  width: 100%; padding: 12px;
+  background: var(--accent-green); color: white; border: none;
+  border-radius: var(--radius-md); font-size: 14px; font-weight: 700; cursor: pointer;
+  margin-bottom: var(--gap-sm);
+}
+#pledge-confirm-btn:hover { background: var(--accent-green-lt); }
+#pledge-skip-btn {
+  width: 100%; padding: 10px;
+  background: none; color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md); font-size: 12px; cursor: pointer;
+}
+#pledge-skip-btn:hover { background: var(--bg-elevated); }
+#active-pledge { font-size: 10px; color: var(--accent-green-lt); text-align: center; padding: 2px 8px; background: rgba(0,112,60,0.12); border-radius: 999px; border: 1px solid rgba(76,175,129,0.3); white-space: nowrap; }
+#active-pledge:empty { display: none; }
+.log-pledge-result { font-size: 11px; line-height: 1.5; padding: var(--gap-sm) var(--gap-md); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 4px 0; }
+.log-pledge-result.kept { border-left: 3px solid var(--status-good); background: rgba(0,200,83,0.06); color: var(--status-good); }
+.log-pledge-result.broken { border-left: 3px solid var(--status-danger); background: rgba(255,61,0,0.06); color: var(--status-danger); }
+
+/* ===== TIPPING POINT OVERLAY ===== */
+#tipping-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; z-index: 810; animation: fadeIn 0.4s ease; }
+#tipping-overlay.hidden { display: none; }
+#tipping-card {
+  background: var(--bg-secondary); border: 2px solid var(--status-danger);
+  border-radius: var(--radius-lg); padding: var(--gap-xl);
+  max-width: 480px; width: 90vw;
+  animation: slideUp 0.4s ease; text-align: center;
+}
+.tipping-icon { font-size: 56px; margin-bottom: var(--gap-md); }
+.tipping-title { font-size: 22px; font-weight: 800; color: var(--status-danger); margin-bottom: var(--gap-sm); }
+.tipping-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; font-family: var(--font-editorial); margin-bottom: var(--gap-md); }
+.tipping-effect { background: var(--bg-tertiary); border-radius: var(--radius-md); padding: var(--gap-md); font-size: 12px; color: var(--status-danger); margin-bottom: var(--gap-lg); font-weight: 600; }
+#tipping-dismiss-btn { width: 100%; padding: 12px; background: var(--accent-blue); color: white; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 700; cursor: pointer; }
+#tipping-dismiss-btn:hover { background: var(--accent-blue-lt); }
+
+/* ===== KEY MOMENTS (ENDGAME) ===== */
+#endgame-moments { margin: var(--gap-lg) 0; }
+.moments-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: var(--gap-md); text-align: center; }
+.moment-item { display: flex; gap: var(--gap-sm); align-items: flex-start; padding: 6px 10px; margin-bottom: 6px; border-left: 3px solid var(--border-strong); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; background: var(--bg-tertiary); font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.moment-item.positive { border-left-color: var(--status-good); }
+.moment-item.negative { border-left-color: var(--status-danger); }
+.moment-item.neutral { border-left-color: var(--status-info); }
+.moment-icon { font-size: 16px; flex-shrink: 0; line-height: 1.3; }
+
 /* ===== ENDGAME POLICY TIMELINE ===== */
 #endgame-timeline {
   margin: var(--gap-lg) 0;
@@ -2160,6 +2259,7 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <span id="active-pledge"></span>
   </div>
   <div id="header-right">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -3019,16 +3119,43 @@ body { transition: filter 2s ease; }
 <div id="advisor-overlay" class="hidden">
   <div id="advisor-card">
     <div class="advisor-icon">📋</div>
-    <h2>Chancellor's Briefing</h2>
-    <p class="advisor-from">From: Cabinet Office Permanent Secretary<br>Classification: OFFICIAL — For Minister's Eyes Only</p>
-    <p>Minister, your advisors have flagged three systemic risks that have derailed previous climate programmes:</p>
+    <h2>Your Advisory Team</h2>
+    <p class="advisor-from">Classification: OFFICIAL — For Minister's Eyes Only</p>
+    <div class="advisor-portrait-row">
+      <div class="advisor-mini-card"><div class="advisor-mini-icon">🔬</div><div class="advisor-mini-name">Sir James Chen</div><div class="advisor-mini-role">Chief Scientific Adviser</div></div>
+      <div class="advisor-mini-card"><div class="advisor-mini-icon">📊</div><div class="advisor-mini-name">Dr. Amara Osei</div><div class="advisor-mini-role">Treasury Secretary</div></div>
+      <div class="advisor-mini-card"><div class="advisor-mini-icon">🤝</div><div class="advisor-mini-name">Rachel Whitfield</div><div class="advisor-mini-role">Social Policy Adviser</div></div>
+    </div>
+    <p>Minister, your three senior advisors have each flagged the systemic risk they consider most dangerous:</p>
     <ul>
-      <li>🔋 <strong>Grid stability</strong> — every wind farm you build needs backup storage. Without it, blackouts follow and the public turns against the whole programme</li>
-      <li>🤝 <strong>Public consent</strong> — the transition raises energy bills. Workers in oil &amp; gas face redundancy. Ignore the social cost and you lose the political mandate to continue</li>
-      <li>🌡️ <strong>Delay is compounding</strong> — above 1.5°C, tipping points accelerate warming beyond your control. Early action is far cheaper than late action</li>
+      <li>🔬 <strong>Sir James Chen:</strong> "Above 1.5°C, tipping points accelerate warming beyond our control. Every wind farm needs backup storage or the grid fails. The physics doesn't negotiate."</li>
+      <li>📊 <strong>Dr. Amara Osei:</strong> "The transition creates stranded assets worth billions. Pension funds and banks are exposed. Without financial resilience, the whole programme collapses from within."</li>
+      <li>🤝 <strong>Rachel Whitfield:</strong> "Rising energy bills and job losses will destroy public consent. Ignore the human cost and you'll lose the mandate to act — no matter how sound the science."</li>
     </ul>
-    <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
+    <p class="advisor-note">Each term covers five years. You can make a policy pledge each turn — fulfil it for public trust, break it at your peril. The trade-offs are real.</p>
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
+  </div>
+</div>
+
+<!-- PLEDGE OVERLAY -->
+<div id="pledge-overlay" class="hidden">
+  <div id="pledge-card">
+    <h2>Policy Pledge</h2>
+    <p class="pledge-subtitle">Make a public commitment this term. Fulfil it for a social stability boost — but break it and the public will punish you.</p>
+    <div class="pledge-options" id="pledge-options"></div>
+    <button id="pledge-confirm-btn">Commit to Pledge</button>
+    <button id="pledge-skip-btn">No Pledge This Term</button>
+  </div>
+</div>
+
+<!-- TIPPING POINT OVERLAY -->
+<div id="tipping-overlay" class="hidden">
+  <div id="tipping-card">
+    <div class="tipping-icon" id="tipping-icon"></div>
+    <div class="tipping-title" id="tipping-title"></div>
+    <div class="tipping-desc" id="tipping-desc"></div>
+    <div class="tipping-effect" id="tipping-effect"></div>
+    <button id="tipping-dismiss-btn">Acknowledge</button>
   </div>
 </div>
 
@@ -3221,6 +3348,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'pledge_keeper', icon: '📢', name: 'Promise Keeper', desc: 'Keep 3 or more policy pledges in a single game', check: () => typeof pledgeMgr !== 'undefined' && pledgeMgr.history.filter(r => r.kept).length >= 3 },
+  { id: 'below_1_5', icon: '🌡️', name: 'Below 1.5°C', desc: 'Complete the game without crossing any tipping points', check: () => typeof pledgeMgr !== 'undefined' && pledgeMgr.tippingPointsCrossed.size === 0 },
 ];
 
 class AchievementManager {
@@ -3299,6 +3428,253 @@ const METRIC_TOOLTIPS = {
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
   },
 };
+
+/* ============================================================
+   NAMED ADVISORS
+============================================================ */
+
+const NAMED_ADVISORS = [
+  {
+    id: 'chen',
+    name: 'Sir James Chen',
+    role: 'Chief Scientific Adviser',
+    icon: '🔬',
+    getBriefing(state, turn) {
+      if (turn === 0) return null;
+      if (state.temperature > 1.8)
+        return `Minister, we've passed 1.8°C. The tipping point feedbacks I warned about are now active — permafrost methane release, accelerating ice loss. Each degree now costs exponentially more to claw back. Immediate, aggressive energy transition is the only path.`;
+      if (state.gridReliability < 45)
+        return `The grid is approaching critical failure. Wind and solar capacity has outpaced backup storage — we need emergency Grid & Storage investment or we face cascading blackouts within the year.`;
+      if (state.gridReliability < 60 && state.energy.gas < 20)
+        return `You're pushing renewables hard without sufficient backup. I appreciate the ambition, but the physics is clear: intermittent generation without storage means blackout risk. Consider Grid & Storage.`;
+      if (state.temperature > 1.5)
+        return `We've crossed 1.5°C. The tipping point feedback loops are beginning — each year of delay now costs disproportionately more. The window for orderly action is narrowing fast.`;
+      if (state.netZeroProgress >= 80)
+        return `Net Zero is within reach. The science says we can get there if we maintain investment momentum. Don't let up now — the last 20% is where most programmes stall.`;
+      if (state.gridReliability >= 80)
+        return `Grid stability is strong. The battery and storage programme is working — renewables are well-supported. This is a foundation you can build on safely.`;
+      return null;
+    },
+  },
+  {
+    id: 'osei',
+    name: 'Dr. Amara Osei',
+    role: 'Treasury Permanent Secretary',
+    icon: '📊',
+    getBriefing(state, turn) {
+      if (turn === 0) return null;
+      if (state.financialStability < 45)
+        return `Minister, financial stability is in the danger zone. Stranded fossil assets are cascading through pension funds. If we don't invest in Financial Resilience immediately, we risk a systemic financial crisis that would make the 2008 crash look contained.`;
+      if (state.strandedAssets > 50)
+        return `Stranded assets now exceed 50 — pension fund exposure is systemic. I'm receiving alarming reports from the Bank of England. We need Financial Resilience investment or managed asset write-downs to stabilise the system.`;
+      if (state.financialStability < 60)
+        return `The financial system is under pressure. Rapid decarbonisation is generating stranded asset losses faster than the market can absorb. A measured approach with financial buffers would prevent a crisis.`;
+      if (state.financialStability >= 75 && state.socialStability >= 75)
+        return `Both financial and social indicators are healthy. This is rare in a transition — you're managing the trade-offs well. Don't overreach now.`;
+      if (state.budget < 40)
+        return `Budget is tight this term. I recommend prioritising the investments with the highest leverage — research multipliers or areas where you've already built infrastructure.`;
+      return null;
+    },
+  },
+  {
+    id: 'whitfield',
+    name: 'Rachel Whitfield',
+    role: 'Social Policy Adviser',
+    icon: '🤝',
+    getBriefing(state, turn) {
+      if (turn === 0) return null;
+      if (state.socialStability < 50)
+        return `Minister, public consent is fracturing. At ${Math.round(state.socialStability)}%, we're approaching the point where the transition programme becomes politically undeliverable. Fuel poverty and job losses are driving real anger — Social Support investment is now urgent.`;
+      if (state.socialStability < 65 && state.infrastructure.energyTransition > state.infrastructure.socialSupport * 1.5)
+        return `The energy transition is moving faster than public support. Communities that depend on fossil fuel jobs feel abandoned. Without matching Social Support investment, you'll face protests that could halt the entire programme.`;
+      if (state.socialStability < 70 && state.temperature > 1.5)
+        return `Rising temperatures are directly impacting wellbeing — heat stress, flood anxiety, climate grief. These aren't abstract numbers; they're real people in real communities. Adaptation investment protects the most vulnerable.`;
+      if (state.socialStability >= 85)
+        return `Public support for the transition remains remarkably strong. The Just Transition investment is paying off — communities feel they have a stake in the green economy rather than being left behind.`;
+      if (state.netZeroProgress < 40 && turn >= 3)
+        return `With only ${5 - turn} terms remaining, people are starting to lose faith in the government's ability to deliver Net Zero. Progress stands at just ${Math.round(state.netZeroProgress)}%. We need visible action.`;
+      return null;
+    },
+  },
+];
+
+/* ============================================================
+   TIPPING POINTS
+============================================================ */
+
+const TIPPING_POINTS = [
+  {
+    id: 'tp_1_5',
+    threshold: 1.5,
+    icon: '🌍',
+    title: 'Paris 1.5°C Threshold Breached',
+    description: 'The UK warming pathway has crossed the 1.5°C limit set by the Paris Agreement. Arctic permafrost is beginning to release trapped methane. Greenland ice sheet melt is accelerating. These feedback loops will now compound warming regardless of policy action — though the speed depends on how fast you act.',
+    effectLabel: 'Warming rate permanently increased by +0.04°C/turn. Tipping point feedbacks are now active.',
+    apply(state) { state.temperature = Math.round((state.temperature + 0.04) * 100) / 100; },
+  },
+  {
+    id: 'tp_1_8',
+    threshold: 1.8,
+    icon: '🔥',
+    title: 'Dangerous Warming — 1.8°C',
+    description: 'The Amazon rainforest has crossed a tipping point and is now a net carbon emitter. Atlantic circulation is weakening, disrupting European weather patterns. UK crop yields are falling as seasons become unpredictable. The window for an orderly transition is closing.',
+    effectLabel: 'Social Stability −5. Financial Stability −5. Adaptation investment now more critical than ever.',
+    apply(state) { state.socialStability = Math.max(0, state.socialStability - 5); state.financialStability = Math.max(0, state.financialStability - 5); },
+  },
+  {
+    id: 'tp_2_0',
+    threshold: 2.0,
+    icon: '⛔',
+    title: 'Paris 2°C Limit Exceeded',
+    description: 'The UK is now on a trajectory that, if replicated globally, would breach the Paris Agreement\'s outer guardrail. Sea level rise is accelerating. Summer temperatures regularly exceed 40°C. Insurance markets are contracting across flood-risk areas. This is no longer a future risk — it is the present.',
+    effectLabel: 'Social Stability −8. Grid Reliability −5. Property values falling — Financial Stability −8.',
+    apply(state) { state.socialStability = Math.max(0, state.socialStability - 8); state.gridReliability = Math.max(0, state.gridReliability - 5); state.financialStability = Math.max(0, state.financialStability - 8); },
+  },
+  {
+    id: 'tp_2_5',
+    threshold: 2.5,
+    icon: '💀',
+    title: 'Catastrophic Trajectory — 2.5°C',
+    description: 'Multiple tipping points have cascaded. Antarctic ice sheet collapse is underway. Global food systems are under severe stress. The UK faces permanent structural damage to its economy, infrastructure, and social fabric. Recovery from this trajectory will take generations.',
+    effectLabel: 'All stability metrics −10. Warming is now self-reinforcing. Emergency measures only.',
+    apply(state) { state.socialStability = Math.max(0, state.socialStability - 10); state.financialStability = Math.max(0, state.financialStability - 10); state.gridReliability = Math.max(0, state.gridReliability - 10); },
+  },
+];
+
+/* ============================================================
+   POLICY PLEDGES
+============================================================ */
+
+const POLICY_PLEDGES = [
+  {
+    id: 'pledge_green_grid',
+    name: 'Green Grid Guarantee',
+    desc: 'Promise to invest in Energy Transition or Grid & Storage this term.',
+    stakes: 'Kept: +4 Social Stability. Broken: −6 Social Stability.',
+    check: (s, d) => d.energyTransition > 0 || d.gridAndStorage > 0,
+    reward: (s) => { s.socialStability = Math.min(100, s.socialStability + 4); s.socialCapital = Math.min(60, s.socialCapital + 2); },
+    penalty: (s) => { s.socialStability = Math.max(0, s.socialStability - 6); },
+    available: () => true,
+  },
+  {
+    id: 'pledge_protect_workers',
+    name: 'Workers\' Protection Pledge',
+    desc: 'Promise to fund Social Support for transition-affected communities this term.',
+    stakes: 'Kept: +5 Social Stability, +3 Social Capital. Broken: −8 Social Stability.',
+    check: (s, d) => d.socialSupport > 0,
+    reward: (s) => { s.socialStability = Math.min(100, s.socialStability + 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
+    penalty: (s) => { s.socialStability = Math.max(0, s.socialStability - 8); },
+    available: () => true,
+  },
+  {
+    id: 'pledge_fiscal_prudence',
+    name: 'Fiscal Prudence Commitment',
+    desc: 'Promise to invest in Financial Resilience to protect pension funds and banks.',
+    stakes: 'Kept: +4 Financial Stability, −3 Stranded Assets. Broken: −6 Financial Stability.',
+    check: (s, d) => d.financialResilience > 0,
+    reward: (s) => { s.financialStability = Math.min(100, s.financialStability + 4); s.strandedAssets = Math.max(0, s.strandedAssets - 3); },
+    penalty: (s) => { s.financialStability = Math.max(0, s.financialStability - 6); },
+    available: () => true,
+  },
+  {
+    id: 'pledge_resilience',
+    name: 'National Resilience Programme',
+    desc: 'Promise to invest in Adaptation to protect communities from climate events.',
+    stakes: 'Kept: +3 Social Stability, +adaptation infrastructure. Broken: −5 Social Stability.',
+    check: (s, d) => d.adaptation > 0,
+    reward: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); s.infrastructure.adaptation += 5; },
+    penalty: (s) => { s.socialStability = Math.max(0, s.socialStability - 5); },
+    available: () => true,
+  },
+  {
+    id: 'pledge_max_investment',
+    name: 'Maximum Investment Pledge',
+    desc: 'Promise to spend at least 80% of this term\'s budget on climate action.',
+    stakes: 'Kept: +6 Social Stability, +3 Net Zero. Broken: −8 Social Stability ("all talk, no action").',
+    check: (s, d) => {
+      const spent = Object.entries(d).reduce((sum, [k, v]) => sum + v * (BLOCK_COSTS[k] || 0), 0);
+      return spent >= s.budget * 0.8;
+    },
+    reward: (s) => { s.socialStability = Math.min(100, s.socialStability + 6); s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    penalty: (s) => { s.socialStability = Math.max(0, s.socialStability - 8); },
+    available: () => true,
+  },
+  {
+    id: 'pledge_research',
+    name: 'Innovation First',
+    desc: 'Promise to invest in Research & Development to unlock technological breakthroughs.',
+    stakes: 'Kept: +3 Social Stability, public confidence in the plan. Broken: −4 Social Stability.',
+    check: (s, d) => d.research > 0,
+    reward: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); },
+    penalty: (s) => { s.socialStability = Math.max(0, s.socialStability - 4); },
+    available: (s) => !techTree.isComplete(),
+  },
+];
+
+class PledgeManager {
+  constructor() {
+    this.activePledge = null;
+    this.history = [];
+    this.tippingPointsCrossed = new Set();
+    this.keyMoments = [];
+  }
+
+  getAvailablePledges(state) {
+    return POLICY_PLEDGES.filter(p => p.available(state));
+  }
+
+  setPledge(pledgeId) {
+    this.activePledge = POLICY_PLEDGES.find(p => p.id === pledgeId) || null;
+  }
+
+  clearPledge() {
+    this.activePledge = null;
+  }
+
+  resolvePledge(state, decisions) {
+    if (!this.activePledge) return null;
+    const pledge = this.activePledge;
+    const kept = pledge.check(state, decisions);
+    if (kept) {
+      pledge.reward(state);
+    } else {
+      pledge.penalty(state);
+    }
+    const result = { pledge, kept };
+    this.history.push(result);
+    if (kept) {
+      this.keyMoments.push({ turn: state.turn, icon: '✅', text: `Pledge kept: ${pledge.name}`, type: 'positive' });
+    } else {
+      this.keyMoments.push({ turn: state.turn, icon: '❌', text: `Pledge broken: ${pledge.name} — public trust damaged`, type: 'negative' });
+    }
+    this.activePledge = null;
+    return result;
+  }
+
+  checkTippingPoints(state) {
+    const triggered = [];
+    for (const tp of TIPPING_POINTS) {
+      if (state.temperature >= tp.threshold && !this.tippingPointsCrossed.has(tp.id)) {
+        this.tippingPointsCrossed.add(tp.id);
+        tp.apply(state);
+        triggered.push(tp);
+        this.keyMoments.push({ turn: state.turn, icon: tp.icon, text: tp.title, type: 'negative' });
+      }
+    }
+    return triggered;
+  }
+
+  recordMoment(moment) {
+    this.keyMoments.push(moment);
+  }
+
+  reset() {
+    this.activePledge = null;
+    this.history = [];
+    this.tippingPointsCrossed.clear();
+    this.keyMoments = [];
+  }
+}
 
 /* ============================================================
    HIGH SCORE MANAGER
@@ -4010,6 +4386,7 @@ class GameEngine {
   reset(scenarioKey) {
     difficultyMgr.activateForNewGame();
     turnHistory.reset();
+    if (typeof pledgeMgr !== 'undefined') pledgeMgr.reset();
     this._initState();
     // Apply starter scenario mutations
     const scenario = STARTER_SCENARIOS[scenarioKey] || STARTER_SCENARIOS.standard;
@@ -4143,6 +4520,15 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
+  // Pledge analysis
+  const pledgesKept = pledgeMgr.history.filter(r => r.kept).length;
+  if (pledgesKept >= 3) {
+    parts.push(`Crucially, the government built public trust by consistently honouring its policy pledges — ${pledgesKept} commitments kept. In an era of political cynicism, this reliability became the foundation of public consent for difficult decisions.`);
+  }
+  // Tipping point analysis
+  if (!pledgeMgr.tippingPointsCrossed.has('tp_1_5')) {
+    parts.push(`Most remarkably, the UK kept warming below the 1.5°C Paris threshold — avoiding the worst tipping point feedbacks. This is the gold standard that climate scientists advocated for, and you delivered it.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4174,6 +4560,14 @@ function buildHotHouseNarrative(s) {
 
   if (s.eventCount > 2) {
     parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, recovery time between shocks shrank until resilience collapsed entirely.`);
+  }
+  const tpCount = pledgeMgr.tippingPointsCrossed.size;
+  if (tpCount >= 2) {
+    parts.push(`${tpCount} major tipping points were crossed during your tenure. Each one accelerated the next — a cascading failure that climate scientists had warned about for decades. The feedback loops are now self-reinforcing.`);
+  }
+  const pledgesBroken = pledgeMgr.history.filter(r => !r.kept).length;
+  if (pledgesBroken >= 2) {
+    parts.push(`The government broke ${pledgesBroken} public pledges, eroding whatever trust remained in the political system's ability to act. By the late 2040s, climate policy had become synonymous with broken promises.`);
   }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
@@ -4535,6 +4929,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-moments')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -5146,6 +5541,9 @@ class UI {
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
 
+    // Build key moments
+    const momentsHtml = this._buildKeyMoments();
+
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
@@ -5165,7 +5563,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', momentsHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5264,6 +5662,34 @@ class UI {
     return html;
   }
 
+  // ===== KEY MOMENTS (ENDGAME) =====
+  _buildKeyMoments() {
+    const moments = pledgeMgr.keyMoments;
+    if (moments.length === 0) return '';
+
+    // Add strategy analysis moments
+    const s = this.engine.state;
+    const infra = s.infrastructure;
+    const topCat = Object.entries(infra).sort((a, b) => b[1] - a[1])[0];
+    const catLabels = { energyTransition: 'Energy Transition', gridAndStorage: 'Grid & Storage', adaptation: 'Adaptation', socialSupport: 'Social Support', financialResilience: 'Financial Resilience' };
+    if (topCat && topCat[1] > 0) {
+      moments.push({ turn: 5, icon: '📊', text: 'Primary strategy: ' + (catLabels[topCat[0]] || topCat[0]), type: 'neutral' });
+    }
+
+    const pledgesKept = pledgeMgr.history.filter(r => r.kept).length;
+    const pledgesTotal = pledgeMgr.history.length;
+    if (pledgesTotal > 0) {
+      moments.push({ turn: 5, icon: '📢', text: 'Pledges: ' + pledgesKept + '/' + pledgesTotal + ' kept', type: pledgesKept >= pledgesTotal ? 'positive' : pledgesKept > 0 ? 'neutral' : 'negative' });
+    }
+
+    let html = '<div id="endgame-moments"><div class="moments-title">Key Moments</div>';
+    for (const m of moments) {
+      html += '<div class="moment-item ' + m.type + '"><span class="moment-icon">' + m.icon + '</span><span>' + m.text + '</span></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   // ===== METRIC TOOLTIP =====
   _initTooltips() {
     this._tooltip = document.getElementById('metric-tooltip');
@@ -5325,56 +5751,31 @@ class UI {
     this._showTooltip(key, anchor);
   }
 
-  // ===== ADVISOR BRIEFINGS =====
-  _buildAdvisorBriefing(state, turnNum) {
-    if (turnNum === 0) return null;
-    const msgs = [];
-
-    if (state.gridReliability < 45) {
-      msgs.push('Grid reliability has fallen to critical levels. Without emergency storage investment, blackouts are near-certain this term.');
-    } else if (state.gridReliability < 60 && state.energy.gas < 20) {
-      msgs.push('You are pushing renewables hard without sufficient backup storage. Grid failure risk is elevated — consider Grid & Storage investment.');
+  // ===== NAMED ADVISOR BRIEFINGS =====
+  _getAdvisorBriefings(state, turnNum) {
+    if (turnNum === 0) return [];
+    const briefings = [];
+    for (const advisor of NAMED_ADVISORS) {
+      const msg = advisor.getBriefing(state, turnNum);
+      if (msg) briefings.push({ advisor, msg });
     }
-
-    if (state.financialStability < 45) {
-      msgs.push('Financial stability is in the danger zone. Stranded fossil assets are cascading through pension funds. Financial Resilience investment is now urgent.');
+    if (briefings.length === 0) {
+      const fallback = NAMED_ADVISORS[turnNum % NAMED_ADVISORS.length];
+      briefings.push({
+        advisor: fallback,
+        msg: 'No critical risks identified this term. Maintain investment momentum and watch the trade-offs.',
+      });
     }
-
-    if (state.socialStability < 50) {
-      msgs.push(`Public consent for the transition is fracturing (${Math.round(state.socialStability)}%). Fuel poverty and job losses are driving anger. Social Support investment is overdue.`);
-    }
-
-    if (state.temperature > 1.6) {
-      msgs.push(`Temperature has passed 1.6°C — tipping point feedbacks are now accelerating warming beyond policy control alone. Every turn of delay costs disproportionately more.`);
-    }
-
-    if (state.netZeroProgress < 40 && turnNum >= 3) {
-      msgs.push(`Net Zero progress stands at just ${Math.round(state.netZeroProgress)}% with only ${5 - turnNum} terms remaining. The 2050 target requires dramatic acceleration.`);
-    }
-
-    if (state.strandedAssets > 50) {
-      msgs.push('Stranded fossil assets now exceed 50 — pension fund exposure is systemic. Financial Resilience investment or managed asset write-downs are required to stabilise the system.');
-    }
-
-    if (msgs.length === 0) {
-      // Positive reinforcement
-      const positives = [];
-      if (state.netZeroProgress >= 80) positives.push('Net Zero is within reach this term.');
-      if (state.gridReliability >= 80) positives.push('The grid is stable — renewables are well-supported by backup capacity.');
-      if (state.financialStability >= 75 && state.socialStability >= 75) positives.push('Both financial and social stability remain strong — the transition is proceeding on a sound foundation.');
-      if (positives.length > 0) msgs.push(positives[0]);
-      else msgs.push('No critical risks identified this term. Maintain investment momentum.');
-    }
-
-    return msgs[0];
+    return briefings;
   }
 
   _injectAdvisorBriefing(state) {
-    const briefing = this._buildAdvisorBriefing(state, state.turn);
-    if (!briefing) return;
-    const div = document.createElement('div');
-    div.innerHTML = `<div class="log-advisor">${briefing}<span class="log-advisor-from">— Cabinet Office Permanent Secretary · Turn ${state.turn + 1} Briefing</span></div>`;
-    this.elLogScroll.appendChild(div);
+    const briefings = this._getAdvisorBriefings(state, state.turn);
+    for (const { advisor, msg } of briefings) {
+      const div = document.createElement('div');
+      div.innerHTML = `<div class="log-advisor">${msg}<span class="log-advisor-from">${advisor.icon} <span class="log-advisor-name">${advisor.name}</span> · ${advisor.role} · Turn ${state.turn + 1}</span></div>`;
+      this.elLogScroll.appendChild(div);
+    }
     this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
   }
 
@@ -5724,20 +6125,155 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_carbon_border',
+    icon: '🌐',
+    title: 'EU Carbon Border Adjustment',
+    prompt: 'The EU is imposing carbon tariffs on UK exports. How do you respond?',
+    explanation: 'The EU\'s Carbon Border Adjustment Mechanism taxes imports based on their carbon footprint. UK manufacturers face higher costs unless the UK aligns its carbon pricing. Aligning is expensive but opens trade; resisting protects short-term industry but isolates the UK from its largest market.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🤝 Align UK carbon pricing with EU standards',
+      consequence: 'Costs £7bn next turn · +5% Net Zero progress · −3 Financial (transition costs)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '🛡️ Resist and protect domestic industry',
+      consequence: 'No cost · −4 Financial (trade barriers hurt exports) · +3 Social (popular domestically)',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 4); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    condition: (s) => s.netZeroProgress > 30 && s.netZeroProgress < 90,
+  },
+  {
+    id: 'mini_tech_breakthrough',
+    icon: '💡',
+    title: 'Green Hydrogen Breakthrough',
+    prompt: 'A UK university has achieved a major efficiency gain in green hydrogen production. How do you respond?',
+    explanation: 'Green hydrogen could replace natural gas in heavy industry and heating. The breakthrough needs massive investment to scale, but could transform the UK\'s industrial decarbonisation. Commercial licensing is cheaper but lets other nations lead the manufacturing.',
+    contextFn: (s) => ({
+      label: 'R&D Infrastructure',
+      value: `${techTree._purchased.size}/${RESEARCH_UPGRADES.length} upgrades`,
+      note: `Gas share: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '🏭 Fund national hydrogen scale-up programme',
+      consequence: 'Costs £12bn next turn · +7% Net Zero · Gas −5 · +4 Grid (hydrogen backup)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.netZeroProgress = Math.min(100, s.netZeroProgress + 7); s.energy.gas = Math.max(0, s.energy.gas - 5); s.gridReliability = Math.min(100, s.gridReliability + 4); },
+    },
+    optB: {
+      label: '📄 License the technology commercially',
+      consequence: 'Earns £4bn next turn · +3% Net Zero · no infrastructure benefit',
+      effect: (s) => { s.nextTurnBudgetPenalty -= 4; s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    },
+    condition: (s) => s.infrastructure.gridAndStorage > 30 || techTree._purchased.size >= 2,
+  },
+  {
+    id: 'mini_climate_lawsuit',
+    icon: '⚖️',
+    title: 'Corporate Climate Lawsuit',
+    prompt: 'Major fossil fuel companies are being sued for climate damages. The Treasury must decide the government\'s stance.',
+    explanation: 'Courts across Europe are holding fossil fuel companies liable for climate damages. Supporting the lawsuits accelerates the transition away from fossil fuels but creates financial market uncertainty. Blocking them protects financial stability but signals continued fossil fuel tolerance.',
+    contextFn: (s) => ({
+      label: 'Stranded Assets',
+      value: `${Math.round(s.strandedAssets)}`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '⚖️ Support climate liability framework',
+      consequence: '−4 Financial (market uncertainty) · −8 Stranded Assets (accelerates clean-up) · +4 Social',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 4); s.strandedAssets = Math.max(0, s.strandedAssets - 8); s.socialStability = Math.min(100, s.socialStability + 4); },
+    },
+    optB: {
+      label: '🏦 Block lawsuits to protect markets',
+      consequence: '+3 Financial (market confidence) · −5 Social (seen as protecting polluters) · +5 Stranded Assets',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 3); s.socialStability = Math.max(0, s.socialStability - 5); s.strandedAssets = Math.min(100, s.strandedAssets + 5); },
+    },
+    condition: (s) => s.strandedAssets > 15,
+  },
+  {
+    id: 'mini_youth_movement',
+    icon: '🌱',
+    title: 'Youth Climate Movement',
+    prompt: 'Millions of young people are demanding faster climate action. How does the government respond?',
+    explanation: 'A new wave of youth climate activism is sweeping the UK. Their demands align with Net Zero goals but their methods — school strikes, infrastructure blockades — are divisive. Engaging them channels energy productively; dismissing them risks radicalisation and a generational trust deficit.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🗣️ Establish National Youth Climate Council',
+      consequence: 'Costs £2bn · +6 Social Capital · +3 Social Stability · public expects faster action',
+      effect: (s) => { s.nextTurnBudgetPenalty += 2; s.socialCapital = Math.min(60, s.socialCapital + 6); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optB: {
+      label: '🚫 Maintain current consultation processes',
+      consequence: 'No cost · −4 Social Stability (youth alienated) · −2 Social Capital',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 4); s.socialCapital = Math.max(0, s.socialCapital - 2); },
+    },
+    condition: (s) => s.temperature > 1.3 || s.netZeroProgress < 60,
+  },
+  {
+    id: 'mini_energy_import',
+    icon: '🔌',
+    title: 'Energy Import Dependency',
+    prompt: 'A geopolitical crisis has disrupted gas imports. The UK faces an energy security dilemma.',
+    explanation: 'International gas supply disruptions have driven prices to record highs. The UK can commission emergency domestic gas extraction — fast but fossil-dependent. Or accelerate the pivot to domestic renewables — which takes longer but permanently reduces import dependency.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Gas: ${Math.round(s.energy.gas)} · Wind: ${Math.round(s.energy.wind)}`,
+    }),
+    optA: {
+      label: '⛽ Emergency domestic gas extraction',
+      consequence: 'Gas +8 · Grid +5 · −6% Net Zero progress · +6 Stranded Assets',
+      effect: (s) => { s.energy.gas = Math.min(100, s.energy.gas + 8); s.gridReliability = Math.min(100, s.gridReliability + 5); s.netZeroProgress = Math.max(0, s.netZeroProgress - 6); s.strandedAssets = Math.min(100, s.strandedAssets + 6); },
+    },
+    optB: {
+      label: '💨 Accelerate domestic renewable build',
+      consequence: 'Costs £8bn · Wind +6 · Solar +4 · Grid −3 short-term',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.energy.wind = Math.min(120, s.energy.wind + 6); s.energy.solar = Math.min(100, s.energy.solar + 4); s.gridReliability = Math.max(0, s.gridReliability - 3); },
+    },
+    condition: (s) => s.energy.gas > 10,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
+  const decisionsSnapshot = { ...engine.state.currentDecisions };
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
 
+  // Resolve pledge before turn resolution
+  const pledgeResult = pledgeMgr.resolvePledge(engine.state, decisionsSnapshot);
+
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
+
+  // Check tipping points after temperature changes
+  const tippingPoints = pledgeMgr.checkTippingPoints(engine.state);
+
+  // Record key events as moments
+  if (result.event) {
+    pledgeMgr.recordMoment({ turn: engine.state.turn - 1, icon: result.event.icon, text: result.event.title, type: 'negative' });
+  }
 
   // Build and mount overlay
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
+
+  // Show pledge result at start of simulation
+  if (pledgeResult) {
+    _setSimStatus(overlay, pledgeResult.kept
+      ? '✅ Pledge kept: ' + pledgeResult.pledge.name
+      : '❌ Pledge broken: ' + pledgeResult.pledge.name);
+    await _delay(2000);
+  }
 
   // Tick through years with possible mini-events
   let minisFired = 0;
@@ -5768,18 +6304,33 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   await _delay(500);
   overlay.remove();
 
-  // Recalculate next-turn budget to include any mini-event penalties
-  // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
+  // Show tipping point overlays
+  for (const tp of tippingPoints) {
+    fxMgr.haptic('heavy');
+    fxMgr.shake();
+    await _showTippingPoint(tp);
+  }
+
+  // Recalculate next-turn budget
   engine.state.budget = engine.getEffectiveBudget();
 
-  // Unlock inputs — simulation complete
+  // Unlock inputs
   engine.state.isResolvingTurn = false;
+
+  // Inject pledge result into log
+  if (pledgeResult) {
+    const pDiv = document.createElement('div');
+    pDiv.innerHTML = pledgeResult.kept
+      ? '<div class="log-pledge-result kept">✅ Pledge kept: <strong>' + pledgeResult.pledge.name + '</strong> — public trust rewarded.</div>'
+      : '<div class="log-pledge-result broken">❌ Pledge broken: <strong>' + pledgeResult.pledge.name + '</strong> — public trust damaged.</div>';
+    ui.elLogScroll.appendChild(pDiv);
+  }
 
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
+  _updatePledgeDisplay();
 
   if (result.endgame) {
-    // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
     if (result.event) {
@@ -5795,14 +6346,20 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     fxMgr.shake();
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
+    if (engine.state.turn < 5 && !engine.state.gameOver) {
+      await _delay(600);
+      _showPledgeOverlay(engine.state);
+    }
   } else {
-    // Auto-save mid-game progress
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
+    if (engine.state.turn < 5 && !engine.state.gameOver) {
+      await _delay(600);
+      _showPledgeOverlay(engine.state);
+    }
   }
 }
 
@@ -5886,6 +6443,84 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+function _showTippingPoint(tp) {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('tipping-overlay');
+    document.getElementById('tipping-icon').textContent = tp.icon;
+    document.getElementById('tipping-title').textContent = tp.title;
+    document.getElementById('tipping-desc').textContent = tp.description;
+    document.getElementById('tipping-effect').textContent = tp.effectLabel;
+    overlay.classList.remove('hidden');
+    const btn = document.getElementById('tipping-dismiss-btn');
+    btn.addEventListener('click', function handler() {
+      overlay.classList.add('hidden');
+      btn.removeEventListener('click', handler);
+      resolve();
+    });
+  });
+}
+
+function _showPledgeOverlay(state) {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('pledge-overlay');
+    const optionsEl = document.getElementById('pledge-options');
+    const available = pledgeMgr.getAvailablePledges(state);
+    if (available.length === 0) { resolve(); return; }
+
+    let selectedId = null;
+    optionsEl.innerHTML = available.map(function(p) {
+      return '<div class="pledge-option" data-pledge="' + p.id + '">' +
+        '<div class="pledge-option-name">' + p.name + '</div>' +
+        '<div class="pledge-option-desc">' + p.desc + '</div>' +
+        '<div class="pledge-option-stakes">' + p.stakes + '</div>' +
+        '</div>';
+    }).join('');
+
+    optionsEl.querySelectorAll('.pledge-option').forEach(function(el) {
+      el.addEventListener('click', function() {
+        optionsEl.querySelectorAll('.pledge-option').forEach(function(o) { o.classList.remove('selected'); });
+        el.classList.add('selected');
+        selectedId = el.dataset.pledge;
+      });
+    });
+
+    overlay.classList.remove('hidden');
+    var confirmBtn = document.getElementById('pledge-confirm-btn');
+    var skipBtn = document.getElementById('pledge-skip-btn');
+
+    function cleanup() {
+      overlay.classList.add('hidden');
+      confirmBtn.removeEventListener('click', onConfirm);
+      skipBtn.removeEventListener('click', onSkip);
+      _updatePledgeDisplay();
+      resolve();
+    }
+    function onConfirm() {
+      if (selectedId) {
+        pledgeMgr.setPledge(selectedId);
+        var pledge = POLICY_PLEDGES.find(function(p) { return p.id === selectedId; });
+        if (pledge) {
+          var logDiv = document.createElement('div');
+          logDiv.innerHTML = '<div class="log-advisor" style="border-left-color:var(--accent-green-lt);background:rgba(0,112,60,0.06);">\u{1F4E2} Public pledge: <strong>' + pledge.name + '</strong> — ' + pledge.desc + '<span class="log-advisor-from">Policy Statement · Turn ' + (engine.state.turn + 1) + '</span></div>';
+          ui.elLogScroll.appendChild(logDiv);
+          ui.elLogScroll.scrollTop = ui.elLogScroll.scrollHeight;
+        }
+      }
+      cleanup();
+    }
+    function onSkip() { pledgeMgr.clearPledge(); cleanup(); }
+
+    confirmBtn.addEventListener('click', onConfirm);
+    skipBtn.addEventListener('click', onSkip);
+  });
+}
+
+function _updatePledgeDisplay() {
+  var el = document.getElementById('active-pledge');
+  if (!el) return;
+  el.textContent = pledgeMgr.activePledge ? '\u{1F4E2} ' + pledgeMgr.activePledge.name : '';
+}
+
 /* ============================================================
    MODULE: LEGACY SYSTEM
 ============================================================ */
@@ -5955,6 +6590,7 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const pledgeMgr    = new PledgeManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
