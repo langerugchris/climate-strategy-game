@@ -2121,6 +2121,30 @@ body { transition: filter 2s ease; }
 }
 #stakeholder-warning.visible { display: block; }
 
+/* ===== MANDATE INDICATOR ===== */
+.mandate-indicator {
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 999px;
+}
+.mandate-indicator.strong {
+  background: rgba(0, 200, 83, 0.12);
+  color: var(--status-good);
+  border: 1px solid rgba(0, 200, 83, 0.3);
+}
+.mandate-indicator.moderate {
+  background: rgba(68, 138, 255, 0.12);
+  color: var(--status-info);
+  border: 1px solid rgba(68, 138, 255, 0.3);
+}
+.mandate-indicator.weak {
+  background: rgba(255, 61, 0, 0.12);
+  color: var(--status-danger);
+  border: 1px solid rgba(255, 61, 0, 0.3);
+}
+
 /* ===== MOMENTUM BADGE ===== */
 .momentum-badge {
   display: none;
@@ -2486,6 +2510,7 @@ body { transition: filter 2s ease; }
         <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
         <div id="budget-status">
           <span id="budget-remaining-display">£100bn</span> remaining
+          <span id="mandate-bonus" class="mandate-indicator"></span>
         </div>
       </div>
       <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
@@ -3205,6 +3230,7 @@ body { transition: filter 2s ease; }
       <li>🌡️ <strong>Delay is compounding</strong> — above 1.5°C, tipping points accelerate warming beyond your control. Early action is far cheaper than late action</li>
     </ul>
     <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
+    <p class="advisor-note">New this parliament: <strong>Stakeholder approval</strong> from Public, Business, Scientists, and Treasury now affects your political mandate. High approval unlocks extra budget; low approval costs you spending power. Investing in the same area on consecutive turns builds <strong>policy momentum</strong> (+15% effectiveness).</p>
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
   </div>
 </div>
@@ -3882,6 +3908,14 @@ class GameEngine {
       : difficultyMgr.preset.baseBudget;
     if (this.state.financialStability > 80) base += 20;
     base -= this.state.nextTurnBudgetPenalty;
+    // Stakeholder mandate bonus: high average approval unlocks more spending
+    if (this.state.stakeholders) {
+      const sh = this.state.stakeholders;
+      const avg = (sh.public + sh.business + sh.scientists + sh.treasury) / 4;
+      if (avg >= 75) base += 15;
+      else if (avg >= 60) base += 8;
+      else if (avg < 30) base -= 10;
+    }
     // After turn 1, budget override only applies once (first turn), then uses normal base
     if (this.state.turn > 0) {
       delete this.state._budgetOverride;
@@ -5240,6 +5274,26 @@ class UI {
 
     // Budget status class
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+
+    // Mandate bonus indicator
+    const mandateEl = document.getElementById('mandate-bonus');
+    if (mandateEl && state.stakeholders) {
+      const sh = state.stakeholders;
+      const avg = (sh.public + sh.business + sh.scientists + sh.treasury) / 4;
+      if (avg >= 75) {
+        mandateEl.textContent = '+\u00A315bn mandate';
+        mandateEl.className = 'mandate-indicator strong';
+      } else if (avg >= 60) {
+        mandateEl.textContent = '+\u00A38bn mandate';
+        mandateEl.className = 'mandate-indicator moderate';
+      } else if (avg < 30) {
+        mandateEl.textContent = '-\u00A310bn mandate';
+        mandateEl.className = 'mandate-indicator weak';
+      } else {
+        mandateEl.textContent = '';
+        mandateEl.className = 'mandate-indicator';
+      }
+    }
   }
 
   _renderCards(state) {
