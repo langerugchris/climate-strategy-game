@@ -2105,6 +2105,22 @@ body { transition: filter 2s ease; }
 .stakeholder-delta.up   { color: var(--status-good); }
 .stakeholder-delta.down { color: var(--status-danger); }
 
+.stakeholder-row[title] {
+  cursor: help;
+}
+#stakeholder-warning {
+  display: none;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(255, 61, 0, 0.08);
+  border: 1px solid rgba(255, 61, 0, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  color: var(--status-danger);
+  line-height: 1.4;
+}
+#stakeholder-warning.visible { display: block; }
+
 /* ===== MOMENTUM BADGE ===== */
 .momentum-badge {
   display: none;
@@ -2429,34 +2445,35 @@ body { transition: filter 2s ease; }
       <!-- Stakeholders -->
       <div id="stakeholder-section">
         <div id="stakeholder-title">Stakeholder Approval</div>
-        <div class="stakeholder-row">
+        <div class="stakeholder-row" title="Favours: Social Support, Adaptation. Dislikes: Energy cost rises, low stability.">
           <span class="stakeholder-icon">👥</span>
           <span class="stakeholder-name">Public</span>
           <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill" id="sbar-public" style="width:65%;background:var(--status-good)"></div></div>
           <span class="stakeholder-val" id="sval-public">65</span>
           <span class="stakeholder-delta" id="sdelta-public"></span>
         </div>
-        <div class="stakeholder-row">
+        <div class="stakeholder-row" title="Favours: Financial Resilience, Grid stability. Dislikes: Rapid energy transition, stranded assets.">
           <span class="stakeholder-icon">🏭</span>
           <span class="stakeholder-name">Business</span>
           <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill" id="sbar-business" style="width:60%;background:var(--status-warn)"></div></div>
           <span class="stakeholder-val" id="sval-business">60</span>
           <span class="stakeholder-delta" id="sdelta-business"></span>
         </div>
-        <div class="stakeholder-row">
+        <div class="stakeholder-row" title="Favours: Energy Transition, R&D. Dislikes: Inaction on climate, rising temperatures.">
           <span class="stakeholder-icon">🔬</span>
           <span class="stakeholder-name">Scientists</span>
           <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill" id="sbar-scientists" style="width:50%;background:var(--status-warn)"></div></div>
           <span class="stakeholder-val" id="sval-scientists">50</span>
           <span class="stakeholder-delta" id="sdelta-scientists"></span>
         </div>
-        <div class="stakeholder-row">
+        <div class="stakeholder-row" title="Favours: Balanced budgets, Financial Resilience. Dislikes: Overspending, fiscal instability.">
           <span class="stakeholder-icon">🏛️</span>
           <span class="stakeholder-name">Treasury</span>
           <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill" id="sbar-treasury" style="width:70%;background:var(--status-good)"></div></div>
           <span class="stakeholder-val" id="sval-treasury">70</span>
           <span class="stakeholder-delta" id="sdelta-treasury"></span>
         </div>
+        <div id="stakeholder-warning"></div>
       </div>
 
     </div>
@@ -4503,7 +4520,7 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
-  return parts.map(p => `<p>${p}</p>`).join('');
+  return parts.map(p => `<p>${p}</p>`).join('') + buildStakeholderNarrative(s);
 }
 
 function buildDisorderlyNarrative(s) {
@@ -4519,7 +4536,7 @@ function buildDisorderlyNarrative(s) {
   if (s.infrastructure.adaptation < 40) {
     parts.push(`Underinvestment in climate adaptation meant that every flood and heatwave caused disproportionate damage, compounding the transition disruption with physical climate losses.`);
   }
-  return parts.map(p => `<p>${p}</p>`).join('');
+  return parts.map(p => `<p>${p}</p>`).join('') + buildStakeholderNarrative(s);
 }
 
 function buildHotHouseNarrative(s) {
@@ -4535,7 +4552,7 @@ function buildHotHouseNarrative(s) {
   if (s.eventCount > 2) {
     parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, recovery time between shocks shrank until resilience collapsed entirely.`);
   }
-  return parts.map(p => `<p>${p}</p>`).join('');
+  return parts.map(p => `<p>${p}</p>`).join('') + buildStakeholderNarrative(s);
 }
 
 function buildBreakdownNarrative(s) {
@@ -4553,7 +4570,7 @@ function buildManagedNarrative(s) {
   if (s.financialStability > 60 && s.socialStability > 60) {
     parts.push(`The cautious approach preserved financial and social cohesion — a genuinely difficult balance. But the cost is that more aggressive transition investment in earlier terms would have closed the emissions gap without sacrificing stability.`);
   }
-  return parts.map(p => `<p>${p}</p>`).join('');
+  return parts.map(p => `<p>${p}</p>`).join('') + buildStakeholderNarrative(s);
 }
 
 function buildTurbulentNarrative(s) {
@@ -4566,6 +4583,41 @@ function buildTurbulentNarrative(s) {
     parts.push(`The financial system absorbed painful shocks from stranded fossil assets. Pension funds and regional lenders required government support, tightening future fiscal space at exactly the moment adaptation spending was needed most.`);
   }
   parts.push(`This is a recognisable real-world outcome: the climate target met, but the transition's distributional costs left deep marks. A more balanced investment strategy — combining energy transition with stronger social and financial buffers — could have reached the same destination with less damage.`);
+  return parts.map(p => `<p>${p}</p>`).join('') + buildStakeholderNarrative(s);
+}
+
+function buildStakeholderNarrative(s) {
+  const sh = s.stakeholders;
+  if (!sh) return '';
+  const parts = [];
+  const avg = (sh.public + sh.business + sh.scientists + sh.treasury) / 4;
+
+  if (avg >= 70) {
+    parts.push(`Remarkably, you maintained broad stakeholder support throughout the transition — a political achievement as significant as the climate one. Public consent, business confidence, scientific endorsement, and Treasury cooperation held together.`);
+  } else if (avg >= 50) {
+    parts.push(`Stakeholder management was uneven. Some factions feel well-served; others carry grievances into the next parliamentary term.`);
+  }
+
+  if (sh.public < 30) {
+    parts.push(`Public support collapsed. Voters overwhelmingly feel the transition was imposed without adequate support for ordinary households. The next government will inherit deep distrust of climate policy.`);
+  } else if (sh.public >= 80) {
+    parts.push(`Public support remained strong throughout — a testament to the Just Transition investments that cushioned households from the worst costs of decarbonisation.`);
+  }
+
+  if (sh.business < 30) {
+    parts.push(`Business confidence was shattered by the pace of change. Investment fled to jurisdictions with clearer, more predictable climate policy frameworks.`);
+  }
+
+  if (sh.scientists < 30) {
+    parts.push(`The scientific community issued unprecedented public criticism of government inaction, damaging the UK's international reputation for evidence-based policy.`);
+  } else if (sh.scientists >= 80) {
+    parts.push(`The UK's scientific establishment praised the evidence-led approach, and UK climate research attracted record international funding.`);
+  }
+
+  if (sh.treasury < 30) {
+    parts.push(`HM Treasury's climate stress tests show the fiscal position severely weakened, with debt-to-GDP ratios limiting future adaptation spending.`);
+  }
+
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -5398,6 +5450,7 @@ class UI {
     const sh = state.stakeholders;
     if (!sh) return;
     const prev = this._prevStakeholders || sh;
+    const warnings = [];
     for (const key of Object.keys(STAKEHOLDERS)) {
       const val = sh[key];
       const bar = document.getElementById(`sbar-${key}`);
@@ -5417,6 +5470,24 @@ class UI {
           deltaEl.textContent = '';
           deltaEl.className = 'stakeholder-delta';
         }
+      }
+      if (val < 30) {
+        const adviceMap = {
+          public: 'Public patience is running out. Invest in Social Support urgently.',
+          business: 'Business confidence collapsing. Prioritise Financial Resilience and grid stability.',
+          scientists: 'Scientific community frustrated by inaction. Invest in Energy Transition or R&D.',
+          treasury: 'Treasury alarmed by fiscal trajectory. Reduce spending or boost Financial Resilience.',
+        };
+        warnings.push(adviceMap[key]);
+      }
+    }
+    const warnEl = document.getElementById('stakeholder-warning');
+    if (warnEl) {
+      if (warnings.length > 0) {
+        warnEl.textContent = warnings[0];
+        warnEl.classList.add('visible');
+      } else {
+        warnEl.classList.remove('visible');
       }
     }
     this._prevStakeholders = { ...sh };
