@@ -132,6 +132,36 @@ body {
   letter-spacing: 0.06em;
 }
 
+/* ===== NEWS TICKER ===== */
+#news-ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  height: 20px;
+  line-height: 20px;
+}
+
+#news-ticker-text {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  animation: ticker-scroll 18s linear infinite;
+  padding-left: 100%;
+}
+
+#news-ticker-text .ticker-alert {
+  color: var(--status-warn);
+  font-style: normal;
+  font-weight: 600;
+}
+
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
 /* ===== TURN PIPS ===== */
 #turn-pips {
   display: flex;
@@ -1301,6 +1331,7 @@ body { transition: filter 2s ease; }
   #game-header { flex-direction: column; align-items: flex-start; gap: var(--gap-sm); }
   #endgame-metrics-grid { grid-template-columns: 1fr 1fr; }
   .card-cost-controls { flex-direction: column; align-items: flex-end; gap: 4px; }
+  .scenario-cards { grid-template-columns: 1fr; }
 }
 
 /* ===== iPhone OPTIMISATIONS (≤430px) ===== */
@@ -1887,7 +1918,7 @@ body { transition: filter 2s ease; }
 }
 .scenario-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-md);
   margin-bottom: var(--gap-lg);
 }
@@ -2117,6 +2148,9 @@ body { transition: filter 2s ease; }
 }
 
 @media (max-width: 768px) {
+  .scenario-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
   #mobile-tabs { display: block; }
 
   #game-main {
@@ -2160,6 +2194,9 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <div id="news-ticker">
+      <span id="news-ticker-text">HM Treasury confirms five-year climate investment programme · Net Zero 2050 remains the legal target · NGFS scenario modelling underway ·</span>
+    </div>
   </div>
   <div id="header-right">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -2889,6 +2926,56 @@ body { transition: filter 2s ease; }
           <rect x="617" y="154" width="12" height="8" fill="#050d1a"/>
         </g>
 
+        <!-- ===== WEATHER EFFECTS ===== -->
+
+        <!-- RAIN — animated falling lines, opacity driven by JS -->
+        <g id="weather-rain" opacity="0">
+          <line x1="60"  y1="25" x2="57"  y2="45" stroke="#6fa8dc" stroke-width="0.8" opacity="0.5"><animate attributeName="y1" values="25;165" dur="1.2s" repeatCount="indefinite"/><animate attributeName="y2" values="45;185" dur="1.2s" repeatCount="indefinite"/></line>
+          <line x1="130" y1="10" x2="127" y2="30" stroke="#6fa8dc" stroke-width="0.7" opacity="0.4"><animate attributeName="y1" values="10;165" dur="1.0s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="y2" values="30;185" dur="1.0s" begin="0.2s" repeatCount="indefinite"/></line>
+          <line x1="210" y1="35" x2="207" y2="55" stroke="#6fa8dc" stroke-width="0.8" opacity="0.5"><animate attributeName="y1" values="35;165" dur="1.3s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="y2" values="55;185" dur="1.3s" begin="0.5s" repeatCount="indefinite"/></line>
+          <line x1="290" y1="15" x2="287" y2="35" stroke="#6fa8dc" stroke-width="0.7" opacity="0.4"><animate attributeName="y1" values="15;165" dur="1.1s" begin="0.3s" repeatCount="indefinite"/><animate attributeName="y2" values="35;185" dur="1.1s" begin="0.3s" repeatCount="indefinite"/></line>
+          <line x1="370" y1="30" x2="367" y2="50" stroke="#6fa8dc" stroke-width="0.8" opacity="0.5"><animate attributeName="y1" values="30;165" dur="1.2s" begin="0.7s" repeatCount="indefinite"/><animate attributeName="y2" values="50;185" dur="1.2s" begin="0.7s" repeatCount="indefinite"/></line>
+          <line x1="440" y1="20" x2="437" y2="40" stroke="#6fa8dc" stroke-width="0.7" opacity="0.4"><animate attributeName="y1" values="20;165" dur="1.0s" begin="0.1s" repeatCount="indefinite"/><animate attributeName="y2" values="40;185" dur="1.0s" begin="0.1s" repeatCount="indefinite"/></line>
+          <line x1="520" y1="40" x2="517" y2="60" stroke="#6fa8dc" stroke-width="0.8" opacity="0.5"><animate attributeName="y1" values="40;165" dur="1.3s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="y2" values="60;185" dur="1.3s" begin="0.4s" repeatCount="indefinite"/></line>
+          <line x1="590" y1="12" x2="587" y2="32" stroke="#6fa8dc" stroke-width="0.7" opacity="0.4"><animate attributeName="y1" values="12;165" dur="1.1s" begin="0.6s" repeatCount="indefinite"/><animate attributeName="y2" values="32;185" dur="1.1s" begin="0.6s" repeatCount="indefinite"/></line>
+          <line x1="660" y1="28" x2="657" y2="48" stroke="#6fa8dc" stroke-width="0.8" opacity="0.5"><animate attributeName="y1" values="28;165" dur="1.2s" begin="0.8s" repeatCount="indefinite"/><animate attributeName="y2" values="48;185" dur="1.2s" begin="0.8s" repeatCount="indefinite"/></line>
+          <line x1="740" y1="18" x2="737" y2="38" stroke="#6fa8dc" stroke-width="0.7" opacity="0.4"><animate attributeName="y1" values="18;165" dur="1.0s" begin="0.9s" repeatCount="indefinite"/><animate attributeName="y2" values="38;185" dur="1.0s" begin="0.9s" repeatCount="indefinite"/></line>
+          <line x1="95"  y1="42" x2="92"  y2="62" stroke="#6fa8dc" stroke-width="0.6" opacity="0.3"><animate attributeName="y1" values="42;165" dur="1.4s" begin="0.15s" repeatCount="indefinite"/><animate attributeName="y2" values="62;185" dur="1.4s" begin="0.15s" repeatCount="indefinite"/></line>
+          <line x1="330" y1="8"  x2="327" y2="28" stroke="#6fa8dc" stroke-width="0.6" opacity="0.3"><animate attributeName="y1" values="8;165"  dur="1.15s" begin="0.45s" repeatCount="indefinite"/><animate attributeName="y2" values="28;185" dur="1.15s" begin="0.45s" repeatCount="indefinite"/></line>
+          <line x1="480" y1="33" x2="477" y2="53" stroke="#6fa8dc" stroke-width="0.6" opacity="0.3"><animate attributeName="y1" values="33;165" dur="1.25s" begin="0.65s" repeatCount="indefinite"/><animate attributeName="y2" values="53;185" dur="1.25s" begin="0.65s" repeatCount="indefinite"/></line>
+          <line x1="700" y1="5"  x2="697" y2="25" stroke="#6fa8dc" stroke-width="0.6" opacity="0.3"><animate attributeName="y1" values="5;165"  dur="1.35s" begin="0.85s" repeatCount="indefinite"/><animate attributeName="y2" values="25;185" dur="1.35s" begin="0.85s" repeatCount="indefinite"/></line>
+        </g>
+
+        <!-- SMOG HAZE — low opacity ground-level pollution -->
+        <g id="weather-smog" opacity="0">
+          <rect x="0" y="120" width="800" height="42" fill="#3a3020" opacity="0.35"/>
+          <ellipse cx="120" cy="145" rx="90" ry="18" fill="#4a4030" opacity="0.25"/>
+          <ellipse cx="350" cy="148" rx="110" ry="16" fill="#4a4030" opacity="0.22"/>
+          <ellipse cx="580" cy="142" rx="95" ry="20" fill="#4a4030" opacity="0.28"/>
+          <ellipse cx="730" cy="150" rx="80" ry="14" fill="#4a4030" opacity="0.2"/>
+        </g>
+
+        <!-- HEAT SHIMMER — distortion overlay for high temperatures -->
+        <g id="weather-heat" opacity="0">
+          <rect x="0" y="130" width="800" height="32" fill="#ff6b35" opacity="0.06"/>
+          <rect x="0" y="0" width="800" height="40" fill="#ff8c42" opacity="0.04"/>
+          <line x1="0" y1="155" x2="800" y2="155" stroke="#ff6b35" stroke-width="0.5" opacity="0.2">
+            <animate attributeName="y1" values="155;157;155" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="155;157;155" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <line x1="0" y1="148" x2="800" y2="148" stroke="#ff6b35" stroke-width="0.4" opacity="0.15">
+            <animate attributeName="y1" values="148;146;148" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="148;146;148" dur="2.5s" repeatCount="indefinite"/>
+          </line>
+        </g>
+
+        <!-- CLEAR SKY SUN — reward visual for good progress -->
+        <g id="weather-sun" opacity="0">
+          <circle cx="755" cy="22" r="16" fill="#ffd54f" opacity="0.15"/>
+          <circle cx="755" cy="22" r="10" fill="#ffecb3" opacity="0.25"/>
+          <circle cx="755" cy="22" r="5"  fill="#fff9c4" opacity="0.5"/>
+        </g>
+
         <!-- FLOOD WATER OVERLAY — shown when adaptation fails -->
         <rect id="flood-water" x="0" y="200" width="800" height="80" fill="#1565c0" opacity="0.55" rx="0">
           <animate id="flood-anim" attributeName="y" from="200" to="148" dur="2s" fill="freeze" begin="indefinite"/>
@@ -2963,6 +3050,28 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="energy_island">
+        <span class="scenario-card-icon">⚛️</span>
+        <div class="scenario-card-name">Energy Island</div>
+        <div class="scenario-card-desc">A nuclear-heavy energy mix keeps the grid stable — but renewable buildout lags behind. The transition must start from an unusual position.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
+          <div class="scenario-stat">Nuclear: <span>35 (high)</span></div>
+          <div class="scenario-stat">Grid: <span>80% (stable)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="post_industrial">
+        <span class="scenario-card-icon">🏭</span>
+        <div class="scenario-card-name">Post-Industrial</div>
+        <div class="scenario-card-desc">Strong community bonds from shared hardship — but crumbling infrastructure and heavy gas dependency. The people are ready, the systems are not.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£95bn/turn</span></div>
+          <div class="scenario-stat">Social Capital: <span>+30 bonus</span></div>
+          <div class="scenario-stat">Grid: <span>45% (fragile)</span></div>
         </div>
       </div>
 
@@ -3301,6 +3410,118 @@ const METRIC_TOOLTIPS = {
 };
 
 /* ============================================================
+   NEWS TICKER SYSTEM
+============================================================ */
+
+const NEWS_HEADLINES = {
+  baseline: [
+    'HM Treasury confirms five-year climate investment programme',
+    'Net Zero 2050 remains the legal target for the United Kingdom',
+    'Bank of England publishes updated climate stress test results',
+    'National Grid ESO forecasts record electricity demand by 2035',
+    'Climate Change Committee calls for accelerated policy action',
+  ],
+  highTemp: [
+    'Met Office issues unprecedented heat advisory for southern England',
+    'Arctic sea ice reaches new record low — scientists warn of tipping point',
+    'Insurers withdraw flood cover from 200,000 UK properties',
+    'NHS declares heat-related admissions a public health emergency',
+    'Global temperature records broken for third consecutive year',
+  ],
+  lowGrid: [
+    'National Grid warns of rolling blackout risk this winter',
+    'Industrial output falls as firms switch to backup generators',
+    'Energy regulator Ofgem issues emergency supply warning',
+    'Grid operator requests emergency coal plant restart',
+  ],
+  lowFinancial: [
+    'Pension funds report significant losses on fossil fuel holdings',
+    'Bank of England considers emergency liquidity measures',
+    'Credit rating agency places UK sovereign debt on negative watch',
+    'Property values fall sharply in flood-prone regions',
+  ],
+  lowSocial: [
+    'Fuel poverty reaches record levels across northern England',
+    'Protests escalate outside Parliament over energy costs',
+    'Union leaders warn of general strike over transition job losses',
+    'Government approval rating hits historic low',
+  ],
+  highNZ: [
+    'UK on track to meet Net Zero commitment ahead of schedule',
+    'Renewable energy now powers majority of UK electricity grid',
+    'Carbon capture deployment exceeds government targets',
+    'International praise for UK climate leadership at COP summit',
+  ],
+  goodOutlook: [
+    'Consumer confidence rises as green economy creates 180,000 jobs',
+    'UK exports of clean technology reach record highs',
+    'Independent review praises balanced approach to energy transition',
+    'Public satisfaction with climate policy reaches five-year high',
+  ],
+  diplomacy: [
+    'EU carbon border adjustment mechanism enters into force',
+    'G7 leaders agree joint green infrastructure investment programme',
+    'UN Secretary-General calls for tripling of climate finance',
+    'China and India announce joint emissions reduction pledge',
+    'COP negotiators push for binding 1.5°C commitment',
+    'World Bank announces $100bn climate adaptation fund',
+  ],
+  weather: [
+    'Met Office records wettest autumn since measurements began',
+    'Air quality warnings issued across major UK cities',
+    'Visible smog returns to London for first time in decades',
+    'Clear skies and clean air mark progress in decarbonisation',
+  ],
+};
+
+function getTickerHeadline(state) {
+  const pool = [];
+
+  // Always include some baseline
+  pool.push(...NEWS_HEADLINES.baseline);
+
+  // Add state-reactive headlines with higher weight
+  if (state.temperature > 1.8) {
+    for (let i = 0; i < 3; i++) pool.push(...NEWS_HEADLINES.highTemp);
+  }
+  if (state.gridReliability < 50) {
+    for (let i = 0; i < 3; i++) pool.push(...NEWS_HEADLINES.lowGrid);
+  }
+  if (state.financialStability < 45) {
+    for (let i = 0; i < 3; i++) pool.push(...NEWS_HEADLINES.lowFinancial);
+  }
+  if (state.socialStability < 45) {
+    for (let i = 0; i < 3; i++) pool.push(...NEWS_HEADLINES.lowSocial);
+  }
+  if (state.netZeroProgress > 75) {
+    for (let i = 0; i < 2; i++) pool.push(...NEWS_HEADLINES.highNZ);
+  }
+  if (state.financialStability > 70 && state.socialStability > 70 && state.gridReliability > 60) {
+    for (let i = 0; i < 2; i++) pool.push(...NEWS_HEADLINES.goodOutlook);
+  }
+  if (state.turn >= 1) {
+    pool.push(...NEWS_HEADLINES.diplomacy);
+  }
+  const totalE = state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1;
+  if (state.energy.gas / totalE > 0.3 || state.temperature > 1.5) {
+    pool.push(...NEWS_HEADLINES.weather);
+  }
+
+  // Pick 3 random non-duplicate headlines
+  const shuffled = pool.sort(() => Math.random() - 0.5);
+  const seen = new Set();
+  const selected = [];
+  for (const h of shuffled) {
+    if (!seen.has(h) && selected.length < 3) {
+      seen.add(h);
+      selected.push(h);
+    }
+  }
+
+  return selected.join(' · ') + ' ·';
+}
+
+/* ============================================================
    HIGH SCORE MANAGER
 ============================================================ */
 
@@ -3370,6 +3591,35 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_island: {
+    label: 'Energy Island',
+    apply(state) {
+      state.energy.nuclear = 35;
+      state.energy.wind = 15;
+      state.energy.solar = 3;
+      state.energy.gas = 18;
+      state.energy.storage = 12;
+      state.gridReliability = 80;
+      state.financialStability = 60;
+      state.netZeroProgress = 25;
+      state._budgetOverride = 90;
+    },
+  },
+  post_industrial: {
+    label: 'Post-Industrial',
+    apply(state) {
+      state.socialCapital = 30;
+      state.socialStability = 85;
+      state.gridReliability = 45;
+      state.financialStability = 55;
+      state.energy.wind = 20;
+      state.energy.solar = 4;
+      state.energy.gas = 35;
+      state.energy.nuclear = 8;
+      state.infrastructure.socialSupport = 40;
+      state._budgetOverride = 95;
     },
   },
 };
@@ -4618,6 +4868,12 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+
+    // Update news ticker
+    const tickerEl = document.getElementById('news-ticker-text');
+    if (tickerEl) {
+      tickerEl.textContent = getTickerHeadline(state);
+    }
   }
 
   _renderHeader(state) {
@@ -4952,6 +5208,40 @@ class UI {
       const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1);
       const smokeOpacity = Math.max(0, (gasShare - 0.15) / 0.4);
       smokeGroup.style.opacity = smokeOpacity;
+    }
+
+    // Weather effects driven by game state
+    const total = state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1;
+    const gasShare = state.energy.gas / total;
+
+    const rainEl = document.getElementById('weather-rain');
+    if (rainEl) {
+      const rainOpacity = state.temperature > 1.5 && state.infrastructure.adaptation < 50
+        ? Math.min(0.6, (state.temperature - 1.5) * 0.5)
+        : 0;
+      rainEl.style.opacity = rainOpacity;
+      rainEl.style.transition = 'opacity 2s ease';
+    }
+
+    const smogEl = document.getElementById('weather-smog');
+    if (smogEl) {
+      const smogOpacity = gasShare > 0.3 ? Math.min(0.7, (gasShare - 0.3) * 2.5) : 0;
+      smogEl.style.opacity = smogOpacity;
+      smogEl.style.transition = 'opacity 2s ease';
+    }
+
+    const heatEl = document.getElementById('weather-heat');
+    if (heatEl) {
+      const heatOpacity = state.temperature > 1.8 ? Math.min(0.8, (state.temperature - 1.8) * 0.7) : 0;
+      heatEl.style.opacity = heatOpacity;
+      heatEl.style.transition = 'opacity 2s ease';
+    }
+
+    const sunEl = document.getElementById('weather-sun');
+    if (sunEl) {
+      const isGood = state.temperature < 1.5 && state.netZeroProgress > 50 && state.gridReliability > 60;
+      sunEl.style.opacity = isGood ? 0.9 : 0;
+      sunEl.style.transition = 'opacity 3s ease';
     }
   }
 
@@ -5723,6 +6013,98 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_cop_summit',
+    icon: '🌍',
+    title: 'COP Climate Summit',
+    prompt: 'The UK is hosting the next COP. Will you make an ambitious pledge or a cautious one?',
+    explanation: 'International climate summits are where nations signal commitment. An ambitious pledge accelerates domestic policy and attracts green investment — but locks you into targets that may strain the budget. A cautious pledge preserves flexibility but signals weakness to investors and allies.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🌱 Ambitious pledge — lead the world',
+      consequence: '+8% Net Zero progress · attracts £5bn green investment · costs £10bn in commitments next turn',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.nextTurnBudgetPenalty += 5; s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optB: {
+      label: '📋 Cautious pledge — protect flexibility',
+      consequence: 'No budget cost · −3 Social (seen as weak leadership) · no Net Zero boost',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    condition: (s) => s.turn >= 0,
+  },
+  {
+    id: 'mini_carbon_border',
+    icon: '🏗️',
+    title: 'EU Carbon Border Tax',
+    prompt: 'The EU is implementing a carbon border adjustment mechanism. How does the UK respond?',
+    explanation: 'Carbon border adjustments tax imports from countries with weaker climate policy. Aligning with the EU system protects UK exporters from tariffs and strengthens the trade relationship — but forces faster domestic decarbonisation. Rejecting it keeps costs down short-term but risks trade friction and makes UK goods less competitive in European markets.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🤝 Align with EU carbon pricing',
+      consequence: '+5% Net Zero · +4 Financial Stability (trade protected) · costs £7bn implementation next turn',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.financialStability = Math.min(100, s.financialStability + 4); s.nextTurnBudgetPenalty += 7; },
+    },
+    optB: {
+      label: '🚫 Reject — maintain regulatory independence',
+      consequence: 'No cost · −5 Financial Stability (export friction) · +2 Social (sovereignty popular)',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 5); s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_trade_deal',
+    icon: '🔬',
+    title: 'Green Technology Trade Deal',
+    prompt: 'China offers a bilateral deal: cheap solar panels and battery tech in exchange for market access. Do you accept?',
+    explanation: 'China dominates global solar and battery manufacturing. A trade deal dramatically cuts the cost of renewable buildout — but creates strategic dependency on a single supplier. Building domestic supply chains costs more and takes longer but reduces long-term vulnerability.',
+    contextFn: (s) => ({
+      label: 'Energy Mix',
+      value: `Solar: ${Math.round(s.energy.solar)} · Storage: ${Math.round(s.energy.storage)}`,
+      note: s.energy.solar < 30 ? 'solar capacity low' : 'solar growing',
+    }),
+    optA: {
+      label: '🤝 Accept the trade deal',
+      consequence: 'Solar +8, Storage +6 · −4 Financial Stability (import dependency) · saves £5bn next turn',
+      effect: (s) => { s.energy.solar = Math.min(100, s.energy.solar + 8); s.energy.storage = Math.min(100, s.energy.storage + 6); s.financialStability = Math.max(0, s.financialStability - 4); s.nextTurnBudgetPenalty -= 5; },
+    },
+    optB: {
+      label: '🏭 Invest in domestic manufacturing instead',
+      consequence: 'Costs £8bn next turn · Solar +3, Storage +2 · +3 Social (UK jobs created)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.energy.solar = Math.min(100, s.energy.solar + 3); s.energy.storage = Math.min(100, s.energy.storage + 2); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    condition: (s) => s.energy.solar < 50,
+  },
+  {
+    id: 'mini_climate_finance',
+    icon: '💰',
+    title: 'Global South Climate Finance',
+    prompt: 'Developing nations demand the UK honour its climate finance commitments. Will you increase contributions?',
+    explanation: 'The UK promised billions in climate finance to developing nations at previous COPs. Honouring the commitment builds diplomatic capital and supports global emissions reduction — which ultimately reduces physical risks to the UK. Deferring saves money now but damages the UK\'s international standing and undermines the global effort.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Budget: £${Math.round(s.budget)}bn`,
+    }),
+    optA: {
+      label: '🌍 Honour commitments — increase contributions',
+      consequence: 'Costs £12bn next turn · +5 Social (moral leadership popular) · −0.02°C temperature (global effort)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.socialStability = Math.min(100, s.socialStability + 5); s.temperature = Math.max(1.1, s.temperature - 0.02); },
+    },
+    optB: {
+      label: '📉 Defer — domestic priorities first',
+      consequence: 'No cost · −4 Social (breaking promises unpopular) · no climate benefit',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 4); },
+    },
+    condition: (s) => s.turn >= 1 && s.budget > 50,
   },
 ];
 
