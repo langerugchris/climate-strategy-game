@@ -2394,7 +2394,7 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🌡️ UK Warming Pathway</span>
-          <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span></span>
+          <span class="metric-value"><span id="val-temp" aria-live="polite">1.1</span>°C <span class="metric-delta" id="delta-temp"></span></span>
         </div>
         <div class="bar-track temp-track" style="position:relative">
           <div class="temp-needle" id="bar-temp" style="left:5%"></div>
@@ -2424,7 +2424,7 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">⚡ Grid Reliability</span>
-          <span class="metric-value"><span id="val-grid">65</span>% <span class="metric-delta" id="delta-grid"></span><span class="proj-label" id="proj-grid"></span></span>
+          <span class="metric-value"><span id="val-grid" aria-live="polite">65</span>% <span class="metric-delta" id="delta-grid"></span><span class="proj-label" id="proj-grid"></span></span>
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-grid" style="width:65%"></div>
@@ -2438,7 +2438,7 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🏦 Financial Stability</span>
-          <span class="metric-value"><span id="val-fin">70</span>% <span class="metric-delta" id="delta-fin"></span><span class="proj-label" id="proj-fin"></span></span>
+          <span class="metric-value"><span id="val-fin" aria-live="polite">70</span>% <span class="metric-delta" id="delta-fin"></span><span class="proj-label" id="proj-fin"></span></span>
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-fin" style="width:70%"></div>
@@ -2452,7 +2452,7 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🏘️ Social Stability</span>
-          <span class="metric-value"><span id="val-soc">75</span>% <span class="metric-delta" id="delta-soc"></span><span class="proj-label" id="proj-soc"></span></span>
+          <span class="metric-value"><span id="val-soc" aria-live="polite">75</span>% <span class="metric-delta" id="delta-soc"></span><span class="proj-label" id="proj-soc"></span></span>
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill" id="bar-soc" style="width:75%"></div>
@@ -2466,7 +2466,7 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🌱 Net Zero Progress</span>
-          <span class="metric-value"><span id="val-nz">0</span>% <span class="metric-delta" id="delta-nz"></span><span class="proj-label" id="proj-nz"></span></span>
+          <span class="metric-value"><span id="val-nz" aria-live="polite">0</span>% <span class="metric-delta" id="delta-nz"></span><span class="proj-label" id="proj-nz"></span></span>
         </div>
         <div class="bar-track" style="position:relative">
           <div class="bar-fill info" id="bar-nz" style="width:0%"></div>
@@ -4637,14 +4637,10 @@ class UI {
     if (hookBtn) {
       hookBtn.addEventListener('click', () => {
         document.getElementById('hook-screen').classList.add('hidden');
-        // Show scenario selection before advisor briefing
-        const scenarioScreen = document.getElementById('scenario-screen');
-        if (scenarioScreen) {
-          const sdl = document.getElementById('scenario-diff-label');
-          if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
-          scenarioScreen.classList.remove('hidden');
+        if (!tutorialMgr.hasSeen()) {
+          _initTutorial();
         } else {
-          document.getElementById('advisor-overlay').classList.remove('hidden');
+          _showScenarioScreen();
         }
       });
     }
@@ -4654,9 +4650,6 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
-        if (!tutorialMgr.hasSeen()) {
-          _initTutorial();
-        }
       });
     }
 
@@ -4727,10 +4720,11 @@ class UI {
       settingsBtn.addEventListener('click', () => {
         this._refreshHighScoreInSettings();
         settingsModal.classList.remove('hidden');
+        _trapFocus(settingsModal);
       });
     }
     if (settingsCloseBtn) {
-      settingsCloseBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+      settingsCloseBtn.addEventListener('click', () => { settingsModal.classList.add('hidden'); _releaseFocusTrap(); });
     }
     document.querySelectorAll('.diff-option').forEach(opt => {
       opt.addEventListener('click', () => {
@@ -5354,10 +5348,12 @@ class UI {
 
     this.elEventModal.classList.remove('hidden');
     soundMgr.event();
+    _trapFocus(this.elEventModal);
   }
 
   hideEventModal() {
     this.elEventModal.classList.add('hidden');
+    _releaseFocusTrap();
   }
 
   showEndgame(result) {
@@ -5449,6 +5445,7 @@ class UI {
     }
 
     this.elEndgame.classList.remove('hidden');
+    _trapFocus(this.elEndgame);
 
     // Staggered reveal of metric tiles
     const tiles = this.elEndgameMetrics.querySelectorAll('.endgame-metric-tile');
@@ -6565,6 +6562,46 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: FOCUS TRAP
+============================================================ */
+
+let _activeFocusTrap = null;
+
+function _trapFocus(container) {
+  _releaseFocusTrap();
+  const focusable = container.querySelectorAll(
+    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  );
+  if (focusable.length === 0) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  first.focus();
+
+  function handler(e) {
+    if (e.key === 'Escape') {
+      const dismiss = container.querySelector('[id$="-dismiss-btn"], [id$="-close-btn"], [id$="-skip-btn"]');
+      if (dismiss) dismiss.click();
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
+  container.addEventListener('keydown', handler);
+  _activeFocusTrap = { container, handler };
+}
+
+function _releaseFocusTrap() {
+  if (_activeFocusTrap) {
+    _activeFocusTrap.container.removeEventListener('keydown', _activeFocusTrap.handler);
+    _activeFocusTrap = null;
+  }
+}
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -6600,6 +6637,11 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// ===== Reduced-motion: disable SMIL animations on SVG turbines =====
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('animateTransform').forEach(el => el.remove());
+}
 
 // ===== Sound toggle button =====
 const _soundBtn = document.getElementById('sound-toggle');
@@ -6642,6 +6684,8 @@ function _initTutorial() {
   function dismiss() {
     tutorialMgr.markSeen();
     overlay.classList.add('hidden');
+    _releaseFocusTrap();
+    _showScenarioScreen();
   }
 
   nextBtn.addEventListener('click', () => {
@@ -6661,6 +6705,18 @@ function _initTutorial() {
 
   renderStep();
   overlay.classList.remove('hidden');
+  _trapFocus(overlay);
+}
+
+function _showScenarioScreen() {
+  const scenarioScreen = document.getElementById('scenario-screen');
+  if (scenarioScreen) {
+    const sdl = document.getElementById('scenario-diff-label');
+    if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
+    scenarioScreen.classList.remove('hidden');
+  } else {
+    document.getElementById('advisor-overlay').classList.remove('hidden');
+  }
 }
 
 // Register service worker for PWA offline support
