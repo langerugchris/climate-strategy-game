@@ -2142,6 +2142,210 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.4s ease;
+}
+#tutorial-overlay.hidden { display: none; }
+
+#tutorial-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 520px;
+  width: 92vw;
+  animation: slideUp 0.4s ease;
+  position: relative;
+}
+#tutorial-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-sm);
+  text-align: center;
+}
+.tutorial-step-icon {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: var(--gap-md);
+}
+.tutorial-step-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: var(--gap-sm);
+}
+.tutorial-step-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: var(--gap-lg);
+  font-family: var(--font-editorial);
+}
+.tutorial-step-body strong { color: var(--text-primary); }
+.tutorial-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: var(--gap-lg);
+}
+.tutorial-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background 0.3s;
+}
+.tutorial-pip.active { background: var(--accent-blue-lt); }
+.tutorial-pip.done { background: var(--status-good); }
+.tutorial-actions {
+  display: flex;
+  gap: var(--gap-md);
+  justify-content: center;
+}
+#tutorial-next-btn {
+  padding: 12px 32px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+#tutorial-next-btn:hover { background: var(--accent-blue-lt); }
+#tutorial-skip-btn {
+  padding: 12px 20px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+#tutorial-skip-btn:hover { color: var(--text-secondary); border-color: var(--border-strong); }
+
+/* ===== ENDGAME HISTORY CHARTS ===== */
+#endgame-charts {
+  margin: var(--gap-lg) 0;
+}
+#endgame-charts-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.history-chart {
+  margin-bottom: var(--gap-md);
+}
+.history-chart-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.history-chart-label .hc-final {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.history-chart-svg {
+  width: 100%;
+  height: 40px;
+  display: block;
+}
+.hc-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hc-area {
+  opacity: 0.1;
+}
+.hc-dot {
+  transition: r 0.2s;
+}
+.hc-dot:hover { r: 5; }
+.hc-target-line {
+  stroke-dasharray: 4 3;
+  stroke-width: 1;
+  opacity: 0.5;
+}
+.hc-year-label {
+  font-size: 8px;
+  fill: var(--text-muted);
+  text-anchor: middle;
+}
+
+/* ===== SOUND TOGGLE ===== */
+#sound-toggle {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+#sound-toggle:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+#sound-toggle.muted { opacity: 0.5; }
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .bar-fill, .temp-needle, .bar-ghost { transition: none !important; }
+  body { transition: none !important; }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+
+/* Focus trap for modals — keyboard users */
+.modal-focus-trap:focus { outline: none; }
 </style>
 </head>
 <body>
@@ -2162,7 +2366,8 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="sound-toggle" title="Toggle Sound" aria-label="Toggle sound effects">🔊</button>
+    <button id="settings-btn" title="Settings" aria-label="Open settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2178,7 +2383,7 @@ body { transition: filter 2s ease; }
 </header>
 
 <!-- ===== MAIN LAYOUT ===== -->
-<main id="game-main">
+<main id="game-main" role="main">
 
   <!-- LEFT: METRICS PANEL -->
   <aside class="panel" id="metrics-panel">
@@ -2327,9 +2532,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition">−</button>
-              <span class="block-count" id="count-energyTransition">0</span>
-              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition">+</button>
+              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition" aria-label="Remove Energy Transition block">−</button>
+              <span class="block-count" id="count-energyTransition" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition" aria-label="Add Energy Transition block">+</button>
             </div>
           </div>
         </div>
@@ -2353,9 +2558,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£35bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage">−</button>
-              <span class="block-count" id="count-gridAndStorage">0</span>
-              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage">+</button>
+              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage" aria-label="Remove Grid and Storage block">−</button>
+              <span class="block-count" id="count-gridAndStorage" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage" aria-label="Add Grid and Storage block">+</button>
             </div>
           </div>
         </div>
@@ -2379,9 +2584,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£25bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-adaptation" data-cat="adaptation">−</button>
-              <span class="block-count" id="count-adaptation">0</span>
-              <button class="block-btn" id="plus-adaptation" data-cat="adaptation">+</button>
+              <button class="block-btn" id="minus-adaptation" data-cat="adaptation" aria-label="Remove Adaptation block">−</button>
+              <span class="block-count" id="count-adaptation" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-adaptation" data-cat="adaptation" aria-label="Add Adaptation block">+</button>
             </div>
           </div>
         </div>
@@ -2405,9 +2610,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£20bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport">−</button>
-              <span class="block-count" id="count-socialSupport">0</span>
-              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport">+</button>
+              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport" aria-label="Remove Social Support block">−</button>
+              <span class="block-count" id="count-socialSupport" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport" aria-label="Add Social Support block">+</button>
             </div>
           </div>
         </div>
@@ -2430,9 +2635,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience">−</button>
-              <span class="block-count" id="count-financialResilience">0</span>
-              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience">+</button>
+              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience" aria-label="Remove Financial Resilience block">−</button>
+              <span class="block-count" id="count-financialResilience" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience" aria-label="Add Financial Resilience block">+</button>
             </div>
           </div>
         </div>
@@ -2455,9 +2660,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£15bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-research" data-cat="research">−</button>
-              <span class="block-count" id="count-research">0</span>
-              <button class="block-btn" id="plus-research" data-cat="research">+</button>
+              <button class="block-btn" id="minus-research" data-cat="research" aria-label="Remove Research block">−</button>
+              <span class="block-count" id="count-research" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-research" data-cat="research" aria-label="Add Research block">+</button>
             </div>
           </div>
         </div>
@@ -2900,7 +3105,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
-      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      <button id="end-turn-btn" aria-label="Advance to next period">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
 
@@ -2966,6 +3171,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="climate_emergency">
+        <span class="scenario-card-icon">🔥</span>
+        <div class="scenario-card-name">Climate Emergency</div>
+        <div class="scenario-card-desc">Years of inaction have left the UK dangerously behind. Temperature is already at tipping point territory. A massive emergency budget is your only hope.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£120bn/turn</span></div>
+          <div class="scenario-stat">Temperature: <span>1.5°C (critical)</span></div>
+          <div class="scenario-stat">Net Zero: <span>15% (far behind)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="austerity_britain">
+        <span class="scenario-card-icon">🪙</span>
+        <div class="scenario-card-name">Austerity Britain</div>
+        <div class="scenario-card-desc">Deep spending cuts have left public services hollowed out. Social trust is fragile, finances are tight, and the climate agenda competes with basic needs.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£55bn/turn</span></div>
+          <div class="scenario-stat">Social: <span>65% (fragile)</span></div>
+          <div class="scenario-stat">Financial: <span>55% (constrained)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -2990,7 +3217,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- EVENT MODAL -->
-<div id="event-modal" class="hidden">
+<div id="event-modal" class="hidden" role="dialog" aria-label="Climate Event" aria-modal="true">
   <div id="event-card">
     <div id="event-icon-display">⚠️</div>
     <h2 id="event-title-display">Climate Event</h2>
@@ -3002,7 +3229,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- END GAME OVERLAY -->
-<div id="endgame-overlay" class="hidden">
+<div id="endgame-overlay" class="hidden" role="dialog" aria-label="Game Results" aria-modal="true">
   <div id="endgame-card">
     <div id="endgame-icon-display"></div>
     <h1 id="endgame-title-display"></h1>
@@ -3016,7 +3243,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- ADVISOR OVERLAY -->
-<div id="advisor-overlay" class="hidden">
+<div id="advisor-overlay" class="hidden" role="dialog" aria-label="Advisor Briefing" aria-modal="true">
   <div id="advisor-card">
     <div class="advisor-icon">📋</div>
     <h2>Chancellor's Briefing</h2>
@@ -3080,6 +3307,20 @@ body { transition: filter 2s ease; }
     <button class="mobile-tab" data-panel="log-panel">
       <span class="mobile-tab-icon">📋</span>Log
     </button>
+  </div>
+</div>
+
+<!-- ===== TUTORIAL OVERLAY ===== -->
+<div id="tutorial-overlay" class="hidden" role="dialog" aria-label="Game Tutorial" aria-modal="true">
+  <div id="tutorial-card">
+    <div class="tutorial-progress" id="tutorial-pips"></div>
+    <div class="tutorial-step-icon" id="tutorial-icon"></div>
+    <div class="tutorial-step-title" id="tutorial-title"></div>
+    <div class="tutorial-step-body" id="tutorial-body"></div>
+    <div class="tutorial-actions">
+      <button id="tutorial-skip-btn">Skip Tutorial</button>
+      <button id="tutorial-next-btn">Next</button>
+    </div>
   </div>
 </div>
 
@@ -3370,6 +3611,28 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  climate_emergency: {
+    label: 'Climate Emergency',
+    apply(state) {
+      state.temperature = 1.5;
+      state.netZeroProgress = 15;
+      state.energy.gas = 38;
+      state.energy.wind = 20;
+      state.energy.solar = 4;
+      state.socialStability = 60;
+      state._budgetOverride = 120;
+    },
+  },
+  austerity_britain: {
+    label: 'Austerity Britain',
+    apply(state) {
+      state._budgetOverride = 55;
+      state.socialStability = 65;
+      state.financialStability = 55;
+      state.socialCapital = 5;
+      state.infrastructure.socialSupport = 0;
     },
   },
 };
@@ -4307,8 +4570,10 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          soundMgr.deallocate();
         } else {
-          this.engine.allocateBlock(cat);
+          const result = this.engine.allocateBlock(cat);
+          if (result.success) soundMgr.allocate();
         }
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
@@ -4389,6 +4654,9 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (!tutorialMgr.hasSeen()) {
+          _initTutorial();
+        }
       });
     }
 
@@ -4412,6 +4680,7 @@ class UI {
       this.elNoSpendWarning.classList.add('hidden');
 
       this.elEndTurnBtn.disabled = true;
+      soundMgr.advance();
       await runSimulationPhase(this.engine, this, effectsMgr);
       this.elEndTurnBtn.disabled = false;
     });
@@ -4535,6 +4804,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-charts')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -5083,6 +5353,7 @@ class UI {
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
 
     this.elEventModal.classList.remove('hidden');
+    soundMgr.event();
   }
 
   hideEventModal() {
@@ -5143,6 +5414,9 @@ class UI {
     // Build radar chart SVG
     const radarHtml = this._buildRadarChart(score);
 
+    // Build history charts
+    const historyChartsHtml = this._buildHistoryCharts();
+
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
 
@@ -5165,7 +5439,14 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', historyChartsHtml + timelineHtml + achievementsHtml);
+
+    // Play endgame sound
+    if (result.scenario === 'ORDERLY' || result.scenario === 'MANAGED') {
+      soundMgr.success();
+    } else {
+      soundMgr.failure();
+    }
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5261,6 +5542,77 @@ class UI {
       </div>`;
     }
     html += `</div></div>`;
+    return html;
+  }
+
+  // ===== ENDGAME HISTORY CHARTS =====
+  _buildHistoryCharts() {
+    const data = turnHistory.data;
+    if (data.length < 2) return '';
+
+    const charts = [
+      { key: 'temperature', label: '🌡️ Temperature', color: '#ff7043', min: 1.0, max: 3.0, unit: '°C', decimals: 1, target: 2.0, targetLabel: '2°C Paris limit', invert: true },
+      { key: 'gridReliability', label: '⚡ Grid Reliability', color: '#4caf81', min: 0, max: 100, unit: '%', decimals: 0, target: 40, targetLabel: '40% cascade risk' },
+      { key: 'financialStability', label: '🏦 Financial Stability', color: '#5390d9', min: 0, max: 100, unit: '%', decimals: 0, target: 40, targetLabel: '40% contagion risk' },
+      { key: 'socialStability', label: '🏘️ Social Stability', color: '#ffd600', min: 0, max: 100, unit: '%', decimals: 0, target: 40, targetLabel: '40% collapse risk' },
+      { key: 'netZeroProgress', label: '🌱 Net Zero Progress', color: '#448aff', min: 0, max: 100, unit: '%', decimals: 0, target: 100, targetLabel: '100% target', invert: false, targetGood: true },
+    ];
+
+    let html = `<div id="endgame-charts"><div id="endgame-charts-title">Performance Trajectory</div>`;
+
+    for (const chart of charts) {
+      const series = data.map(d => d[chart.key]);
+      const finalVal = chart.decimals ? series[series.length - 1].toFixed(chart.decimals) : Math.round(series[series.length - 1]);
+      const firstVal = series[0];
+      const lastVal = series[series.length - 1];
+      const trend = chart.invert ? (lastVal < firstVal ? 'good' : lastVal > firstVal ? 'danger' : '') : (lastVal > firstVal ? 'good' : lastVal < firstVal ? 'danger' : '');
+      const finalClass = trend === 'good' ? 'color:var(--status-good)' : trend === 'danger' ? 'color:var(--status-danger)' : 'color:var(--text-primary)';
+
+      const w = 400, h = 40, padX = 30, padY = 4;
+      const range = (chart.max - chart.min) || 1;
+      const points = series.map((v, i) => {
+        const x = padX + (i / Math.max(series.length - 1, 1)) * (w - padX * 2);
+        const y = padY + (1 - (v - chart.min) / range) * (h - padY * 2);
+        return { x, y, v };
+      });
+
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaPath = linePath + ` L${points[points.length - 1].x.toFixed(1)},${h} L${points[0].x.toFixed(1)},${h} Z`;
+
+      const dots = points.map(p => {
+        const label = chart.decimals ? p.v.toFixed(chart.decimals) : Math.round(p.v);
+        return `<circle class="hc-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${chart.color}"><title>${label}${chart.unit}</title></circle>`;
+      }).join('');
+
+      const years = data.map((d, i) => {
+        const x = padX + (i / Math.max(data.length - 1, 1)) * (w - padX * 2);
+        return `<text class="hc-year-label" x="${x.toFixed(1)}" y="${h - 1}">${d.year}</text>`;
+      }).join('');
+
+      let targetLine = '';
+      if (chart.target !== undefined) {
+        const ty = padY + (1 - (chart.target - chart.min) / range) * (h - padY * 2);
+        const tColor = chart.targetGood ? 'var(--status-good)' : 'var(--status-danger)';
+        targetLine = `<line class="hc-target-line" x1="${padX}" y1="${ty.toFixed(1)}" x2="${w - padX}" y2="${ty.toFixed(1)}" stroke="${tColor}"/>
+          <text x="${w - padX + 4}" y="${ty.toFixed(1)}" dominant-baseline="middle" fill="${tColor}" font-size="7" opacity="0.7">${chart.targetLabel}</text>`;
+      }
+
+      html += `<div class="history-chart">
+        <div class="history-chart-label">
+          <span>${chart.label}</span>
+          <span class="hc-final" style="${finalClass}">${finalVal}${chart.unit}</span>
+        </div>
+        <svg class="history-chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+          <path class="hc-area" d="${areaPath}" fill="${chart.color}"/>
+          <path class="hc-line" d="${linePath}" stroke="${chart.color}"/>
+          ${targetLine}
+          ${dots}
+          ${years}
+        </svg>
+      </div>`;
+    }
+
+    html += `</div>`;
     return html;
   }
 
@@ -5485,6 +5837,177 @@ class EffectsManager {
       navigator.vibrate(patterns[style] || [35]);
     }
   }
+}
+
+/* ============================================================
+   MODULE: SOUND MANAGER
+============================================================ */
+
+class SoundManager {
+  constructor() {
+    this._KEY = 'uk_climate_sound_v1';
+    this._ctx = null;
+    this._enabled = this._loadPref();
+    this._initialized = false;
+  }
+
+  _loadPref() {
+    try { return localStorage.getItem(this._KEY) !== 'off'; } catch { return true; }
+  }
+
+  _savePref() {
+    try { localStorage.setItem(this._KEY, this._enabled ? 'on' : 'off'); } catch {}
+  }
+
+  _initContext() {
+    if (this._initialized) return;
+    try {
+      this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this._initialized = true;
+    } catch {}
+  }
+
+  get enabled() { return this._enabled; }
+
+  toggle() {
+    this._enabled = !this._enabled;
+    this._savePref();
+    return this._enabled;
+  }
+
+  _tone(freq, duration, type = 'sine', volume = 0.15) {
+    if (!this._enabled) return;
+    this._initContext();
+    if (!this._ctx) return;
+    const osc = this._ctx.createOscillator();
+    const gain = this._ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(volume, this._ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this._ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(this._ctx.destination);
+    osc.start();
+    osc.stop(this._ctx.currentTime + duration);
+  }
+
+  click() {
+    this._tone(800, 0.06, 'square', 0.05);
+  }
+
+  allocate() {
+    this._tone(520, 0.08, 'sine', 0.1);
+    setTimeout(() => this._tone(660, 0.08, 'sine', 0.1), 60);
+  }
+
+  deallocate() {
+    this._tone(440, 0.08, 'sine', 0.08);
+    setTimeout(() => this._tone(350, 0.08, 'sine', 0.08), 60);
+  }
+
+  advance() {
+    [440, 554, 659].forEach((f, i) =>
+      setTimeout(() => this._tone(f, 0.15, 'sine', 0.1), i * 100)
+    );
+  }
+
+  warning() {
+    this._tone(280, 0.3, 'sawtooth', 0.08);
+    setTimeout(() => this._tone(220, 0.4, 'sawtooth', 0.08), 250);
+  }
+
+  event() {
+    this._tone(200, 0.2, 'square', 0.06);
+    setTimeout(() => this._tone(160, 0.3, 'square', 0.08), 150);
+  }
+
+  success() {
+    [523, 659, 784, 1047].forEach((f, i) =>
+      setTimeout(() => this._tone(f, 0.25, 'sine', 0.1), i * 120)
+    );
+  }
+
+  failure() {
+    [392, 349, 311, 261].forEach((f, i) =>
+      setTimeout(() => this._tone(f, 0.3, 'sawtooth', 0.06), i * 180)
+    );
+  }
+
+  miniEvent() {
+    this._tone(440, 0.1, 'triangle', 0.08);
+    setTimeout(() => this._tone(554, 0.15, 'triangle', 0.1), 80);
+  }
+
+  turnTick() {
+    this._tone(600, 0.04, 'sine', 0.04);
+  }
+}
+
+/* ============================================================
+   MODULE: TUTORIAL MANAGER
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_v1';
+    this._step = 0;
+    this._steps = [
+      {
+        icon: '♛',
+        title: 'Welcome, Prime Minister',
+        body: 'You are leading the UK\'s climate transition from 2025 to 2050. Every five years, you\'ll allocate a limited budget across competing priorities. There are <strong>no right answers</strong> — only trade-offs.',
+      },
+      {
+        icon: '📊',
+        title: 'National Indicators',
+        body: 'The <strong>left panel</strong> shows your key metrics: temperature, grid reliability, financial stability, social stability, and Net Zero progress. Keep them balanced — if any metric hits zero, the game ends in breakdown.',
+      },
+      {
+        icon: '💡',
+        title: 'Investment Decisions',
+        body: 'The <strong>centre panel</strong> is where you allocate budget blocks. Each investment category has different effects. You can assign up to <strong>2 blocks per category</strong> each turn. Hover over metric names for detailed tooltips.',
+      },
+      {
+        icon: '⚖️',
+        title: 'The Core Trade-off',
+        body: 'Investing heavily in <strong>Energy Transition</strong> drives Net Zero progress — but creates stranded assets and can destabilise finances. <strong>Grid &amp; Storage</strong> keeps the lights on. <strong>Social Support</strong> maintains public consent. Neglect any pillar and the others eventually crumble.',
+      },
+      {
+        icon: '⚡',
+        title: 'Events & Mini-Decisions',
+        body: 'During each 5-year simulation, <strong>random events</strong> (floods, heatwaves, crises) can strike — and you\'ll face <strong>mini-decisions</strong> with real consequences. <strong>Adaptation</strong> investment reduces event damage by up to 50%.',
+      },
+      {
+        icon: '🎯',
+        title: 'Your Mission',
+        body: 'Reach <strong>Net Zero by 2050</strong> while keeping society stable. Your final score (out of 100) measures climate performance, transition progress, stability, and resilience. Good luck — the clock is ticking.',
+      },
+    ];
+  }
+
+  hasSeen() {
+    try { return localStorage.getItem(this._KEY) === 'seen'; } catch { return false; }
+  }
+
+  markSeen() {
+    try { localStorage.setItem(this._KEY, 'seen'); } catch {}
+  }
+
+  get totalSteps() { return this._steps.length; }
+  get currentStep() { return this._step; }
+  get isLastStep() { return this._step >= this._steps.length - 1; }
+
+  getStepData() { return this._steps[this._step]; }
+
+  next() {
+    if (this._step < this._steps.length - 1) {
+      this._step++;
+      return true;
+    }
+    return false;
+  }
+
+  reset() { this._step = 0; }
 }
 
 /* ============================================================
@@ -5724,6 +6247,98 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_eu_carbon_border',
+    icon: '🇪🇺',
+    title: 'EU Carbon Border Tax',
+    prompt: 'The EU has imposed a carbon border adjustment mechanism. UK exports face steep tariffs unless carbon standards align.',
+    explanation: 'The EU\'s CBAM penalises imports from countries with weaker carbon pricing. Aligning UK standards accelerates your net zero transition but raises costs for heavy industry. Negotiating an exemption preserves trade flows but undermines international climate credibility.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Financial: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '📋 Align UK carbon pricing with EU standards',
+      consequence: '+8% Net Zero progress · −4 Financial (higher industrial costs) · builds international credibility',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    optB: {
+      label: '🤝 Negotiate bilateral exemption deal',
+      consequence: '+3 Financial (trade preserved) · −3% Net Zero (weaker standards) · costs £4bn',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.financialStability = Math.min(100, s.financialStability + 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); },
+    },
+    condition: (s) => s.netZeroProgress > 20 && s.netZeroProgress < 90,
+  },
+  {
+    id: 'mini_global_summit',
+    icon: '🌍',
+    title: 'Global Climate Summit',
+    prompt: 'A landmark climate summit is demanding ambitious new pledges. How does the UK respond?',
+    explanation: 'International climate conferences create pressure to accelerate domestic targets. An ambitious pledge signals leadership but binds you to faster (more expensive) action. A cautious commitment preserves flexibility but risks diplomatic isolation and investor uncertainty.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Budget: £${Math.round(s.budget)}bn`,
+    }),
+    optA: {
+      label: '🏆 Announce ambitious accelerated pledge',
+      consequence: '+10% Net Zero · +5 Social (national pride) · costs £10bn (implementation commitment)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.netZeroProgress = Math.min(100, s.netZeroProgress + 10); s.socialStability = Math.min(100, s.socialStability + 5); },
+    },
+    optB: {
+      label: '🕊️ Make cautious realistic commitment',
+      consequence: '+3% Net Zero · −3 Social (public disappointed) · no extra cost',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    condition: () => true,
+  },
+  {
+    id: 'mini_china_solar',
+    icon: '🇨🇳',
+    title: 'China Solar Subsidy War',
+    prompt: 'China is flooding the market with cheap solar panels. UK manufacturers cannot compete.',
+    explanation: 'Cheap Chinese panels would accelerate UK solar buildout dramatically — but would destroy the nascent domestic manufacturing base. Tariffs protect UK jobs and supply chain security, but slow the transition and raise costs.',
+    contextFn: (s) => ({
+      label: 'Solar Capacity',
+      value: `${Math.round(s.energy.solar)}`,
+      note: `Social: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '☀️ Accept cheap imports — maximise solar buildout',
+      consequence: 'Solar +12 · +5% Net Zero · −5 Social (UK factory closures) · −3 Financial',
+      effect: (s) => { s.energy.solar = Math.min(100, s.energy.solar + 12); s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.max(0, s.socialStability - 5); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '🏭 Impose tariffs — protect domestic industry',
+      consequence: 'Solar +4 · +3 Social (jobs protected) · costs £5bn (domestic subsidy)',
+      effect: (s) => { s.energy.solar = Math.min(100, s.energy.solar + 4); s.socialStability = Math.min(100, s.socialStability + 3); s.nextTurnBudgetPenalty += 5; },
+    },
+    condition: (s) => s.energy.solar < 60,
+  },
+  {
+    id: 'mini_oil_crisis',
+    icon: '🛢️',
+    title: 'Middle East Oil Crisis',
+    prompt: 'Geopolitical tensions have caused a sudden spike in global oil and gas prices.',
+    explanation: 'An oil price shock is painful in the short term — energy bills surge and public anger rises. But it also makes renewables relatively cheaper and strengthens the case for energy independence. You can cushion the blow with subsidies, or use the crisis to accelerate the transition.',
+    contextFn: (s) => ({
+      label: 'Gas Share',
+      value: `${Math.round(s.energy.gas)}`,
+      note: `Social: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '💷 Subsidise energy bills to cushion the shock',
+      consequence: 'Costs £12bn · maintains Social · gas dependency unchanged',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; },
+    },
+    optB: {
+      label: '⚡ Use the crisis to fast-track renewables',
+      consequence: '−8 Social (short-term pain) · Wind +6, Solar +4 · +6% Net Zero · Gas −5',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 8); s.energy.wind = Math.min(120, s.energy.wind + 6); s.energy.solar = Math.min(100, s.energy.solar + 4); s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.energy.gas = Math.max(0, s.energy.gas - 5); },
+    },
+    condition: (s) => s.energy.gas > 10,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5744,6 +6359,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
+    soundMgr.turnTick();
     await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
@@ -5751,6 +6367,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
       if (eligible.length > 0) {
         const evt = eligible[Math.floor(Math.random() * eligible.length)];
         fxMgr.haptic('medium');
+        soundMgr.miniEvent();
         await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
         minisFired++;
       }
@@ -5955,6 +6572,8 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const soundMgr     = new SoundManager();
+const tutorialMgr  = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -5981,6 +6600,68 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// ===== Sound toggle button =====
+const _soundBtn = document.getElementById('sound-toggle');
+if (_soundBtn) {
+  _soundBtn.textContent = soundMgr.enabled ? '\uD83D\uDD0A' : '\uD83D\uDD07';
+  _soundBtn.classList.toggle('muted', !soundMgr.enabled);
+  _soundBtn.addEventListener('click', () => {
+    const on = soundMgr.toggle();
+    _soundBtn.textContent = on ? '\uD83D\uDD0A' : '\uD83D\uDD07';
+    _soundBtn.classList.toggle('muted', !on);
+    if (on) soundMgr.click();
+  });
+}
+
+// ===== Tutorial init =====
+function _initTutorial() {
+  const overlay = document.getElementById('tutorial-overlay');
+  const pips    = document.getElementById('tutorial-pips');
+  const icon    = document.getElementById('tutorial-icon');
+  const title   = document.getElementById('tutorial-title');
+  const body    = document.getElementById('tutorial-body');
+  const nextBtn = document.getElementById('tutorial-next-btn');
+  const skipBtn = document.getElementById('tutorial-skip-btn');
+  if (!overlay || !nextBtn) return;
+
+  function renderStep() {
+    const data = tutorialMgr.getStepData();
+    icon.textContent = data.icon;
+    title.textContent = data.title;
+    body.innerHTML = data.body;
+    nextBtn.textContent = tutorialMgr.isLastStep ? 'Start Playing' : 'Next';
+    pips.innerHTML = '';
+    for (let i = 0; i < tutorialMgr.totalSteps; i++) {
+      const pip = document.createElement('div');
+      pip.className = 'tutorial-pip' + (i < tutorialMgr.currentStep ? ' done' : i === tutorialMgr.currentStep ? ' active' : '');
+      pips.appendChild(pip);
+    }
+  }
+
+  function dismiss() {
+    tutorialMgr.markSeen();
+    overlay.classList.add('hidden');
+  }
+
+  nextBtn.addEventListener('click', () => {
+    soundMgr.click();
+    if (tutorialMgr.isLastStep) {
+      dismiss();
+    } else {
+      tutorialMgr.next();
+      renderStep();
+    }
+  });
+
+  skipBtn.addEventListener('click', () => {
+    soundMgr.click();
+    dismiss();
+  });
+
+  renderStep();
+  overlay.classList.remove('hidden');
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
