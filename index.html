@@ -2075,6 +2075,213 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== WEATHER OVERLAY ===== */
+#weather-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+.rain-drop {
+  position: absolute;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(100,180,255,0.5));
+  animation: rain-fall linear infinite;
+}
+@keyframes rain-fall {
+  0%   { transform: translateY(-20px); opacity: 0.7; }
+  100% { transform: translateY(180px); opacity: 0; }
+}
+.cloud {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(100,120,150,0.15);
+  filter: blur(6px);
+  animation: cloud-drift linear infinite;
+}
+@keyframes cloud-drift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(820px); }
+}
+.sun-ray {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at 70% 10%, rgba(255,220,80,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+/* ===== BREAKTHROUGH BANNER ===== */
+#breakthrough-banner {
+  position: fixed;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #0c2a1a, #183828);
+  border: 2px solid var(--status-good);
+  border-radius: var(--radius-lg);
+  padding: 12px 24px;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  box-shadow: 0 8px 32px rgba(0,200,83,0.3);
+  transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 500px;
+  width: 90vw;
+}
+#breakthrough-banner.visible {
+  top: 80px;
+}
+#breakthrough-banner .bt-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+#breakthrough-banner .bt-text {
+  flex: 1;
+}
+#breakthrough-banner .bt-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--status-good);
+  margin-bottom: 2px;
+}
+#breakthrough-banner .bt-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ===== COP SUMMIT MINI-EVENT ===== */
+.cop-badge {
+  display: inline-block;
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(29,112,184,0.2);
+  color: var(--accent-blue-lt);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+/* ===== SOUND TOGGLE ===== */
+#sound-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+#sound-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+#sound-btn.muted { opacity: 0.5; }
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .rain-drop, .cloud { display: none !important; }
+}
+
+/* ===== FOCUS VISIBLE ===== */
+:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+.block-btn:focus-visible,
+.mini-btn:focus-visible,
+#end-turn-btn:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(83,144,217,0.3);
+}
+
+/* ===== ENDGAME COMPARISON ===== */
+#endgame-comparison {
+  margin: var(--gap-lg) 0;
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+}
+#endgame-comparison-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.comparison-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 5px 0;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.comparison-row:last-child { border-bottom: none; }
+.comp-label {
+  flex: 1;
+  color: var(--text-secondary);
+}
+.comp-yours {
+  width: 70px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.comp-optimal {
+  width: 70px;
+  text-align: right;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.comp-bar-track {
+  flex: 1;
+  max-width: 100px;
+  height: 6px;
+  background: var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+.comp-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.comp-bar-fill.good { background: var(--status-good); }
+.comp-bar-fill.warn { background: var(--status-warn); }
+.comp-bar-fill.danger { background: var(--status-danger); }
+
+/* ===== GLOBAL COOPERATION INDICATOR ===== */
+.metric-block.global-coop {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--gap-sm);
+  margin-top: var(--gap-sm);
+}
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2162,7 +2369,8 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="sound-btn" title="Toggle sound" aria-label="Toggle sound effects">🔊</button>
+    <button id="settings-btn" title="Settings" aria-label="Open settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2181,7 +2389,7 @@ body { transition: filter 2s ease; }
 <main id="game-main">
 
   <!-- LEFT: METRICS PANEL -->
-  <aside class="panel" id="metrics-panel">
+  <aside class="panel" id="metrics-panel" role="region" aria-label="National Indicators">
     <div class="panel-title">National Indicators</div>
     <div id="metrics-inner">
 
@@ -2270,6 +2478,19 @@ body { transition: filter 2s ease; }
         <div class="sparkline-container" id="spark-nz"></div>
       </div>
 
+      <!-- Global Cooperation -->
+      <div class="metric-block global-coop">
+        <div class="metric-label-row">
+          <span class="metric-name">🌍 Global Cooperation</span>
+          <span class="metric-value"><span id="val-coop">50</span>% <span class="metric-delta" id="delta-coop"></span></span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill info" id="bar-coop" style="width:50%"></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">International climate cooperation level</div>
+        <div class="sparkline-container" id="spark-coop"></div>
+      </div>
+
       <!-- Energy Mix -->
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
@@ -2303,7 +2524,7 @@ body { transition: filter 2s ease; }
   </aside>
 
   <!-- CENTRE: DECISIONS PANEL -->
-  <section class="panel" id="decisions-panel">
+  <section class="panel" id="decisions-panel" role="region" aria-label="Investment Decisions">
     <div id="decision-header">
       <div id="decision-header-top">
         <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
@@ -2900,12 +3121,12 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
-      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      <button id="end-turn-btn" aria-label="Advance to next turn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
 
   <!-- RIGHT: LOG PANEL -->
-  <aside class="panel" id="log-panel">
+  <aside class="panel" id="log-panel" role="region" aria-label="Policy Record">
     <div class="panel-title">Policy Record</div>
     <div id="log-scroll">
       <div class="log-entry welcome">
@@ -2966,6 +3187,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_crisis">
+        <span class="scenario-card-icon">⚡</span>
+        <div class="scenario-card-name">Energy Crisis</div>
+        <div class="scenario-card-desc">A global energy crisis has sent gas prices soaring. Grid reliability is fragile, but public urgency for change is high.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
+          <div class="scenario-stat">Grid: <span>45% (fragile)</span></div>
+          <div class="scenario-stat">Gas price: <span>+50% stranded risk</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="island_leader">
+        <span class="scenario-card-icon">🏝️</span>
+        <div class="scenario-card-name">Island Leader</div>
+        <div class="scenario-card-desc">The UK has positioned itself as a global climate leader. High cooperation, strong mandate — but the world is watching your every move.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Cooperation: <span>70% (high)</span></div>
+          <div class="scenario-stat">Expectations: <span>NZ by Turn 4</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -2989,8 +3232,17 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- BREAKTHROUGH BANNER -->
+<div id="breakthrough-banner" aria-live="polite">
+  <div class="bt-icon"></div>
+  <div class="bt-text">
+    <div class="bt-title"></div>
+    <div class="bt-desc"></div>
+  </div>
+</div>
+
 <!-- EVENT MODAL -->
-<div id="event-modal" class="hidden">
+<div id="event-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="event-title-display">
   <div id="event-card">
     <div id="event-icon-display">⚠️</div>
     <h2 id="event-title-display">Climate Event</h2>
@@ -3002,7 +3254,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- END GAME OVERLAY -->
-<div id="endgame-overlay" class="hidden">
+<div id="endgame-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="endgame-title-display">
   <div id="endgame-card">
     <div id="endgame-icon-display"></div>
     <h1 id="endgame-title-display"></h1>
@@ -3033,7 +3285,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- SETTINGS MODAL -->
-<div id="settings-modal" class="hidden">
+<div id="settings-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Settings">
   <div id="settings-card">
     <h2>⚙ Settings</h2>
     <div class="settings-section">
@@ -3170,6 +3422,69 @@ const RANDOM_EVENTS = [
 ];
 
 /* ============================================================
+   POSITIVE BREAKTHROUGH EVENTS
+============================================================ */
+
+const BREAKTHROUGH_EVENTS = [
+  {
+    id: 'BT_SOLAR_COST', icon: '☀️',
+    title: 'Solar Cost Breakthrough',
+    desc: 'New perovskite manufacturing slashes solar panel costs by 40%. Solar investment now yields dramatically higher returns.',
+    effects: { solar: 12, netZeroProgress: 5 },
+    condition: (s) => s.infrastructure.energyTransition >= 30 || (techTree._purchased.has('solar_supply_chain')),
+  },
+  {
+    id: 'BT_BATTERY', icon: '🔋',
+    title: 'Solid-State Battery Breakthrough',
+    desc: 'UK lab achieves commercial-grade solid-state batteries. Grid storage capacity jumps, reliability soars.',
+    effects: { storage: 15, gridReliability: 8 },
+    condition: (s) => s.infrastructure.gridAndStorage >= 35 || techTree._purchased.has('battery_density'),
+  },
+  {
+    id: 'BT_FUSION', icon: '⚛️',
+    title: 'Fusion Energy Milestone',
+    desc: 'UK\'s STEP programme achieves net-positive fusion energy. While commercial deployment is years away, nuclear confidence surges.',
+    effects: { nuclear: 8, netZeroProgress: 8, globalCooperation: 5 },
+    condition: (s) => s.energy.nuclear >= 18 && s.infrastructure.gridAndStorage >= 35,
+  },
+  {
+    id: 'BT_CARBON_CAPTURE', icon: '🏭',
+    title: 'Direct Air Capture at Scale',
+    desc: 'Industrial carbon capture costs fall below £80/tonne. Negative emissions become economically viable for the first time.',
+    effects: { netZeroProgress: 12, temperature: -0.05 },
+    condition: (s) => s.netZeroProgress >= 60 && techTree._purchased.size >= 2,
+  },
+  {
+    id: 'BT_GREEN_HYDROGEN', icon: '💨',
+    title: 'Green Hydrogen Pipeline',
+    desc: 'UK completes first commercial green hydrogen pipeline. Heavy industry can now decarbonise without shutting down.',
+    effects: { netZeroProgress: 8, financialStability: 5, gas: -5 },
+    condition: (s) => s.infrastructure.energyTransition >= 60 && s.energy.wind >= 40,
+  },
+  {
+    id: 'BT_COMMUNITY_ENERGY', icon: '🏘️',
+    title: 'Community Energy Revolution',
+    desc: 'Local energy cooperatives spread across the UK. Communities generate, store, and sell their own power — public trust in the transition surges.',
+    effects: { socialStability: 8, socialCapital: 6, gridReliability: 3 },
+    condition: (s) => s.infrastructure.socialSupport >= 40 && s.socialCapital >= 10,
+  },
+  {
+    id: 'BT_INSURANCE_INNOVATION', icon: '🛡️',
+    title: 'Climate Insurance Innovation',
+    desc: 'Parametric insurance products make climate risk transferable at scale. Property markets stabilise as adaptation confidence grows.',
+    effects: { financialStability: 10, propertyValue: 8 },
+    condition: (s) => s.infrastructure.financialResilience >= 30 && s.infrastructure.adaptation >= 25,
+  },
+  {
+    id: 'BT_GLOBAL_PACT', icon: '🌍',
+    title: 'Global Climate Pact',
+    desc: 'Major emitters sign binding targets at COP. Global cooperation reaches a new high, reducing UK warming pathway pressure.',
+    effects: { globalCooperation: 15, temperature: -0.08 },
+    condition: (s) => s.globalCooperation >= 55 && s.netZeroProgress >= 50,
+  },
+];
+
+/* ============================================================
    DIFFICULTY SYSTEM
 ============================================================ */
 
@@ -3221,6 +3536,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'diplomat', icon: '🌍', name: 'Global Diplomat', desc: 'Achieve 80%+ Global Cooperation', check: (s) => s.globalCooperation >= 80 },
+  { id: 'breakthrough', icon: '🔬', name: 'Eureka!', desc: 'Trigger a technology breakthrough', check: (s) => s._breakthroughFired === true },
 ];
 
 class AchievementManager {
@@ -3298,6 +3615,14 @@ const METRIC_TOOLTIPS = {
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
   },
+  coop: {
+    title: '🌍 Global Cooperation',
+    desc: 'The level of international alignment on climate action. Reflects COP summit outcomes, trade agreements, and the UK\'s diplomatic influence on other major emitters.',
+    drivers: '↑ Raised by: COP diplomacy choices, achieving Net Zero milestones, leading by example\n↓ Lowered by: slow domestic progress, isolationist trade policy, failing to meet pledges',
+    threshold: 'Above 60%: other nations accelerate action, reducing global warming pressure. Below 40%: UK efforts are undermined by rising global emissions.',
+    thresholdGood: true,
+    source: 'Inspired by NGFS global cooperation assumptions',
+  },
 };
 
 /* ============================================================
@@ -3370,6 +3695,26 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_crisis: {
+    label: 'Energy Crisis',
+    apply(state) {
+      state.gridReliability = 45;
+      state.energy.gas = 40;
+      state.strandedAssets = 25;
+      state.socialStability = 80;
+      state._budgetOverride = 90;
+    },
+  },
+  island_leader: {
+    label: 'Island Leader',
+    apply(state) {
+      state.globalCooperation = 70;
+      state.socialStability = 80;
+      state.netZeroProgress = 40;
+      state._budgetOverride = 110;
+      state._nzDeadlineTurn = 4;
     },
   },
 };
@@ -3517,6 +3862,7 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      globalCooperation: state.globalCooperation,
     });
   }
   reset() { this.data = []; }
@@ -3561,6 +3907,7 @@ class GameEngine {
       strandedAssets: 0,
       propertyValue: 100,
       socialCapital: 0,
+      globalCooperation: 50,
       currentDecisions: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -3712,6 +4059,7 @@ class GameEngine {
       gridReliability: s.gridReliability,
       financialStability: s.financialStability,
       socialStability: s.socialStability,
+      globalCooperation: s.globalCooperation,
       energy: Object.assign({}, s.energy),
     };
 
@@ -3738,10 +4086,24 @@ class GameEngine {
     s.currentRandomEvent = event;
     if (event) {
       s.eventCount++;
-      // Recalc formulas again after event damage
       this._recalcGrid();
       this._recalcFinancial();
       this._recalcSocial();
+    }
+
+    // Phase 7b: Positive breakthrough
+    const breakthrough = this._resolveBreakthrough();
+    if (breakthrough) {
+      this._recalcGrid();
+      this._recalcFinancial();
+      this._recalcSocial();
+    }
+
+    // Phase 7c: Global cooperation drift
+    if (s.netZeroProgress >= 60) {
+      s.globalCooperation = this._clamp(s.globalCooperation + 3, 0, 100);
+    } else if (s.netZeroProgress < 30 && s.turn >= 2) {
+      s.globalCooperation = this._clamp(s.globalCooperation - 4, 0, 100);
     }
 
     // Phase 8: Breakdown check
@@ -3763,12 +4125,14 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      breakthrough: breakthrough ? breakthrough.title : null,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
       afterGrid:     s.gridReliability,
       afterFin:      s.financialStability,
       afterSoc:      s.socialStability,
+      afterCoop:     s.globalCooperation,
     };
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
@@ -3791,7 +4155,7 @@ class GameEngine {
       endgame = evaluateEndgame(s);
     }
 
-    return { logEntry, event, endgame };
+    return { logEntry, event, endgame, breakthrough };
   }
 
   _applyInvestments() {
@@ -3906,6 +4270,11 @@ class GameEngine {
     }
 
     if (s.netZeroAchieved) delta *= 0.45;
+
+    // Global cooperation reduces warming (other nations acting too)
+    const coopFactor = 1 - (s.globalCooperation - 50) * 0.004;
+    delta *= Math.max(0.7, Math.min(1.3, coopFactor));
+
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
   }
 
@@ -3995,6 +4364,47 @@ class GameEngine {
     return { ...selectedEvent, appliedEffects: applied };
   }
 
+  _resolveBreakthrough() {
+    const s = this.state;
+    // Breakthroughs can only occur from turn 1 onward
+    if (s.turn < 1) return null;
+    // Max one breakthrough per game to keep them special
+    if (s._breakthroughFired) return null;
+    // Base probability: 15%, boosted by R&D investment
+    const rdBoost = techTree._purchased.size * 0.06;
+    const prob = Math.min(0.15 + rdBoost, 0.45);
+    if (Math.random() >= prob) return null;
+
+    const eligible = BREAKTHROUGH_EVENTS.filter(e => e.condition(s));
+    if (eligible.length === 0) return null;
+
+    const bt = eligible[Math.floor(Math.random() * eligible.length)];
+    // Apply effects
+    for (const [key, val] of Object.entries(bt.effects)) {
+      if (key === 'temperature') {
+        s.temperature = Math.round((s.temperature + val) * 100) / 100;
+      } else if (key === 'solar') {
+        s.energy.solar = this._clamp(s.energy.solar + val, 0, 100);
+      } else if (key === 'storage') {
+        s.energy.storage = this._clamp(s.energy.storage + val, 0, 100);
+      } else if (key === 'nuclear') {
+        s.energy.nuclear = this._clamp(s.energy.nuclear + val, 0, 80);
+      } else if (key === 'gas') {
+        s.energy.gas = this._clamp(s.energy.gas + val, 0, 100);
+      } else if (key === 'netZeroProgress') {
+        s.netZeroProgress = this._clamp(s.netZeroProgress + val, 0, 100);
+      } else if (key === 'socialCapital') {
+        s.socialCapital = this._clamp(s.socialCapital + val, 0, 60);
+      } else if (key === 'propertyValue') {
+        s.propertyValue = this._clamp(s.propertyValue + val, 0, 150);
+      } else if (s[key] !== undefined) {
+        s[key] = this._clamp(s[key] + val, 0, 100);
+      }
+    }
+    s._breakthroughFired = true;
+    return bt;
+  }
+
   _describeDecisions(d) {
     const out = [];
     if (d.energyTransition > 0)   out.push(`Energy Transition ×${d.energyTransition} (£${d.energyTransition * 30}bn)`);
@@ -4027,23 +4437,26 @@ class GameEngine {
 
 function calculateScore(state) {
   const s = state;
-  // Climate Score (0-30): based on how low temperature stayed
-  const tempScore = Math.round(Math.max(0, 30 - (s.temperature - 1.1) * 18));
+  // Climate Score (0-25): based on how low temperature stayed
+  const tempScore = Math.round(Math.max(0, 25 - (s.temperature - 1.1) * 15));
 
-  // Transition Score (0-30): Net Zero progress
-  const nzScore = Math.round((s.netZeroProgress / 100) * 30);
+  // Transition Score (0-25): Net Zero progress
+  const nzScore = Math.round((s.netZeroProgress / 100) * 25);
 
-  // Stability Score (0-30): financial + social average
+  // Stability Score (0-25): financial + social average
   const stabAvg = (s.financialStability + s.socialStability) / 2;
-  const stabScore = Math.round((stabAvg / 100) * 30);
+  const stabScore = Math.round((stabAvg / 100) * 25);
+
+  // Cooperation Score (0-15): global cooperation level
+  const coopScore = Math.round((s.globalCooperation / 100) * 15);
 
   // Resilience Score (0-10): adaptation built, events survived
   const adaptLevel = s.infrastructure.adaptation / 100;
   const eventPenalty = s.eventCount * 1.5;
   const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
 
-  const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
-  return { total, tempScore, nzScore, stabScore, resScore };
+  const total = Math.min(100, tempScore + nzScore + stabScore + coopScore + resScore);
+  return { total, tempScore, nzScore, stabScore, coopScore, resScore };
 }
 
 /* ============================================================
@@ -4068,6 +4481,7 @@ function evaluateEndgame(state) {
   const nzReached = s.netZeroProgress >= 100;
   const stabilityStrong = s.financialStability >= 70 && s.socialStability >= 70;
   const stabilityCollapsed = s.financialStability < 30 || s.socialStability < 30;
+  const coopBonus = s.globalCooperation >= 65;
 
   if (nzReached && stabilityStrong) {
     return {
@@ -4143,6 +4557,9 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
+  if (s.globalCooperation >= 65) {
+    parts.push(`The UK's diplomatic leadership at COP summits helped forge a genuine global coalition. International cooperation ensured that domestic decarbonisation was matched by action from other major emitters — without which temperature gains would have been eroded.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4174,6 +4591,9 @@ function buildHotHouseNarrative(s) {
 
   if (s.eventCount > 2) {
     parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, recovery time between shocks shrank until resilience collapsed entirely.`);
+  }
+  if (s.globalCooperation < 40) {
+    parts.push(`International cooperation collapsed as nations retreated into climate isolationism. Without coordinated global action, even the UK's domestic efforts were overwhelmed by rising emissions from other major economies.`);
   }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
@@ -4224,7 +4644,7 @@ function buildShareText(state, result) {
     MANAGED: '🌤️ Managed Transition',
   };
   const label = scenarios[result.scenario] || result.title;
-  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
+  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}% | Cooperation: ${Math.round(state.globalCooperation)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
 }
 
 /* ============================================================
@@ -4259,6 +4679,7 @@ class UI {
       { key: 'fin',   valId: 'val-fin',  barId: 'bar-fin',  deltaId: 'delta-fin' },
       { key: 'soc',   valId: 'val-soc',  barId: 'bar-soc',  deltaId: 'delta-soc' },
       { key: 'nz',    valId: 'val-nz',   barId: 'bar-nz',   deltaId: 'delta-nz' },
+      { key: 'coop',  valId: 'val-coop', barId: 'bar-coop', deltaId: 'delta-coop' },
     ];
 
     this.elSegWind    = document.getElementById('seg-wind');
@@ -4305,6 +4726,7 @@ class UI {
         const cat = btn.dataset.cat;
         const isMinus = btn.id.startsWith('minus-');
         effectsMgr.haptic('light');
+        soundMgr.playClick();
         if (isMinus) {
           this.engine.deallocateBlock(cat);
         } else {
@@ -4481,6 +4903,19 @@ class UI {
       currentDiffOpt.classList.add('selected');
     }
 
+    // Sound toggle
+    const soundBtn = document.getElementById('sound-btn');
+    if (soundBtn) {
+      if (!soundMgr.enabled) soundBtn.classList.add('muted');
+      soundBtn.textContent = soundMgr.enabled ? '🔊' : '🔇';
+      soundBtn.addEventListener('click', () => {
+        const on = soundMgr.toggle();
+        soundBtn.textContent = on ? '🔊' : '🔇';
+        soundBtn.classList.toggle('muted', !on);
+        if (on) soundMgr.playClick();
+      });
+    }
+
     // Scenario selection screen
     this._activeScenario = 'standard';
     document.querySelectorAll('.scenario-card').forEach(card => {
@@ -4535,6 +4970,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-comparison')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -4618,6 +5054,7 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    weatherFx.update(state);
   }
 
   _renderHeader(state) {
@@ -4655,6 +5092,7 @@ class UI {
       fin:  { val: state.financialStability, snap: state.lastSnapshot ? state.lastSnapshot.financialStability : null },
       soc:  { val: state.socialStability, snap: state.lastSnapshot ? state.lastSnapshot.socialStability : null },
       nz:   { val: state.netZeroProgress, snap: state.lastSnapshot ? state.lastSnapshot.netZeroProgress : null },
+      coop: { val: state.globalCooperation, snap: state.lastSnapshot ? state.lastSnapshot.globalCooperation : null },
     };
 
     for (const m of this.metrics) {
@@ -4665,7 +5103,7 @@ class UI {
       const bar = document.getElementById(m.barId);
       bar.style.width = Math.max(0, val) + '%';
       // Status colour
-      const status = m.key === 'nz'
+      const status = m.key === 'nz' || m.key === 'coop'
         ? (val >= 100 ? 'good' : val >= 60 ? 'info' : val >= 30 ? 'warn' : 'danger')
         : (val >= 60 ? 'good' : val >= 35 ? 'warn' : 'danger');
       bar.className = 'bar-fill ' + status;
@@ -4680,6 +5118,7 @@ class UI {
       { containerId: 'spark-fin',  key: 'financialStability', color: '#5390d9', invert: false, min: 0, max: 100 },
       { containerId: 'spark-soc',  key: 'socialStability', color: '#ffd600', invert: false, min: 0, max: 100 },
       { containerId: 'spark-nz',   key: 'netZeroProgress', color: '#448aff', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-coop', key: 'globalCooperation', color: '#b39ddb', invert: false, min: 0, max: 100 },
     ];
 
     for (const s of series) {
@@ -4998,6 +5437,11 @@ class UI {
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
 
+    // Breakthrough notice
+    if (entry.breakthrough) {
+      html += `<div class="log-text" style="color:var(--status-good);margin-top:4px;">✨ ${entry.breakthrough}</div>`;
+    }
+
     // Event notice
     if (entry.event) {
       html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
@@ -5010,6 +5454,9 @@ class UI {
     html += this._chip('Fin',  Math.round(entry.snapshot.financialStability), Math.round(entry.afterFin), false, '%');
     html += this._chip('Soc',  Math.round(entry.snapshot.socialStability), Math.round(entry.afterSoc), false, '%');
     html += this._chip('NZ',   Math.round(entry.snapshot.netZeroProgress), Math.round(entry.afterNZ), false, '%');
+    if (entry.afterCoop !== undefined) {
+      html += this._chip('Coop', Math.round(entry.snapshot.globalCooperation || 50), Math.round(entry.afterCoop), false, '%');
+    }
     html += '</div>';
 
     div.innerHTML = html;
@@ -5126,6 +5573,10 @@ class UI {
         <div class="endgame-metric-val ${socStatus}">${Math.round(s.socialStability)}%</div>
       </div>
       <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Global Cooperation</div>
+        <div class="endgame-metric-val ${s.globalCooperation >= 60 ? 'good' : s.globalCooperation >= 35 ? 'warn' : 'danger'}">${Math.round(s.globalCooperation)}%</div>
+      </div>
+      <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
       </div>`;
@@ -5156,16 +5607,20 @@ class UI {
         <div id="endgame-score-label">Your Climate Score</div>
         ${radarHtml}
         <div id="endgame-score-breakdown">
-          <div class="score-dim"><span class="score-dim-val">${score.tempScore}/30</span><span class="score-dim-name">Climate</span></div>
-          <div class="score-dim"><span class="score-dim-val">${score.nzScore}/30</span><span class="score-dim-name">Net Zero</span></div>
-          <div class="score-dim"><span class="score-dim-val">${score.stabScore}/30</span><span class="score-dim-name">Stability</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.tempScore}/25</span><span class="score-dim-name">Climate</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.nzScore}/25</span><span class="score-dim-name">Net Zero</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.stabScore}/25</span><span class="score-dim-name">Stability</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.coopScore}/15</span><span class="score-dim-name">Cooperation</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
         </div>
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    // Build comparison to optimal benchmarks
+    const comparisonHtml = this._buildComparisonTable(s);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', comparisonHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5182,11 +5637,44 @@ class UI {
     setTimeout(() => this.elEndgameNgfs.classList.add('revealed'), narrativeDelay + 400);
   }
 
+  _buildComparisonTable(state) {
+    const benchmarks = [
+      { label: 'Temperature', yours: state.temperature.toFixed(1) + '°C', optimal: '1.5°C', pct: Math.max(0, 100 - ((state.temperature - 1.1) / 1.9) * 100) },
+      { label: 'Net Zero Progress', yours: Math.round(state.netZeroProgress) + '%', optimal: '100%', pct: state.netZeroProgress },
+      { label: 'Grid Reliability', yours: Math.round(state.gridReliability) + '%', optimal: '85%+', pct: state.gridReliability },
+      { label: 'Financial Stability', yours: Math.round(state.financialStability) + '%', optimal: '75%+', pct: state.financialStability },
+      { label: 'Social Stability', yours: Math.round(state.socialStability) + '%', optimal: '75%+', pct: state.socialStability },
+      { label: 'Global Cooperation', yours: Math.round(state.globalCooperation) + '%', optimal: '70%+', pct: state.globalCooperation },
+    ];
+
+    let rows = benchmarks.map(b => {
+      const status = b.pct >= 70 ? 'good' : b.pct >= 40 ? 'warn' : 'danger';
+      return `<div class="comparison-row">
+        <span class="comp-label">${b.label}</span>
+        <span class="comp-yours">${b.yours}</span>
+        <div class="comp-bar-track"><div class="comp-bar-fill ${status}" style="width:${Math.max(2, b.pct)}%"></div></div>
+        <span class="comp-optimal">${b.optimal}</span>
+      </div>`;
+    }).join('');
+
+    return `<div id="endgame-comparison">
+      <div id="endgame-comparison-title">Your Result vs. Optimal Pathway</div>
+      <div class="comparison-row" style="border-bottom:none;padding-bottom:0;">
+        <span class="comp-label" style="font-weight:700;font-size:11px">Metric</span>
+        <span class="comp-yours" style="font-weight:700;font-size:11px;color:var(--accent-blue-lt)">Yours</span>
+        <span style="flex:1;max-width:100px;font-size:10px;text-align:center;color:var(--text-muted)"></span>
+        <span class="comp-optimal" style="font-weight:700;font-size:11px">Target</span>
+      </div>
+      ${rows}
+    </div>`;
+  }
+
   _buildRadarChart(score) {
     const dims = [
-      { label: 'Climate', val: score.tempScore, max: 30 },
-      { label: 'Net Zero', val: score.nzScore, max: 30 },
-      { label: 'Stability', val: score.stabScore, max: 30 },
+      { label: 'Climate', val: score.tempScore, max: 25 },
+      { label: 'Net Zero', val: score.nzScore, max: 25 },
+      { label: 'Stability', val: score.stabScore, max: 25 },
+      { label: 'Cooperation', val: score.coopScore, max: 15 },
       { label: 'Resilience', val: score.resScore, max: 10 },
     ];
     const cx = 110, cy = 110, r = 80;
@@ -5281,6 +5769,7 @@ class UI {
       '🏦 Financial Stability':'fin',
       '🏘️ Social Stability':   'soc',
       '🌱 Net Zero Progress':  'nz',
+      '🌍 Global Cooperation':  'coop',
     };
 
     document.querySelectorAll('.metric-name').forEach(el => {
@@ -5356,12 +5845,17 @@ class UI {
       msgs.push('Stranded fossil assets now exceed 50 — pension fund exposure is systemic. Financial Resilience investment or managed asset write-downs are required to stabilise the system.');
     }
 
+    if (state.globalCooperation < 35) {
+      msgs.push(`Global cooperation has fallen to ${Math.round(state.globalCooperation)}%. Without international alignment, the UK's domestic efforts are undermined by rising global emissions. COP diplomacy is critical.`);
+    }
+
     if (msgs.length === 0) {
       // Positive reinforcement
       const positives = [];
       if (state.netZeroProgress >= 80) positives.push('Net Zero is within reach this term.');
       if (state.gridReliability >= 80) positives.push('The grid is stable — renewables are well-supported by backup capacity.');
       if (state.financialStability >= 75 && state.socialStability >= 75) positives.push('Both financial and social stability remain strong — the transition is proceeding on a sound foundation.');
+      if (state.globalCooperation >= 70) positives.push('International cooperation is strong — the global community is aligned behind the transition.');
       if (positives.length > 0) msgs.push(positives[0]);
       else msgs.push('No critical risks identified this term. Maintain investment momentum.');
     }
@@ -5483,6 +5977,154 @@ class EffectsManager {
     if (navigator.vibrate) {
       const patterns = { light: [15], medium: [35], heavy: [55, 25, 55] };
       navigator.vibrate(patterns[style] || [35]);
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: WEATHER EFFECTS
+============================================================ */
+
+class WeatherEffects {
+  constructor() {
+    this._container = null;
+    this._active = false;
+  }
+
+  _ensureContainer() {
+    if (this._container) return;
+    const scene = document.getElementById('scene-section');
+    if (!scene) return;
+    const div = document.createElement('div');
+    div.id = 'weather-overlay';
+    scene.style.position = 'relative';
+    scene.appendChild(div);
+    this._container = div;
+  }
+
+  update(state) {
+    this._ensureContainer();
+    if (!this._container) return;
+
+    // Clear existing effects
+    this._container.innerHTML = '';
+
+    const temp = state.temperature;
+
+    // Rain: appears after events and at higher temperatures
+    if (temp > 1.6 && state.infrastructure.adaptation < 50) {
+      const intensity = Math.min(20, Math.floor((temp - 1.4) * 12));
+      for (let i = 0; i < intensity; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        drop.style.left = Math.random() * 100 + '%';
+        drop.style.height = (8 + Math.random() * 12) + 'px';
+        drop.style.animationDuration = (0.6 + Math.random() * 0.4) + 's';
+        drop.style.animationDelay = Math.random() * 2 + 's';
+        this._container.appendChild(drop);
+      }
+    }
+
+    // Clouds: increase with temperature
+    if (temp > 1.3) {
+      const numClouds = Math.min(4, Math.floor((temp - 1.1) * 3));
+      for (let i = 0; i < numClouds; i++) {
+        const cloud = document.createElement('div');
+        cloud.className = 'cloud';
+        cloud.style.width = (30 + Math.random() * 50) + 'px';
+        cloud.style.height = (15 + Math.random() * 20) + 'px';
+        cloud.style.top = (5 + Math.random() * 40) + 'px';
+        cloud.style.left = (-50 - Math.random() * 100) + 'px';
+        cloud.style.animationDuration = (20 + Math.random() * 30) + 's';
+        cloud.style.animationDelay = (i * 5 + Math.random() * 10) + 's';
+        this._container.appendChild(cloud);
+      }
+    }
+
+    // Sun rays: visible when temperature is low and renewables are strong
+    if (temp < 1.6 && (state.energy.solar > 20 || state.energy.wind > 40)) {
+      const ray = document.createElement('div');
+      ray.className = 'sun-ray';
+      ray.style.opacity = Math.max(0.3, 1 - (temp - 1.1) / 0.5);
+      this._container.appendChild(ray);
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: SOUND MANAGER
+============================================================ */
+
+class SoundManager {
+  constructor() {
+    this._KEY = 'uk_climate_sound';
+    this.enabled = this._load();
+    this._ctx = null;
+  }
+
+  _load() {
+    try { return localStorage.getItem(this._KEY) !== 'false'; } catch { return true; }
+  }
+
+  _save() {
+    try { localStorage.setItem(this._KEY, this.enabled ? 'true' : 'false'); } catch {}
+  }
+
+  toggle() {
+    this.enabled = !this.enabled;
+    this._save();
+    return this.enabled;
+  }
+
+  _getCtx() {
+    if (!this._ctx) {
+      try { this._ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch { return null; }
+    }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  }
+
+  _tone(freq, duration, type = 'sine', volume = 0.08) {
+    if (!this.enabled) return;
+    const ctx = this._getCtx();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(volume, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  }
+
+  playClick() { this._tone(800, 0.06, 'sine', 0.05); }
+
+  playAdvance() {
+    this._tone(440, 0.15, 'sine', 0.06);
+    setTimeout(() => this._tone(660, 0.15, 'sine', 0.06), 100);
+    setTimeout(() => this._tone(880, 0.2, 'sine', 0.06), 200);
+  }
+
+  playEvent() {
+    this._tone(220, 0.3, 'sawtooth', 0.04);
+    setTimeout(() => this._tone(180, 0.4, 'sawtooth', 0.04), 200);
+  }
+
+  playBreakthrough() {
+    this._tone(523, 0.15, 'sine', 0.06);
+    setTimeout(() => this._tone(659, 0.15, 'sine', 0.06), 120);
+    setTimeout(() => this._tone(784, 0.15, 'sine', 0.06), 240);
+    setTimeout(() => this._tone(1047, 0.3, 'sine', 0.06), 360);
+  }
+
+  playEndgame(isGood) {
+    if (isGood) {
+      [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => this._tone(f, 0.3, 'sine', 0.06), i * 200));
+    } else {
+      [440, 392, 349, 330].forEach((f, i) => setTimeout(() => this._tone(f, 0.4, 'sine', 0.05), i * 250));
     }
   }
 }
@@ -5702,6 +6344,53 @@ const MINI_EVENTS_POOL = [
     condition: (s) => s.energy.gas < 28 || s.infrastructure.energyTransition > 60,
   },
   {
+    id: 'mini_cop_summit',
+    icon: '🌍',
+    title: 'COP Climate Summit',
+    prompt: 'The UK is hosting COP this year. What position do you take?',
+    explanation: 'International climate summits shape global action. Ambitious pledges boost cooperation and can unlock international green finance — but they commit the UK to faster domestic action. A pragmatic approach keeps options open but risks losing global leadership.',
+    contextFn: (s) => ({
+      label: 'Global Cooperation',
+      value: `${Math.round(s.globalCooperation)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🌱 Announce ambitious binding targets',
+      consequence: '+12 Global Cooperation · +5 Net Zero momentum · −£8bn (implementation cost)',
+      effect: (s) => { s.globalCooperation = Math.min(100, s.globalCooperation + 12); s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.nextTurnBudgetPenalty += 8; },
+    },
+    optB: {
+      label: '🤝 Take a pragmatic consensus approach',
+      consequence: '+5 Global Cooperation · +3 Financial Stability · no domestic pressure',
+      effect: (s) => { s.globalCooperation = Math.min(100, s.globalCooperation + 5); s.financialStability = Math.min(100, s.financialStability + 3); },
+    },
+    condition: (s) => true,
+    _isCOP: true,
+  },
+  {
+    id: 'mini_trade_deal',
+    icon: '🤝',
+    title: 'Green Trade Agreement',
+    prompt: 'The EU proposes a carbon border adjustment. How does the UK respond?',
+    explanation: 'The EU\'s Carbon Border Adjustment Mechanism (CBAM) taxes imports based on their carbon content. Joining it aligns UK climate standards with Europe — boosting cooperation but raising costs for some importers. Opposing it preserves trade flexibility but isolates the UK from the world\'s largest green market.',
+    contextFn: (s) => ({
+      label: 'Global Cooperation',
+      value: `${Math.round(s.globalCooperation)}%`,
+      note: `Financial: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🇪🇺 Join the EU carbon border mechanism',
+      consequence: '+8 Global Cooperation · +6 Net Zero · −4 Financial Stability (transition costs)',
+      effect: (s) => { s.globalCooperation = Math.min(100, s.globalCooperation + 8); s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    optB: {
+      label: '🇬🇧 Maintain independent trade policy',
+      consequence: '−3 Global Cooperation · +5 Financial Stability · trade flexibility preserved',
+      effect: (s) => { s.globalCooperation = Math.max(0, s.globalCooperation - 3); s.financialStability = Math.min(100, s.financialStability + 5); },
+    },
+    condition: (s) => s.globalCooperation >= 30,
+  },
+  {
     id: 'mini_nuclear_delay',
     icon: '⚛️',
     title: 'Nuclear Plant Delay',
@@ -5778,10 +6467,18 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
+  // Show breakthrough banner if one occurred
+  if (result.breakthrough) {
+    soundMgr.playBreakthrough();
+    _showBreakthroughBanner(result.breakthrough);
+  }
+
   if (result.endgame) {
     // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
+    const isGoodEnd = result.endgame.scenario === 'ORDERLY' || result.endgame.scenario === 'TURBULENT';
+    soundMgr.playEndgame(isGoodEnd);
     if (result.event) {
       fxMgr.haptic('heavy');
       fxMgr.shake();
@@ -5793,13 +6490,13 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   } else if (result.event) {
     fxMgr.haptic('heavy');
     fxMgr.shake();
+    soundMgr.playEvent();
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
   } else {
-    // Auto-save mid-game progress
+    soundMgr.playAdvance();
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
@@ -5854,6 +6551,7 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 
     panel.innerHTML = `
       <div class="mini-event-icon">${evt.icon}</div>
+      ${evt._isCOP ? '<div class="cop-badge">International Summit</div>' : ''}
       <div class="mini-event-year">${year}</div>
       <div class="mini-event-title">${evt.title}</div>
       <div class="mini-event-prompt">${evt.prompt}</div>
@@ -5882,6 +6580,16 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
     panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
     panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
   });
+}
+
+function _showBreakthroughBanner(bt) {
+  const banner = document.getElementById('breakthrough-banner');
+  if (!banner) return;
+  banner.querySelector('.bt-icon').textContent = bt.icon;
+  banner.querySelector('.bt-title').textContent = bt.title;
+  banner.querySelector('.bt-desc').textContent = bt.desc;
+  banner.classList.add('visible');
+  setTimeout(() => banner.classList.remove('visible'), 4500);
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -5955,6 +6663,8 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const weatherFx    = new WeatherEffects();
+const soundMgr     = new SoundManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
