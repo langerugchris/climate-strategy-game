@@ -2432,7 +2432,7 @@ button:focus-visible {
 </header>
 
 <!-- ===== NEWS TICKER ===== -->
-<div id="news-ticker" class="hidden" aria-label="News headlines" role="marquee">
+<div id="news-ticker" class="hidden" aria-label="News headlines" role="region">
   <div id="news-ticker-label">BREAKING</div>
   <div id="news-ticker-track">
     <div id="news-ticker-content" aria-live="off"></div>
@@ -2440,7 +2440,7 @@ button:focus-visible {
 </div>
 
 <!-- ===== MAIN LAYOUT ===== -->
-<main id="game-main" role="main">
+<main id="game-main">
 
   <!-- LEFT: METRICS PANEL -->
   <aside class="panel" id="metrics-panel" role="region" aria-label="National indicators">
@@ -6616,8 +6616,6 @@ class NewsTicker {
   show() {
     if (!this._headlines.length || !this.contentEl) return;
     const sources = this._sources();
-    const sourceMap = {};
-    sources.forEach(s => sourceMap[s.cls] = s);
 
     this.contentEl.innerHTML = this._headlines.map((h, i) => {
       const src = sources.find(s => s.cls === h.s) || sources[0];
@@ -6713,7 +6711,7 @@ function buildHistoryChart(historyData) {
 
   for (let i = 0; i < n; i++) {
     const x = pad + i * xStep;
-    const year = 2025 + i * 5;
+    const year = historyData[i].year || (2025 + i * 5);
     svg += `<text x="${x}" y="${h - 5}" text-anchor="middle" fill="#909cb8" font-size="8" font-family="monospace">${year}</text>`;
   }
 
@@ -6749,8 +6747,8 @@ function buildEfficiencyReport(state, turnHistory) {
   const nzGain = state.netZeroProgress - 35;
   const avgStability = (state.financialStability + state.socialStability) / 2;
 
-  const costPerNZ = nzGain > 0 ? (totalSpent / nzGain).toFixed(1) : '—';
-  const costPerDegree = tempDelta > 0.01 ? (totalSpent / tempDelta).toFixed(0) : '—';
+  const costPerNZ = nzGain > 0 && totalSpent > 0 ? (totalSpent / nzGain).toFixed(1) : '—';
+  const warmingPerSpend = tempDelta > 0.01 && totalSpent > 0 ? (tempDelta / (totalSpent / 100)).toFixed(2) + '°C' : 'minimal';
 
   const stabilityGrade = avgStability >= 70 ? 'good' : avgStability >= 45 ? 'warn' : 'poor';
   const tempGrade = state.temperature <= 1.5 ? 'good' : state.temperature <= 2.0 ? 'warn' : 'poor';
@@ -6759,7 +6757,7 @@ function buildEfficiencyReport(state, turnHistory) {
   let html = `<div class="efficiency-title">Policy Efficiency Analysis</div>`;
   html += `<div class="efficiency-row"><span class="efficiency-label">Total Investment</span><span class="efficiency-value">£${totalSpent}bn</span></div>`;
   html += `<div class="efficiency-row"><span class="efficiency-label">Cost per Net Zero %</span><span class="efficiency-value ${nzGrade}">£${costPerNZ}bn</span></div>`;
-  html += `<div class="efficiency-row"><span class="efficiency-label">Warming per £100bn</span><span class="efficiency-value ${tempGrade}">${tempDelta > 0.01 ? (tempDelta / (totalSpent / 100)).toFixed(2) + '°C' : 'minimal'}</span></div>`;
+  html += `<div class="efficiency-row"><span class="efficiency-label">Warming per £100bn</span><span class="efficiency-value ${tempGrade}">${warmingPerSpend}</span></div>`;
   html += `<div class="efficiency-row"><span class="efficiency-label">Final Temperature</span><span class="efficiency-value ${tempGrade}">${state.temperature.toFixed(1)}°C</span></div>`;
   html += `<div class="efficiency-row"><span class="efficiency-label">Average Stability</span><span class="efficiency-value ${stabilityGrade}">${Math.round(avgStability)}%</span></div>`;
   html += `<div class="efficiency-row"><span class="efficiency-label">Events Weathered</span><span class="efficiency-value">${state.eventCount}</span></div>`;
