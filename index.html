@@ -2142,6 +2142,217 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== NEWS TICKER ===== */
+#news-ticker {
+  overflow: hidden;
+  position: relative;
+  height: 20px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.ticker-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s ease;
+}
+.ticker-item {
+  height: 20px;
+  line-height: 20px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-family: var(--font-editorial);
+  font-style: italic;
+}
+.ticker-item .ticker-tag {
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-right: 5px;
+  font-family: var(--font-system);
+}
+.ticker-tag.breaking { background: #2a0e08; color: var(--status-danger); }
+.ticker-tag.update   { background: #1a2040; color: var(--accent-blue-lt); }
+.ticker-tag.progress { background: #0c2a1a; color: var(--status-good); }
+.ticker-tag.warning  { background: #2a2000; color: var(--status-warn); }
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  pointer-events: auto;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+}
+#tutorial-spotlight {
+  position: absolute;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.82);
+  transition: all 0.45s ease;
+  pointer-events: none;
+}
+#tutorial-card {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 380px;
+  width: 90vw;
+  z-index: 2;
+  animation: slideUp 0.3s ease;
+}
+#tutorial-step-indicator {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: var(--gap-md);
+}
+.tut-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background 0.2s;
+}
+.tut-pip.active { background: var(--accent-blue-lt); }
+.tut-pip.done   { background: var(--status-good); }
+#tutorial-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-sm);
+  text-align: center;
+}
+#tutorial-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: var(--gap-lg);
+  text-align: center;
+  font-family: var(--font-editorial);
+}
+#tutorial-actions {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: center;
+}
+#tutorial-actions button {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+}
+#tut-next-btn {
+  background: var(--accent-blue);
+  color: white;
+}
+#tut-next-btn:hover { background: var(--accent-blue-lt); }
+#tut-skip-btn {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong) !important;
+}
+#tut-skip-btn:hover { background: var(--border-strong); }
+
+/* ===== CONTEXTUAL HINTS ===== */
+#context-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 5px var(--gap-md);
+  background: rgba(29,112,184,0.06);
+  border-left: 2px solid var(--accent-blue-lt);
+  margin: 4px var(--gap-md) 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  line-height: 1.5;
+  animation: slideIn 0.3s ease-out;
+  flex-shrink: 0;
+}
+#context-hint.hidden { display: none; }
+#context-hint .hint-dismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 2px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+#context-hint .hint-dismiss:hover { opacity: 1; }
+
+/* ===== EMISSIONS TRAJECTORY CHART ===== */
+#endgame-trajectory {
+  margin: var(--gap-lg) 0;
+  text-align: center;
+}
+#endgame-trajectory-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+}
+#trajectory-svg {
+  width: 100%;
+  max-width: 500px;
+  display: block;
+  margin: 0 auto;
+}
+.traj-grid-line { stroke: var(--border-subtle); stroke-width: 0.5; }
+.traj-threshold { stroke-dasharray: 6 4; stroke-width: 1.5; }
+.traj-player-line { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.traj-dot { r: 4; }
+.traj-label { font-size: 9px; fill: var(--text-muted); font-family: var(--font-mono); }
+.traj-threshold-label { font-size: 10px; font-weight: 600; font-family: var(--font-mono); }
+
+/* ===== SOUND TOGGLE ===== */
+#sound-toggle {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+#sound-toggle:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+#sound-toggle.muted { opacity: 0.4; }
+
+@media (max-width: 430px) {
+  #news-ticker { max-width: 200px; }
+  #tutorial-card { padding: var(--gap-md); max-width: 92vw; }
+}
+@media (max-width: 768px) {
+  #news-ticker { max-width: 240px; }
+}
 </style>
 </head>
 <body>
@@ -2160,8 +2371,14 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <div id="news-ticker">
+      <div class="ticker-track" id="ticker-track">
+        <div class="ticker-item"><span class="ticker-tag update">2025</span>New government climate mandate begins</div>
+      </div>
+    </div>
   </div>
   <div id="header-right">
+    <button id="sound-toggle" title="Toggle sound">🔊</button>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2966,6 +3183,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="industrial_heartland">
+        <span class="scenario-card-icon">🏭</span>
+        <div class="scenario-card-name">Industrial Heartland</div>
+        <div class="scenario-card-desc">Heavy industry and North Sea oil dominate the economy. Gas is deeply entrenched, renewables barely started. Financial institutions are heavily exposed to fossil assets.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Gas: <span>45 (dominant)</span></div>
+          <div class="scenario-stat">Wind: <span>15 (minimal)</span></div>
+          <div class="scenario-stat">Stranded Assets: <span>25 (severe)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="island_resilience">
+        <span class="scenario-card-icon">🏝️</span>
+        <div class="scenario-card-name">Island Resilience</div>
+        <div class="scenario-card-desc">Decades of coastal flooding have forced early adaptation investment. Communities are strong and well-organised, but the financial sector is weakened by repeated climate payouts.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Adaptation: <span>+40 infrastructure</span></div>
+          <div class="scenario-stat">Social Capital: <span>+25 bonus</span></div>
+          <div class="scenario-stat">Financial: <span>55% (weakened)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3081,6 +3320,27 @@ body { transition: filter 2s ease; }
       <span class="mobile-tab-icon">📋</span>Log
     </button>
   </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-backdrop"></div>
+  <div id="tutorial-spotlight"></div>
+  <div id="tutorial-card">
+    <div id="tutorial-step-indicator"></div>
+    <div id="tutorial-title"></div>
+    <div id="tutorial-text"></div>
+    <div id="tutorial-actions">
+      <button id="tut-skip-btn">Skip</button>
+      <button id="tut-next-btn">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTEXT HINT -->
+<div id="context-hint" class="hidden">
+  <span id="hint-text"></span>
+  <button class="hint-dismiss" id="hint-dismiss">×</button>
 </div>
 
 <script>
@@ -3370,6 +3630,33 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  industrial_heartland: {
+    label: 'Industrial Heartland',
+    apply(state) {
+      state.energy.gas = 45;
+      state.energy.wind = 15;
+      state.energy.solar = 3;
+      state.energy.nuclear = 10;
+      state.financialStability = 80;
+      state.socialStability = 55;
+      state.strandedAssets = 25;
+      state.netZeroProgress = 15;
+      state._budgetOverride = 110;
+    },
+  },
+  island_resilience: {
+    label: 'Island Resilience',
+    apply(state) {
+      state.infrastructure.adaptation = 40;
+      state.socialCapital = 25;
+      state.socialStability = 80;
+      state.financialStability = 55;
+      state.energy.wind = 35;
+      state.energy.solar = 10;
+      state.energy.gas = 20;
+      state._budgetOverride = 90;
     },
   },
 };
@@ -4307,8 +4594,10 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          soundMgr.deallocate();
         } else {
-          this.engine.allocateBlock(cat);
+          const result = this.engine.allocateBlock(cat);
+          if (result.success) soundMgr.allocate();
         }
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
@@ -4322,8 +4611,13 @@ class UI {
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
-        if (e.shiftKey) this.engine.deallocateBlock(keyMap[e.key]);
-        else this.engine.allocateBlock(keyMap[e.key]);
+        if (e.shiftKey) {
+          this.engine.deallocateBlock(keyMap[e.key]);
+          soundMgr.deallocate();
+        } else {
+          const result = this.engine.allocateBlock(keyMap[e.key]);
+          if (result.success) soundMgr.allocate();
+        }
         this.render(this.engine.getState());
       } else if (e.key === 'Enter' && !e.repeat) {
         this.elEndTurnBtn.click();
@@ -4411,6 +4705,7 @@ class UI {
       this._noSpendWarned = false;
       this.elNoSpendWarning.classList.add('hidden');
 
+      soundMgr.endTurn();
       this.elEndTurnBtn.disabled = true;
       await runSimulationPhase(this.engine, this, effectsMgr);
       this.elEndTurnBtn.disabled = false;
@@ -4502,6 +4797,7 @@ class UI {
         // Clear any existing save and start fresh
         saveMgr.clear();
         analyticsMgr.recordStart();
+        hintMgr.reset();
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
@@ -4536,6 +4832,7 @@ class UI {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
       document.getElementById('endgame-timeline')?.remove();
+      document.getElementById('endgame-trajectory')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
       // Reset scenario card selection to default
@@ -4618,6 +4915,8 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    newsTicker.update(state);
+    hintMgr.evaluate(state);
   }
 
   _renderHeader(state) {
@@ -5083,6 +5382,7 @@ class UI {
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
 
     this.elEventModal.classList.remove('hidden');
+    soundMgr.eventAlert();
   }
 
   hideEventModal() {
@@ -5164,10 +5464,13 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    const trajectoryHtml = buildTrajectoryChart(s, turnHistory.data);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', trajectoryHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
+    soundMgr.endgame();
 
     // Staggered reveal of metric tiles
     const tiles = this.elEndgameMetrics.querySelectorAll('.endgame-metric-tile');
@@ -5948,6 +6251,445 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: SOUND MANAGER (Web Audio API synthesis)
+============================================================ */
+
+class SoundManager {
+  constructor() {
+    this._KEY = 'uk_climate_sound_muted';
+    this.muted = this._loadMuted();
+    this._ctx = null;
+  }
+
+  _loadMuted() {
+    try { return localStorage.getItem(this._KEY) === '1'; } catch { return false; }
+  }
+
+  _saveMuted() {
+    try { localStorage.setItem(this._KEY, this.muted ? '1' : '0'); } catch {}
+  }
+
+  _ensureContext() {
+    if (!this._ctx) {
+      this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this._ctx.state === 'suspended') {
+      this._ctx.resume();
+    }
+    return this._ctx;
+  }
+
+  toggle() {
+    this.muted = !this.muted;
+    this._saveMuted();
+    return this.muted;
+  }
+
+  _tone(freq, duration, type = 'sine', gain = 0.12) {
+    if (this.muted) return;
+    try {
+      const ctx = this._ensureContext();
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      g.gain.setValueAtTime(gain, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(g);
+      g.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + duration);
+    } catch {}
+  }
+
+  allocate() {
+    this._tone(520, 0.1, 'sine', 0.08);
+    setTimeout(() => this._tone(660, 0.1, 'sine', 0.08), 60);
+  }
+
+  deallocate() {
+    this._tone(440, 0.1, 'sine', 0.06);
+    setTimeout(() => this._tone(350, 0.12, 'sine', 0.06), 60);
+  }
+
+  endTurn() {
+    this._tone(440, 0.12, 'triangle', 0.1);
+    setTimeout(() => this._tone(554, 0.12, 'triangle', 0.1), 80);
+    setTimeout(() => this._tone(660, 0.18, 'triangle', 0.1), 160);
+  }
+
+  eventAlert() {
+    this._tone(220, 0.3, 'sawtooth', 0.06);
+    setTimeout(() => this._tone(185, 0.4, 'sawtooth', 0.06), 200);
+  }
+
+  endgame() {
+    const notes = [440, 554, 660, 880];
+    notes.forEach((f, i) => {
+      setTimeout(() => this._tone(f, 0.25, 'triangle', 0.08), i * 150);
+    });
+  }
+
+  click() {
+    this._tone(800, 0.04, 'sine', 0.04);
+  }
+}
+
+/* ============================================================
+   MODULE: NEWS TICKER
+============================================================ */
+
+class NewsTicker {
+  constructor() {
+    this._track = document.getElementById('ticker-track');
+    this._currentIndex = 0;
+    this._interval = null;
+  }
+
+  _generateHeadlines(state) {
+    const headlines = [];
+    const yr = state.year;
+
+    if (state.temperature >= 2.0) {
+      headlines.push({ tag: 'breaking', text: `${yr}: UK breaches 2°C warming threshold` });
+    } else if (state.temperature >= 1.5) {
+      headlines.push({ tag: 'warning', text: `${yr}: 1.5°C Paris limit exceeded — tipping points active` });
+    }
+
+    if (state.netZeroProgress >= 100) {
+      headlines.push({ tag: 'progress', text: `${yr}: UK achieves Net Zero — historic milestone` });
+    } else if (state.netZeroProgress >= 75) {
+      headlines.push({ tag: 'progress', text: `${yr}: Net Zero ${Math.round(state.netZeroProgress)}% complete — final push underway` });
+    } else if (state.netZeroProgress < 30 && state.turn >= 2) {
+      headlines.push({ tag: 'warning', text: `${yr}: Net Zero progress stalls at ${Math.round(state.netZeroProgress)}%` });
+    }
+
+    if (state.gridReliability < 40) {
+      headlines.push({ tag: 'breaking', text: `${yr}: National Grid warns of imminent blackout risk` });
+    } else if (state.gridReliability > 85) {
+      headlines.push({ tag: 'progress', text: `${yr}: UK grid rated most reliable in Europe` });
+    }
+
+    if (state.financialStability < 35) {
+      headlines.push({ tag: 'breaking', text: `${yr}: Bank of England issues financial stability warning` });
+    }
+
+    if (state.socialStability < 40) {
+      headlines.push({ tag: 'breaking', text: `${yr}: Public trust in climate programme collapses` });
+    } else if (state.socialStability > 85) {
+      headlines.push({ tag: 'progress', text: `${yr}: Record public support for transition programme` });
+    }
+
+    const total = state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + state.energy.storage;
+    const renewPct = total > 0 ? Math.round(((state.energy.wind + state.energy.solar) / total) * 100) : 0;
+    if (renewPct > 70) {
+      headlines.push({ tag: 'progress', text: `${yr}: Renewables now supply ${renewPct}% of UK electricity` });
+    } else if (state.energy.gas > 35) {
+      headlines.push({ tag: 'warning', text: `${yr}: Gas still dominates UK energy mix at ${Math.round(state.energy.gas)} units` });
+    }
+
+    if (state.strandedAssets > 50) {
+      headlines.push({ tag: 'warning', text: `${yr}: Pension funds face £bn losses from stranded fossil assets` });
+    }
+
+    if (state.infrastructure.adaptation > 60) {
+      headlines.push({ tag: 'update', text: `${yr}: Flood defence upgrades protect millions of homes` });
+    }
+
+    if (headlines.length === 0) {
+      headlines.push({ tag: 'update', text: `${yr}: Climate policy programme continues on schedule` });
+    }
+
+    return headlines.slice(0, 4);
+  }
+
+  update(state) {
+    const headlines = this._generateHeadlines(state);
+    if (!this._track) return;
+
+    this._track.innerHTML = headlines.map(h =>
+      `<div class="ticker-item"><span class="ticker-tag ${h.tag}">${h.tag === 'breaking' ? 'BREAKING' : h.tag === 'warning' ? 'ALERT' : h.tag === 'progress' ? 'PROGRESS' : 'UPDATE'}</span>${h.text}</div>`
+    ).join('');
+
+    this._currentIndex = 0;
+    this._track.style.transform = 'translateY(0)';
+
+    if (this._interval) clearInterval(this._interval);
+    if (headlines.length > 1) {
+      this._interval = setInterval(() => {
+        this._currentIndex = (this._currentIndex + 1) % headlines.length;
+        this._track.style.transform = `translateY(-${this._currentIndex * 20}px)`;
+      }, 4000);
+    }
+  }
+
+  stop() {
+    if (this._interval) clearInterval(this._interval);
+  }
+}
+
+/* ============================================================
+   MODULE: TUTORIAL SYSTEM
+============================================================ */
+
+class TutorialSystem {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_seen_v1';
+    this._overlay = document.getElementById('tutorial-overlay');
+    this._spotlight = document.getElementById('tutorial-spotlight');
+    this._card = document.getElementById('tutorial-card');
+    this._title = document.getElementById('tutorial-title');
+    this._text = document.getElementById('tutorial-text');
+    this._stepIndicator = document.getElementById('tutorial-step-indicator');
+    this._nextBtn = document.getElementById('tut-next-btn');
+    this._skipBtn = document.getElementById('tut-skip-btn');
+    this._step = 0;
+    this._steps = [
+      {
+        title: 'Welcome, Minister',
+        text: 'You are the UK’s Climate Strategy lead from 2025 to 2050. Over 5 turns, you’ll allocate limited budgets to balance decarbonisation with economic and social stability. Every choice has real-world trade-offs.',
+        target: null,
+      },
+      {
+        title: 'National Indicators',
+        text: 'These five metrics track your country’s health: Temperature, Grid Reliability, Financial Stability, Social Stability, and Net Zero Progress. If any stability metric hits zero, your government falls. Click a metric name for detailed explanation.',
+        target: '#metrics-panel',
+      },
+      {
+        title: 'Investment Decisions',
+        text: 'Each turn you allocate up to 2 blocks per category using your budget. Energy Transition builds renewables. Grid & Storage prevents blackouts. Adaptation protects against events. Social Support maintains public consent. Financial Resilience manages stranded assets. R&D unlocks permanent multipliers.',
+        target: '#investment-cards',
+      },
+      {
+        title: 'The Living Scene',
+        text: 'Watch your city transform as you invest. Turbines spin for wind energy, batteries appear for storage, flood walls rise for adaptation. This is your policy legacy, built block by block. The sky colour shifts with temperature — from cool blue to warning amber.',
+        target: '#scene-section',
+      },
+      {
+        title: 'Advance the Simulation',
+        text: 'Press this button to simulate 5 years. You’ll face mid-period policy crises requiring binary decisions. At the end, climate events may strike — mitigated by your adaptation investment. Use keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance.',
+        target: '#action-bar',
+      },
+    ];
+
+    if (this._nextBtn) this._nextBtn.addEventListener('click', () => this._advance());
+    if (this._skipBtn) this._skipBtn.addEventListener('click', () => this._finish());
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return false; }
+  }
+
+  start() {
+    if (!this._overlay) return;
+    this._step = 0;
+    this._overlay.classList.remove('hidden');
+    this._renderStep();
+  }
+
+  _renderStep() {
+    const step = this._steps[this._step];
+    if (!step) { this._finish(); return; }
+
+    this._title.textContent = step.title;
+    this._text.textContent = step.text;
+    this._nextBtn.textContent = this._step === this._steps.length - 1 ? 'Start Playing' : 'Next';
+
+    this._stepIndicator.innerHTML = this._steps.map((_, i) => {
+      const cls = i < this._step ? 'tut-pip done' : i === this._step ? 'tut-pip active' : 'tut-pip';
+      return `<div class="${cls}"></div>`;
+    }).join('');
+
+    if (step.target) {
+      const el = document.querySelector(step.target);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const pad = 8;
+        this._spotlight.style.left = (rect.left - pad) + 'px';
+        this._spotlight.style.top = (rect.top - pad) + 'px';
+        this._spotlight.style.width = (rect.width + pad * 2) + 'px';
+        this._spotlight.style.height = (rect.height + pad * 2) + 'px';
+        this._spotlight.style.display = 'block';
+
+        const cardW = 380;
+        let cardLeft = rect.right + 16;
+        let cardTop = rect.top;
+        if (cardLeft + cardW > window.innerWidth - 16) {
+          cardLeft = Math.max(16, rect.left - cardW - 16);
+        }
+        if (cardLeft < 16) {
+          cardLeft = Math.max(16, (window.innerWidth - cardW) / 2);
+          cardTop = rect.bottom + 16;
+        }
+        if (cardTop + 300 > window.innerHeight) {
+          cardTop = Math.max(16, window.innerHeight - 320);
+        }
+        this._card.style.left = cardLeft + 'px';
+        this._card.style.top = cardTop + 'px';
+        this._card.style.bottom = 'auto';
+        this._card.style.right = 'auto';
+      }
+    } else {
+      this._spotlight.style.display = 'none';
+      this._card.style.left = '50%';
+      this._card.style.top = '50%';
+      this._card.style.transform = 'translate(-50%, -50%)';
+    }
+  }
+
+  _advance() {
+    this._step++;
+    if (this._step >= this._steps.length) {
+      this._finish();
+    } else {
+      this._card.style.transform = '';
+      this._renderStep();
+    }
+  }
+
+  _finish() {
+    if (this._overlay) this._overlay.classList.add('hidden');
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+}
+
+/* ============================================================
+   MODULE: CONTEXT HINTS
+============================================================ */
+
+class ContextHintManager {
+  constructor() {
+    this._el = document.getElementById('context-hint');
+    this._textEl = document.getElementById('hint-text');
+    this._dismissBtn = document.getElementById('hint-dismiss');
+    this._currentHint = null;
+    this._dismissed = new Set();
+    if (this._dismissBtn) {
+      this._dismissBtn.addEventListener('click', () => this.hide());
+    }
+  }
+
+  evaluate(state) {
+    const d = state.currentDecisions;
+    const hints = [];
+
+    if (d.energyTransition > 0 && d.gridAndStorage === 0 && state.infrastructure.gridAndStorage < 35) {
+      hints.push({ id: 'energy_no_grid', text: 'Energy Transition without Grid & Storage risks blackouts — renewables need backup capacity.' });
+    }
+    if (d.energyTransition > 0 && d.financialResilience === 0 && state.strandedAssets > 15) {
+      hints.push({ id: 'energy_no_fin', text: 'Phasing out gas creates stranded assets — consider Financial Resilience to protect pension funds.' });
+    }
+    if (d.energyTransition > 0 && d.socialSupport === 0 && state.socialStability < 65) {
+      hints.push({ id: 'energy_no_social', text: 'Rapid decarbonisation raises energy bills — Social Support can cushion the transition for households.' });
+    }
+    if (state.spentThisTurn === 0 && state.turn >= 1) {
+      hints.push({ id: 'no_spend', text: 'Spending nothing means gas rebounds and warming accelerates. Even small investments compound over time.' });
+    }
+    if (d.research > 0 && state.turn >= 4) {
+      hints.push({ id: 'late_research', text: 'R&D multipliers compound over remaining turns — late-game research has limited payoff.' });
+    }
+    if (d.adaptation === 0 && state.temperature > 1.6 && state.infrastructure.adaptation < 30) {
+      hints.push({ id: 'no_adapt_hot', text: 'At this temperature, climate events are increasingly likely. Adaptation cuts event damage by up to 50%.' });
+    }
+    if (d.gridAndStorage > 0 && d.energyTransition === 0 && state.energy.wind + state.energy.solar < 30) {
+      hints.push({ id: 'storage_no_energy', text: 'Grid storage is most valuable when paired with renewables — consider adding Energy Transition too.' });
+    }
+
+    const eligible = hints.filter(h => !this._dismissed.has(h.id));
+    if (eligible.length > 0 && eligible[0].id !== this._currentHint) {
+      this.show(eligible[0]);
+    } else if (eligible.length === 0) {
+      this.hide();
+    }
+  }
+
+  show(hint) {
+    if (!this._el || !this._textEl) return;
+    this._currentHint = hint.id;
+    this._textEl.textContent = hint.text;
+    this._el.classList.remove('hidden');
+  }
+
+  hide() {
+    if (this._currentHint) this._dismissed.add(this._currentHint);
+    this._currentHint = null;
+    if (this._el) this._el.classList.add('hidden');
+  }
+
+  reset() {
+    this._dismissed.clear();
+    this._currentHint = null;
+    this.hide();
+  }
+}
+
+/* ============================================================
+   MODULE: EMISSIONS TRAJECTORY CHART
+============================================================ */
+
+function buildTrajectoryChart(state, turnHistoryData) {
+  if (!turnHistoryData || turnHistoryData.length < 2) return '';
+
+  const w = 460, h = 180, pad = { top: 20, right: 50, bottom: 30, left: 45 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  const years = turnHistoryData.map(d => d.year);
+  const temps = turnHistoryData.map(d => d.temperature);
+
+  const minYear = years[0];
+  const maxYear = years[years.length - 1];
+  const minTemp = 1.0;
+  const maxTemp = Math.max(3.0, Math.max(...temps) + 0.2);
+
+  const xScale = (year) => pad.left + ((year - minYear) / (maxYear - minYear)) * plotW;
+  const yScale = (temp) => pad.top + plotH - ((temp - minTemp) / (maxTemp - minTemp)) * plotH;
+
+  const gridYears = years.filter((_, i) => i === 0 || i === years.length - 1 || i % 1 === 0);
+
+  let svg = `<svg id="trajectory-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`;
+
+  const gridTemps = [1.0, 1.5, 2.0, 2.5, 3.0].filter(t => t <= maxTemp);
+  for (const t of gridTemps) {
+    const y = yScale(t);
+    svg += `<line x1="${pad.left}" y1="${y}" x2="${w - pad.right}" y2="${y}" class="traj-grid-line"/>`;
+    svg += `<text x="${pad.left - 6}" y="${y + 3}" text-anchor="end" class="traj-label">${t.toFixed(1)}°C</text>`;
+  }
+
+  for (const yr of gridYears) {
+    const x = xScale(yr);
+    svg += `<line x1="${x}" y1="${pad.top}" x2="${x}" y2="${h - pad.bottom}" class="traj-grid-line"/>`;
+    svg += `<text x="${x}" y="${h - pad.bottom + 14}" text-anchor="middle" class="traj-label">${yr}</text>`;
+  }
+
+  const y15 = yScale(1.5);
+  svg += `<line x1="${pad.left}" y1="${y15}" x2="${w - pad.right}" y2="${y15}" class="traj-threshold" stroke="#ffd600"/>`;
+  svg += `<text x="${w - pad.right + 4}" y="${y15 + 3}" class="traj-threshold-label" fill="#ffd600">1.5°C</text>`;
+
+  const y20 = yScale(2.0);
+  svg += `<line x1="${pad.left}" y1="${y20}" x2="${w - pad.right}" y2="${y20}" class="traj-threshold" stroke="#ff3d00"/>`;
+  svg += `<text x="${w - pad.right + 4}" y="${y20 + 3}" class="traj-threshold-label" fill="#ff3d00">2.0°C</text>`;
+
+  const linePts = years.map((yr, i) => `${xScale(yr).toFixed(1)},${yScale(temps[i]).toFixed(1)}`);
+  const lineColor = temps[temps.length - 1] < 1.5 ? '#00c853' : temps[temps.length - 1] < 2.0 ? '#ffd600' : '#ff3d00';
+  svg += `<polyline points="${linePts.join(' ')}" class="traj-player-line" stroke="${lineColor}"/>`;
+
+  const areaPts = linePts.join(' ') + ` ${xScale(maxYear).toFixed(1)},${yScale(minTemp).toFixed(1)} ${xScale(minYear).toFixed(1)},${yScale(minTemp).toFixed(1)}`;
+  svg += `<polygon points="${areaPts}" fill="${lineColor}" opacity="0.08"/>`;
+
+  years.forEach((yr, i) => {
+    svg += `<circle cx="${xScale(yr).toFixed(1)}" cy="${yScale(temps[i]).toFixed(1)}" class="traj-dot" fill="${lineColor}"><title>${yr}: ${temps[i].toFixed(2)}°C</title></circle>`;
+  });
+
+  svg += `</svg>`;
+
+  return `<div id="endgame-trajectory">
+    <div id="endgame-trajectory-title">Temperature Pathway</div>
+    ${svg}
+  </div>`;
+}
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -5955,6 +6697,10 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const soundMgr     = new SoundManager();
+const newsTicker   = new NewsTicker();
+const tutorialSys  = new TutorialSystem();
+const hintMgr      = new ContextHintManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -5981,6 +6727,46 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Move context hint element into the decisions panel (after action bar)
+const hintEl = document.getElementById('context-hint');
+const actionBar = document.getElementById('action-bar');
+if (hintEl && actionBar) {
+  actionBar.parentNode.insertBefore(hintEl, actionBar);
+}
+
+// Sound toggle button
+const soundToggleBtn = document.getElementById('sound-toggle');
+if (soundToggleBtn) {
+  if (soundMgr.muted) soundToggleBtn.classList.add('muted');
+  soundToggleBtn.textContent = soundMgr.muted ? '🔇' : '🔊';
+  soundToggleBtn.addEventListener('click', () => {
+    const muted = soundMgr.toggle();
+    soundToggleBtn.textContent = muted ? '🔇' : '🔊';
+    soundToggleBtn.classList.toggle('muted', muted);
+    if (!muted) soundMgr.click();
+  });
+}
+
+// Tutorial: show for first-time players after hook screen is dismissed
+const _origHookBtnHandler = document.getElementById('hook-btn');
+if (_origHookBtnHandler && tutorialSys.shouldShow()) {
+  const origClick = _origHookBtnHandler.onclick;
+  const scenarioStartBtn2 = document.getElementById('scenario-start-btn');
+  if (scenarioStartBtn2) {
+    const origScenarioClick = scenarioStartBtn2.onclick;
+    scenarioStartBtn2.addEventListener('click', () => {
+      setTimeout(() => {
+        const advisorDismiss2 = document.getElementById('advisor-dismiss-btn');
+        if (advisorDismiss2) {
+          advisorDismiss2.addEventListener('click', () => {
+            setTimeout(() => tutorialSys.start(), 500);
+          }, { once: true });
+        }
+      }, 100);
+    }, { once: true });
+  }
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
