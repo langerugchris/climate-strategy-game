@@ -2142,6 +2142,257 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== PHASE 5: DIPLOMATIC EVENTS ===== */
+.diplomatic-cable {
+  margin-top: var(--gap-md);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-md);
+  animation: slideUp 0.3s ease;
+}
+.diplomatic-cable-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.diplomatic-cable-flag { font-size: 22px; }
+.diplomatic-cable-tag {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-blue-lt);
+  font-weight: 700;
+}
+.diplomatic-cable-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.diplomatic-cable-body {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-family: var(--font-editorial);
+  margin-bottom: var(--gap-sm);
+}
+.diplomatic-cable-effect {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  display: inline-block;
+}
+.diplomatic-cable-effect.positive { background: #0c2a1a; color: var(--status-good); }
+.diplomatic-cable-effect.negative { background: #2a0e08; color: var(--status-danger); }
+.diplomatic-cable-dismiss {
+  width: 100%;
+  padding: 8px;
+  margin-top: var(--gap-sm);
+  background: rgba(29,112,184,0.15);
+  color: var(--accent-blue-lt);
+  border: 1px solid rgba(29,112,184,0.3);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.diplomatic-cable-dismiss:hover { background: rgba(29,112,184,0.3); }
+
+/* ===== PHASE 5: CHALLENGE MODE ===== */
+#challenge-section {
+  margin-top: var(--gap-xl);
+  padding-top: var(--gap-xl);
+  border-top: 1px solid var(--border-subtle);
+}
+#challenge-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+#challenge-subheading {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-md);
+}
+.challenge-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-md);
+}
+.challenge-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md) var(--gap-sm);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.1s;
+  text-align: left;
+  position: relative;
+}
+.challenge-card:hover {
+  border-color: var(--status-warn);
+  background: var(--bg-tertiary);
+  transform: translateY(-1px);
+}
+.challenge-card.selected {
+  border-color: var(--status-warn);
+  background: #2a2000;
+}
+.challenge-card.completed::after {
+  content: '✓';
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 14px;
+  color: var(--status-good);
+  font-weight: 700;
+}
+.challenge-card-icon { font-size: 24px; margin-bottom: 4px; display: block; }
+.challenge-card-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.challenge-card-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.challenge-card-rules {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.3;
+  font-style: italic;
+}
+.challenge-badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  background: #2a2000;
+  color: var(--status-warn);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ===== PHASE 5: STRATEGY REPORT ===== */
+#strategy-report {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+#strategy-report-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.investment-chart {
+  margin-bottom: var(--gap-md);
+}
+.invest-chart-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.invest-chart-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  min-width: 60px;
+  text-align: right;
+}
+.invest-chart-bar-track {
+  flex: 1;
+  height: 16px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  overflow: hidden;
+}
+.invest-chart-seg {
+  height: 100%;
+  transition: width 0.5s ease;
+  position: relative;
+}
+.invest-chart-seg.energy   { background: var(--energy-wind); }
+.invest-chart-seg.grid     { background: var(--energy-storage); }
+.invest-chart-seg.adapt    { background: #80cbc4; }
+.invest-chart-seg.social   { background: var(--energy-solar); }
+.invest-chart-seg.finance  { background: var(--energy-nuclear); }
+.invest-chart-seg.research { background: #ff8a80; }
+.invest-chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: var(--gap-md);
+}
+.invest-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.invest-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.strategy-insight {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-family: var(--font-editorial);
+  padding: var(--gap-sm) var(--gap-md);
+  background: rgba(29,112,184,0.06);
+  border-left: 3px solid var(--accent-blue-lt);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: var(--gap-sm);
+}
+.strategy-insight-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-blue-lt);
+  margin-bottom: 2px;
+  font-family: var(--font-system);
+}
+.challenge-result {
+  text-align: center;
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--gap-md);
+}
+.challenge-result-icon { font-size: 36px; margin-bottom: 4px; }
+.challenge-result-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.challenge-result-title.passed { color: var(--status-good); }
+.challenge-result-title.failed { color: var(--status-danger); }
+.challenge-result-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
 </style>
 </head>
 <body>
@@ -2967,6 +3218,45 @@ body { transition: filter 2s ease; }
       </div>
 
     </div>
+
+    <!-- Challenge Mode -->
+    <div id="challenge-section">
+      <div id="challenge-heading">Challenge Mode <span class="challenge-badge">NEW</span></div>
+      <div id="challenge-subheading">Special objectives with modified rules. Can you master them all?</div>
+      <div class="challenge-cards">
+        <div class="challenge-card" data-challenge="sprint">
+          <span class="challenge-card-icon">⏱️</span>
+          <div class="challenge-card-name">The Sprint</div>
+          <div class="challenge-card-desc">Achieve Net Zero in 3 turns or fewer.</div>
+          <div class="challenge-card-rules">Standard rules. Speed is everything.</div>
+        </div>
+        <div class="challenge-card" data-challenge="austerity">
+          <span class="challenge-card-icon">💸</span>
+          <div class="challenge-card-name">Austerity Britain</div>
+          <div class="challenge-card-desc">Reach Net Zero on a £55bn budget.</div>
+          <div class="challenge-card-rules">Budget capped at £55bn/turn.</div>
+        </div>
+        <div class="challenge-card" data-challenge="storm_season">
+          <span class="challenge-card-icon">🌪️</span>
+          <div class="challenge-card-name">Storm Season</div>
+          <div class="challenge-card-desc">Orderly Transition with doubled events.</div>
+          <div class="challenge-card-rules">Event probability ×2. Need NZ≥100%, Fin≥70%, Soc≥70%.</div>
+        </div>
+        <div class="challenge-card" data-challenge="balancer">
+          <span class="challenge-card-icon">⚖️</span>
+          <div class="challenge-card-name">The Balancer</div>
+          <div class="challenge-card-desc">No metric ever drops below 50%.</div>
+          <div class="challenge-card-rules">Grid, Fin, Soc must stay ≥50% every turn. Reach NZ to win.</div>
+        </div>
+        <div class="challenge-card" data-challenge="fossil_freedom">
+          <span class="challenge-card-icon">♻️</span>
+          <div class="challenge-card-name">Fossil Freedom</div>
+          <div class="challenge-card-desc">Eliminate gas. Keep the lights on.</div>
+          <div class="challenge-card-rules">Gas = 0 and Grid ≥60% at game end.</div>
+        </div>
+      </div>
+    </div>
+
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
   </div>
@@ -3221,6 +3511,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'challenger', icon: '🏆', name: 'Challenge Accepted', desc: 'Complete any challenge', check: () => challengeMgr.completed.size > 0 },
+  { id: 'challenge_master', icon: '👑', name: 'Challenge Master', desc: 'Complete all 5 challenges', check: () => challengeMgr.completed.size >= 5 },
 ];
 
 class AchievementManager {
@@ -3375,7 +3667,97 @@ const STARTER_SCENARIOS = {
 };
 
 /* ============================================================
-   TURN HISTORY TRACKER
+   CHALLENGE MODE DEFINITIONS
+============================================================ */
+
+const CHALLENGES = {
+  sprint: {
+    label: 'The Sprint',
+    icon: '⏱️',
+    desc: 'Achieve Net Zero in 3 turns or fewer.',
+    apply(state) {},
+    check(state) { return state.netZeroProgress >= 100 && state.turn <= 3; },
+    failMsg: 'You needed to reach 100% Net Zero by Turn 3.',
+    passMsg: 'Net Zero achieved in record time!',
+  },
+  austerity: {
+    label: 'Austerity Britain',
+    icon: '💸',
+    desc: 'Reach Net Zero on a £55bn budget each turn.',
+    apply(state) { state._budgetOverride = 55; state._challengeBudgetCap = 55; },
+    check(state) { return state.netZeroProgress >= 100; },
+    failMsg: 'Net Zero was not reached despite the austerity conditions.',
+    passMsg: 'Net Zero achieved on a shoestring budget!',
+  },
+  storm_season: {
+    label: 'Storm Season',
+    icon: '🌪️',
+    desc: 'Orderly Transition with doubled event probability.',
+    apply(state) { state._challengeEventMod = 2.0; },
+    check(state) { return state.netZeroProgress >= 100 && state.financialStability >= 70 && state.socialStability >= 70; },
+    failMsg: 'Orderly Transition requires NZ≥100%, Financial≥70%, Social≥70%.',
+    passMsg: 'Orderly Transition achieved despite relentless climate events!',
+  },
+  balancer: {
+    label: 'The Balancer',
+    icon: '⚖️',
+    desc: 'No metric drops below 50%. Reach Net Zero.',
+    apply(state) { state._challengeBalancer = true; state._challengeBalancerFailed = false; },
+    check(state) { return state.netZeroProgress >= 100 && !state._challengeBalancerFailed; },
+    failMsg: state => state._challengeBalancerFailed
+      ? 'A metric dropped below 50% during the game.'
+      : 'Net Zero was not reached.',
+    passMsg: 'Perfect balance maintained throughout the transition!',
+  },
+  fossil_freedom: {
+    label: 'Fossil Freedom',
+    icon: '♻️',
+    desc: 'Eliminate gas and keep Grid ≥60%.',
+    apply(state) {},
+    check(state) { return state.energy.gas <= 0 && state.gridReliability >= 60; },
+    failMsg: state => state.energy.gas > 0
+      ? `Gas still at ${Math.round(state.energy.gas)} — not eliminated.`
+      : `Grid at ${Math.round(state.gridReliability)}% — needed 60%.`,
+    passMsg: 'A fully fossil-free grid with the lights still on!',
+  },
+};
+
+class ChallengeManager {
+  constructor() {
+    this._KEY = 'uk_climate_challenges_v1';
+    this.completed = this._load();
+    this.active = null;
+  }
+  _load() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      return raw ? new Set(JSON.parse(raw)) : new Set();
+    } catch { return new Set(); }
+  }
+  _save() {
+    try { localStorage.setItem(this._KEY, JSON.stringify([...this.completed])); } catch {}
+  }
+  activate(key) { this.active = key; }
+  deactivate() { this.active = null; }
+  isActive() { return this.active !== null; }
+  getActive() { return this.active ? CHALLENGES[this.active] : null; }
+  recordResult(state) {
+    if (!this.active) return null;
+    const ch = CHALLENGES[this.active];
+    const passed = ch.check(state);
+    if (passed) {
+      this.completed.add(this.active);
+      this._save();
+    }
+    return { key: this.active, challenge: ch, passed };
+  }
+  isCompleted(key) { return this.completed.has(key); }
+}
+
+const challengeMgr = new ChallengeManager();
+
+/* ============================================================
+   TURN HISTORY TRACKER (placeholder)
 ============================================================ */
 
 /* ============================================================
@@ -3387,7 +3769,7 @@ class SaveManager {
     this._KEY = 'uk_climate_save_v2';
   }
 
-  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
+  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty, activeChallenge) {
     try {
       const payload = {
         version: 2,
@@ -3397,6 +3779,7 @@ class SaveManager {
         techPurchased: [...techPurchased],
         activeScenario,
         activeDifficulty,
+        activeChallenge: activeChallenge || null,
       };
       localStorage.setItem(this._KEY, JSON.stringify(payload));
     } catch (e) { /* storage full or unavailable */ }
@@ -3915,7 +4298,8 @@ class GameEngine {
     if (s.turn > 0 && s.turn - 1 === s.lastEventTurn) return null;
 
     const excess = Math.max(s.temperature - 1.1, 0);
-    const prob   = Math.min((0.10 + (excess / 0.1) * 0.015) * difficultyMgr.preset.eventProbMod, 0.70);
+    const challengeEventMod = s._challengeEventMod || 1.0;
+    const prob   = Math.min((0.10 + (excess / 0.1) * 0.015) * difficultyMgr.preset.eventProbMod * challengeEventMod, 0.85);
 
     if (Math.random() >= prob) return null;
 
@@ -4352,6 +4736,9 @@ class UI {
         // Restore history
         turnHistory.data = payload.historyData || [];
         this._activeScenario = payload.activeScenario || 'standard';
+        this._activeChallenge = payload.activeChallenge || null;
+        if (payload.activeChallenge) challengeMgr.activate(payload.activeChallenge);
+        else challengeMgr.deactivate();
         if (payload.activeDifficulty) difficultyMgr.active = payload.activeDifficulty;
         // Restore log entries
         this.elLogScroll.innerHTML = `
@@ -4483,11 +4870,27 @@ class UI {
 
     // Scenario selection screen
     this._activeScenario = 'standard';
+    this._activeChallenge = null;
     document.querySelectorAll('.scenario-card').forEach(card => {
       card.addEventListener('click', () => {
         document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('.challenge-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
         this._activeScenario = card.dataset.scenario;
+        this._activeChallenge = null;
+      });
+    });
+    // Challenge card selection
+    document.querySelectorAll('.challenge-card').forEach(card => {
+      if (challengeMgr.isCompleted(card.dataset.challenge)) {
+        card.classList.add('completed');
+      }
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('.challenge-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        this._activeChallenge = card.dataset.challenge;
+        this._activeScenario = 'standard';
       });
     });
     // Mark standard as default
@@ -4499,18 +4902,33 @@ class UI {
       scenarioStartBtn.addEventListener('click', () => {
         document.getElementById('scenario-screen').classList.add('hidden');
         document.getElementById('advisor-overlay').classList.remove('hidden');
-        // Clear any existing save and start fresh
         saveMgr.clear();
         analyticsMgr.recordStart();
-        // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
+        // Apply challenge if selected
+        if (this._activeChallenge && CHALLENGES[this._activeChallenge]) {
+          challengeMgr.activate(this._activeChallenge);
+          CHALLENGES[this._activeChallenge].apply(this.engine.state);
+          if (this.engine.state._challengeBudgetCap) {
+            this.engine.state.budget = Math.min(this.engine.state.budget, this.engine.state._challengeBudgetCap);
+          }
+          if (this.engine.state._challengeEventMod) {
+            this.engine.state._challengeEventMod = this.engine.state._challengeEventMod;
+          }
+        } else {
+          challengeMgr.deactivate();
+        }
+        const scenarioLabel = this._activeChallenge
+          ? `Challenge: ${CHALLENGES[this._activeChallenge].label}`
+          : (STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard');
         this._lastLogLength = 0;
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
             <div class="log-year">2025 — Briefing</div>
-            <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard'}</strong>. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
+            <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${scenarioLabel}</strong>. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.${this._activeChallenge ? `<br><span style="color:var(--status-warn);font-weight:700;">Challenge objective: ${CHALLENGES[this._activeChallenge].desc}</span>` : ''}</div>
           </div>`;
+        this._updateDifficultyIndicator();
         this.render(this.engine.getState());
       });
     }
@@ -4538,12 +4956,20 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
-      // Reset scenario card selection to default
+      document.getElementById('strategy-report')?.remove();
+      document.getElementById('challenge-result-section')?.remove();
+      // Reset scenario and challenge selection
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('.challenge-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
       if (def) def.classList.add('selected');
       this._activeScenario = 'standard';
-      // Update scenario screen difficulty label
+      this._activeChallenge = null;
+      challengeMgr.deactivate();
+      // Refresh challenge completed indicators
+      document.querySelectorAll('.challenge-card').forEach(card => {
+        card.classList.toggle('completed', challengeMgr.isCompleted(card.dataset.challenge));
+      });
       const sdl = document.getElementById('scenario-diff-label');
       if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
       document.getElementById('scenario-screen').classList.remove('hidden');
@@ -4555,7 +4981,12 @@ class UI {
     if (!el) return;
     const preset = difficultyMgr.selectedPreset;
     const badge = difficultyMgr.selected;
-    el.innerHTML = `<span class="diff-badge ${badge}">${preset.label}</span>`;
+    let html = `<span class="diff-badge ${badge}">${preset.label}</span>`;
+    if (challengeMgr.isActive()) {
+      const ch = challengeMgr.getActive();
+      html += `<span class="challenge-badge">${ch.icon} ${ch.label}</span>`;
+    }
+    el.innerHTML = html;
   }
 
   _refreshHighScoreInSettings() {
@@ -5164,8 +5595,14 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    // Build strategy report
+    const strategyHtml = this._buildStrategyReport(s);
+
+    // Build challenge result
+    const challengeResultHtml = this._buildChallengeResult(s);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', challengeResultHtml + timelineHtml + strategyHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5262,6 +5699,110 @@ class UI {
     }
     html += `</div></div>`;
     return html;
+  }
+
+  // ===== STRATEGY REPORT =====
+  _buildStrategyReport(state) {
+    if (!state.log || state.log.length === 0) return '';
+
+    const catColors = {
+      energyTransition: { bg: 'var(--energy-wind)', cls: 'energy', label: 'Energy' },
+      gridAndStorage:   { bg: 'var(--energy-storage)', cls: 'grid', label: 'Grid' },
+      adaptation:       { bg: '#80cbc4', cls: 'adapt', label: 'Adapt' },
+      socialSupport:    { bg: 'var(--energy-solar)', cls: 'social', label: 'Social' },
+      financialResilience: { bg: 'var(--energy-nuclear)', cls: 'finance', label: 'Finance' },
+      research:         { bg: '#ff8a80', cls: 'research', label: 'R&D' },
+    };
+
+    const turnInvestments = state.log.map(entry => {
+      const d = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+      entry.decisions.forEach(dec => {
+        if (dec.includes('Energy Transition')) d.energyTransition = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+        if (dec.includes('Grid')) d.gridAndStorage = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+        if (dec.includes('Adaptation')) d.adaptation = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+        if (dec.includes('Social')) d.socialSupport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+        if (dec.includes('Financial')) d.financialResilience = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+        if (dec.includes('R&D')) d.research = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      });
+      return d;
+    });
+
+    let chartHtml = '<div class="investment-chart">';
+    turnInvestments.forEach((d, i) => {
+      const total = Object.values(d).reduce((a, b) => a + b, 0);
+      const maxBlocks = 12;
+      const year = 2025 + i * 5;
+      chartHtml += `<div class="invest-chart-row"><span class="invest-chart-label">${year}–${year + 5}</span><div class="invest-chart-bar-track">`;
+      for (const [cat, count] of Object.entries(d)) {
+        if (count <= 0) continue;
+        const pct = (count / maxBlocks) * 100;
+        chartHtml += `<div class="invest-chart-seg ${catColors[cat].cls}" style="width:${pct}%" title="${catColors[cat].label} ×${count}"></div>`;
+      }
+      if (total === 0) {
+        chartHtml += `<div style="width:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-muted)">No investment</div>`;
+      }
+      chartHtml += `</div></div>`;
+    });
+    chartHtml += '</div>';
+
+    let legendHtml = '<div class="invest-chart-legend">';
+    for (const [cat, info] of Object.entries(catColors)) {
+      legendHtml += `<span class="invest-legend-item"><span class="invest-legend-dot" style="background:${info.bg}"></span>${info.label}</span>`;
+    }
+    legendHtml += '</div>';
+
+    const totals = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+    turnInvestments.forEach(d => { for (const k of Object.keys(totals)) totals[k] += d[k]; });
+    const totalBlocks = Object.values(totals).reduce((a, b) => a + b, 0);
+
+    let insightsHtml = '';
+
+    if (totals.energyTransition === 0) {
+      insightsHtml += `<div class="strategy-insight"><div class="strategy-insight-label">Missed opportunity</div>You never invested in Energy Transition. Without active decarbonisation, gas remains entrenched and Net Zero becomes unreachable.</div>`;
+    } else if (totals.energyTransition >= 6) {
+      insightsHtml += `<div class="strategy-insight"><div class="strategy-insight-label">Heavy green push</div>You invested heavily in Energy Transition (${totals.energyTransition} blocks). ${totals.gridAndStorage < 3 ? 'But without matching Grid & Storage investment, the grid struggled to absorb so much intermittent power.' : 'Paired with solid grid infrastructure, this drove strong decarbonisation.'}</div>`;
+    }
+
+    if (totals.socialSupport === 0 && state.socialStability < 60) {
+      insightsHtml += `<div class="strategy-insight"><div class="strategy-insight-label">Social neglect</div>No Social Support investment left communities bearing the full cost of transition. Public consent eroded as energy bills rose and fossil jobs disappeared.</div>`;
+    }
+
+    if (totals.adaptation === 0 && state.eventCount > 0) {
+      insightsHtml += `<div class="strategy-insight"><div class="strategy-insight-label">Adaptation gap</div>With zero adaptation investment, every climate event caused maximum damage. £25bn per block in adaptation could have halved the impact of ${state.eventCount} event${state.eventCount > 1 ? 's' : ''}.</div>`;
+    }
+
+    if (totals.financialResilience === 0 && state.strandedAssets > 40) {
+      insightsHtml += `<div class="strategy-insight"><div class="strategy-insight-label">Stranded asset crisis</div>Without Financial Resilience investment, stranded fossil assets cascaded through pension funds unchecked. Green finance regulation could have managed the write-down.</div>`;
+    }
+
+    if (totals.research === 0) {
+      insightsHtml += `<div class="strategy-insight"><div class="strategy-insight-label">No R&D</div>Skipping Research meant no tech multipliers. Each upgrade permanently boosts one investment category — early R&D compounds across all remaining turns.</div>`;
+    }
+
+    if (totalBlocks > 0 && insightsHtml === '') {
+      insightsHtml += `<div class="strategy-insight"><div class="strategy-insight-label">Balanced approach</div>Your investment mix covered multiple priorities. This is the hallmark of a well-managed transition — no single dimension was neglected.</div>`;
+    }
+
+    return `<div id="strategy-report">
+      <div id="strategy-report-title">Investment Strategy Breakdown</div>
+      ${legendHtml}${chartHtml}${insightsHtml}
+    </div>`;
+  }
+
+  // ===== CHALLENGE RESULT =====
+  _buildChallengeResult(state) {
+    if (!challengeMgr.isActive()) return '';
+    const result = challengeMgr.recordResult(state);
+    if (!result) return '';
+    const ch = result.challenge;
+    const failMsg = typeof ch.failMsg === 'function' ? ch.failMsg(state) : ch.failMsg;
+    return `<div id="challenge-result-section" class="challenge-result">
+      <div class="challenge-result-icon">${result.passed ? '🏆' : '❌'}</div>
+      <div class="challenge-result-title ${result.passed ? 'passed' : 'failed'}">
+        Challenge: ${ch.label} — ${result.passed ? 'PASSED' : 'FAILED'}
+      </div>
+      <div class="challenge-result-desc">${result.passed ? ch.passMsg : failMsg}</div>
+    </div>`;
   }
 
   // ===== METRIC TOOLTIP =====
@@ -5726,6 +6267,129 @@ const MINI_EVENTS_POOL = [
   },
 ];
 
+/* ============================================================
+   INTERNATIONAL DIPLOMACY EVENTS
+============================================================ */
+
+const DIPLOMATIC_EVENTS = [
+  {
+    id: 'cop_summit',
+    icon: '🌐',
+    title: 'COP Global Stocktake',
+    messageFn: (s) => s.netZeroProgress >= 60
+      ? 'The UK is praised at COP for ambitious climate action. International green finance flows increase.'
+      : 'UK faces sharp criticism at the Global Stocktake for insufficient progress. Diplomatic pressure weakens public confidence.',
+    positive: (s) => s.netZeroProgress >= 60,
+    effectLabel: (s) => s.netZeroProgress >= 60 ? 'Budget +£10bn next turn' : 'Social Stability −3%',
+    effect: (s) => {
+      if (s.netZeroProgress >= 60) { s.nextTurnBudgetPenalty = Math.max(0, s.nextTurnBudgetPenalty - 10); }
+      else { s.socialStability = Math.max(0, s.socialStability - 3); }
+    },
+    condition: (s, turn) => turn >= 1,
+    probability: 0.35,
+  },
+  {
+    id: 'chinese_solar',
+    icon: '🇨🇳',
+    title: 'Chinese Solar Price Crash',
+    messageFn: () => 'China floods the global market with ultra-cheap solar panels, cutting installation costs by 40%. Solar capacity expands.',
+    positive: () => true,
+    effectLabel: () => 'Solar +4, Net Zero +3%',
+    effect: (s) => {
+      s.energy.solar = Math.min(100, s.energy.solar + 4);
+      s.netZeroProgress = Math.min(100, s.netZeroProgress + 3);
+    },
+    condition: (s) => s.energy.solar < 80,
+    probability: 0.25,
+  },
+  {
+    id: 'eu_cbam',
+    icon: '🇪🇺',
+    title: 'EU Carbon Border Tax Expansion',
+    messageFn: () => 'The EU expands its Carbon Border Adjustment Mechanism. High-carbon UK exports face tariffs, pressuring industry to decarbonise.',
+    positive: (s) => s.netZeroProgress > 50,
+    effectLabel: (s) => s.netZeroProgress > 50 ? 'Financial +3%' : 'Financial −4%, Stranded Assets +5',
+    effect: (s) => {
+      if (s.netZeroProgress > 50) {
+        s.financialStability = Math.min(100, s.financialStability + 3);
+      } else {
+        s.financialStability = Math.max(0, s.financialStability - 4);
+        s.strandedAssets = Math.min(100, s.strandedAssets + 5);
+      }
+    },
+    condition: () => true,
+    probability: 0.25,
+  },
+  {
+    id: 'us_reversal',
+    icon: '🇺🇸',
+    title: 'US Climate Policy Reversal',
+    messageFn: () => 'A new US administration withdraws from Paris commitments and expands fossil fuel production. Global emissions trajectory worsens.',
+    positive: () => false,
+    effectLabel: () => 'Temperature +0.03°C',
+    effect: (s) => {
+      s.temperature = Math.round((s.temperature + 0.03) * 100) / 100;
+    },
+    condition: (s) => s.temperature < 2.5,
+    probability: 0.2,
+  },
+  {
+    id: 'green_bond_boom',
+    icon: '📊',
+    title: 'Global Green Bond Rally',
+    messageFn: (s) => `International investors pile into green sovereign bonds. The UK's ${Math.round(s.financialStability)}% financial stability attracts concessional climate finance.`,
+    positive: () => true,
+    effectLabel: () => 'Budget +£8bn, Financial +2%',
+    effect: (s) => {
+      s.nextTurnBudgetPenalty = Math.max(0, s.nextTurnBudgetPenalty - 8);
+      s.financialStability = Math.min(100, s.financialStability + 2);
+    },
+    condition: (s) => s.financialStability > 55,
+    probability: 0.2,
+  },
+  {
+    id: 'arctic_tipping',
+    icon: '🧊',
+    title: 'Arctic Ice Sheet Collapse Accelerates',
+    messageFn: () => 'Satellite data confirms accelerating Arctic ice loss beyond model predictions. Sea level projections for UK coastal cities are revised sharply upward.',
+    positive: () => false,
+    effectLabel: () => 'Property Value −6%, Temp +0.02°C',
+    effect: (s) => {
+      s.propertyValue = Math.max(0, s.propertyValue - 6);
+      s.temperature = Math.round((s.temperature + 0.02) * 100) / 100;
+    },
+    condition: (s) => s.temperature > 1.4,
+    probability: 0.25,
+  },
+  {
+    id: 'india_coal_exit',
+    icon: '🇮🇳',
+    title: 'India Announces Coal Phase-Out',
+    messageFn: () => 'India commits to closing all coal plants by 2045 — a historic shift that galvanises international cooperation and boosts public morale.',
+    positive: () => true,
+    effectLabel: () => 'Social +3%',
+    effect: (s) => {
+      s.socialStability = Math.min(100, s.socialStability + 3);
+    },
+    condition: (s, turn) => turn >= 2,
+    probability: 0.2,
+  },
+  {
+    id: 'fusion_breakthrough',
+    icon: '🔬',
+    title: 'Fusion Energy Breakthrough',
+    messageFn: () => 'A UK-backed fusion reactor achieves sustained net energy output. Commercial viability is a decade away, but the energy outlook is transformed.',
+    positive: () => true,
+    effectLabel: () => 'Nuclear +3, Social +3%',
+    effect: (s) => {
+      s.energy.nuclear = Math.min(80, s.energy.nuclear + 3);
+      s.socialStability = Math.min(100, s.socialStability + 3);
+    },
+    condition: (s, turn) => turn >= 3,
+    probability: 0.12,
+  },
+];
+
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
 
@@ -5739,8 +6403,9 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
-  // Tick through years with possible mini-events
+  // Tick through years with possible mini-events and diplomatic cables
   let minisFired = 0;
+  let diplomaticFired = false;
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
@@ -5755,6 +6420,30 @@ async function runSimulationPhase(engine, ui, fxMgr) {
         minisFired++;
       }
     }
+
+    if (!diplomaticFired && offset >= 2 && Math.random() < 0.45) {
+      const eligible = DIPLOMATIC_EVENTS.filter(e =>
+        e.condition(engine.state, engine.state.turn) && Math.random() < e.probability
+      );
+      if (eligible.length > 0) {
+        const dEvt = eligible[Math.floor(Math.random() * eligible.length)];
+        fxMgr.haptic('light');
+        await _showDiplomaticEvent(overlay, dEvt, engine, startYear + offset);
+        diplomaticFired = true;
+      }
+    }
+  }
+
+  // Balancer challenge: check if any metric dropped below 50% this turn
+  if (engine.state._challengeBalancer && !engine.state._challengeBalancerFailed) {
+    if (engine.state.gridReliability < 50 || engine.state.financialStability < 50 || engine.state.socialStability < 50) {
+      engine.state._challengeBalancerFailed = true;
+    }
+  }
+
+  // Austerity challenge: enforce budget cap for next turn
+  if (engine.state._challengeBudgetCap) {
+    engine.state.budget = Math.min(engine.state.budget, engine.state._challengeBudgetCap);
   }
 
   // Complete progress bar
@@ -5796,11 +6485,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, challengeMgr.active);
     ui.render(engine.getState());
   } else {
     // Auto-save mid-game progress
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, challengeMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
@@ -5885,6 +6574,36 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function _showDiplomaticEvent(overlay, evt, engine, year) {
+  return new Promise(resolve => {
+    const panel = document.createElement('div');
+    panel.className = 'diplomatic-cable';
+
+    const isPositive = typeof evt.positive === 'function' ? evt.positive(engine.state) : evt.positive;
+    const message = typeof evt.messageFn === 'function' ? evt.messageFn(engine.state) : evt.messageFn;
+    const effectLabel = typeof evt.effectLabel === 'function' ? evt.effectLabel(engine.state) : evt.effectLabel;
+
+    panel.innerHTML = `
+      <div class="diplomatic-cable-header">
+        <span class="diplomatic-cable-flag">${evt.icon}</span>
+        <span class="diplomatic-cable-tag">Diplomatic Cable · ${year}</span>
+      </div>
+      <div class="diplomatic-cable-title">${evt.title}</div>
+      <div class="diplomatic-cable-body">${message}</div>
+      <div class="diplomatic-cable-effect ${isPositive ? 'positive' : 'negative'}">${isPositive ? '↑' : '↓'} ${effectLabel}</div>
+      <button class="diplomatic-cable-dismiss">Acknowledge →</button>`;
+
+    overlay.querySelector('#sim-card').appendChild(panel);
+
+    evt.effect(engine.state);
+
+    panel.querySelector('.diplomatic-cable-dismiss').addEventListener('click', () => {
+      panel.classList.add('sim-fade-out');
+      setTimeout(() => { panel.remove(); resolve(); }, 300);
+    }, { once: true });
+  });
+}
 
 /* ============================================================
    MODULE: LEGACY SYSTEM
