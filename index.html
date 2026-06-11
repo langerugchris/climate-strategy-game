@@ -2142,12 +2142,32 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== ACCESSIBILITY ===== */
+.block-btn:focus-visible, .mini-btn:focus-visible, #end-turn-btn:focus-visible,
+#hook-btn:focus-visible, #restart-btn:focus-visible, #share-btn:focus-visible,
+.scenario-card:focus-visible, .diff-option:focus-visible, .mobile-tab:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
-<header id="game-header">
+<header id="game-header" role="banner">
   <div id="header-left">
     <svg id="gov-crown" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="30" cy="30" r="29" fill="#1d70b8" opacity="0.15" stroke="#1d70b8" stroke-width="1.5"/>
@@ -2171,17 +2191,17 @@ body { transition: filter 2s ease; }
         <div class="pip" id="pip-3"></div>
         <div class="pip" id="pip-4"></div>
       </div>
-      <span id="current-year">2025</span>
-      <span id="turn-counter">Turn 1 of 5</span>
+      <span id="current-year" aria-live="polite">2025</span>
+      <span id="turn-counter" aria-live="polite">Turn 1 of 5</span>
     </div>
   </div>
 </header>
 
 <!-- ===== MAIN LAYOUT ===== -->
-<main id="game-main">
+<main id="game-main" role="main">
 
   <!-- LEFT: METRICS PANEL -->
-  <aside class="panel" id="metrics-panel">
+  <aside class="panel" id="metrics-panel" aria-label="National Indicators">
     <div class="panel-title">National Indicators</div>
     <div id="metrics-inner">
 
@@ -2317,7 +2337,7 @@ body { transition: filter 2s ease; }
   </aside>
 
   <!-- CENTRE: DECISIONS PANEL -->
-  <section class="panel" id="decisions-panel">
+  <section class="panel" id="decisions-panel" aria-label="Investment Decisions">
     <div id="decision-header">
       <div id="decision-header-top">
         <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
@@ -2341,9 +2361,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition">−</button>
+              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition" aria-label="Remove Energy Transition block">−</button>
               <span class="block-count" id="count-energyTransition">0</span>
-              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition">+</button>
+              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition" aria-label="Add Energy Transition block">+</button>
             </div>
           </div>
         </div>
@@ -2367,9 +2387,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£35bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage">−</button>
+              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage" aria-label="Remove Grid and Storage block">−</button>
               <span class="block-count" id="count-gridAndStorage">0</span>
-              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage">+</button>
+              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage" aria-label="Add Grid and Storage block">+</button>
             </div>
           </div>
         </div>
@@ -2393,9 +2413,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£25bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-adaptation" data-cat="adaptation">−</button>
+              <button class="block-btn" id="minus-adaptation" data-cat="adaptation" aria-label="Remove Adaptation block">−</button>
               <span class="block-count" id="count-adaptation">0</span>
-              <button class="block-btn" id="plus-adaptation" data-cat="adaptation">+</button>
+              <button class="block-btn" id="plus-adaptation" data-cat="adaptation" aria-label="Add Adaptation block">+</button>
             </div>
           </div>
         </div>
@@ -2419,9 +2439,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£20bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport">−</button>
+              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport" aria-label="Remove Social Support block">−</button>
               <span class="block-count" id="count-socialSupport">0</span>
-              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport">+</button>
+              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport" aria-label="Add Social Support block">+</button>
             </div>
           </div>
         </div>
@@ -2444,9 +2464,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience">−</button>
+              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience" aria-label="Remove Financial Resilience block">−</button>
               <span class="block-count" id="count-financialResilience">0</span>
-              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience">+</button>
+              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience" aria-label="Add Financial Resilience block">+</button>
             </div>
           </div>
         </div>
@@ -2469,9 +2489,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£15bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-research" data-cat="research">−</button>
+              <button class="block-btn" id="minus-research" data-cat="research" aria-label="Remove Research block">−</button>
               <span class="block-count" id="count-research">0</span>
-              <button class="block-btn" id="plus-research" data-cat="research">+</button>
+              <button class="block-btn" id="plus-research" data-cat="research" aria-label="Add Research block">+</button>
             </div>
           </div>
         </div>
@@ -2919,9 +2939,9 @@ body { transition: filter 2s ease; }
   </section>
 
   <!-- RIGHT: LOG PANEL -->
-  <aside class="panel" id="log-panel">
+  <aside class="panel" id="log-panel" aria-label="Policy Record">
     <div class="panel-title">Policy Record</div>
-    <div id="log-scroll">
+    <div id="log-scroll" aria-live="polite">
       <div class="log-entry welcome">
         <div class="log-year">2025 — Briefing</div>
         <div class="log-text">UK Climate Strategy simulation begins. Warming pathway: 1.1°C above pre-industrial. UK has already cut emissions 50% since 1990 — Net Zero Progress starts at 35%. You have 5 five-year terms to shape the nation's response. Allocate investment blocks each turn — but watch the trade-offs.</div>
@@ -2945,9 +2965,9 @@ body { transition: filter 2s ease; }
   <div id="scenario-content">
     <div id="scenario-heading">Choose Your Starting Scenario</div>
     <p id="scenario-subheading">Each scenario reflects a different political and economic inheritance.<br>The fundamentals of the UK climate challenge remain the same.</p>
-    <div class="scenario-cards">
+    <div class="scenario-cards" role="radiogroup">
 
-      <div class="scenario-card" data-scenario="standard">
+      <div class="scenario-card" data-scenario="standard" role="radio" tabindex="0">
         <span class="scenario-card-icon">🏛️</span>
         <div class="scenario-card-name">Standard Mandate</div>
         <div class="scenario-card-desc">A new government inherits a functional but unremarkable climate position. No head start, no handicap.</div>
@@ -2958,7 +2978,7 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
-      <div class="scenario-card" data-scenario="green_legacy">
+      <div class="scenario-card" data-scenario="green_legacy" role="radio" tabindex="0">
         <span class="scenario-card-icon">🌱</span>
         <div class="scenario-card-name">Green Legacy</div>
         <div class="scenario-card-desc">The previous government invested heavily in renewables. You inherit a head start on energy transition — but financial pressures are building.</div>
@@ -2969,7 +2989,7 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
-      <div class="scenario-card" data-scenario="fiscal_crisis">
+      <div class="scenario-card" data-scenario="fiscal_crisis" role="radio" tabindex="0">
         <span class="scenario-card-icon">📉</span>
         <div class="scenario-card-name">Fiscal Crisis</div>
         <div class="scenario-card-desc">A sovereign debt crisis has severely constrained public spending. You must achieve Net Zero on a shoestring — but social capital is high from austerity solidarity.</div>
@@ -2980,7 +3000,7 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
-      <div class="scenario-card" data-scenario="energy_island">
+      <div class="scenario-card" data-scenario="energy_island" role="radio" tabindex="0">
         <span class="scenario-card-icon">🏝️</span>
         <div class="scenario-card-name">Energy Island</div>
         <div class="scenario-card-desc">An isolated grid with strong nuclear but almost no gas. Grid reliability is fragile — one wrong move and the lights go out.</div>
@@ -2991,7 +3011,7 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
-      <div class="scenario-card" data-scenario="climate_emergency">
+      <div class="scenario-card" data-scenario="climate_emergency" role="radio" tabindex="0">
         <span class="scenario-card-icon">🔥</span>
         <div class="scenario-card-name">Climate Emergency</div>
         <div class="scenario-card-desc">Years of delay have pushed warming to 1.6°C. Tipping points are already active. You have more money but much less time — every turn counts double.</div>
@@ -3026,7 +3046,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- EVENT MODAL -->
-<div id="event-modal" class="hidden">
+<div id="event-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Climate Event">
   <div id="event-card">
     <div id="event-icon-display">⚠️</div>
     <h2 id="event-title-display">Climate Event</h2>
@@ -3038,7 +3058,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- END GAME OVERLAY -->
-<div id="endgame-overlay" class="hidden">
+<div id="endgame-overlay" class="hidden" role="dialog" aria-modal="true" aria-label="End Game Results">
   <div id="endgame-card">
     <div id="endgame-icon-display"></div>
     <h1 id="endgame-title-display"></h1>
@@ -3052,7 +3072,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- ADVISOR OVERLAY -->
-<div id="advisor-overlay" class="hidden">
+<div id="advisor-overlay" class="hidden" role="dialog" aria-modal="true" aria-label="Chancellor Briefing">
   <div id="advisor-card">
     <div class="advisor-icon">📋</div>
     <h2>Chancellor's Briefing</h2>
@@ -3069,7 +3089,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- SETTINGS MODAL -->
-<div id="settings-modal" class="hidden">
+<div id="settings-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Settings">
   <div id="settings-card">
     <h2>⚙ Settings</h2>
     <div class="settings-section">
@@ -3333,6 +3353,14 @@ const METRIC_TOOLTIPS = {
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
+  },
+  carbon: {
+    title: '🏭 Carbon Budget',
+    desc: 'The remaining cumulative CO₂ the UK can emit while staying on a 1.5°C-compatible pathway. Based on the UK\'s fair share of the global carbon budget.',
+    drivers: '↑ Preserved by: Net Zero progress, fossil fuel phase-out\n↓ Consumed by: gas dependence, delayed energy transition',
+    threshold: 'Below 1.0 GtCO₂: the UK has effectively exhausted its carbon budget. Further emissions lock in warming above 1.5°C regardless of future action.',
+    thresholdGood: false,
+    source: 'Based on IPCC AR6 remaining carbon budget estimates, UK fair-share allocation',
   },
 };
 
@@ -3834,6 +3862,7 @@ class GameEngine {
       afterGrid:     s.gridReliability,
       afterFin:      s.financialStability,
       afterSoc:      s.socialStability,
+      afterCarbon:   s.carbonBudget,
     };
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
@@ -4111,8 +4140,11 @@ function calculateScore(state) {
   const eventPenalty = s.eventCount * 1.5;
   const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
 
-  const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
-  return { total, tempScore, nzScore, stabScore, resScore };
+  // Carbon budget bonus (0-5): reward preserving carbon budget
+  const carbonBonus = Math.round(Math.min(5, ((s.carbonBudget || 0) / 5.0) * 5));
+
+  const total = Math.min(100, tempScore + nzScore + stabScore + resScore + carbonBonus);
+  return { total, tempScore, nzScore, stabScore, resScore, carbonBonus };
 }
 
 /* ============================================================
@@ -4740,6 +4772,21 @@ class UI {
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
     }
+
+    // Carbon budget
+    const carbonPct = Math.round((state.carbonBudget / 5.0) * 100);
+    const carbonEl = document.getElementById('val-carbon');
+    if (carbonEl) {
+      const prevCarbon = state.lastSnapshot ? state.lastSnapshot.carbonBudget : state.carbonBudget;
+      this._rollNumber(carbonEl, prevCarbon, state.carbonBudget, 800, 1);
+    }
+    const carbonBar = document.getElementById('bar-carbon');
+    if (carbonBar) {
+      carbonBar.style.width = Math.max(0, carbonPct) + '%';
+      carbonBar.className = 'bar-fill ' + (carbonPct > 50 ? 'info' : carbonPct > 20 ? 'warn' : 'danger');
+    }
+    const deltaCarbon = document.getElementById('delta-carbon');
+    if (deltaCarbon) this._renderDelta(deltaCarbon, state.carbonBudget, state.lastSnapshot ? state.lastSnapshot.carbonBudget : null, false, 1);
   }
 
   _renderSparklines() {
@@ -4749,6 +4796,7 @@ class UI {
       { containerId: 'spark-fin',  key: 'financialStability', color: '#5390d9', invert: false, min: 0, max: 100 },
       { containerId: 'spark-soc',  key: 'socialStability', color: '#ffd600', invert: false, min: 0, max: 100 },
       { containerId: 'spark-nz',   key: 'netZeroProgress', color: '#448aff', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-carbon', key: 'carbonBudget', color: '#b39ddb', invert: false, min: 0, max: 5.0, decimals: 1 },
     ];
 
     for (const s of series) {
@@ -5067,6 +5115,10 @@ class UI {
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
 
+    // Turn narrative
+    const narrative = this._buildTurnNarrative(entry);
+    html += `<div class="log-narrative">${narrative}</div>`;
+
     // Event notice
     if (entry.event) {
       html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
@@ -5197,6 +5249,10 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Carbon Budget Left</div>
+        <div class="endgame-metric-val ${s.carbonBudget > 1.5 ? 'good' : s.carbonBudget > 0.5 ? 'warn' : 'danger'}">${s.carbonBudget.toFixed(1)} Gt</div>
       </div>`;
 
     this.elEndgameNarr.innerHTML = result.narrative;
@@ -5219,6 +5275,12 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    // International context
+    const intlHtml = this._buildInternationalContext(s);
+
+    // Endgame time-series charts
+    const chartsHtml = this._buildEndgameCharts();
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
@@ -5229,12 +5291,13 @@ class UI {
           <div class="score-dim"><span class="score-dim-val">${score.nzScore}/30</span><span class="score-dim-name">Net Zero</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.stabScore}/30</span><span class="score-dim-name">Stability</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.carbonBonus}/5</span><span class="score-dim-name">Carbon</span></div>
         </div>
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', chartsHtml + intlHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5249,6 +5312,105 @@ class UI {
     const narrativeDelay = 200 + tiles.length * 200 + 300;
     setTimeout(() => this.elEndgameNarr.classList.add('revealed'), narrativeDelay);
     setTimeout(() => this.elEndgameNgfs.classList.add('revealed'), narrativeDelay + 400);
+  }
+
+  _buildInternationalContext(state) {
+    const ukTemp = state.temperature.toFixed(1);
+    const ukNZ = Math.round(state.netZeroProgress);
+    const comparisons = [];
+
+    if (state.temperature < 1.8) {
+      comparisons.push({ flag: '\u{1F1E9}\u{1F1F0}', country: 'Denmark', note: 'Comparable: also targeting 70% cuts by 2030' });
+    } else if (state.temperature < 2.2) {
+      comparisons.push({ flag: '\u{1F1E9}\u{1F1EA}', country: 'Germany', note: 'Similar trajectory: Energiewende saw coal exit but gas dependency lingered' });
+    } else {
+      comparisons.push({ flag: '\u{1F1E6}\u{1F1FA}', country: 'Australia', note: 'Comparable: fossil fuel export dependency delayed action' });
+    }
+
+    if (ukNZ >= 80) {
+      comparisons.push({ flag: '\u{1F1F3}\u{1F1F4}', country: 'Norway', note: 'Peer: high renewable share, electrified transport' });
+    } else if (ukNZ >= 50) {
+      comparisons.push({ flag: '\u{1F1EB}\u{1F1F7}', country: 'France', note: 'Similar: nuclear baseload, moderate renewable growth' });
+    } else {
+      comparisons.push({ flag: '\u{1F1FA}\u{1F1F8}', country: 'United States', note: 'Comparable: fragmented federal policy, inconsistent investment' });
+    }
+
+    let html = `<div style="margin:var(--gap-lg) 0;padding:var(--gap-md);background:var(--bg-tertiary);border-radius:var(--radius-md);border:1px solid var(--border-subtle);">`;
+    html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary);margin-bottom:var(--gap-sm);">International Context</div>`;
+    html += `<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:var(--gap-sm);">Your UK outcome (${ukTemp}°C, ${ukNZ}% Net Zero) in international comparison:</div>`;
+    for (const c of comparisons) {
+      html += `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--border-subtle);font-size:12px;">
+        <span style="font-size:20px">${c.flag}</span>
+        <div><strong style="color:var(--text-primary)">${c.country}</strong><br><span style="color:var(--text-muted)">${c.note}</span></div>
+      </div>`;
+    }
+    html += `<div style="font-size:10px;color:var(--text-muted);margin-top:var(--gap-sm);font-style:italic;">International comparisons are illustrative — each nation faces unique constraints.</div>`;
+    html += `</div>`;
+    return html;
+  }
+
+  _buildEndgameCharts() {
+    if (turnHistory.data.length < 2) return '';
+
+    const metrics = [
+      { key: 'temperature', label: 'Temperature (°C)', color: '#ff7043', min: 1.0, max: 3.0, decimals: 1, invert: true },
+      { key: 'carbonBudget', label: 'Carbon Budget (Gt)', color: '#b39ddb', min: 0, max: 5.0, decimals: 1 },
+      { key: 'gridReliability', label: 'Grid Reliability (%)', color: '#4caf81', min: 0, max: 100 },
+      { key: 'financialStability', label: 'Financial Stability (%)', color: '#5390d9', min: 0, max: 100 },
+      { key: 'socialStability', label: 'Social Stability (%)', color: '#ffd600', min: 0, max: 100 },
+      { key: 'netZeroProgress', label: 'Net Zero Progress (%)', color: '#448aff', min: 0, max: 100 },
+    ];
+
+    let html = `<div style="margin:var(--gap-lg) 0;">`;
+    html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary);margin-bottom:var(--gap-md);text-align:center;">Metric Evolution 2025–2050</div>`;
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">`;
+
+    for (const m of metrics) {
+      const data = turnHistory.getSeriesFor(m.key);
+      if (!data || data.length < 2) continue;
+
+      const w = 200, h = 60, padX = 8, padY = 8;
+      const range = m.max - m.min || 1;
+      const points = data.map((v, i) => {
+        const x = padX + (i / Math.max(data.length - 1, 1)) * (w - padX * 2);
+        const y = padY + (1 - (v - m.min) / range) * (h - padY * 2);
+        return { x, y, v };
+      });
+
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaPath = linePath + ` L${points[points.length - 1].x.toFixed(1)},${h} L${points[0].x.toFixed(1)},${h} Z`;
+
+      const lastVal = data[data.length - 1];
+      const formattedVal = m.decimals ? lastVal.toFixed(m.decimals) : Math.round(lastVal);
+
+      const dots = points.map(p => {
+        const label = m.decimals ? p.v.toFixed(m.decimals) : Math.round(p.v);
+        return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${m.color}"><title>${label}</title></circle>`;
+      }).join('');
+
+      // Year labels along x-axis
+      const years = turnHistory.data.map(d => d.year || 2025);
+      const yearLabels = years.map((yr, i) => {
+        const x = padX + (i / Math.max(years.length - 1, 1)) * (w - padX * 2);
+        return `<text x="${x.toFixed(1)}" y="${h + 10}" text-anchor="middle" fill="var(--text-muted)" font-size="7" font-family="var(--font-mono)">${yr}</text>`;
+      }).join('');
+
+      html += `<div style="background:var(--bg-tertiary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--gap-sm);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+          <span style="font-size:10px;color:var(--text-secondary);font-weight:600;">${m.label}</span>
+          <span style="font-size:12px;font-weight:700;color:${m.color}">${formattedVal}</span>
+        </div>
+        <svg viewBox="0 0 ${w} ${h + 14}" style="width:100%;height:auto;" preserveAspectRatio="xMidYMid meet">
+          <path d="${areaPath}" fill="${m.color}" opacity="0.1"/>
+          <path d="${linePath}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          ${dots}
+          ${yearLabels}
+        </svg>
+      </div>`;
+    }
+
+    html += `</div></div>`;
+    return html;
   }
 
   _buildRadarChart(score) {
@@ -5350,6 +5512,7 @@ class UI {
       '🏦 Financial Stability':'fin',
       '🏘️ Social Stability':   'soc',
       '🌱 Net Zero Progress':  'nz',
+      '🏭 Carbon Budget':      'carbon',
     };
 
     document.querySelectorAll('.metric-name').forEach(el => {
