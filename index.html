@@ -2673,6 +2673,31 @@ body { transition: filter 2s ease; }
         <circle cx="758" cy="20" r="13" fill="#c8d8e8" opacity="0.75"/>
         <circle cx="765" cy="16" r="11" fill="#030810"/>
 
+        <!-- CLOUDS — opacity/color driven by JS based on temperature -->
+        <g id="scene-clouds">
+          <g opacity="0.15">
+            <ellipse cx="120" cy="32" rx="45" ry="10" fill="#7090b0">
+              <animate attributeName="cx" values="120;160;120" dur="60s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="135" cy="28" rx="30" ry="8" fill="#8aa0c0">
+              <animate attributeName="cx" values="135;175;135" dur="60s" repeatCount="indefinite"/>
+            </ellipse>
+          </g>
+          <g opacity="0.12">
+            <ellipse cx="420" cy="22" rx="55" ry="12" fill="#7090b0">
+              <animate attributeName="cx" values="420;380;420" dur="75s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="440" cy="18" rx="35" ry="9" fill="#8aa0c0">
+              <animate attributeName="cx" values="440;400;440" dur="75s" repeatCount="indefinite"/>
+            </ellipse>
+          </g>
+          <g opacity="0.1">
+            <ellipse cx="650" cy="38" rx="40" ry="9" fill="#7090b0">
+              <animate attributeName="cx" values="650;680;650" dur="50s" repeatCount="indefinite"/>
+            </ellipse>
+          </g>
+        </g>
+
         <!-- HILLS -->
         <path d="M0,158 Q60,132 120,148 Q200,118 280,145 Q360,122 440,150 Q520,128 600,148 Q680,120 760,142 L800,145 L800,175 L0,175Z" fill="#060f06" opacity="0.9"/>
 
@@ -5448,6 +5473,9 @@ class UI {
     // Endgame time-series charts
     const chartsHtml = this._buildEndgameCharts();
 
+    // Strategic analysis
+    const stratHtml = this._buildStrategicAnalysis(s, score);
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
@@ -5464,7 +5492,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', chartsHtml + intlHtml + timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', stratHtml + chartsHtml + intlHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5512,6 +5540,48 @@ class UI {
       </div>`;
     }
     html += `<div style="font-size:10px;color:var(--text-muted);margin-top:var(--gap-sm);font-style:italic;">International comparisons are illustrative — each nation faces unique constraints.</div>`;
+    html += `</div>`;
+    return html;
+  }
+
+  _buildStrategicAnalysis(state, score) {
+    const insights = [];
+    const infra = state.infrastructure;
+
+    if (score.tempScore < 15 && infra.energyTransition < 60) {
+      insights.push({ icon: '⚡', title: 'Underinvestment in Energy Transition', text: 'Temperature rose sharply because fossil fuel phase-out was too slow. Earlier and heavier Energy Transition investment would have kept warming lower — each block reduces gas by 7 and adds 10% Net Zero progress.' });
+    }
+    if (score.stabScore < 15) {
+      if (state.socialStability < 50 && infra.socialSupport < 40) {
+        insights.push({ icon: '🤝', title: 'Social Stability Neglected', text: 'Public consent collapsed because the transition\'s costs fell on those least able to bear them. Social Support builds durable social capital that compounds across turns — even one block per term makes a difference.' });
+      }
+      if (state.financialStability < 50 && state.strandedAssets > 40) {
+        insights.push({ icon: '📈', title: 'Stranded Asset Exposure', text: `Stranded assets reached ${Math.round(state.strandedAssets)} — dragging financial stability down through pension fund and bank losses. Financial Resilience investment reduces stranded assets by 8 per block and protects the system.` });
+      }
+    }
+    if (score.resScore < 3 && infra.adaptation < 50) {
+      insights.push({ icon: '🌊', title: 'Insufficient Adaptation', text: 'Climate events caused disproportionate damage because adaptation investment was too low. Each adaptation block mitigates event damage by up to 50% and protects energy infrastructure from storms.' });
+    }
+    if (state.gridReliability < 50 && infra.gridAndStorage < 70) {
+      insights.push({ icon: '🔋', title: 'Grid Reliability Crisis', text: 'Renewables were built faster than backup storage could support them. Grid & Storage investment is essential whenever Energy Transition investment is high — batteries and nuclear provide the firm capacity that wind and solar cannot.' });
+    }
+    if (score.nzScore < 20 && state.netZeroProgress < 80) {
+      insights.push({ icon: '🌱', title: 'Net Zero Target Missed', text: `Net Zero progress reached only ${Math.round(state.netZeroProgress)}%. The 2050 target requires sustained Energy Transition investment — ideally amplified by early R&D to unlock the 1.5× Net Zero multiplier.` });
+    }
+
+    if (insights.length === 0) {
+      insights.push({ icon: '✓', title: 'Well-Balanced Strategy', text: 'No major strategic gaps identified. Your investment allocation balanced climate ambition with systemic stability — a genuinely difficult achievement.' });
+    }
+
+    let html = `<div style="margin:var(--gap-lg) 0;padding:var(--gap-md);background:var(--bg-tertiary);border-radius:var(--radius-md);border:1px solid var(--border-subtle);">`;
+    html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary);margin-bottom:var(--gap-sm);">Strategic Analysis</div>`;
+    for (const ins of insights.slice(0, 3)) {
+      html += `<div style="display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--border-subtle);">
+        <span style="font-size:22px;flex-shrink:0">${ins.icon}</span>
+        <div><strong style="color:var(--text-primary);font-size:12px;">${ins.title}</strong><br>
+        <span style="color:var(--text-secondary);font-size:11px;line-height:1.5;">${ins.text}</span></div>
+      </div>`;
+    }
     html += `</div>`;
     return html;
   }
@@ -5874,6 +5944,12 @@ class EffectsManager {
   }
 
   updateWeather(temperature) {
+    const clouds = document.getElementById('scene-clouds');
+    if (clouds) {
+      const t = Math.max(0, Math.min(1, (temperature - 1.1) / 1.9));
+      const opacity = t < 0.3 ? 1 : Math.max(0.2, 1 - (t - 0.3) * 1.4);
+      clouds.style.opacity = opacity;
+    }
     const c = document.getElementById('weather-particles');
     if (!c) return;
     if (temperature > 1.8) {
