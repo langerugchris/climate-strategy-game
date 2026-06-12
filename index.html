@@ -717,6 +717,18 @@ body {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+@keyframes screen-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes screen-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes screen-slide-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 #event-card {
   background: var(--bg-secondary);
@@ -929,7 +941,10 @@ body {
   z-index: 900;
   animation: fadeIn 0.5s ease;
 }
-
+#advisor-overlay.screen-exit {
+  animation: screen-fade-out 0.3s ease forwards;
+  pointer-events: none;
+}
 #advisor-overlay.hidden { display: none; }
 
 #advisor-card {
@@ -1396,6 +1411,11 @@ body { transition: filter 2s ease; }
   justify-content: center;
   z-index: 2000;
   padding: var(--gap-xl);
+  animation: screen-fade-in 0.6s ease;
+}
+#hook-screen.screen-exit {
+  animation: screen-fade-out 0.4s ease forwards;
+  pointer-events: none;
 }
 #hook-screen.hidden { display: none; }
 #hook-content {
@@ -1865,6 +1885,11 @@ body { transition: filter 2s ease; }
   z-index: 1900;
   padding: var(--gap-xl);
   overflow-y: auto;
+  animation: screen-slide-in 0.4s ease;
+}
+#scenario-screen.screen-exit {
+  animation: screen-fade-out 0.3s ease forwards;
+  pointer-events: none;
 }
 #scenario-screen.hidden { display: none; }
 #scenario-content {
@@ -4577,16 +4602,17 @@ class UI {
     const hookBtn = document.getElementById('hook-btn');
     if (hookBtn) {
       hookBtn.addEventListener('click', () => {
-        document.getElementById('hook-screen').classList.add('hidden');
-        // Show scenario selection before advisor briefing
-        const scenarioScreen = document.getElementById('scenario-screen');
-        if (scenarioScreen) {
-          const sdl = document.getElementById('scenario-diff-label');
-          if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
-          scenarioScreen.classList.remove('hidden');
-        } else {
-          document.getElementById('advisor-overlay').classList.remove('hidden');
-        }
+        const hookScreen = document.getElementById('hook-screen');
+        _animateScreenExit(hookScreen, () => {
+          const scenarioScreen = document.getElementById('scenario-screen');
+          if (scenarioScreen) {
+            const sdl = document.getElementById('scenario-diff-label');
+            if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
+            scenarioScreen.classList.remove('hidden');
+          } else {
+            document.getElementById('advisor-overlay').classList.remove('hidden');
+          }
+        });
       });
     }
 
@@ -4594,7 +4620,7 @@ class UI {
     const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
-        document.getElementById('advisor-overlay').classList.add('hidden');
+        _animateScreenExit(document.getElementById('advisor-overlay'));
       });
     }
 
@@ -4691,22 +4717,43 @@ class UI {
 
     // Scenario selection screen
     this._activeScenario = 'standard';
-    document.querySelectorAll('.scenario-card').forEach(card => {
-      card.addEventListener('click', () => {
-        document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        this._activeScenario = card.dataset.scenario;
+    const scenarioCards = document.querySelectorAll('.scenario-card');
+    scenarioCards.forEach(card => {
+      const selectCard = (c) => {
+        scenarioCards.forEach(cc => { cc.classList.remove('selected'); cc.setAttribute('aria-checked', 'false'); });
+        c.classList.add('selected');
+        c.setAttribute('aria-checked', 'true');
+        c.focus();
+        this._activeScenario = c.dataset.scenario;
+        soundMgr.blockAdd();
+      };
+      card.addEventListener('click', () => selectCard(card));
+      card.addEventListener('keydown', (e) => {
+        const cards = [...scenarioCards];
+        const idx = cards.indexOf(card);
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          selectCard(cards[(idx + 1) % cards.length]);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          selectCard(cards[(idx - 1 + cards.length) % cards.length]);
+        } else if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectCard(card);
+          document.getElementById('scenario-start-btn')?.click();
+        }
       });
     });
-    // Mark standard as default
     const defaultCard = document.querySelector('.scenario-card[data-scenario="standard"]');
-    if (defaultCard) defaultCard.classList.add('selected');
+    if (defaultCard) { defaultCard.classList.add('selected'); defaultCard.setAttribute('aria-checked', 'true'); }
 
     const scenarioStartBtn = document.getElementById('scenario-start-btn');
     if (scenarioStartBtn) {
       scenarioStartBtn.addEventListener('click', () => {
-        document.getElementById('scenario-screen').classList.add('hidden');
-        document.getElementById('advisor-overlay').classList.remove('hidden');
+        const scScreen = document.getElementById('scenario-screen');
+        _animateScreenExit(scScreen, () => {
+          document.getElementById('advisor-overlay').classList.remove('hidden');
+        });
         // Clear any existing save and start fresh
         saveMgr.clear();
         analyticsMgr.recordStart();
@@ -5204,10 +5251,21 @@ class UI {
     if (d.financialResilience > 0) parts.push(`reinforced financial sector stability`);
     if (d.research > 0) parts.push(`commissioned strategic research`);
 
-    if (parts.length === 0) return 'No investment was made this term.';
-    if (parts.length === 1) return `This term, government ${parts[0]}.`;
-    const last = parts.pop();
-    return `This term, government ${parts.join(', ')} and ${last}.`;
+    let narrative;
+    if (parts.length === 0) narrative = 'No investment was made this term.';
+    else if (parts.length === 1) narrative = `This term, government ${parts[0]}.`;
+    else { const last = parts.pop(); narrative = `This term, government ${parts.join(', ')} and ${last}.`; }
+
+    const obs = [];
+    const tempDelta = entry.afterTemp - entry.snapshot.temperature;
+    if (tempDelta > 0.3) obs.push(`Warming accelerated sharply (+${tempDelta.toFixed(1)}°C).`);
+    if (entry.afterGrid < 40 && entry.snapshot.gridReliability >= 40) obs.push('Grid reliability has dropped below the critical 40% threshold.');
+    if (entry.afterNZ >= 100 && entry.snapshot.netZeroProgress < 100) obs.push('Net Zero target achieved.');
+    if (entry.afterSoc < 50 && entry.snapshot.socialStability >= 50) obs.push('Social stability has fallen below 50% — public consent is eroding.');
+    if (entry.afterFin < 40 && entry.snapshot.financialStability >= 40) obs.push('Financial stability is now in the danger zone.');
+    if (obs.length > 0) narrative += ' ' + obs[0];
+
+    return narrative;
   }
 
   _addLogEntry(entry) {
@@ -6418,6 +6476,15 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function _animateScreenExit(el, callback) {
+  el.classList.add('screen-exit');
+  setTimeout(() => {
+    el.classList.add('hidden');
+    el.classList.remove('screen-exit');
+    if (callback) callback();
+  }, 350);
+}
 
 /* ============================================================
    MODULE: LEGACY SYSTEM
