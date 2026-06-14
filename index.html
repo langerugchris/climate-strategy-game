@@ -2064,6 +2064,94 @@ body { transition: filter 2s ease; }
 .tl-chip.warn { background: #2a2000; color: var(--status-warn); }
 .tl-chip.danger { background: #2a0e08; color: var(--status-danger); }
 
+/* ===== WEATHER PARTICLES ===== */
+@keyframes rain-fall {
+  0% { transform: translateY(-20px); opacity: 0.7; }
+  100% { transform: translateY(175px); opacity: 0; }
+}
+@keyframes heat-pulse {
+  0%, 100% { opacity: 0.06; }
+  50% { opacity: 0.18; }
+}
+@keyframes heat-wave {
+  0% { d: path("M0,158 Q100,153 200,158 Q300,153 400,158 Q500,153 600,158 Q700,153 800,158 L800,175 L0,175Z"); }
+  50% { d: path("M0,158 Q100,163 200,158 Q300,163 400,158 Q500,163 600,158 Q700,163 800,158 L800,175 L0,175Z"); }
+  100% { d: path("M0,158 Q100,153 200,158 Q300,153 400,158 Q500,153 600,158 Q700,153 800,158 L800,175 L0,175Z"); }
+}
+#weather-rain line {
+  animation: rain-fall linear infinite;
+}
+#weather-heat {
+  animation: heat-pulse 3s ease-in-out infinite;
+}
+
+/* ===== COP SUMMIT STYLING ===== */
+.cop-summit-badge {
+  display: inline-block;
+  background: #1a3a5c;
+  border: 1px solid #2a5a8c;
+  color: #7ab8ff;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+#mini-event-panel .cop-title {
+  color: #7ab8ff;
+  font-size: 16px;
+}
+
+/* ===== ENDGAME HINDSIGHT ===== */
+#endgame-hindsight {
+  margin: var(--gap-lg) 0;
+  padding: var(--gap-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+#endgame-hindsight-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.hindsight-row {
+  display: flex;
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-sm);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.hindsight-icon {
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.hindsight-text {
+  color: var(--text-secondary);
+}
+.hindsight-text strong {
+  color: var(--text-primary);
+}
+.hindsight-good { border-left: 3px solid var(--status-good); padding-left: var(--gap-sm); }
+.hindsight-warn { border-left: 3px solid var(--status-warn); padding-left: var(--gap-sm); }
+.hindsight-bad { border-left: 3px solid var(--status-danger); padding-left: var(--gap-sm); }
+
+/* ===== NEW ACHIEVEMENT GLOW ===== */
+.achievement-card.new {
+  border-color: var(--status-warn);
+  animation: ach-glow 1.5s ease-in-out 2;
+}
+@keyframes ach-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,214,0,0); }
+  50% { box-shadow: 0 0 12px 2px rgba(255,214,0,0.25); }
+}
+
 /* ===== ENDGAME RADAR CHART ===== */
 #endgame-radar {
   display: flex;
@@ -2889,6 +2977,32 @@ body { transition: filter 2s ease; }
           <rect x="617" y="154" width="12" height="8" fill="#050d1a"/>
         </g>
 
+        <!-- WEATHER: RAIN PARTICLES -->
+        <g id="weather-rain" opacity="0">
+          <line x1="45"  y1="-5" x2="43"  y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.5" style="animation-duration:0.8s;animation-delay:0.1s"/>
+          <line x1="112" y1="-5" x2="110" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.6" style="animation-duration:0.7s;animation-delay:0.3s"/>
+          <line x1="198" y1="-5" x2="196" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.5" style="animation-duration:0.9s;animation-delay:0.0s"/>
+          <line x1="267" y1="-5" x2="265" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.4" style="animation-duration:0.75s;animation-delay:0.5s"/>
+          <line x1="341" y1="-5" x2="339" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.6" style="animation-duration:0.85s;animation-delay:0.2s"/>
+          <line x1="412" y1="-5" x2="410" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.5" style="animation-duration:0.7s;animation-delay:0.6s"/>
+          <line x1="488" y1="-5" x2="486" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.6" style="animation-duration:0.8s;animation-delay:0.15s"/>
+          <line x1="553" y1="-5" x2="551" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.4" style="animation-duration:0.9s;animation-delay:0.4s"/>
+          <line x1="620" y1="-5" x2="618" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.5" style="animation-duration:0.75s;animation-delay:0.35s"/>
+          <line x1="695" y1="-5" x2="693" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.6" style="animation-duration:0.85s;animation-delay:0.55s"/>
+          <line x1="760" y1="-5" x2="758" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.5" style="animation-duration:0.7s;animation-delay:0.25s"/>
+          <line x1="78"  y1="-5" x2="76"  y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.4" style="animation-duration:0.9s;animation-delay:0.45s"/>
+          <line x1="155" y1="-5" x2="153" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.5" style="animation-duration:0.8s;animation-delay:0.7s"/>
+          <line x1="305" y1="-5" x2="303" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.6" style="animation-duration:0.75s;animation-delay:0.1s"/>
+          <line x1="530" y1="-5" x2="528" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.5" style="animation-duration:0.85s;animation-delay:0.65s"/>
+          <line x1="380" y1="-5" x2="378" y2="3" stroke="#448aff" stroke-width="0.7" opacity="0.4" style="animation-duration:0.7s;animation-delay:0.8s"/>
+        </g>
+
+        <!-- WEATHER: HEAT SHIMMER -->
+        <g id="weather-heat" opacity="0">
+          <rect x="0" y="130" width="800" height="45" fill="#ff7043" opacity="0.08"/>
+          <rect x="0" y="0" width="800" height="60" fill="#ff3d00" opacity="0.04"/>
+        </g>
+
         <!-- FLOOD WATER OVERLAY — shown when adaptation fails -->
         <rect id="flood-water" x="0" y="200" width="800" height="80" fill="#1565c0" opacity="0.55" rx="0">
           <animate id="flood-anim" attributeName="y" from="200" to="148" dur="2s" fill="freeze" begin="indefinite"/>
@@ -2963,6 +3077,28 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="energy_crisis">
+        <span class="scenario-card-icon">⛽</span>
+        <div class="scenario-card-name">Energy Crisis</div>
+        <div class="scenario-card-desc">A global gas price shock has exposed the UK's fossil dependency. Energy independence is urgent — but the grid is fragile and public patience is wearing thin.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Gas dependency: <span>40 (high)</span></div>
+          <div class="scenario-stat">Grid: <span>55% (fragile)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="climate_emergency">
+        <span class="scenario-card-icon">🔥</span>
+        <div class="scenario-card-name">Climate Emergency</div>
+        <div class="scenario-card-desc">Temperature is already elevated and the previous government declared a climate emergency. Public support is high — but the science window is closing fast.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temperature: <span>1.4°C (elevated)</span></div>
+          <div class="scenario-stat">Social Stability: <span>80% (mandate)</span></div>
+          <div class="scenario-stat">Net Zero: <span>25% (behind)</span></div>
         </div>
       </div>
 
@@ -3170,6 +3306,57 @@ const RANDOM_EVENTS = [
 ];
 
 /* ============================================================
+   COP SUMMIT EVENTS
+============================================================ */
+
+const COP_SUMMITS = [
+  {
+    turn: 1,
+    icon: '🌐',
+    title: 'COP35 — Paris Review Summit',
+    prompt: 'World leaders convene to review Paris Agreement progress. The UK faces a defining choice.',
+    explanation: 'International climate summits set binding targets. Ambitious pledges boost domestic credibility and unlock green finance — but commit you to faster, more expensive decarbonisation. Conservative positions preserve flexibility but risk international isolation and higher borrowing costs.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🌍 Sign ambitious binding pledge',
+      consequence: '+8 Net Zero · +5 Social Capital · costs £12bn next turn (implementation)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialCapital = Math.min(60, s.socialCapital + 5); s.nextTurnBudgetPenalty += 12; s._copPledges = (s._copPledges || 0) + 1; },
+    },
+    optB: {
+      label: '📋 Reaffirm existing commitments only',
+      consequence: 'No cost · −3 Social Capital (international criticism) · −4 Net Zero (lost momentum)',
+      effect: (s) => { s.socialCapital = Math.max(0, s.socialCapital - 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 4); },
+    },
+  },
+  {
+    turn: 3,
+    icon: '🌐',
+    title: 'COP40 — Glasgow+15 Summit',
+    prompt: 'The final major summit before 2050. The world is watching the UK\'s climate record.',
+    explanation: 'This is the last chance for a major international commitment before the Net Zero deadline. A landmark pledge accelerates the final push — but at significant cost. Standing pat preserves resources for domestic use but signals that ambition is fading.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `${5 - s.turn} terms remaining`,
+    }),
+    optA: {
+      label: '🏆 Launch historic Green Marshall Plan',
+      consequence: '+12 Net Zero · +8 Social · Fin −5 (bond pressure) · costs £18bn next turn',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 12); s.socialStability = Math.min(100, s.socialStability + 8); s.financialStability = Math.max(0, s.financialStability - 5); s.nextTurnBudgetPenalty += 18; s._copPledges = (s._copPledges || 0) + 1; },
+    },
+    optB: {
+      label: '🛡️ Focus on domestic delivery',
+      consequence: 'No cost · −5 Social (seen as retreating) · no climate benefit',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 5); },
+    },
+  },
+];
+
+/* ============================================================
    DIFFICULTY SYSTEM
 ============================================================ */
 
@@ -3221,6 +3408,12 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'diplomat', icon: '🌐', name: 'Global Leader', desc: 'Accept all COP summit pledges in a single game', check: (s) => (s._copPledges || 0) >= 2 },
+  { id: 'speed_runner', icon: '🏎️', name: 'Speed Runner', desc: 'Achieve Net Zero in 2 turns or fewer', check: (s) => s.netZeroProgress >= 100 && s.turn <= 2 },
+  { id: 'green_grid', icon: '🍃', name: 'Green Grid', desc: 'End with zero gas and Grid Reliability above 70%', check: (s) => s.energy.gas <= 0 && s.gridReliability >= 70 },
+  { id: 'triple_crown', icon: '🏅', name: 'Triple Crown', desc: 'Finish with Grid, Financial and Social all above 80%', check: (s) => s.gridReliability >= 80 && s.financialStability >= 80 && s.socialStability >= 80 },
+  { id: 'frugal', icon: '💰', name: 'Frugal Chancellor', desc: 'Win while spending under £350bn total', check: (s) => s.netZeroProgress >= 100 && (s._totalSpent || Infinity) <= 350 },
+  { id: 'fortress', icon: '🏗️', name: 'Fortress Britain', desc: 'Finish with adaptation infrastructure above 100', check: (s) => s.infrastructure.adaptation >= 100 },
 ];
 
 class AchievementManager {
@@ -3370,6 +3563,25 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_crisis: {
+    label: 'Energy Crisis',
+    apply(state) {
+      state.energy.gas = 40;
+      state.energy.wind = 20;
+      state.gridReliability = 55;
+      state.socialStability = 60;
+      state._budgetOverride = 110;
+    },
+  },
+  climate_emergency: {
+    label: 'Climate Emergency',
+    apply(state) {
+      state.temperature = 1.4;
+      state.socialStability = 80;
+      state.socialCapital = 15;
+      state.netZeroProgress = 25;
     },
   },
 };
@@ -3577,6 +3789,8 @@ class GameEngine {
       lastEventTurn: -1,
       log: [],
       lastSnapshot: null,
+      _copPledges: 0,
+      _totalSpent: 0,
     };
   }
 
@@ -3714,6 +3928,9 @@ class GameEngine {
       socialStability: s.socialStability,
       energy: Object.assign({}, s.energy),
     };
+
+    // Track cumulative spending
+    s._totalSpent += s.spentThisTurn;
 
     // Phase 1: Budget (already set at turn start; reset nextTurn penalty)
     s.nextTurnBudgetPenalty = 0;
@@ -4538,6 +4755,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('endgame-hindsight')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -4618,6 +4836,7 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    effectsMgr.updateWeather(state);
   }
 
   _renderHeader(state) {
@@ -5164,8 +5383,11 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    // Build hindsight analysis
+    const hindsightHtml = this._buildHindsightAnalysis(s, score);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', hindsightHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5261,6 +5483,79 @@ class UI {
       </div>`;
     }
     html += `</div></div>`;
+    return html;
+  }
+
+  // ===== ENDGAME HINDSIGHT ANALYSIS =====
+  _buildHindsightAnalysis(state, score) {
+    const s = state;
+    const infra = s.infrastructure;
+    const rows = [];
+
+    // Identify strongest and weakest areas
+    const areas = [
+      { name: 'Energy Transition', val: infra.energyTransition, key: 'energy' },
+      { name: 'Grid & Storage', val: infra.gridAndStorage, key: 'grid' },
+      { name: 'Adaptation', val: infra.adaptation, key: 'adapt' },
+      { name: 'Social Support', val: infra.socialSupport, key: 'social' },
+      { name: 'Financial Resilience', val: infra.financialResilience, key: 'finance' },
+    ];
+    areas.sort((a, b) => b.val - a.val);
+    const strongest = areas[0];
+    const weakest = areas[areas.length - 1];
+
+    if (strongest.val > 0) {
+      rows.push({ cls: 'hindsight-good', icon: '✓', text: `<strong>${strongest.name}</strong> was your strongest investment area (${strongest.val} infrastructure). ${strongest.key === 'energy' ? 'This drove your Net Zero progress forward.' : strongest.key === 'grid' ? 'This kept the lights on during the transition.' : strongest.key === 'social' ? 'This maintained the public mandate for change.' : strongest.key === 'finance' ? 'This protected the financial system from stranded asset losses.' : 'This reduced damage from climate events.'}` });
+    }
+
+    if (weakest.val < 30 && !s.socialBreakdownOccurred) {
+      const suggestions = {
+        energy: 'More energy investment would have accelerated Net Zero progress.',
+        grid: 'Grid investment prevents blackouts as renewables scale up.',
+        adapt: 'Adaptation reduces event damage by up to 50% — underinvestment left you exposed.',
+        social: 'Social investment prevents the public consent erosion that can derail the whole programme.',
+        finance: 'Financial resilience manages stranded asset risk from fossil phase-out.',
+      };
+      rows.push({ cls: 'hindsight-warn', icon: '⚠', text: `<strong>${weakest.name}</strong> was underinvested (${weakest.val} infrastructure). ${suggestions[weakest.key]}` });
+    }
+
+    // Temperature analysis
+    if (s.temperature >= 2.0) {
+      rows.push({ cls: 'hindsight-bad', icon: '🌡️', text: `Temperature reached <strong>${s.temperature.toFixed(1)}°C</strong> — past the 2°C Paris threshold. Earlier and heavier Energy Transition investment would have slowed warming before tipping point feedbacks accelerated it.` });
+    } else if (s.temperature < 1.5) {
+      rows.push({ cls: 'hindsight-good', icon: '🌡️', text: `Temperature held to <strong>${s.temperature.toFixed(1)}°C</strong> — below the critical 1.5°C tipping point threshold. Outstanding climate management.` });
+    }
+
+    // COP participation
+    const copCount = s._copPledges || 0;
+    if (copCount >= 2) {
+      rows.push({ cls: 'hindsight-good', icon: '🌐', text: `You accepted <strong>both COP summit pledges</strong> — demonstrating international leadership. The diplomatic costs were high, but global coordination accelerated progress.` });
+    } else if (copCount === 0) {
+      rows.push({ cls: 'hindsight-warn', icon: '🌐', text: `You declined all <strong>COP summit pledges</strong>. While this preserved fiscal flexibility, the UK lost international credibility and missed diplomatic momentum.` });
+    }
+
+    // Spending efficiency
+    if (s._totalSpent > 0) {
+      const efficiency = score.total / (s._totalSpent / 100);
+      if (efficiency > 20) {
+        rows.push({ cls: 'hindsight-good', icon: '💷', text: `<strong>High spending efficiency</strong> — you achieved ${score.total} points with £${s._totalSpent}bn total investment. Every pound counted.` });
+      } else if (s._totalSpent > 400 && score.total < 60) {
+        rows.push({ cls: 'hindsight-bad', icon: '💷', text: `Despite spending <strong>£${s._totalSpent}bn</strong>, the outcome was below expectations. Investment may have been spread too thinly — concentration on fewer areas often yields better results.` });
+      }
+    }
+
+    // Events survived
+    if (s.eventCount >= 3 && !s.socialBreakdownOccurred) {
+      rows.push({ cls: 'hindsight-good', icon: '🛡️', text: `You survived <strong>${s.eventCount} climate events</strong> without collapse — a testament to ${infra.adaptation > 40 ? 'your adaptation investment' : 'resilient policymaking under pressure'}.` });
+    }
+
+    if (rows.length === 0) return '';
+
+    let html = `<div id="endgame-hindsight"><div id="endgame-hindsight-title">Hindsight Analysis</div>`;
+    for (const row of rows) {
+      html += `<div class="hindsight-row ${row.cls}"><div class="hindsight-icon">${row.icon}</div><div class="hindsight-text">${row.text}</div></div>`;
+    }
+    html += `</div>`;
     return html;
   }
 
@@ -5472,6 +5767,21 @@ class EffectsManager {
       b = Math.round(20 - tt * 10);
     }
     sky.setAttribute('fill', `rgb(${r},${g},${b})`);
+  }
+
+  updateWeather(state) {
+    const rain = document.getElementById('weather-rain');
+    const heat = document.getElementById('weather-heat');
+    if (!rain || !heat) return;
+
+    // Rain: visible when temperature is moderate-high (flood risk) or recent flood event
+    const recentFlood = state.currentRandomEvent && state.currentRandomEvent.type === 'FLOOD';
+    const rainIntensity = recentFlood ? 0.7 : (state.temperature > 1.5 ? Math.min(0.4, (state.temperature - 1.5) * 0.3) : 0);
+    rain.style.opacity = rainIntensity;
+
+    // Heat shimmer: visible when temperature exceeds 1.8°C
+    const heatIntensity = state.temperature > 1.8 ? Math.min(1, (state.temperature - 1.8) * 0.6) : 0;
+    heat.style.opacity = heatIntensity;
   }
 
   haptic(style = 'medium') {
@@ -5739,6 +6049,16 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
+  // Check for COP summit this turn (fires before year ticks)
+  const currentTurn = engine.state.turn - 1;
+  const copSummit = COP_SUMMITS.find(c => c.turn === currentTurn);
+  if (copSummit) {
+    _setSimStatus(overlay, 'International summit in progress…');
+    await _delay(1500);
+    fxMgr.haptic('heavy');
+    await _showMiniEvent(overlay, copSummit, engine, fxMgr, startYear + 2, true);
+  }
+
   // Tick through years with possible mini-events
   let minisFired = 0;
   for (const offset of [1, 2, 3, 4]) {
@@ -5838,7 +6158,7 @@ function _setSimStatus(overlay, text) {
   if (el) el.textContent = text;
 }
 
-function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
+function _showMiniEvent(overlay, evt, engine, fxMgr, year, isCop) {
   return new Promise(resolve => {
     const panel = document.createElement('div');
     panel.id = 'mini-event-panel';
@@ -5852,10 +6172,13 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
       </div>`;
     })() : '';
 
+    const copBadge = isCop ? `<div class="cop-summit-badge">International Summit</div>` : '';
+
     panel.innerHTML = `
+      ${copBadge}
       <div class="mini-event-icon">${evt.icon}</div>
       <div class="mini-event-year">${year}</div>
-      <div class="mini-event-title">${evt.title}</div>
+      <div class="mini-event-title${isCop ? ' cop-title' : ''}">${evt.title}</div>
       <div class="mini-event-prompt">${evt.prompt}</div>
       ${evt.explanation ? `<div class="mini-event-explain">${evt.explanation}</div>` : ''}
       ${contextHTML}
