@@ -1249,6 +1249,183 @@ body { transition: filter 2s ease; }
 .opt-a:hover { background: rgba(29,112,184,0.30); }
 .opt-b:hover { background: rgba(255,214,0,0.20); }
 
+/* ===== STAKEHOLDER PANEL ===== */
+#stakeholder-section {
+  margin-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--gap-md);
+}
+#stakeholder-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+.stakeholder-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 4px 0;
+  font-size: 12px;
+  cursor: help;
+  position: relative;
+}
+.stakeholder-icon { font-size: 14px; flex-shrink: 0; width: 18px; text-align: center; }
+.stakeholder-name { flex: 1; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stakeholder-bar-track {
+  width: 60px;
+  height: 6px;
+  background: var(--bg-primary);
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.stakeholder-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease, background 0.3s ease;
+}
+.stakeholder-val {
+  font-size: 11px;
+  font-weight: 600;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.stakeholder-delta {
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: right;
+}
+.stakeholder-delta.up { color: var(--status-good); }
+.stakeholder-delta.down { color: var(--status-danger); }
+.stakeholder-tooltip {
+  display: none;
+  position: absolute;
+  left: 0; right: 0; top: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  z-index: 20;
+  pointer-events: none;
+}
+.stakeholder-row:hover .stakeholder-tooltip { display: block; }
+
+/* ===== NEWSPAPER HEADLINE ===== */
+.log-headline {
+  font-family: var(--font-editorial);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 4px;
+}
+.log-subhead {
+  font-family: var(--font-editorial);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.log-paper-name {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+}
+#tutorial-step-icon {
+  font-size: 40px;
+  margin-bottom: var(--gap-md);
+}
+#tutorial-step-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-step-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-lg);
+}
+#tutorial-progress {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: var(--gap-md);
+}
+.tutorial-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border-subtle);
+  transition: background 0.2s;
+}
+.tutorial-dot.active { background: var(--accent-blue-lt); }
+.tutorial-dot.done { background: var(--accent-green-lt); }
+#tutorial-nav {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: center;
+}
+.tutorial-btn {
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transition: background 0.15s;
+}
+.tutorial-btn:hover { background: var(--bg-elevated); }
+.tutorial-btn.primary {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: white;
+}
+.tutorial-btn.primary:hover { background: var(--accent-blue-lt); }
+#tutorial-skip {
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: var(--gap-md);
+}
+#tutorial-skip:hover { color: var(--text-secondary); }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   /* Release the viewport-lock so the whole page scrolls naturally */
@@ -2299,6 +2476,12 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <!-- Stakeholder Approval -->
+      <div id="stakeholder-section">
+        <div id="stakeholder-title">Political Support</div>
+        <div id="stakeholder-rows"></div>
+      </div>
+
     </div>
   </aside>
 
@@ -3032,6 +3215,18 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-card">
+    <div id="tutorial-step-icon"></div>
+    <div id="tutorial-step-title"></div>
+    <div id="tutorial-step-text"></div>
+    <div id="tutorial-progress"></div>
+    <div id="tutorial-nav"></div>
+    <div id="tutorial-skip">Skip tutorial</div>
+  </div>
+</div>
+
 <!-- SETTINGS MODAL -->
 <div id="settings-modal" class="hidden">
   <div id="settings-card">
@@ -3062,6 +3257,10 @@ body { transition: filter 2s ease; }
       <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
         Difficulty changes take effect on <strong>New Game</strong>. Your current run continues with the settings it started with.
       </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-label">Help</div>
+      <button id="settings-tutorial-btn" style="width:100%;padding:10px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);font-size:13px;cursor:pointer;margin-bottom:var(--gap-sm);">📖 Replay Tutorial</button>
     </div>
     <!-- High scores injected here by JS -->
     <button id="settings-close-btn">Done</button>
@@ -3387,7 +3586,7 @@ class SaveManager {
     this._KEY = 'uk_climate_save_v2';
   }
 
-  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
+  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty, stakeholderSnap) {
     try {
       const payload = {
         version: 2,
@@ -3397,6 +3596,7 @@ class SaveManager {
         techPurchased: [...techPurchased],
         activeScenario,
         activeDifficulty,
+        stakeholders: stakeholderSnap || null,
       };
       localStorage.setItem(this._KEY, JSON.stringify(payload));
     } catch (e) { /* storage full or unavailable */ }
@@ -3599,7 +3799,7 @@ class GameEngine {
       : difficultyMgr.preset.baseBudget;
     if (this.state.financialStability > 80) base += 20;
     base -= this.state.nextTurnBudgetPenalty;
-    // After turn 1, budget override only applies once (first turn), then uses normal base
+    base += stakeholderMgr.budgetModifier();
     if (this.state.turn > 0) {
       delete this.state._budgetOverride;
     }
@@ -3696,7 +3896,9 @@ class GameEngine {
     const supBonus     = infra.socialSupport * 0.15;
     const energyBurden = Math.max(0, (infra.energyTransition - infra.socialSupport) * 0.07);
     const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
-    socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
+    const projPublicApproval = stakeholderMgr.approvals.general_public || 55;
+    const politicalDrag = projPublicApproval < 40 ? (40 - projPublicApproval) * 0.3 : 0;
+    socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag - politicalDrag), 0, 100);
 
     return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
   }
@@ -3733,12 +3935,15 @@ class GameEngine {
     // Phase 6: Temperature
     this._progressTemp();
 
+    // Phase 6b: Stakeholder reactions to decisions
+    stakeholderMgr.applyDecisions(s.currentDecisions);
+
     // Phase 7: Random event
     const event = this._resolveEvent();
     s.currentRandomEvent = event;
     if (event) {
       s.eventCount++;
-      // Recalc formulas again after event damage
+      stakeholderMgr.applyEvent(event.type);
       this._recalcGrid();
       this._recalcFinancial();
       this._recalcSocial();
@@ -3879,8 +4084,11 @@ class GameEngine {
     const energyBurden = Math.max(0, (s.infrastructure.energyTransition - s.infrastructure.socialSupport) * 0.07);
     // Temperature drag: sustained high temperatures directly damage wellbeing and housing
     const tempDrag = Math.max(0, (s.temperature - 1.3) * 8);
+    // Political drag: low public approval erodes social stability
+    const publicApproval = stakeholderMgr.approvals.general_public || 55;
+    const politicalDrag = publicApproval < 40 ? (40 - publicApproval) * 0.3 : 0;
     s.socialStability = this._clamp(
-      Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100
+      Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag - politicalDrag), 0, 100
     );
   }
 
@@ -4010,6 +4218,7 @@ class GameEngine {
   reset(scenarioKey) {
     difficultyMgr.activateForNewGame();
     turnHistory.reset();
+    stakeholderMgr.reset();
     this._initState();
     // Apply starter scenario mutations
     const scenario = STARTER_SCENARIOS[scenarioKey] || STARTER_SCENARIOS.standard;
@@ -4353,6 +4562,7 @@ class UI {
         turnHistory.data = payload.historyData || [];
         this._activeScenario = payload.activeScenario || 'standard';
         if (payload.activeDifficulty) difficultyMgr.active = payload.activeDifficulty;
+        if (payload.stakeholders) stakeholderMgr.restoreSnapshot(payload.stakeholders);
         // Restore log entries
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4389,6 +4599,18 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (tutorialMgr.shouldShow()) {
+          tutorialMgr.open();
+        }
+      });
+    }
+
+    // Settings → replay tutorial
+    const settingsTutBtn = document.getElementById('settings-tutorial-btn');
+    if (settingsTutBtn) {
+      settingsTutBtn.addEventListener('click', () => {
+        document.getElementById('settings-modal').classList.add('hidden');
+        tutorialMgr.open();
       });
     }
 
@@ -4616,6 +4838,7 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderStakeholders();
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
   }
@@ -4815,8 +5038,10 @@ class UI {
 
     this.elValBudRem.textContent  = rem;
     this.elValBudTot.textContent  = total;
+    const polMod = stakeholderMgr.budgetModifier();
+    const polNote = polMod !== 0 ? ` (${polMod > 0 ? '+' : ''}${polMod} political)` : '';
     this.elBudDisplay.textContent = `\u00A3${rem}bn`;
-    this.elTotalSpend.innerHTML   = `&pound;${spent}bn`;
+    this.elTotalSpend.innerHTML   = `&pound;${spent}bn${polNote}`;
     this.elBarBudget.style.width  = Math.max(0, remPct) + '%';
 
     // Bar colour: green while healthy, warn when tight
@@ -4993,7 +5218,11 @@ class UI {
     const overallGood = socDelta > 0 && tempDelta < 0.15;
     div.className = 'log-entry ' + (entry.event ? 'event' : overallGood ? 'good' : 'warn');
 
-    let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
+    const news = generateHeadline(entry, this.engine.state, stakeholderMgr);
+    let html = `<div class="log-paper-name">The Climate Gazette · ${entry.year}</div>`;
+    html += `<div class="log-headline">${news.headline}</div>`;
+    html += `<div class="log-subhead">${news.subhead}</div>`;
+    html += `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
@@ -5128,6 +5357,10 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Political Support</div>
+        <div class="endgame-metric-val ${stakeholderMgr.averageApproval() >= 55 ? 'good' : stakeholderMgr.averageApproval() >= 35 ? 'warn' : 'danger'}">${Math.round(stakeholderMgr.averageApproval())}%</div>
       </div>`;
 
     this.elEndgameNarr.innerHTML = result.narrative;
@@ -5264,6 +5497,33 @@ class UI {
     return html;
   }
 
+  // ===== STAKEHOLDER RENDERING =====
+  _renderStakeholders() {
+    const container = document.getElementById('stakeholder-rows');
+    if (!container) return;
+
+    container.innerHTML = STAKEHOLDERS.map(sh => {
+      const approval = Math.round(stakeholderMgr.approvals[sh.id]);
+      const delta = Math.round(stakeholderMgr.deltas[sh.id] || 0);
+      const status = approval >= 60 ? 'var(--status-good)' :
+                     approval >= 40 ? 'var(--status-warn)' :
+                     'var(--status-danger)';
+      const deltaHtml = delta !== 0
+        ? `<span class="stakeholder-delta ${delta > 0 ? 'up' : 'down'}">${delta > 0 ? '+' : ''}${delta}</span>`
+        : '';
+      return `<div class="stakeholder-row">
+        <span class="stakeholder-icon">${sh.icon}</span>
+        <span class="stakeholder-name">${sh.name}</span>
+        <div class="stakeholder-bar-track">
+          <div class="stakeholder-bar-fill" style="width:${approval}%;background:${status}"></div>
+        </div>
+        <span class="stakeholder-val" style="color:${status}">${approval}</span>
+        ${deltaHtml}
+        <div class="stakeholder-tooltip">${sh.desc}</div>
+      </div>`;
+    }).join('');
+  }
+
   // ===== METRIC TOOLTIP =====
   _initTooltips() {
     this._tooltip = document.getElementById('metric-tooltip');
@@ -5354,6 +5614,14 @@ class UI {
 
     if (state.strandedAssets > 50) {
       msgs.push('Stranded fossil assets now exceed 50 — pension fund exposure is systemic. Financial Resilience investment or managed asset write-downs are required to stabilise the system.');
+    }
+
+    const lowestSh = STAKEHOLDERS.reduce((min, sh) =>
+      stakeholderMgr.approvals[sh.id] < stakeholderMgr.approvals[min.id] ? sh : min, STAKEHOLDERS[0]);
+    if (stakeholderMgr.approvals[lowestSh.id] < 30) {
+      msgs.push(`${lowestSh.icon} ${lowestSh.name} approval has collapsed to ${Math.round(stakeholderMgr.approvals[lowestSh.id])}%. This is damaging your political mandate and budget allocation.`);
+    } else if (stakeholderMgr.averageApproval() < 40) {
+      msgs.push('Political support is dangerously low across the board. Budget allocation is being reduced — you need to rebuild trust with key stakeholders.');
     }
 
     if (msgs.length === 0) {
@@ -5726,6 +5994,329 @@ const MINI_EVENTS_POOL = [
   },
 ];
 
+/* ============================================================
+   STAKEHOLDER SYSTEM
+============================================================ */
+
+const STAKEHOLDERS = [
+  {
+    id: 'energy_industry',
+    name: 'Energy Industry',
+    icon: '🏭',
+    baseApproval: 55,
+    desc: 'Oil & gas majors, energy utilities, and supply chain companies. They want gradual change and financial protection for existing assets.',
+    reactions: { energyTransition: -8, gridAndStorage: 5, adaptation: 0, socialSupport: -2, financialResilience: 6, research: 3 },
+    eventReactions: { FINANCIAL: -8, GRID: -5, HEATWAVE: -2, FLOOD: -1, STORM: -3, SOCIAL: 0 },
+  },
+  {
+    id: 'green_groups',
+    name: 'Green Groups',
+    icon: '🌿',
+    baseApproval: 45,
+    desc: 'Environmental NGOs, climate activists, and renewable energy advocates. They push for aggressive decarbonisation and ecosystem protection.',
+    reactions: { energyTransition: 10, gridAndStorage: 4, adaptation: 6, socialSupport: 2, financialResilience: -3, research: 5 },
+    eventReactions: { FINANCIAL: 0, GRID: 0, HEATWAVE: 3, FLOOD: 3, STORM: 2, SOCIAL: -2 },
+  },
+  {
+    id: 'trade_unions',
+    name: 'Trade Unions',
+    icon: '⚒️',
+    baseApproval: 50,
+    desc: 'Organised labour representing workers in energy, manufacturing, transport, and the public sector. They demand a just transition and worker protection.',
+    reactions: { energyTransition: -4, gridAndStorage: 3, adaptation: 2, socialSupport: 9, financialResilience: 2, research: 1 },
+    eventReactions: { FINANCIAL: -3, GRID: -4, HEATWAVE: -2, FLOOD: -2, STORM: -2, SOCIAL: -6 },
+  },
+  {
+    id: 'financial_sector',
+    name: 'Financial Sector',
+    icon: '💼',
+    baseApproval: 60,
+    desc: 'Banks, pension funds, insurers, and investors. They need regulatory clarity and protection from stranded asset exposure.',
+    reactions: { energyTransition: -5, gridAndStorage: 2, adaptation: 1, socialSupport: -3, financialResilience: 10, research: 2 },
+    eventReactions: { FINANCIAL: -10, GRID: -2, HEATWAVE: -3, FLOOD: -5, STORM: -3, SOCIAL: -1 },
+  },
+  {
+    id: 'general_public',
+    name: 'General Public',
+    icon: '👥',
+    baseApproval: 55,
+    desc: 'Voters and communities across the UK. They care about energy bills, job security, flood protection, and quality of life.',
+    reactions: { energyTransition: -2, gridAndStorage: 2, adaptation: 4, socialSupport: 7, financialResilience: 1, research: 0 },
+    eventReactions: { FINANCIAL: -2, GRID: -8, HEATWAVE: -6, FLOOD: -5, STORM: -4, SOCIAL: -8 },
+  },
+];
+
+class StakeholderManager {
+  constructor() {
+    this.approvals = {};
+    this.deltas = {};
+    this.reset();
+  }
+
+  reset() {
+    for (const sh of STAKEHOLDERS) {
+      this.approvals[sh.id] = sh.baseApproval;
+      this.deltas[sh.id] = 0;
+    }
+  }
+
+  applyDecisions(decisions) {
+    for (const sh of STAKEHOLDERS) {
+      let delta = 0;
+      for (const [cat, blocks] of Object.entries(decisions)) {
+        if (blocks > 0 && sh.reactions[cat] !== undefined) {
+          delta += sh.reactions[cat] * blocks;
+        }
+      }
+      this.deltas[sh.id] = delta;
+      this.approvals[sh.id] = Math.max(0, Math.min(100, this.approvals[sh.id] + delta));
+    }
+  }
+
+  applyEvent(eventType) {
+    for (const sh of STAKEHOLDERS) {
+      const reaction = sh.eventReactions[eventType] || 0;
+      if (reaction !== 0) {
+        this.deltas[sh.id] += reaction;
+        this.approvals[sh.id] = Math.max(0, Math.min(100, this.approvals[sh.id] + reaction));
+      }
+    }
+  }
+
+  averageApproval() {
+    const vals = Object.values(this.approvals);
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  }
+
+  lowestApproval() {
+    return Math.min(...Object.values(this.approvals));
+  }
+
+  budgetModifier() {
+    const avg = this.averageApproval();
+    if (avg < 30) return -15;
+    if (avg < 40) return -10;
+    if (avg < 50) return -5;
+    if (avg > 75) return 5;
+    return 0;
+  }
+
+  getSnapshot() {
+    return { approvals: { ...this.approvals }, deltas: { ...this.deltas } };
+  }
+
+  restoreSnapshot(snap) {
+    if (snap && snap.approvals) {
+      this.approvals = { ...snap.approvals };
+      this.deltas = snap.deltas ? { ...snap.deltas } : {};
+    }
+  }
+}
+
+/* ============================================================
+   NEWSPAPER HEADLINE GENERATOR
+============================================================ */
+
+function generateHeadline(logEntry, state, stakeholders) {
+  const d = logEntry.decisions;
+  const tempDelta = logEntry.afterTemp - logEntry.snapshot.temperature;
+  const socDelta = logEntry.afterSoc - logEntry.snapshot.socialStability;
+  const finDelta = logEntry.afterFin - logEntry.snapshot.financialStability;
+  const nzDelta = logEntry.afterNZ - logEntry.snapshot.netZeroProgress;
+  const gridDelta = logEntry.afterGrid - logEntry.snapshot.gridReliability;
+
+  const headlines = [];
+  const subheads = [];
+
+  if (logEntry.event) {
+    const eventHeadlines = {
+      'Coastal Flooding': 'FLOOD WATERS BREACH EAST ANGLIA DEFENCES',
+      'Catastrophic Thames': 'THAMES BARRIER FAILS: LONDON UNDERWATER',
+      'Extended Heatwave': 'HEATWAVE DEATH TOLL MOUNTS AS NHS BUCKLES',
+      'Extreme Heat': 'NATIONAL HEAT EMERGENCY: 10,000 EXCESS DEATHS',
+      'Severe Atlantic': 'STORM IDRIS TEARS THROUGH THE NORTH',
+      'Fossil Asset': 'PENSION CRISIS AS FOSSIL ASSETS WRITTEN DOWN',
+      'Fuel Poverty': 'FUEL POVERTY PROTESTS SWEEP THE NATION',
+      'National Grid': 'LIGHTS OUT: GRID FAILURE HITS MILLIONS',
+    };
+    for (const [key, headline] of Object.entries(eventHeadlines)) {
+      if (logEntry.event.includes(key)) {
+        headlines.push(headline);
+        break;
+      }
+    }
+  }
+
+  if (nzDelta >= 15) {
+    headlines.push('GREEN REVOLUTION: NET ZERO TARGET IN SIGHT');
+    subheads.push('Record investment in renewables accelerates UK\'s path to carbon neutrality');
+  } else if (nzDelta >= 8) {
+    headlines.push('UK MAKES MAJOR STRIDES ON EMISSIONS');
+    subheads.push('Government\'s energy transition programme shows measurable progress on carbon targets');
+  }
+
+  if (tempDelta > 0.25) {
+    headlines.push('WARMING ACCELERATES DESPITE PLEDGES');
+    subheads.push('Scientists warn the UK pathway now risks overshooting the Paris Agreement target');
+  }
+
+  if (socDelta < -12) {
+    headlines.push('PUBLIC ANGER BOILS OVER');
+    subheads.push('Trust in government climate policy hits record low as communities bear the cost');
+  } else if (socDelta > 8) {
+    headlines.push('COMMUNITIES RALLY BEHIND GREEN TRANSITION');
+    subheads.push('Social investment programme wins widespread public approval across regions');
+  }
+
+  if (finDelta < -10) {
+    headlines.push('MARKETS ROCKED BY CLIMATE POLICY FALLOUT');
+    subheads.push('Financial sector stability falls sharply as stranded asset exposure deepens');
+  }
+
+  if (gridDelta < -15) {
+    headlines.push('GRID ON THE BRINK AS SUPPLY FALTERS');
+    subheads.push('Energy regulator warns of rolling blackout risk without urgent infrastructure investment');
+  }
+
+  if (state.netZeroProgress >= 100 && logEntry.afterNZ >= 100) {
+    headlines.length = 0;
+    subheads.length = 0;
+    headlines.push('NET ZERO ACHIEVED: A HISTORIC MILESTONE');
+    subheads.push('The United Kingdom has reached net zero emissions, fulfilling a generational commitment');
+  }
+
+  if (headlines.length === 0) {
+    const avg = stakeholders.averageApproval();
+    if (avg > 65) {
+      headlines.push('STEADY HAND: PM\'S CLIMATE STRATEGY HOLDS COURSE');
+      subheads.push('Balanced approach to climate investment maintains broad political support');
+    } else if (avg < 40) {
+      headlines.push('COALITION FRACTURES OVER CLIMATE DIRECTION');
+      subheads.push('Political support erodes as interest groups demand a change of course');
+    } else {
+      const yearLabel = logEntry.year + '–' + (logEntry.year + 5);
+      headlines.push(`UK CLIMATE REPORT CARD: ${yearLabel}`);
+      subheads.push(`Government navigates difficult trade-offs as temperature reaches ${logEntry.afterTemp.toFixed(1)}°C`);
+    }
+  }
+
+  if (subheads.length === 0) {
+    subheads.push(`Temperature: ${logEntry.afterTemp.toFixed(1)}°C · Net Zero: ${Math.round(logEntry.afterNZ)}% · Grid: ${Math.round(logEntry.afterGrid)}%`);
+  }
+
+  return { headline: headlines[0], subhead: subheads[0] };
+}
+
+/* ============================================================
+   TUTORIAL SYSTEM
+============================================================ */
+
+const TUTORIAL_STEPS = [
+  {
+    icon: '♛',
+    title: 'Welcome, Prime Minister',
+    text: 'You\'ve just been elected to lead the UK through the climate crisis. Over 5 terms (2025–2050), you\'ll invest public funds to decarbonise the economy — while keeping the lights on, the banks stable, and the public on your side.',
+  },
+  {
+    icon: '📊',
+    title: 'National Indicators',
+    text: 'The left panel tracks six vital signs: <strong>Temperature</strong> (keep below 2°C), <strong>Budget</strong>, <strong>Grid Reliability</strong>, <strong>Financial Stability</strong>, <strong>Social Stability</strong>, and <strong>Net Zero Progress</strong>. If any stability metric hits zero, it\'s game over.',
+  },
+  {
+    icon: '💡',
+    title: 'Investment Decisions',
+    text: 'Each turn you allocate budget blocks across six categories. Use the <strong>+/−</strong> buttons (or keys 1–6). Each block costs a different amount — you can\'t fund everything. Watch the projected impacts update in real time.',
+  },
+  {
+    icon: '⚖️',
+    title: 'Trade-offs Are Real',
+    text: '<strong>Energy Transition</strong> cuts emissions but creates stranded assets. <strong>Grid & Storage</strong> keeps the lights on. <strong>Social Support</strong> maintains public trust during painful changes. Every choice has a cost elsewhere — that\'s the game.',
+  },
+  {
+    icon: '🏭',
+    title: 'Political Support',
+    text: 'Five stakeholder groups — Energy Industry, Green Groups, Trade Unions, Financial Sector, and the General Public — react to your decisions. Keep them broadly supportive or face budget cuts and political consequences.',
+  },
+  {
+    icon: '⚡',
+    title: 'Events & Crises',
+    text: 'Random events like floods, heatwaves, and financial shocks will test your resilience. Mid-term mini-events offer binary choices with real consequences. Investing in <strong>Adaptation</strong> mitigates their damage.',
+  },
+  {
+    icon: '🔬',
+    title: 'Research & Legacy',
+    text: 'Spending on <strong>R&D</strong> unlocks permanent tech upgrades that make future investments more effective. Complete games to build your legacy rank and earn achievements. Good luck, PM.',
+  },
+];
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_seen_v1';
+    this.step = 0;
+    this.overlay = document.getElementById('tutorial-overlay');
+    this.iconEl = document.getElementById('tutorial-step-icon');
+    this.titleEl = document.getElementById('tutorial-step-title');
+    this.textEl = document.getElementById('tutorial-step-text');
+    this.progressEl = document.getElementById('tutorial-progress');
+    this.navEl = document.getElementById('tutorial-nav');
+    this.skipEl = document.getElementById('tutorial-skip');
+
+    if (this.skipEl) {
+      this.skipEl.addEventListener('click', () => this.close());
+    }
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return false; }
+  }
+
+  markSeen() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  open() {
+    this.step = 0;
+    this._render();
+    if (this.overlay) this.overlay.classList.remove('hidden');
+  }
+
+  close() {
+    this.markSeen();
+    if (this.overlay) this.overlay.classList.add('hidden');
+  }
+
+  _render() {
+    const s = TUTORIAL_STEPS[this.step];
+    if (!s || !this.overlay) return;
+
+    this.iconEl.textContent = s.icon;
+    this.titleEl.textContent = s.title;
+    this.textEl.innerHTML = s.text;
+
+    this.progressEl.innerHTML = TUTORIAL_STEPS.map((_, i) => {
+      const cls = i < this.step ? 'done' : i === this.step ? 'active' : '';
+      return `<div class="tutorial-dot ${cls}"></div>`;
+    }).join('');
+
+    const isLast = this.step === TUTORIAL_STEPS.length - 1;
+    const isFirst = this.step === 0;
+
+    let navHtml = '';
+    if (!isFirst) navHtml += `<button class="tutorial-btn" id="tut-prev">← Back</button>`;
+    if (isLast) navHtml += `<button class="tutorial-btn primary" id="tut-finish">Start Playing →</button>`;
+    else navHtml += `<button class="tutorial-btn primary" id="tut-next">Next →</button>`;
+    this.navEl.innerHTML = navHtml;
+
+    const prevBtn = document.getElementById('tut-prev');
+    const nextBtn = document.getElementById('tut-next');
+    const finishBtn = document.getElementById('tut-finish');
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { this.step--; this._render(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { this.step++; this._render(); });
+    if (finishBtn) finishBtn.addEventListener('click', () => this.close());
+  }
+}
+
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
 
@@ -5796,11 +6387,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, stakeholderMgr.getSnapshot());
     ui.render(engine.getState());
   } else {
     // Auto-save mid-game progress
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, stakeholderMgr.getSnapshot());
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
@@ -5951,10 +6542,12 @@ class LegacySystem {
    INITIALISATION
 ============================================================ */
 
-const engine       = new GameEngine();
-const techTree     = new TechTreeManager();
-const effectsMgr   = new EffectsManager();
-const legacySystem = new LegacySystem();
+const engine         = new GameEngine();
+const techTree       = new TechTreeManager();
+const effectsMgr     = new EffectsManager();
+const legacySystem   = new LegacySystem();
+const stakeholderMgr = new StakeholderManager();
+const tutorialMgr    = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
