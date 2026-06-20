@@ -2116,6 +2116,200 @@ body { transition: filter 2s ease; }
   border-top: 2px solid var(--accent-blue-lt);
 }
 
+/* ===== NEWSPAPER HEADLINES ===== */
+.newspaper-headline {
+  background: #fdf5e6;
+  border: 1px solid #d4c5a0;
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  margin: 8px 0;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+.newspaper-masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 2px solid #2a2a2a;
+  padding-bottom: 3px;
+  margin-bottom: 6px;
+}
+.newspaper-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.newspaper-name.guardian { color: #052962; }
+.newspaper-name.ft { color: #33302e; background: #fff1e5; padding: 0 4px; }
+.newspaper-name.mail { color: #004db3; }
+.newspaper-name.times { color: #1d1d1b; }
+.newspaper-date {
+  font-size: 9px;
+  color: #666;
+  font-style: italic;
+}
+.newspaper-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.newspaper-standfirst {
+  font-size: 11px;
+  color: #444;
+  line-height: 1.45;
+  font-style: italic;
+}
+
+/* ===== STAKEHOLDER PANEL ===== */
+#stakeholder-section {
+  margin-top: var(--gap-md);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+#stakeholder-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+.stakeholder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.stakeholder-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  transition: border-color 0.3s;
+}
+.stakeholder-item.confident { border-color: var(--status-good); }
+.stakeholder-item.cautious { border-color: var(--status-warn); }
+.stakeholder-item.hostile { border-color: var(--status-danger); }
+.stakeholder-icon { font-size: 14px; flex-shrink: 0; }
+.stakeholder-info { min-width: 0; flex: 1; }
+.stakeholder-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.2;
+}
+.stakeholder-mood {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.stakeholder-mood.confident { color: var(--status-good); }
+.stakeholder-mood.cautious { color: var(--status-warn); }
+.stakeholder-mood.hostile { color: var(--status-danger); }
+.stakeholder-bar {
+  height: 3px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  margin-top: 2px;
+  overflow: hidden;
+}
+.stakeholder-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+/* ===== ENDGAME JOURNEY CHART ===== */
+#endgame-journey {
+  margin: var(--gap-lg) 0;
+}
+#endgame-journey-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.journey-chart-container {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+}
+.journey-chart-svg {
+  width: 100%;
+  height: 180px;
+  display: block;
+}
+.journey-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-md);
+  margin-top: var(--gap-sm);
+  flex-wrap: wrap;
+}
+.journey-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.journey-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ===== GLOBAL CONTEXT BANNER ===== */
+.global-context-banner {
+  background: linear-gradient(135deg, #0a1628 0%, #152040 100%);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  margin: 8px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+}
+.global-context-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.global-context-body { flex: 1; min-width: 0; }
+.global-context-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: 2px;
+}
+.global-context-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+.global-context-effect {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 4px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+.global-context-effect.positive { background: #0c2a1a; color: var(--status-good); }
+.global-context-effect.negative { background: #2a0e08; color: var(--status-danger); }
+.global-context-effect.neutral { background: #1a2040; color: var(--accent-blue-lt); }
+
 @media (max-width: 768px) {
   #mobile-tabs { display: block; }
 
@@ -2141,6 +2335,10 @@ body { transition: filter 2s ease; }
     flex-direction: column;
   }
   .timeline-turn { min-width: unset; }
+
+  .stakeholder-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
@@ -2295,6 +2493,45 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAKEHOLDER CONFIDENCE -->
+      <div id="stakeholder-section">
+        <div id="stakeholder-title">Stakeholder Confidence</div>
+        <div class="stakeholder-grid">
+          <div class="stakeholder-item" id="sh-industry">
+            <span class="stakeholder-icon">🏭</span>
+            <div class="stakeholder-info">
+              <div class="stakeholder-name">Industry</div>
+              <div class="stakeholder-mood cautious" id="sh-industry-mood">Cautious</div>
+              <div class="stakeholder-bar"><div class="stakeholder-bar-fill" id="sh-industry-bar" style="width:50%;background:var(--status-warn)"></div></div>
+            </div>
+          </div>
+          <div class="stakeholder-item" id="sh-public">
+            <span class="stakeholder-icon">🏥</span>
+            <div class="stakeholder-info">
+              <div class="stakeholder-name">Public Services</div>
+              <div class="stakeholder-mood cautious" id="sh-public-mood">Cautious</div>
+              <div class="stakeholder-bar"><div class="stakeholder-bar-fill" id="sh-public-bar" style="width:60%;background:var(--status-warn)"></div></div>
+            </div>
+          </div>
+          <div class="stakeholder-item" id="sh-green">
+            <span class="stakeholder-icon">🌿</span>
+            <div class="stakeholder-info">
+              <div class="stakeholder-name">Environmentalists</div>
+              <div class="stakeholder-mood cautious" id="sh-green-mood">Cautious</div>
+              <div class="stakeholder-bar"><div class="stakeholder-bar-fill" id="sh-green-bar" style="width:40%;background:var(--status-warn)"></div></div>
+            </div>
+          </div>
+          <div class="stakeholder-item" id="sh-workers">
+            <span class="stakeholder-icon">👷</span>
+            <div class="stakeholder-info">
+              <div class="stakeholder-name">Workers & Unions</div>
+              <div class="stakeholder-mood cautious" id="sh-workers-mood">Cautious</div>
+              <div class="stakeholder-bar"><div class="stakeholder-bar-fill" id="sh-workers-bar" style="width:55%;background:var(--status-warn)"></div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -3297,6 +3534,217 @@ const METRIC_TOOLTIPS = {
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
+  },
+};
+
+/* ============================================================
+   NEWSPAPER HEADLINE GENERATOR
+============================================================ */
+
+const NEWSPAPERS = [
+  { name: 'The Guardian', css: 'guardian' },
+  { name: 'Financial Times', css: 'ft' },
+  { name: 'Daily Mail', css: 'mail' },
+  { name: 'The Times', css: 'times' },
+];
+
+function generateNewspaperHeadline(state, logEntry) {
+  const year = logEntry.year + 5;
+  const tempDelta = logEntry.afterTemp - logEntry.snapshot.temperature;
+  const nzDelta = logEntry.afterNZ - logEntry.snapshot.netZeroProgress;
+  const socDelta = logEntry.afterSoc - logEntry.snapshot.socialStability;
+  const finDelta = logEntry.afterFin - logEntry.snapshot.financialStability;
+  const gridDelta = logEntry.afterGrid - logEntry.snapshot.gridReliability;
+
+  const headlines = [];
+
+  if (nzDelta > 15) {
+    headlines.push({ paper: 0, title: `Britain's green revolution accelerates as renewables surge past ${Math.round(logEntry.afterNZ)}%`, standfirst: `Government investment drives fastest decarbonisation in G7 as wind and solar capacity expands dramatically across the UK.` });
+  } else if (nzDelta > 5) {
+    headlines.push({ paper: 0, title: `Steady progress on Net Zero as UK edges closer to ${year} climate targets`, standfirst: `Latest figures show ${Math.round(nzDelta)} percentage points of decarbonisation progress, though campaigners say the pace must quicken.` });
+  }
+
+  if (finDelta < -10) {
+    headlines.push({ paper: 1, title: `Markets rattled as stranded assets hit pension fund portfolios`, standfirst: `Financial stability drops to ${Math.round(logEntry.afterFin)}%. Analysts warn of contagion risk as fossil fuel write-downs accelerate across City institutions.` });
+  } else if (finDelta > 8) {
+    headlines.push({ paper: 1, title: `Green finance push shores up City resilience`, standfirst: `Financial sector stability rises to ${Math.round(logEntry.afterFin)}% as managed transition reduces stranded asset exposure.` });
+  }
+
+  if (socDelta < -8) {
+    headlines.push({ paper: 2, title: `Fury as energy bills soar and communities left behind by Net Zero drive`, standfirst: `Social stability falls to ${Math.round(logEntry.afterSoc)}%. "Ordinary families are paying the price," says opposition.` });
+  } else if (state.temperature > 1.8) {
+    headlines.push({ paper: 2, title: `Scorching summers becoming the new normal as UK warms to ${state.temperature.toFixed(1)}°C`, standfirst: `NHS under pressure as extreme heat events increase. Government faces calls to boost adaptation spending.` });
+  }
+
+  if (gridDelta < -10) {
+    headlines.push({ paper: 3, title: `Blackout fears grow as grid reliability drops to ${Math.round(logEntry.afterGrid)}%`, standfirst: `National Grid warns of "material risk" to supply security as renewable capacity outstrips backup storage.` });
+  } else if (logEntry.event) {
+    headlines.push({ paper: 3, title: `${logEntry.event}: ministers face questions on preparedness`, standfirst: `Emergency response under scrutiny as climate event disrupts services across affected regions.` });
+  }
+
+  if (tempDelta <= 0.1 && nzDelta >= 0 && socDelta >= 0) {
+    headlines.push({ paper: 0, title: `UK climate strategy wins international praise at COP`, standfirst: `Temperature rise held to ${state.temperature.toFixed(1)}°C. Commentators call Britain's balancing act "a model for industrialised nations".` });
+  }
+
+  if (socDelta > 5 && finDelta > 0) {
+    headlines.push({ paper: 2, title: `Just transition delivers: communities report renewed confidence`, standfirst: `Government support package sees social stability climb to ${Math.round(logEntry.afterSoc)}%. Retraining programmes praised in former coal regions.` });
+  }
+
+  if (state.energy.gas <= 5) {
+    headlines.push({ paper: 1, title: `End of an era: UK gas generation falls to historic low`, standfirst: `North Sea output near zero as the last gas plants prepare for decommissioning. Pension funds brace for final write-downs.` });
+  }
+
+  if (headlines.length === 0) {
+    headlines.push({ paper: 3, title: `Government holds course on climate strategy amid mixed signals`, standfirst: `Latest quarterly data shows incremental progress as ministers resist pressure to change tack.` });
+  }
+
+  const pick = headlines[Math.floor(Math.random() * headlines.length)];
+  const paper = NEWSPAPERS[pick.paper];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const displayDate = `${Math.floor(Math.random()*28)+1} ${months[Math.floor(Math.random()*12)]} ${year}`;
+
+  return { paper, title: pick.title, standfirst: pick.standfirst, date: displayDate };
+}
+
+/* ============================================================
+   STAKEHOLDER CONFIDENCE TRACKER
+============================================================ */
+
+class StakeholderTracker {
+  constructor() {
+    this.confidence = { industry: 50, public: 60, green: 40, workers: 55 };
+  }
+
+  reset() {
+    this.confidence = { industry: 50, public: 60, green: 40, workers: 55 };
+  }
+
+  update(state, decisions) {
+    const clamp = (v) => Math.max(0, Math.min(100, Math.round(v)));
+    const c = this.confidence;
+
+    c.industry = clamp(
+      state.financialStability * 0.4 +
+      state.gridReliability * 0.3 +
+      (state.energy.gas > 15 ? 15 : -10) +
+      (decisions.financialResilience * 8) -
+      (decisions.energyTransition * 5) +
+      10
+    );
+
+    c.public = clamp(
+      state.socialStability * 0.5 +
+      state.gridReliability * 0.2 +
+      (decisions.socialSupport * 6) +
+      (decisions.adaptation * 5) -
+      (state.temperature > 1.5 ? (state.temperature - 1.5) * 15 : 0) +
+      10
+    );
+
+    c.green = clamp(
+      state.netZeroProgress * 0.5 +
+      (decisions.energyTransition * 12) +
+      (decisions.research * 5) -
+      (state.energy.gas * 0.5) -
+      (state.temperature > 1.5 ? 10 : 0) +
+      5
+    );
+
+    c.workers = clamp(
+      state.socialStability * 0.3 +
+      state.financialStability * 0.2 +
+      (decisions.socialSupport * 10) +
+      (decisions.gridAndStorage * 5) -
+      (decisions.energyTransition > 0 && decisions.socialSupport === 0 ? 15 : 0) +
+      15
+    );
+  }
+
+  render() {
+    const groups = [
+      { id: 'industry', label: 'Industry' },
+      { id: 'public', label: 'Public Services' },
+      { id: 'green', label: 'Environmentalists' },
+      { id: 'workers', label: 'Workers & Unions' },
+    ];
+
+    for (const g of groups) {
+      const val = this.confidence[g.id];
+      const mood = val >= 60 ? 'confident' : val >= 35 ? 'cautious' : 'hostile';
+      const moodLabel = val >= 60 ? 'Supportive' : val >= 35 ? 'Cautious' : 'Hostile';
+      const color = val >= 60 ? 'var(--status-good)' : val >= 35 ? 'var(--status-warn)' : 'var(--status-danger)';
+
+      const item = document.getElementById(`sh-${g.id}`);
+      const moodEl = document.getElementById(`sh-${g.id}-mood`);
+      const barEl = document.getElementById(`sh-${g.id}-bar`);
+
+      if (item) {
+        item.className = 'stakeholder-item ' + mood;
+      }
+      if (moodEl) {
+        moodEl.textContent = moodLabel;
+        moodEl.className = 'stakeholder-mood ' + mood;
+      }
+      if (barEl) {
+        barEl.style.width = val + '%';
+        barEl.style.background = color;
+      }
+    }
+  }
+}
+
+const stakeholderTracker = new StakeholderTracker();
+
+/* ============================================================
+   GLOBAL CONTEXT EVENTS (COP SUMMITS & INTERNATIONAL)
+============================================================ */
+
+const GLOBAL_CONTEXT_EVENTS = {
+  0: {
+    icon: '🌍',
+    title: 'COP30 — Belem, Brazil',
+    desc: 'World leaders gather in the Amazon. The UK delegation presents its opening strategy. International pressure to demonstrate credible domestic action.',
+    effect(state) {
+      if (state.netZeroProgress >= 40) return { type: 'positive', label: 'Diplomatic boost: +5 social stability', apply(s) { s.socialStability = Math.min(100, s.socialStability + 5); } };
+      return { type: 'neutral', label: 'Delegates note UK has yet to accelerate', apply() {} };
+    },
+  },
+  1: {
+    icon: '🇪🇺',
+    title: 'EU Carbon Border Tax Takes Effect',
+    desc: 'The EU Carbon Border Adjustment Mechanism reaches full implementation. UK exporters face tariffs unless domestic carbon pricing aligns.',
+    effect(state) {
+      if (state.netZeroProgress >= 50) return { type: 'positive', label: 'UK firms competitive: Financial +5', apply(s) { s.financialStability = Math.min(100, s.financialStability + 5); } };
+      return { type: 'negative', label: 'Trade friction: Financial −5', apply(s) { s.financialStability = Math.max(0, s.financialStability - 5); } };
+    },
+  },
+  2: {
+    icon: '🌡️',
+    title: 'IPCC Sixth Synthesis — "Code Red" Update',
+    desc: 'Scientists warn the 1.5°C window is closing faster than projected. Global emissions still rising. Pressure mounts on wealthy nations.',
+    effect(state) {
+      if (state.temperature < 1.6) return { type: 'positive', label: 'UK cited as positive example: Social +3', apply(s) { s.socialStability = Math.min(100, s.socialStability + 3); } };
+      return { type: 'negative', label: 'Public anxiety rises: Social −3', apply(s) { s.socialStability = Math.max(0, s.socialStability - 3); } };
+    },
+  },
+  3: {
+    icon: '🏦',
+    title: 'Global Green Bond Market Surges',
+    desc: 'International capital markets shift decisively toward sustainable finance. Countries with strong climate policy attract premium investment.',
+    effect(state) {
+      if (state.financialStability >= 60) return { type: 'positive', label: 'Investment inflow: Financial +8, Budget +10bn', apply(s) { s.financialStability = Math.min(100, s.financialStability + 8); s.budget += 10; } };
+      return { type: 'neutral', label: 'UK misses the wave — limited capital inflow', apply() {} };
+    },
+  },
+  4: {
+    icon: '🌏',
+    title: 'COP35 — Final Reckoning',
+    desc: 'The last major COP before 2050. Nations are judged on 25 years of climate action. The UK faces its moment of truth.',
+    effect(state) {
+      if (state.netZeroProgress >= 90 && state.temperature < 2.0) return { type: 'positive', label: 'UK hailed as climate leader: Social +10', apply(s) { s.socialStability = Math.min(100, s.socialStability + 10); } };
+      if (state.netZeroProgress < 60) return { type: 'negative', label: 'International condemnation: Social −8', apply(s) { s.socialStability = Math.max(0, s.socialStability - 8); } };
+      return { type: 'neutral', label: 'Mixed reviews — progress acknowledged but gaps remain', apply() {} };
+    },
   },
 };
 
@@ -4505,6 +4953,7 @@ class UI {
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
+        stakeholderTracker.reset();
         this._lastLogLength = 0;
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4535,6 +4984,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-journey')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -4616,6 +5066,7 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderStakeholders(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
   }
@@ -4955,6 +5406,11 @@ class UI {
     }
   }
 
+  _renderStakeholders(state) {
+    stakeholderTracker.update(state, state.currentDecisions);
+    stakeholderTracker.render();
+  }
+
   _buildTurnNarrative(entry) {
     const d = {
       energyTransition: 0, gridAndStorage: 0, adaptation: 0,
@@ -5014,6 +5470,19 @@ class UI {
 
     div.innerHTML = html;
     this.elLogScroll.appendChild(div);
+
+    // Inject newspaper headline
+    const headline = generateNewspaperHeadline(this.engine.state, entry);
+    const newsDiv = document.createElement('div');
+    newsDiv.className = 'newspaper-headline';
+    newsDiv.innerHTML = `
+      <div class="newspaper-masthead">
+        <span class="newspaper-name ${headline.paper.css}">${headline.paper.name}</span>
+        <span class="newspaper-date">${headline.date}</span>
+      </div>
+      <div class="newspaper-title">${headline.title}</div>
+      <div class="newspaper-standfirst">${headline.standfirst}</div>`;
+    this.elLogScroll.appendChild(newsDiv);
 
     // Inject advisor briefing for next turn (based on post-turn state)
     this._injectAdvisorBriefing(this.engine.state);
@@ -5146,6 +5615,9 @@ class UI {
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
 
+    // Build journey chart
+    const journeyHtml = this._buildJourneyChart();
+
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
@@ -5165,7 +5637,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', journeyHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5225,6 +5697,73 @@ class UI {
       ${dataPoints.map(p => `<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="3" fill="var(--accent-blue-lt)"/>`).join('')}
       ${labels.join('')}
     </svg></div>`;
+  }
+
+  _buildJourneyChart() {
+    const data = turnHistory.data;
+    if (data.length < 2) return '';
+
+    const w = 480, h = 160, padL = 40, padR = 16, padT = 16, padB = 28;
+    const chartW = w - padL - padR;
+    const chartH = h - padT - padB;
+    const n = data.length;
+
+    const series = [
+      { key: 'gridReliability', label: 'Grid', color: '#4caf81', min: 0, max: 100 },
+      { key: 'financialStability', label: 'Financial', color: '#5390d9', min: 0, max: 100 },
+      { key: 'socialStability', label: 'Social', color: '#ffd600', min: 0, max: 100 },
+      { key: 'netZeroProgress', label: 'Net Zero', color: '#448aff', min: 0, max: 100 },
+      { key: 'temperature', label: 'Temp (scaled)', color: '#ff7043', min: 1.0, max: 3.0 },
+    ];
+
+    const xScale = (i) => padL + (i / (n - 1)) * chartW;
+    const yScale = (v, min, max) => padT + (1 - (v - min) / (max - min || 1)) * chartH;
+
+    let svg = `<svg class="journey-chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet">`;
+
+    svg += `<rect x="${padL}" y="${padT}" width="${chartW}" height="${chartH}" fill="var(--bg-elevated)" rx="4"/>`;
+
+    for (const pct of [0.25, 0.5, 0.75]) {
+      const y = padT + pct * chartH;
+      svg += `<line x1="${padL}" y1="${y}" x2="${padL + chartW}" y2="${y}" stroke="var(--border-subtle)" stroke-width="0.5" stroke-dasharray="3,3"/>`;
+      svg += `<text x="${padL - 4}" y="${y + 3}" text-anchor="end" fill="var(--text-muted)" font-size="8">${Math.round(100 - pct * 100)}%</text>`;
+    }
+
+    for (let i = 0; i < n; i++) {
+      const x = xScale(i);
+      svg += `<text x="${x}" y="${h - 4}" text-anchor="middle" fill="var(--text-muted)" font-size="8">${data[i].year}</text>`;
+      svg += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${padT + chartH}" stroke="var(--border-subtle)" stroke-width="0.5" opacity="0.4"/>`;
+    }
+
+    for (const s of series) {
+      const isTemp = s.key === 'temperature';
+      const points = data.map((d, i) => {
+        const rawVal = d[s.key];
+        const displayVal = isTemp ? ((rawVal - s.min) / (s.max - s.min)) * 100 : rawVal;
+        return { x: xScale(i), y: yScale(displayVal, 0, 100) };
+      });
+
+      const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      svg += `<path d="${pathD}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>`;
+
+      for (const p of points) {
+        svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${s.color}" stroke="var(--bg-tertiary)" stroke-width="1.5"/>`;
+      }
+    }
+
+    svg += `</svg>`;
+
+    const legend = series.map(s =>
+      `<div class="journey-legend-item"><div class="journey-legend-dot" style="background:${s.color}"></div>${s.label}</div>`
+    ).join('');
+
+    return `<div id="endgame-journey">
+      <div id="endgame-journey-title">Your 25-Year Journey</div>
+      <div class="journey-chart-container">
+        ${svg}
+        <div class="journey-legend">${legend}</div>
+      </div>
+    </div>`;
   }
 
   _buildPolicyTimeline(state) {
@@ -5777,6 +6316,41 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
+
+  // Inject global context event for this turn
+  const turnIndex = engine.state.turn - 1;
+  const globalEvent = GLOBAL_CONTEXT_EVENTS[turnIndex];
+  if (globalEvent) {
+    const effect = globalEvent.effect(engine.state);
+    effect.apply(engine.state);
+    const bannerDiv = document.createElement('div');
+    bannerDiv.className = 'global-context-banner';
+    bannerDiv.innerHTML = `
+      <div class="global-context-icon">${globalEvent.icon}</div>
+      <div class="global-context-body">
+        <div class="global-context-title">${globalEvent.title}</div>
+        <div class="global-context-desc">${globalEvent.desc}</div>
+        <div class="global-context-effect ${effect.type}">${effect.label}</div>
+      </div>`;
+    ui.elLogScroll.appendChild(bannerDiv);
+    ui.elLogScroll.scrollTop = ui.elLogScroll.scrollHeight;
+  }
+
+  // Update stakeholder confidence using decisions from the resolved turn
+  const resolvedDecisions = { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0 };
+  for (const dec of result.logEntry.decisions) {
+    const m = dec.match(/×(\d)/);
+    if (!m) continue;
+    const count = parseInt(m[1]);
+    if (dec.includes('Energy')) resolvedDecisions.energyTransition = count;
+    else if (dec.includes('Grid')) resolvedDecisions.gridAndStorage = count;
+    else if (dec.includes('Adapt')) resolvedDecisions.adaptation = count;
+    else if (dec.includes('Social')) resolvedDecisions.socialSupport = count;
+    else if (dec.includes('Financial')) resolvedDecisions.financialResilience = count;
+    else if (dec.includes('R&D')) resolvedDecisions.research = count;
+  }
+  stakeholderTracker.update(engine.state, resolvedDecisions);
+  stakeholderTracker.render();
 
   if (result.endgame) {
     // Game over — clear save, record analytics
