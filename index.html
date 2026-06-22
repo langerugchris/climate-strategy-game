@@ -1386,6 +1386,220 @@ body { transition: filter 2s ease; }
   #event-card { padding: var(--gap-lg); }
 }
 
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== NEWS TICKER ===== */
+#news-ticker {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 5px var(--gap-lg);
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+#news-ticker-label {
+  font-weight: 700;
+  color: var(--status-danger);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+#news-ticker-text {
+  white-space: nowrap;
+  animation: ticker-scroll 18s linear infinite;
+  font-family: var(--font-editorial);
+  font-style: italic;
+  color: var(--text-primary);
+}
+@keyframes ticker-scroll {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #news-ticker-text { animation: none; }
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  pointer-events: none;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  pointer-events: auto;
+}
+#tutorial-highlight {
+  position: absolute;
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.65), 0 0 20px var(--accent-blue-lt);
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+#tutorial-card {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 340px;
+  width: 90vw;
+  pointer-events: auto;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+#tutorial-step-indicator {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: var(--gap-md);
+}
+#tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+.tutorial-btn {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+#tutorial-next-btn {
+  background: var(--accent-blue);
+  color: white;
+}
+#tutorial-next-btn:hover { background: var(--accent-blue-lt); }
+#tutorial-skip-btn {
+  background: none;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+#tutorial-skip-btn:hover { color: var(--text-primary); border-color: var(--border-strong); }
+
+/* ===== ARIA LIVE REGION ===== */
+#aria-announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ===== SOUND TOGGLE ===== */
+#sound-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+#sound-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+#sound-btn.muted { opacity: 0.5; }
+
+/* ===== ENDGAME COUNTERFACTUAL ===== */
+#endgame-counterfactual {
+  margin-top: var(--gap-lg);
+  padding: var(--gap-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+#counterfactual-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+}
+.cf-comparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--gap-sm) var(--gap-md);
+  align-items: center;
+  font-size: 12px;
+}
+.cf-label {
+  color: var(--text-muted);
+  text-align: right;
+}
+.cf-vs {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.cf-your-val, .cf-alt-val {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cf-your-val { color: var(--accent-blue-lt); }
+.cf-alt-val { color: var(--text-secondary); }
+.cf-header {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+  padding-bottom: var(--gap-xs);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.cf-header.yours { color: var(--accent-blue-lt); text-align: right; }
+.cf-header.balanced { color: var(--text-muted); }
+.cf-insight {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  line-height: 1.6;
+  margin-top: var(--gap-sm);
+  padding-top: var(--gap-sm);
+  border-top: 1px solid var(--border-subtle);
+}
+
 /* ===== HOOK SCREEN ===== */
 #hook-screen {
   position: fixed;
@@ -2162,7 +2376,8 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="sound-btn" title="Toggle sound" aria-label="Toggle sound effects">🔊</button>
+    <button id="settings-btn" title="Settings" aria-label="Open settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2177,11 +2392,20 @@ body { transition: filter 2s ease; }
   </div>
 </header>
 
+<!-- NEWS TICKER -->
+<div id="news-ticker" role="marquee" aria-live="off">
+  <span id="news-ticker-label">Breaking</span>
+  <span id="news-ticker-text">Government announces 25-year climate strategy. Markets react cautiously.</span>
+</div>
+
+<!-- ARIA LIVE REGION -->
+<div id="aria-announcer" role="status" aria-live="polite" aria-atomic="true"></div>
+
 <!-- ===== MAIN LAYOUT ===== -->
-<main id="game-main">
+<main id="game-main" role="main">
 
   <!-- LEFT: METRICS PANEL -->
-  <aside class="panel" id="metrics-panel">
+  <aside class="panel" id="metrics-panel" role="complementary" aria-label="National indicators">
     <div class="panel-title">National Indicators</div>
     <div id="metrics-inner">
 
@@ -2303,7 +2527,7 @@ body { transition: filter 2s ease; }
   </aside>
 
   <!-- CENTRE: DECISIONS PANEL -->
-  <section class="panel" id="decisions-panel">
+  <section class="panel" id="decisions-panel" aria-label="Investment decisions">
     <div id="decision-header">
       <div id="decision-header-top">
         <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
@@ -2327,9 +2551,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition">−</button>
+              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition" aria-label="Remove Energy Transition block">−</button>
               <span class="block-count" id="count-energyTransition">0</span>
-              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition">+</button>
+              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition" aria-label="Add Energy Transition block">+</button>
             </div>
           </div>
         </div>
@@ -2353,9 +2577,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£35bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage">−</button>
+              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage" aria-label="Remove Grid and Storage block">−</button>
               <span class="block-count" id="count-gridAndStorage">0</span>
-              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage">+</button>
+              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage" aria-label="Add Grid and Storage block">+</button>
             </div>
           </div>
         </div>
@@ -2379,9 +2603,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£25bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-adaptation" data-cat="adaptation">−</button>
+              <button class="block-btn" id="minus-adaptation" data-cat="adaptation" aria-label="Remove Adaptation block">−</button>
               <span class="block-count" id="count-adaptation">0</span>
-              <button class="block-btn" id="plus-adaptation" data-cat="adaptation">+</button>
+              <button class="block-btn" id="plus-adaptation" data-cat="adaptation" aria-label="Add Adaptation block">+</button>
             </div>
           </div>
         </div>
@@ -2405,9 +2629,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£20bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport">−</button>
+              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport" aria-label="Remove Social Support block">−</button>
               <span class="block-count" id="count-socialSupport">0</span>
-              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport">+</button>
+              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport" aria-label="Add Social Support block">+</button>
             </div>
           </div>
         </div>
@@ -2430,9 +2654,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience">−</button>
+              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience" aria-label="Remove Financial Resilience block">−</button>
               <span class="block-count" id="count-financialResilience">0</span>
-              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience">+</button>
+              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience" aria-label="Add Financial Resilience block">+</button>
             </div>
           </div>
         </div>
@@ -2455,9 +2679,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£15bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-research" data-cat="research">−</button>
+              <button class="block-btn" id="minus-research" data-cat="research" aria-label="Remove R&amp;D block">−</button>
               <span class="block-count" id="count-research">0</span>
-              <button class="block-btn" id="plus-research" data-cat="research">+</button>
+              <button class="block-btn" id="plus-research" data-cat="research" aria-label="Add R&amp;D block">+</button>
             </div>
           </div>
         </div>
@@ -3063,8 +3287,29 @@ body { transition: filter 2s ease; }
         Difficulty changes take effect on <strong>New Game</strong>. Your current run continues with the settings it started with.
       </div>
     </div>
+    <div class="settings-section">
+      <div class="settings-section-label">Options</div>
+      <div style="display:flex;gap:var(--gap-sm);flex-wrap:wrap;margin-top:var(--gap-sm);">
+        <button id="reset-tutorial-btn" style="padding:8px 16px;background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);font-size:12px;cursor:pointer;">Replay Tutorial</button>
+      </div>
+    </div>
     <!-- High scores injected here by JS -->
     <button id="settings-close-btn">Done</button>
+  </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-backdrop"></div>
+  <div id="tutorial-highlight"></div>
+  <div id="tutorial-card">
+    <div id="tutorial-step-indicator">Step 1 of 6</div>
+    <div id="tutorial-title"></div>
+    <div id="tutorial-body"></div>
+    <div id="tutorial-actions">
+      <button class="tutorial-btn" id="tutorial-skip-btn">Skip tutorial</button>
+      <button class="tutorial-btn" id="tutorial-next-btn">Next →</button>
+    </div>
   </div>
 </div>
 
@@ -4307,8 +4552,10 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          soundMgr.play('remove');
         } else {
           this.engine.allocateBlock(cat);
+          soundMgr.play('invest');
         }
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
@@ -4322,8 +4569,8 @@ class UI {
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
-        if (e.shiftKey) this.engine.deallocateBlock(keyMap[e.key]);
-        else this.engine.allocateBlock(keyMap[e.key]);
+        if (e.shiftKey) { this.engine.deallocateBlock(keyMap[e.key]); soundMgr.play('remove'); }
+        else { this.engine.allocateBlock(keyMap[e.key]); soundMgr.play('invest'); }
         this.render(this.engine.getState());
       } else if (e.key === 'Enter' && !e.repeat) {
         this.elEndTurnBtn.click();
@@ -4389,6 +4636,9 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (tutorialMgr.shouldShow()) {
+          setTimeout(() => tutorialMgr.start(), 400);
+        }
       });
     }
 
@@ -4463,6 +4713,15 @@ class UI {
     if (settingsCloseBtn) {
       settingsCloseBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
     }
+    const resetTutorialBtn = document.getElementById('reset-tutorial-btn');
+    if (resetTutorialBtn) {
+      resetTutorialBtn.addEventListener('click', () => {
+        localStorage.removeItem('uk_climate_tutorial_done_v1');
+        tutorialMgr._done = false;
+        resetTutorialBtn.textContent = '✓ Tutorial will show on next game';
+        setTimeout(() => { resetTutorialBtn.textContent = 'Replay Tutorial'; }, 2000);
+      });
+    }
     document.querySelectorAll('.diff-option').forEach(opt => {
       opt.addEventListener('click', () => {
         document.querySelectorAll('.diff-option').forEach(o => o.classList.remove('selected'));
@@ -4511,6 +4770,7 @@ class UI {
             <div class="log-year">2025 — Briefing</div>
             <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard'}</strong>. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
           </div>`;
+        newsTicker.update(this.engine.getState());
         this.render(this.engine.getState());
       });
     }
@@ -4536,6 +4796,7 @@ class UI {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
       document.getElementById('endgame-timeline')?.remove();
+      document.getElementById('endgame-counterfactual')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
       // Reset scenario card selection to default
@@ -5146,6 +5407,9 @@ class UI {
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
 
+    // Build counterfactual comparison
+    const counterfactualHtml = buildCounterfactual(s);
+
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
@@ -5165,7 +5429,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + counterfactualHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5731,6 +5995,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
+  soundMgr.play('advance');
 
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
@@ -5744,6 +6009,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
+    soundMgr.play('tick');
     await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
@@ -5778,10 +6044,17 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
+  // Update news ticker after turn resolution
+  newsTicker.update(engine.state);
+  announce(`Turn complete. Year ${engine.state.year}. Grid ${Math.round(engine.state.gridReliability)}%, Financial ${Math.round(engine.state.financialStability)}%, Social ${Math.round(engine.state.socialStability)}%.`);
+
   if (result.endgame) {
     // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
+    const isGoodEnd = result.endgame.scenario === 'ORDERLY' || result.endgame.scenario === 'MANAGED';
+    soundMgr.play(isGoodEnd ? 'endgame-good' : 'endgame-bad');
+    newsTicker.setEndgame(isGoodEnd);
     if (result.event) {
       fxMgr.haptic('heavy');
       fxMgr.shake();
@@ -5793,6 +6066,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   } else if (result.event) {
     fxMgr.haptic('heavy');
     fxMgr.shake();
+    soundMgr.play('event');
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
@@ -5948,6 +6222,479 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: SOUND MANAGER (Web Audio API)
+============================================================ */
+
+class SoundManager {
+  constructor() {
+    this._ctx = null;
+    this._muted = localStorage.getItem('uk_climate_muted') === '1';
+    this._btn = document.getElementById('sound-btn');
+    if (this._btn) {
+      this._btn.textContent = this._muted ? '🔇' : '🔊';
+      if (this._muted) this._btn.classList.add('muted');
+      this._btn.addEventListener('click', () => this.toggle());
+    }
+  }
+
+  _ensureCtx() {
+    if (!this._ctx) {
+      try { this._ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch { return null; }
+    }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  }
+
+  toggle() {
+    this._muted = !this._muted;
+    localStorage.setItem('uk_climate_muted', this._muted ? '1' : '0');
+    if (this._btn) {
+      this._btn.textContent = this._muted ? '🔇' : '🔊';
+      this._btn.classList.toggle('muted', this._muted);
+    }
+    if (!this._muted) this.play('click');
+  }
+
+  play(type) {
+    if (this._muted) return;
+    const ctx = this._ensureCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    switch (type) {
+      case 'invest': {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.linearRampToValueAtTime(780, now + 0.08);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.15);
+        break;
+      }
+      case 'remove': {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.linearRampToValueAtTime(350, now + 0.1);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+        break;
+      }
+      case 'advance': {
+        [440, 554, 659].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0, now + i * 0.1);
+          gain.gain.linearRampToValueAtTime(0.1, now + i * 0.1 + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.2);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(now + i * 0.1);
+          osc.stop(now + i * 0.1 + 0.2);
+        });
+        break;
+      }
+      case 'event': {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.linearRampToValueAtTime(120, now + 0.3);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+        break;
+      }
+      case 'endgame-good': {
+        [523, 659, 784, 1047].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0, now + i * 0.15);
+          gain.gain.linearRampToValueAtTime(0.1, now + i * 0.15 + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.4);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(now + i * 0.15);
+          osc.stop(now + i * 0.15 + 0.4);
+        });
+        break;
+      }
+      case 'endgame-bad': {
+        [294, 262, 220, 196].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0, now + i * 0.2);
+          gain.gain.linearRampToValueAtTime(0.08, now + i * 0.2 + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.2 + 0.5);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(now + i * 0.2);
+          osc.stop(now + i * 0.2 + 0.5);
+        });
+        break;
+      }
+      case 'click': {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 1000;
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.04);
+        break;
+      }
+      case 'tick': {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.03);
+        break;
+      }
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: NEWS TICKER
+============================================================ */
+
+const NEWS_HEADLINES = {
+  opening: [
+    'Government announces 25-year climate strategy. Markets react cautiously.',
+    'New PM pledges "Net Zero by 2050 or bust." Pension funds nervous.',
+    'Climate minister: "The next five years are make-or-break for UK energy."',
+  ],
+  highRenewables: [
+    'UK wind farms produce record output — gas dependency plummets.',
+    'Solar boom: UK installs more panels than rest of Europe combined.',
+    'Offshore wind expansion creates 40,000 new jobs in coastal communities.',
+  ],
+  gridRisk: [
+    'Grid operators warn: "Rolling blackouts possible this winter."',
+    'National Grid issues emergency demand reduction notice.',
+    'Energy regulator raises alarm over intermittency gaps in power supply.',
+  ],
+  financialStress: [
+    'Pension funds report £40bn losses on stranded fossil assets.',
+    'Bank of England warns of "climate Minsky moment" in financial markets.',
+    'Regional banks face capital shortfalls as property valuations slide.',
+  ],
+  socialUnrest: [
+    'Fuel poverty protests spread to 40 cities across England and Wales.',
+    'Polling: 62% say "transition is being done to us, not with us."',
+    'Former coal communities demand Just Transition investment.',
+  ],
+  adaptation: [
+    'Thames Barrier upgraded as sea level rise accelerates beyond projections.',
+    'Government fast-tracks flood defence programme after record rainfall.',
+    'Heat-resilient building standards made mandatory for all new homes.',
+  ],
+  highTemp: [
+    'Met Office confirms UK warming 0.3°C faster than global average.',
+    'Record-breaking summer forces hospitals into emergency heat protocols.',
+    'Insurance industry withdraws flood cover from 200,000 UK properties.',
+  ],
+  nzProgress: [
+    'UK emissions down 60% from 1990 levels — Net Zero within reach.',
+    'Carbon capture breakthrough boosts Net Zero timeline confidence.',
+    'Independent assessment: UK on track to meet 2050 climate targets.',
+  ],
+  balanced: [
+    'Cross-party support holds for climate investment programme.',
+    'CBI report: green investment delivering 3:1 GDP returns.',
+    'International observers praise UK transition model as "replicable."',
+  ],
+  endgameGood: [
+    '2050: UK declares Net Zero achieved. Global leaders congratulate.',
+    'The UK has done it — a generation of investment pays off at Net Zero.',
+  ],
+  endgameBad: [
+    '2050: Net Zero target missed. Climate commitments in tatters.',
+    'UN climate review: UK transition "a cautionary tale of half-measures."',
+  ],
+};
+
+class NewsTickerManager {
+  constructor() {
+    this._el = document.getElementById('news-ticker-text');
+    this._current = '';
+  }
+
+  update(state) {
+    const headlines = this._getRelevantHeadlines(state);
+    const chosen = headlines[Math.floor(Math.random() * headlines.length)];
+    if (this._el && chosen !== this._current) {
+      this._current = chosen;
+      this._el.style.animation = 'none';
+      this._el.offsetHeight;
+      this._el.textContent = chosen;
+      this._el.style.animation = '';
+    }
+  }
+
+  _getRelevantHeadlines(s) {
+    const pool = [];
+
+    if (s.turn === 0) return NEWS_HEADLINES.opening;
+
+    if (s.energy.wind + s.energy.solar > 80) pool.push(...NEWS_HEADLINES.highRenewables);
+    if (s.gridReliability < 45) pool.push(...NEWS_HEADLINES.gridRisk);
+    if (s.financialStability < 45) pool.push(...NEWS_HEADLINES.financialStress);
+    if (s.socialStability < 45) pool.push(...NEWS_HEADLINES.socialUnrest);
+    if (s.infrastructure.adaptation > 40) pool.push(...NEWS_HEADLINES.adaptation);
+    if (s.temperature > 1.6) pool.push(...NEWS_HEADLINES.highTemp);
+    if (s.netZeroProgress > 60) pool.push(...NEWS_HEADLINES.nzProgress);
+    if (s.gridReliability >= 60 && s.financialStability >= 60 && s.socialStability >= 60) pool.push(...NEWS_HEADLINES.balanced);
+
+    return pool.length > 0 ? pool : NEWS_HEADLINES.balanced;
+  }
+
+  setEndgame(isGood) {
+    const pool = isGood ? NEWS_HEADLINES.endgameGood : NEWS_HEADLINES.endgameBad;
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    if (this._el) {
+      this._el.style.animation = 'none';
+      this._el.textContent = chosen;
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: TUTORIAL MANAGER
+============================================================ */
+
+const TUTORIAL_STEPS = [
+  {
+    target: '#metrics-panel',
+    title: 'National Indicators',
+    body: 'These five metrics track the UK\'s climate trajectory. Temperature, grid reliability, financial stability, social stability, and Net Zero progress all interact — neglecting one risks cascading failure across the others.',
+  },
+  {
+    target: '#investment-cards',
+    title: 'Investment Decisions',
+    body: 'Each turn, allocate your budget across six policy areas by adding blocks. Each block has a fixed cost and specific effects. You can add up to 2 blocks per area. Use number keys 1-6 for speed.',
+  },
+  {
+    target: '#card-energyTransition',
+    title: 'Trade-offs Are Real',
+    body: 'Energy Transition builds renewables but creates stranded assets. Grid & Storage prevents blackouts. Every choice has a second-order consequence — there is no "right" answer, only trade-offs.',
+  },
+  {
+    target: '#energy-mix-section',
+    title: 'Energy Mix',
+    body: 'This bar shows the UK\'s live energy composition. As you invest in renewables, gas share drops — but without storage and nuclear backup, grid reliability suffers.',
+  },
+  {
+    target: '#end-turn-btn',
+    title: 'Advancing Time',
+    body: 'When you\'re ready, advance to the next 5-year term. Random climate events may strike. Mini-events during the simulation give you tactical choices mid-term.',
+  },
+  {
+    target: '#turn-info',
+    title: 'Your Mission',
+    body: 'You have 5 terms (25 years) to reach Net Zero while keeping society and the financial system intact. Good luck, Minister.',
+  },
+];
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done_v1';
+    this._done = localStorage.getItem(this._KEY) === '1';
+    this._step = 0;
+    this._overlay = document.getElementById('tutorial-overlay');
+    this._highlight = document.getElementById('tutorial-highlight');
+    this._card = document.getElementById('tutorial-card');
+    this._title = document.getElementById('tutorial-title');
+    this._body = document.getElementById('tutorial-body');
+    this._stepIndicator = document.getElementById('tutorial-step-indicator');
+    this._nextBtn = document.getElementById('tutorial-next-btn');
+    this._skipBtn = document.getElementById('tutorial-skip-btn');
+
+    if (this._nextBtn) this._nextBtn.addEventListener('click', () => this.next());
+    if (this._skipBtn) this._skipBtn.addEventListener('click', () => this.dismiss());
+  }
+
+  shouldShow() { return !this._done; }
+
+  start() {
+    if (this._done) return;
+    this._step = 0;
+    this._overlay.classList.remove('hidden');
+    this._showStep();
+  }
+
+  next() {
+    this._step++;
+    if (this._step >= TUTORIAL_STEPS.length) {
+      this.dismiss();
+    } else {
+      this._showStep();
+    }
+  }
+
+  dismiss() {
+    this._done = true;
+    localStorage.setItem(this._KEY, '1');
+    this._overlay.classList.add('hidden');
+  }
+
+  _showStep() {
+    const step = TUTORIAL_STEPS[this._step];
+    this._stepIndicator.textContent = `Step ${this._step + 1} of ${TUTORIAL_STEPS.length}`;
+    this._title.textContent = step.title;
+    this._body.textContent = step.body;
+    this._nextBtn.textContent = this._step === TUTORIAL_STEPS.length - 1 ? 'Start playing →' : 'Next →';
+
+    const target = document.querySelector(step.target);
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      this._highlight.style.left = (rect.left - 4) + 'px';
+      this._highlight.style.top = (rect.top - 4) + 'px';
+      this._highlight.style.width = (rect.width + 8) + 'px';
+      this._highlight.style.height = (rect.height + 8) + 'px';
+
+      const cardWidth = 340;
+      let cardLeft = rect.right + 16;
+      let cardTop = rect.top;
+      if (cardLeft + cardWidth > window.innerWidth - 16) {
+        cardLeft = Math.max(16, rect.left - cardWidth - 16);
+      }
+      if (cardLeft < 16) {
+        cardLeft = Math.max(16, (window.innerWidth - cardWidth) / 2);
+        cardTop = rect.bottom + 16;
+      }
+      if (cardTop + 200 > window.innerHeight) {
+        cardTop = Math.max(16, rect.top - 200);
+      }
+      this._card.style.left = cardLeft + 'px';
+      this._card.style.top = cardTop + 'px';
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: ARIA ANNOUNCER
+============================================================ */
+
+function announce(message) {
+  const el = document.getElementById('aria-announcer');
+  if (el) {
+    el.textContent = '';
+    requestAnimationFrame(() => { el.textContent = message; });
+  }
+}
+
+/* ============================================================
+   MODULE: COUNTERFACTUAL BUILDER
+============================================================ */
+
+function buildCounterfactual(state) {
+  const totalInvestment = {};
+  const catLabels = {
+    energyTransition: 'Energy Transition',
+    gridAndStorage: 'Grid & Storage',
+    adaptation: 'Adaptation',
+    socialSupport: 'Social Support',
+    financialResilience: 'Financial Resilience',
+    research: 'R&D',
+  };
+  for (const key of Object.keys(catLabels)) {
+    totalInvestment[key] = state.infrastructure[key] || 0;
+  }
+
+  const total = Object.values(totalInvestment).reduce((a, b) => a + b, 0);
+  if (total === 0) return '';
+
+  const max = Math.max(...Object.values(totalInvestment));
+  const min = Math.min(...Object.values(totalInvestment));
+  const spread = max - min;
+
+  const yourMetrics = {
+    temperature: state.temperature,
+    netZero: state.netZeroProgress,
+    grid: state.gridReliability,
+    financial: state.financialStability,
+    social: state.socialStability,
+  };
+
+  const avg = total / Object.keys(totalInvestment).length;
+  const balancedTemp = Math.max(1.1, state.temperature + (totalInvestment.energyTransition > avg ? 0.15 : -0.1));
+  const balancedNZ = Math.min(100, state.netZeroProgress + (totalInvestment.energyTransition < avg ? 8 : -5));
+  const balancedGrid = Math.min(100, Math.max(0, state.gridReliability + (totalInvestment.gridAndStorage < avg ? 12 : -8)));
+  const balancedFin = Math.min(100, Math.max(0, state.financialStability + (totalInvestment.financialResilience < avg ? 10 : -6)));
+  const balancedSoc = Math.min(100, Math.max(0, state.socialStability + (totalInvestment.socialSupport < avg ? 10 : -5)));
+
+  const altMetrics = {
+    temperature: balancedTemp,
+    netZero: balancedNZ,
+    grid: balancedGrid,
+    financial: balancedFin,
+    social: balancedSoc,
+  };
+
+  const neglectedAreas = Object.entries(totalInvestment)
+    .filter(([, v]) => v < avg * 0.5)
+    .map(([k]) => catLabels[k]);
+
+  const heavilyInvested = Object.entries(totalInvestment)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 2)
+    .map(([k]) => catLabels[k]);
+
+  let insight = '';
+  if (neglectedAreas.length > 0) {
+    insight = `Your strategy heavily favoured ${heavilyInvested.join(' and ')} while underinvesting in ${neglectedAreas.join(' and ')}. A more balanced portfolio would have traded some ${heavilyInvested[0]} gains for stronger ${neglectedAreas[0]} outcomes.`;
+  } else {
+    insight = `Your investment was relatively balanced across categories. The outcomes reflect the difficulty of maintaining all five indicators simultaneously — the trade-offs are inherent in the problem.`;
+  }
+
+  const rows = [
+    ['Temperature', yourMetrics.temperature.toFixed(1) + '°C', altMetrics.temperature.toFixed(1) + '°C'],
+    ['Net Zero', Math.round(yourMetrics.netZero) + '%', Math.round(altMetrics.netZero) + '%'],
+    ['Grid', Math.round(yourMetrics.grid) + '%', Math.round(altMetrics.grid) + '%'],
+    ['Financial', Math.round(yourMetrics.financial) + '%', Math.round(altMetrics.financial) + '%'],
+    ['Social', Math.round(yourMetrics.social) + '%', Math.round(altMetrics.social) + '%'],
+  ];
+
+  let html = `<div id="endgame-counterfactual">
+    <div id="counterfactual-title">What If? — Balanced Portfolio Comparison</div>
+    <div class="cf-comparison">
+      <div class="cf-header yours">Your Strategy</div>
+      <div class="cf-header" style="text-align:center">vs</div>
+      <div class="cf-header balanced">Balanced Alt.</div>`;
+
+  for (const [label, yours, alt] of rows) {
+    html += `<div class="cf-your-val">${yours}</div>
+      <div class="cf-label">${label}</div>
+      <div class="cf-alt-val">${alt}</div>`;
+  }
+
+  html += `<div class="cf-insight">${insight}</div></div></div>`;
+  return html;
+}
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -5955,6 +6702,9 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const soundMgr     = new SoundManager();
+const newsTicker   = new NewsTickerManager();
+const tutorialMgr  = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
