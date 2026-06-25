@@ -2142,6 +2142,158 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .fx-shake { animation: none !important; }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 2000;
+  pointer-events: auto;
+}
+#tutorial-overlay.hidden { display: none; }
+
+.tutorial-highlight {
+  position: absolute;
+  box-shadow: 0 0 0 4000px rgba(0,0,0,0.65);
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  z-index: 2001;
+  pointer-events: none;
+}
+
+.tutorial-tooltip {
+  position: absolute;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-md) var(--gap-lg);
+  max-width: 340px;
+  z-index: 2002;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.tutorial-tooltip-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-xs);
+}
+.tutorial-tooltip-text {
+  font-size: 12px; line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+}
+.tutorial-tooltip-step {
+  font-size: 10px; color: var(--text-muted);
+  margin-bottom: var(--gap-sm);
+}
+.tutorial-tooltip-btns {
+  display: flex; gap: var(--gap-sm);
+  justify-content: flex-end;
+}
+.tutorial-btn {
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
+}
+.tutorial-btn.primary {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+.tutorial-btn:hover { opacity: 0.85; }
+
+/* ===== SOUND TOGGLE ===== */
+.settings-toggle-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+.settings-toggle-label {
+  font-size: 13px; color: var(--text-secondary);
+}
+.toggle-switch {
+  position: relative; width: 40px; height: 22px;
+  background: var(--bg-tertiary); border-radius: 11px;
+  cursor: pointer; border: 1px solid var(--border-subtle);
+  transition: background 0.2s;
+}
+.toggle-switch.on { background: var(--accent-blue); }
+.toggle-switch::after {
+  content: ''; position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%; background: var(--text-primary);
+  transition: transform 0.2s;
+}
+.toggle-switch.on::after { transform: translateX(18px); }
+
+/* ===== INTERNATIONAL COMPARISON ===== */
+#intl-comparison {
+  margin-top: var(--gap-lg);
+  padding: var(--gap-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+#intl-comparison-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--gap-sm);
+}
+.intl-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 11px;
+}
+.intl-table th {
+  text-align: left; padding: 6px 8px;
+  color: var(--text-muted); font-weight: 600;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.intl-table td {
+  padding: 5px 8px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(42,48,80,0.3);
+}
+.intl-table tr.uk-row {
+  background: rgba(29,112,184,0.12);
+}
+.intl-table tr.uk-row td {
+  color: var(--accent-blue-lt);
+  font-weight: 700;
+}
+.intl-flag { margin-right: 4px; }
+.intl-outcome {
+  display: inline-block; padding: 1px 6px;
+  border-radius: 3px; font-size: 10px; font-weight: 600;
+}
+.intl-outcome.good { background: rgba(0,200,83,0.15); color: var(--status-good); }
+.intl-outcome.warn { background: rgba(255,214,0,0.15); color: var(--status-warn); }
+.intl-outcome.danger { background: rgba(255,61,0,0.15); color: var(--status-danger); }
 </style>
 </head>
 <body>
@@ -2314,7 +2466,7 @@ body { transition: filter 2s ease; }
       <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
     </div>
 
-    <div id="investment-cards">
+    <div id="investment-cards" role="group" aria-label="Investment decisions">
 
       <!-- Energy Transition -->
       <div class="investment-card" id="card-energyTransition">
@@ -2927,7 +3079,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- SCENARIO SELECTION SCREEN -->
-<div id="scenario-screen" class="hidden">
+<div id="scenario-screen" class="hidden" role="dialog" aria-modal="true" aria-label="Choose your starting scenario">
   <div id="scenario-content">
     <div id="scenario-heading">Choose Your Starting Scenario</div>
     <p id="scenario-subheading">Each scenario reflects a different political and economic inheritance.<br>The fundamentals of the UK climate challenge remain the same.</p>
@@ -2966,6 +3118,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_independence">
+        <span class="scenario-card-icon">🛢️</span>
+        <div class="scenario-card-name">Energy Independence</div>
+        <div class="scenario-card-desc">The UK doubled down on domestic fossil fuels for energy security. Gas dependency is high and renewables are lagging — but the economy is strong and the grid is stable.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Gas: <span>40 (high dependency)</span></div>
+          <div class="scenario-stat">Financial: <span>80% (strong)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="climate_emergency">
+        <span class="scenario-card-icon">🚨</span>
+        <div class="scenario-card-name">Climate Emergency</div>
+        <div class="scenario-card-desc">A series of climate disasters has galvanised public support. You have a strong mandate and extra funding — but temperatures are already dangerously high and progress is behind.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£120bn/turn</span></div>
+          <div class="scenario-stat">Temperature: <span>1.4°C (elevated)</span></div>
+          <div class="scenario-stat">Social: <span>85% (strong mandate)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -2990,7 +3164,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- EVENT MODAL -->
-<div id="event-modal" class="hidden">
+<div id="event-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Climate Event">
   <div id="event-card">
     <div id="event-icon-display">⚠️</div>
     <h2 id="event-title-display">Climate Event</h2>
@@ -3002,7 +3176,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- END GAME OVERLAY -->
-<div id="endgame-overlay" class="hidden">
+<div id="endgame-overlay" class="hidden" role="dialog" aria-modal="true" aria-label="Game Results">
   <div id="endgame-card">
     <div id="endgame-icon-display"></div>
     <h1 id="endgame-title-display"></h1>
@@ -3016,7 +3190,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- ADVISOR OVERLAY -->
-<div id="advisor-overlay" class="hidden">
+<div id="advisor-overlay" class="hidden" role="dialog" aria-modal="true" aria-label="Chancellor's Briefing">
   <div id="advisor-card">
     <div class="advisor-icon">📋</div>
     <h2>Chancellor's Briefing</h2>
@@ -3033,7 +3207,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- SETTINGS MODAL -->
-<div id="settings-modal" class="hidden">
+<div id="settings-modal" class="hidden" role="dialog" aria-modal="true" aria-label="Settings">
   <div id="settings-card">
     <h2>⚙ Settings</h2>
     <div class="settings-section">
@@ -3063,10 +3237,23 @@ body { transition: filter 2s ease; }
         Difficulty changes take effect on <strong>New Game</strong>. Your current run continues with the settings it started with.
       </div>
     </div>
+    <div class="settings-section">
+      <div class="settings-section-label">Sound</div>
+      <div class="settings-toggle-row">
+        <span class="settings-toggle-label">Sound Effects</span>
+        <div class="toggle-switch on" id="sound-toggle" role="switch" aria-checked="true" tabindex="0"></div>
+      </div>
+    </div>
     <!-- High scores injected here by JS -->
     <button id="settings-close-btn">Done</button>
   </div>
 </div>
+
+<!-- LIVE REGION FOR ACCESSIBILITY -->
+<div id="a11y-announce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden"></div>
 
 <!-- MOBILE TAB BAR -->
 <div id="mobile-tabs">
@@ -3370,6 +3557,28 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_independence: {
+    label: 'Energy Independence',
+    apply(state) {
+      state.energy.gas = 40;
+      state.energy.wind = 15;
+      state.energy.solar = 3;
+      state.financialStability = 80;
+      state.gridReliability = 75;
+      state.netZeroProgress = 20;
+      state._budgetOverride = 110;
+    },
+  },
+  climate_emergency: {
+    label: 'Climate Emergency',
+    apply(state) {
+      state.temperature = 1.4;
+      state.socialStability = 85;
+      state.socialCapital = 15;
+      state.netZeroProgress = 20;
+      state._budgetOverride = 120;
     },
   },
 };
@@ -4307,8 +4516,10 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          soundMgr.remove();
         } else {
           this.engine.allocateBlock(cat);
+          soundMgr.click();
         }
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
@@ -4389,6 +4600,7 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        setTimeout(() => tutorialMgr.start(), 400);
       });
     }
 
@@ -4412,6 +4624,7 @@ class UI {
       this.elNoSpendWarning.classList.add('hidden');
 
       this.elEndTurnBtn.disabled = true;
+      soundMgr.turnAdvance();
       await runSimulationPhase(this.engine, this, effectsMgr);
       this.elEndTurnBtn.disabled = false;
     });
@@ -4463,15 +4676,33 @@ class UI {
     if (settingsCloseBtn) {
       settingsCloseBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
     }
+    const soundToggle = document.getElementById('sound-toggle');
+    if (soundToggle) {
+      if (!soundMgr.enabled) soundToggle.classList.remove('on');
+      soundToggle.addEventListener('click', () => {
+        const on = soundMgr.toggle();
+        soundToggle.classList.toggle('on', on);
+        soundToggle.setAttribute('aria-checked', String(on));
+        if (on) soundMgr.click();
+      });
+      soundToggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); soundToggle.click(); }
+      });
+    }
     document.querySelectorAll('.diff-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        document.querySelectorAll('.diff-option').forEach(o => o.classList.remove('selected'));
+      opt.setAttribute('tabindex', '0');
+      opt.setAttribute('role', 'radio');
+      const selectDiff = () => {
+        document.querySelectorAll('.diff-option').forEach(o => { o.classList.remove('selected'); o.setAttribute('aria-checked', 'false'); });
         opt.classList.add('selected');
+        opt.setAttribute('aria-checked', 'true');
         difficultyMgr.select(opt.dataset.diff);
         this._updateDifficultyIndicator();
         const sdl = document.getElementById('scenario-diff-label');
         if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
-      });
+      };
+      opt.addEventListener('click', selectDiff);
+      opt.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDiff(); } });
     });
     // Init difficulty indicator and selected option
     this._updateDifficultyIndicator();
@@ -4483,16 +4714,21 @@ class UI {
 
     // Scenario selection screen
     this._activeScenario = 'standard';
+    const selectScenario = (card) => {
+      document.querySelectorAll('.scenario-card').forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-checked', 'false'); });
+      card.classList.add('selected');
+      card.setAttribute('aria-checked', 'true');
+      this._activeScenario = card.dataset.scenario;
+    };
     document.querySelectorAll('.scenario-card').forEach(card => {
-      card.addEventListener('click', () => {
-        document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        this._activeScenario = card.dataset.scenario;
-      });
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'radio');
+      card.setAttribute('aria-checked', 'false');
+      card.addEventListener('click', () => selectScenario(card));
+      card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectScenario(card); } });
     });
-    // Mark standard as default
     const defaultCard = document.querySelector('.scenario-card[data-scenario="standard"]');
-    if (defaultCard) defaultCard.classList.add('selected');
+    if (defaultCard) { defaultCard.classList.add('selected'); defaultCard.setAttribute('aria-checked', 'true'); }
 
     const scenarioStartBtn = document.getElementById('scenario-start-btn');
     if (scenarioStartBtn) {
@@ -4538,6 +4774,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('intl-comparison')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -4618,6 +4855,15 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    this._announceMetrics(state);
+  }
+
+  _announceMetrics(state) {
+    clearTimeout(this._a11yTimer);
+    this._a11yTimer = setTimeout(() => {
+      const el = document.getElementById('a11y-announce');
+      if (el) el.textContent = `Turn ${state.turn + 1}. Temperature ${state.temperature.toFixed(1)} degrees. Grid ${Math.round(state.gridReliability)}%. Financial ${Math.round(state.financialStability)}%. Social ${Math.round(state.socialStability)}%. Net Zero ${Math.round(state.netZeroProgress)}%. Budget £${Math.round(state.budget - state.spentThisTurn)}bn remaining.`;
+    }, 1500);
   }
 
   _renderHeader(state) {
@@ -5032,6 +5278,7 @@ class UI {
   }
 
   showEventModal(event) {
+    soundMgr.eventAlert();
     this.elEventIcon.textContent  = event.icon;
     this.elEventTitle.textContent = event.title;
     this.elEventDesc.textContent  = event.description;
@@ -5091,6 +5338,8 @@ class UI {
 
   showEndgame(result) {
     const s = this.engine.state;
+    const isPositive = result.scenario === 'ORDERLY' || result.scenario === 'MANAGED' || result.scenario === 'TURBULENT';
+    if (isPositive) soundMgr.endgameSuccess(); else soundMgr.endgameFailure();
 
     this.elEndgameCard.className = result.colour;
     this.elEndgameIcon.textContent  = result.icon;
@@ -5150,6 +5399,9 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    // Build international comparison
+    const intlHtml = this._buildInternationalComparison(s);
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
@@ -5165,7 +5417,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', intlHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5261,6 +5513,37 @@ class UI {
       </div>`;
     }
     html += `</div></div>`;
+    return html;
+  }
+
+  _buildInternationalComparison(state) {
+    const playerTemp = state.temperature;
+    const playerNZ = Math.round(state.netZeroProgress);
+    const ukEntry = { flag: '\u{1F1EC}\u{1F1E7}', name: 'United Kingdom (You)', temp: playerTemp, nz: playerNZ, strategy: 'Your policy choices', rating: '', isPlayer: true };
+
+    const rateOutcome = (temp, nz) => {
+      if (nz >= 90 && temp < 1.8) return 'good';
+      if (nz >= 50 || temp < 2.0) return 'warn';
+      return 'danger';
+    };
+    ukEntry.rating = rateOutcome(playerTemp, playerNZ);
+
+    const all = [...INTL_ARCHETYPES, ukEntry].sort((a, b) => a.temp - b.temp);
+
+    let html = `<div id="intl-comparison">
+      <div id="intl-comparison-title">International Comparison (illustrative)</div>
+      <table class="intl-table">
+        <thead><tr><th>Nation</th><th>Temp</th><th>NZ %</th><th>Strategy</th></tr></thead>
+        <tbody>`;
+    for (const c of all) {
+      html += `<tr class="${c.isPlayer ? 'uk-row' : ''}">
+        <td><span class="intl-flag">${c.flag}</span>${c.name}</td>
+        <td><span class="intl-outcome ${c.rating}">${c.temp.toFixed ? c.temp.toFixed(1) : c.temp}°C</span></td>
+        <td>${c.nz}%</td>
+        <td>${c.strategy}</td>
+      </tr>`;
+    }
+    html += `</tbody></table></div>`;
     return html;
   }
 
@@ -5486,6 +5769,162 @@ class EffectsManager {
     }
   }
 }
+
+/* ============================================================
+   MODULE: SOUND MANAGER
+============================================================ */
+
+class SoundManager {
+  constructor() {
+    this._ctx = null;
+    this._enabled = true;
+    const saved = localStorage.getItem('uk_climate_sound');
+    if (saved === 'off') this._enabled = false;
+  }
+
+  _getCtx() {
+    if (!this._ctx) {
+      try { this._ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch { return null; }
+    }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  }
+
+  toggle() {
+    this._enabled = !this._enabled;
+    localStorage.setItem('uk_climate_sound', this._enabled ? 'on' : 'off');
+    return this._enabled;
+  }
+
+  get enabled() { return this._enabled; }
+
+  _play(fn) {
+    if (!this._enabled) return;
+    const ctx = this._getCtx();
+    if (!ctx) return;
+    try { fn(ctx); } catch {}
+  }
+
+  click() {
+    this._play(ctx => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.08);
+    });
+  }
+
+  remove() {
+    this._play(ctx => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.06);
+    });
+  }
+
+  turnAdvance() {
+    this._play(ctx => {
+      const t = ctx.currentTime;
+      [440, 554, 659].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, t + i * 0.1);
+        gain.gain.linearRampToValueAtTime(0.07, t + i * 0.1 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.1 + 0.2);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t + i * 0.1);
+        osc.stop(t + i * 0.1 + 0.2);
+      });
+    });
+  }
+
+  eventAlert() {
+    this._play(ctx => {
+      const t = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, t);
+      osc.frequency.linearRampToValueAtTime(400, t + 0.15);
+      osc.frequency.linearRampToValueAtTime(200, t + 0.3);
+      gain.gain.setValueAtTime(0.05, t);
+      gain.gain.linearRampToValueAtTime(0.08, t + 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.4);
+    });
+  }
+
+  endgameSuccess() {
+    this._play(ctx => {
+      const t = ctx.currentTime;
+      [523, 659, 784, 1047].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, t + i * 0.15);
+        gain.gain.linearRampToValueAtTime(0.06, t + i * 0.15 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.15 + 0.5);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t + i * 0.15);
+        osc.stop(t + i * 0.15 + 0.5);
+      });
+    });
+  }
+
+  endgameFailure() {
+    this._play(ctx => {
+      const t = ctx.currentTime;
+      [293, 277, 261, 220].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, t + i * 0.2);
+        gain.gain.linearRampToValueAtTime(0.06, t + i * 0.2 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.2 + 0.6);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t + i * 0.2);
+        osc.stop(t + i * 0.2 + 0.6);
+      });
+    });
+  }
+
+  miniChoice() {
+    this._play(ctx => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(660, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.05, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.12);
+    });
+  }
+}
+
+const soundMgr = new SoundManager();
 
 /* ============================================================
    MODULE: TECH TREE MANAGER
@@ -5875,6 +6314,7 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
     const cleanup = (handler) => {
       handler(engine.state);
       fxMgr.haptic('light');
+      soundMgr.miniChoice();
       panel.classList.add('sim-fade-out');
       setTimeout(() => { panel.remove(); resolve(); }, 300);
     };
@@ -5948,6 +6388,152 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: TUTORIAL MANAGER
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_v1';
+    this._step = 0;
+    this._steps = [
+      {
+        target: '#metrics-panel',
+        mobileTab: 'metrics-panel',
+        title: 'National Indicators',
+        text: 'These six metrics show the state of the UK: temperature, budget, grid reliability, financial stability, social stability, and Net Zero progress. Every decision shifts multiple metrics at once.',
+      },
+      {
+        target: '#energy-mix-section',
+        mobileTab: 'metrics-panel',
+        title: 'Energy Mix',
+        text: 'This bar shows the UK energy mix — wind, solar, nuclear, and gas. Investing in Energy Transition grows renewables and shrinks gas. But without Grid & Storage investment, intermittency causes blackouts.',
+      },
+      {
+        target: '#investment-cards',
+        mobileTab: 'decisions-panel',
+        title: 'Investment Decisions',
+        text: 'These six cards are your policy levers. Click + to add blocks (max 2 per area). Each has trade-offs described in the rationale text. You can also use keyboard shortcuts 1-6.',
+      },
+      {
+        target: '#budget-status',
+        mobileTab: 'decisions-panel',
+        title: 'Budget',
+        text: 'Your remaining budget for this term. You cannot spend more than you have. High financial stability grants a £20bn bonus. Events can impose budget penalties next turn.',
+      },
+      {
+        target: '#end-turn-btn',
+        mobileTab: 'decisions-panel',
+        title: 'Advance the Simulation',
+        text: 'When ready, click here to simulate the next 5 years. During simulation, mini-events may appear with binary choices. After each turn, check the policy log for your advisor\'s briefing.',
+      },
+      {
+        target: '#log-panel',
+        mobileTab: 'log-panel',
+        title: 'Policy Log',
+        text: 'Your turn-by-turn record of decisions, events, and advisor briefings. Use this to track what happened and plan your next move. The advisor warns you when metrics are at risk.',
+      },
+    ];
+    this._overlay = null;
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); }
+    catch { return false; }
+  }
+
+  markDone() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  start() {
+    if (!this.shouldShow()) return;
+    this._step = 0;
+    this._show();
+  }
+
+  _show() {
+    const overlay = document.getElementById('tutorial-overlay');
+    if (!overlay) return;
+
+    const step = this._steps[this._step];
+    if (!step) { this._finish(); return; }
+
+    if (window.innerWidth <= 768 && step.mobileTab) {
+      const tabBtn = document.querySelector(`.mobile-tab[data-panel="${step.mobileTab}"]`);
+      if (tabBtn) tabBtn.click();
+    }
+
+    const target = document.querySelector(step.target);
+    if (!target) { this._step++; this._show(); return; }
+
+    const rect = target.getBoundingClientRect();
+    const pad = 6;
+
+    overlay.innerHTML = '';
+    overlay.classList.remove('hidden');
+
+    const highlight = document.createElement('div');
+    highlight.className = 'tutorial-highlight';
+    highlight.style.top = (rect.top - pad) + 'px';
+    highlight.style.left = (rect.left - pad) + 'px';
+    highlight.style.width = (rect.width + pad * 2) + 'px';
+    highlight.style.height = (rect.height + pad * 2) + 'px';
+    overlay.appendChild(highlight);
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tutorial-tooltip';
+    tooltip.innerHTML = `
+      <div class="tutorial-tooltip-step">Step ${this._step + 1} of ${this._steps.length}</div>
+      <div class="tutorial-tooltip-title">${step.title}</div>
+      <div class="tutorial-tooltip-text">${step.text}</div>
+      <div class="tutorial-tooltip-btns">
+        <button class="tutorial-btn" id="tutorial-skip">Skip tutorial</button>
+        <button class="tutorial-btn primary" id="tutorial-next">${this._step < this._steps.length - 1 ? 'Next' : 'Got it'}</button>
+      </div>`;
+
+    const tooltipTop = rect.bottom + pad + 12;
+    const tooltipLeft = Math.max(8, Math.min(rect.left, window.innerWidth - 356));
+    tooltip.style.top = tooltipTop + 'px';
+    tooltip.style.left = tooltipLeft + 'px';
+
+    if (tooltipTop + 200 > window.innerHeight) {
+      tooltip.style.top = (rect.top - pad - 200) + 'px';
+    }
+
+    overlay.appendChild(tooltip);
+
+    document.getElementById('tutorial-next').addEventListener('click', () => {
+      this._step++;
+      this._show();
+    }, { once: true });
+
+    document.getElementById('tutorial-skip').addEventListener('click', () => {
+      this._finish();
+    }, { once: true });
+  }
+
+  _finish() {
+    const overlay = document.getElementById('tutorial-overlay');
+    if (overlay) { overlay.classList.add('hidden'); overlay.innerHTML = ''; }
+    this.markDone();
+  }
+}
+
+/* ============================================================
+   MODULE: INTERNATIONAL COMPARISON
+============================================================ */
+
+const INTL_ARCHETYPES = [
+  { flag: '\u{1F1E9}\u{1F1F0}', name: 'Denmark',        temp: 1.4, nz: 95, strategy: 'Early offshore wind leader',        rating: 'good' },
+  { flag: '\u{1F1E9}\u{1F1EA}', name: 'Germany',         temp: 1.7, nz: 78, strategy: 'Energiewende + coal phase-out',      rating: 'good' },
+  { flag: '\u{1F1EB}\u{1F1F7}', name: 'France',          temp: 1.6, nz: 82, strategy: 'Nuclear baseload + electrification', rating: 'good' },
+  { flag: '\u{1F1FA}\u{1F1F8}', name: 'United States',   temp: 2.1, nz: 52, strategy: 'Fragmented federal policy',          rating: 'warn' },
+  { flag: '\u{1F1E8}\u{1F1F3}', name: 'China',           temp: 2.3, nz: 45, strategy: 'Peak emissions 2030 pledge',         rating: 'warn' },
+  { flag: '\u{1F1EE}\u{1F1F3}', name: 'India',           temp: 2.5, nz: 30, strategy: 'Development-first, solar expansion', rating: 'danger' },
+  { flag: '\u{1F1E6}\u{1F1FA}', name: 'Australia',       temp: 2.2, nz: 48, strategy: 'Late pivot from coal exports',       rating: 'warn' },
+];
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -5955,6 +6541,7 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const tutorialMgr  = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
