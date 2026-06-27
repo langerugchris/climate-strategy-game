@@ -2149,6 +2149,99 @@ body { transition: filter 2s ease; }
   margin-top: 4px;
 }
 
+/* ===== STAKEHOLDER PRESSURE PANEL ===== */
+#stakeholder-panel {
+  padding: var(--gap-sm) var(--gap-md);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+#stakeholder-panel-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.stakeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.stakeholder-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  transition: border-color 0.3s, background 0.3s;
+  cursor: default;
+  position: relative;
+}
+.stakeholder-tile.positive { border-color: rgba(0,200,83,0.35); }
+.stakeholder-tile.negative { border-color: rgba(255,61,0,0.35); background: rgba(255,61,0,0.04); }
+.stakeholder-icon { font-size: 16px; line-height: 1; }
+.stakeholder-name {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  text-align: center;
+}
+.stakeholder-bar-track {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-primary);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+.stakeholder-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease, background 0.3s;
+}
+.stakeholder-bar-fill.high { background: var(--status-good); }
+.stakeholder-bar-fill.mid { background: var(--status-warn); }
+.stakeholder-bar-fill.low { background: var(--status-danger); }
+.stakeholder-val {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+.stakeholder-pressure-tag {
+  font-size: 8px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 999px;
+  margin-top: 2px;
+}
+.stakeholder-pressure-tag.demand { background: rgba(255,214,0,0.15); color: var(--status-warn); }
+.stakeholder-pressure-tag.support { background: rgba(0,200,83,0.12); color: var(--status-good); }
+
+/* ===== MOMENTUM INDICATORS ===== */
+.momentum-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: rgba(68,138,255,0.12);
+  color: var(--status-info);
+  border: 1px solid rgba(68,138,255,0.25);
+}
+.momentum-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2382,6 +2475,37 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <!-- Stakeholder Pressure -->
+      <div id="stakeholder-panel">
+        <div id="stakeholder-panel-title">Stakeholder Pressure</div>
+        <div class="stakeholder-grid">
+          <div class="stakeholder-tile" id="sh-industry">
+            <span class="stakeholder-icon">🏭</span>
+            <span class="stakeholder-name">Industry</span>
+            <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill mid" id="sh-bar-industry" style="width:60%"></div></div>
+            <span class="stakeholder-val" id="sh-val-industry">60</span>
+          </div>
+          <div class="stakeholder-tile" id="sh-public">
+            <span class="stakeholder-icon">👥</span>
+            <span class="stakeholder-name">Public</span>
+            <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill mid" id="sh-bar-public" style="width:55%"></div></div>
+            <span class="stakeholder-val" id="sh-val-public">55</span>
+          </div>
+          <div class="stakeholder-tile" id="sh-science">
+            <span class="stakeholder-icon">🔬</span>
+            <span class="stakeholder-name">Scientists</span>
+            <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill mid" id="sh-bar-science" style="width:50%"></div></div>
+            <span class="stakeholder-val" id="sh-val-science">50</span>
+          </div>
+          <div class="stakeholder-tile" id="sh-treasury">
+            <span class="stakeholder-icon">🏛️</span>
+            <span class="stakeholder-name">Treasury</span>
+            <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill mid" id="sh-bar-treasury" style="width:65%"></div></div>
+            <span class="stakeholder-val" id="sh-val-treasury">65</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </aside>
 
@@ -2424,6 +2548,7 @@ body { transition: filter 2s ease; }
         </div>
         <div class="card-citation">Based on CCC Sixth Carbon Budget renewable build rates</div>
         <div class="synergy-row" id="synergy-energyTransition"></div>
+        <div class="momentum-row" id="momentum-energyTransition"></div>
       </div>
 
       <!-- Grid & Storage -->
@@ -2451,6 +2576,7 @@ body { transition: filter 2s ease; }
         </div>
         <div class="card-citation">Based on National Grid ESO Future Energy Scenarios</div>
         <div class="synergy-row" id="synergy-gridAndStorage"></div>
+        <div class="momentum-row" id="momentum-gridAndStorage"></div>
       </div>
 
       <!-- Adaptation -->
@@ -2478,6 +2604,7 @@ body { transition: filter 2s ease; }
         </div>
         <div class="card-citation">Based on UK Climate Risk Assessment 2022</div>
         <div class="synergy-row" id="synergy-adaptation"></div>
+        <div class="momentum-row" id="momentum-adaptation"></div>
       </div>
 
       <!-- Social Support -->
@@ -2504,6 +2631,7 @@ body { transition: filter 2s ease; }
         </div>
         <div class="card-citation">Illustrative figures — educational simulation</div>
         <div class="synergy-row" id="synergy-socialSupport"></div>
+        <div class="momentum-row" id="momentum-socialSupport"></div>
       </div>
 
       <!-- Financial Resilience -->
@@ -2530,6 +2658,7 @@ body { transition: filter 2s ease; }
         </div>
         <div class="card-citation">Based on Bank of England Climate Stress Testing 2022</div>
         <div class="synergy-row" id="synergy-financialResilience"></div>
+        <div class="momentum-row" id="momentum-financialResilience"></div>
       </div>
 
       <!-- Research & Development (6th card) -->
@@ -3345,6 +3474,9 @@ const ACHIEVEMENTS = [
   { id: 'synergist', icon: '🔗', name: 'Synergist', desc: 'Activate 3+ policy synergies in a single turn', check: (s) => s._maxSynergies >= 3 },
   { id: 'diplomat', icon: '🌍', name: 'Climate Diplomat', desc: 'Build Social Capital above 40', check: (s) => s.socialCapital >= 40 },
   { id: 'balanced', icon: '⚖️', name: 'Balanced Portfolio', desc: 'Invest in 4+ categories in a single turn', check: (s) => s._maxCategories >= 4 },
+  { id: 'crowd_pleaser', icon: '🎉', name: 'Crowd Pleaser', desc: 'Get all stakeholder approvals above 70%', check: (s) => Object.values(stakeholderMgr.approval).every(v => v >= 70) },
+  { id: 'momentum_master', icon: '🔄', name: 'Momentum Master', desc: 'Build a 4-turn streak in any category', check: (s) => Object.values(momentumTracker.streaks).some(v => v >= 4) },
+  { id: 'crisis_manager', icon: '⛓', name: 'Crisis Manager', desc: 'Survive a cascading crisis without breakdown', check: (s) => s._cascadesSurvived >= 1 },
 ];
 
 class AchievementManager {
@@ -3521,6 +3653,9 @@ class SaveManager {
         techPurchased: [...techPurchased],
         activeScenario,
         activeDifficulty,
+        stakeholderApproval: Object.assign({}, stakeholderMgr.approval),
+        momentumStreaks: Object.assign({}, momentumTracker.streaks),
+        crisisHits: Object.assign({}, crisisTracker._hits),
       };
       localStorage.setItem(this._KEY, JSON.stringify(payload));
     } catch (e) { /* storage full or unavailable */ }
@@ -3703,6 +3838,7 @@ class GameEngine {
       lastSnapshot: null,
       _maxSynergies: 0,
       _maxCategories: 0,
+      _cascadesSurvived: 0,
     };
   }
 
@@ -3854,6 +3990,17 @@ class GameEngine {
     const catCount = Object.values(s.currentDecisions).filter(v => v > 0).length;
     s._maxCategories = Math.max(s._maxCategories || 0, catCount);
 
+    // Phase 2.6: Apply policy momentum bonuses
+    momentumTracker.updateStreaks(s.currentDecisions);
+    const momentumBonuses = momentumTracker.applyBonuses(s);
+
+    // Phase 2.7: Update stakeholder approval and apply pressure effects
+    stakeholderMgr.update(s.currentDecisions, s);
+    const pressureCount = stakeholderMgr.applyEffects(s);
+
+    // Phase 2.8: Investment recovery for crisis tracker
+    crisisTracker.investmentRecovery(s.currentDecisions);
+
     // Phase 3: Grid formula
     this._recalcGrid();
 
@@ -3877,7 +4024,20 @@ class GameEngine {
       this._recalcSocial();
     }
 
+    // Phase 7.5: Cascading crisis — compounding damage for repeated hits
+    crisisTracker.recordEvent(event);
+    const cascaded = crisisTracker.applyCascade(s);
+    if (cascaded) {
+      this._recalcGrid();
+      this._recalcFinancial();
+      this._recalcSocial();
+    }
+
     // Phase 8: Breakdown check
+    // (track cascade survival before checking breakdown)
+    if (cascaded && s.gridReliability > 0 && s.financialStability > 0 && s.socialStability > 0) {
+      s._cascadesSurvived = (s._cascadesSurvived || 0) + 1;
+    }
     if (s.gridReliability <= 0 || s.financialStability <= 0 || s.socialStability <= 0) {
       s.gameOver = true;
       s.gameOverReason = 'SOCIAL_BREAKDOWN';
@@ -3898,6 +4058,9 @@ class GameEngine {
       decisions,
       event: event ? event.title : null,
       synergies: activeSyns,
+      momentum: momentumBonuses,
+      stakeholders: Object.assign({}, stakeholderMgr.approval),
+      cascaded,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -4155,6 +4318,9 @@ class GameEngine {
   reset(scenarioKey) {
     difficultyMgr.activateForNewGame();
     turnHistory.reset();
+    stakeholderMgr.reset();
+    momentumTracker.reset();
+    crisisTracker.reset();
     this._initState();
     // Apply starter scenario mutations
     const scenario = STARTER_SCENARIOS[scenarioKey] || STARTER_SCENARIOS.standard;
@@ -4498,6 +4664,10 @@ class UI {
         turnHistory.data = payload.historyData || [];
         this._activeScenario = payload.activeScenario || 'standard';
         if (payload.activeDifficulty) difficultyMgr.active = payload.activeDifficulty;
+        // Restore Phase 7 systems
+        if (payload.stakeholderApproval) Object.assign(stakeholderMgr.approval, payload.stakeholderApproval);
+        if (payload.momentumStreaks) Object.assign(momentumTracker.streaks, payload.momentumStreaks);
+        if (payload.crisisHits) Object.assign(crisisTracker._hits, payload.crisisHits);
         // Restore log entries
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4761,6 +4931,7 @@ class UI {
     this._renderBudget(state);
     synergyMgr.detectSynergies(state.currentDecisions);
     this._renderCards(state);
+    this._renderStakeholders();
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
@@ -4973,6 +5144,24 @@ class UI {
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
   }
 
+  _renderStakeholders() {
+    for (const [key, sh] of Object.entries(STAKEHOLDERS)) {
+      const val = Math.round(stakeholderMgr.approval[key]);
+      const barEl = document.getElementById(`sh-bar-${key}`);
+      const valEl = document.getElementById(`sh-val-${key}`);
+      const tileEl = document.getElementById(`sh-${key}`);
+      if (barEl) {
+        barEl.style.width = val + '%';
+        barEl.className = 'stakeholder-bar-fill ' + (val >= 60 ? 'high' : val >= 35 ? 'mid' : 'low');
+      }
+      if (valEl) valEl.textContent = val;
+      if (tileEl) {
+        tileEl.classList.toggle('positive', val >= 70);
+        tileEl.classList.toggle('negative', val < 35);
+      }
+    }
+  }
+
   _renderCards(state) {
     for (const cat of this.categories) {
       const count   = state.currentDecisions[cat];
@@ -4996,6 +5185,17 @@ class UI {
         synergyEl.innerHTML = activeSynergies.map(s =>
           `<span class="synergy-badge">${s.icon} ${s.name} · ${s.bonusDesc}</span>`
         ).join('');
+      }
+      const momEl = document.getElementById(`momentum-${cat}`);
+      if (momEl && cat !== 'research') {
+        const streak = momentumTracker.getStreakFor(cat);
+        if (streak >= 2) {
+          momEl.innerHTML = `<span class="momentum-badge">🔄 ${streak}-turn streak</span>`;
+        } else if (streak === 1) {
+          momEl.innerHTML = `<span class="momentum-badge" style="opacity:0.6">🔄 Building momentum</span>`;
+        } else {
+          momEl.innerHTML = '';
+        }
       }
     }
     this._renderResearchCard();
@@ -5155,6 +5355,17 @@ class UI {
     // Synergy notice
     if (entry.synergies && entry.synergies.length > 0) {
       html += `<div class="log-text" style="color:var(--accent-green-lt);margin-top:4px;font-size:11px;">🔗 Synergies: ${entry.synergies.join(', ')}</div>`;
+    }
+
+    // Momentum notice
+    if (entry.momentum && entry.momentum.length > 0) {
+      const momText = entry.momentum.map(m => `${m.desc}`).join(', ');
+      html += `<div class="log-text" style="color:var(--status-info);margin-top:4px;font-size:11px;">🔄 Momentum: ${momText}</div>`;
+    }
+
+    // Cascading crisis warning
+    if (entry.cascaded) {
+      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;font-size:11px;">⛓ Cascading crisis — repeated shocks are compounding damage</div>`;
     }
 
     // Event notice
@@ -5395,6 +5606,8 @@ class UI {
         <div class="timeline-year">${entry.year}–${entry.year + 5}</div>
         <div class="timeline-decisions">${entry.decisions.map(d => `<span class="tl-invest">${d}</span>`).join('<br>')}</div>
         ${entry.synergies && entry.synergies.length > 0 ? `<div style="font-size:10px;color:var(--accent-green-lt);margin-top:3px;">🔗 ${entry.synergies.join(', ')}</div>` : ''}
+        ${entry.momentum && entry.momentum.length > 0 ? `<div style="font-size:10px;color:var(--status-info);margin-top:3px;">🔄 ${entry.momentum.map(m => m.desc).join(', ')}</div>` : ''}
+        ${entry.cascaded ? `<div style="font-size:10px;color:var(--status-danger);margin-top:3px;">⛓ Cascading crisis</div>` : ''}
         ${entry.event ? `<div class="timeline-event">⚠ ${entry.event}</div>` : ''}
         <div class="timeline-metrics">
           <span class="tl-chip ${chipStatus(entry.afterGrid)}">Grid ${Math.round(entry.afterGrid)}%</span>
@@ -5893,6 +6106,19 @@ class NewsTicker {
       headlines.push(...NEWS_HEADLINES.synergy);
     }
 
+    const maxStreak = Math.max(...Object.values(momentumTracker.streaks));
+    if (maxStreak >= 3) {
+      headlines.push({ dot: 'good', text: 'Sustained policy direction builds investor confidence — long-term commitments bearing fruit' });
+    }
+
+    const demands = stakeholderMgr.getDemands();
+    if (demands.length > 0) {
+      headlines.push({ dot: 'warn', text: `${demands[0].group} lobby warns: "${demands[0].demand}" — pressure mounting on PM` });
+    }
+    if (Object.values(stakeholderMgr.approval).every(v => v >= 65)) {
+      headlines.push({ dot: 'good', text: 'Cross-party consensus holds — stakeholder support at record levels' });
+    }
+
     headlines.push(...NEWS_HEADLINES.base);
 
     const selected = headlines.slice(0, 5);
@@ -5903,6 +6129,228 @@ class NewsTicker {
 }
 
 const newsTicker = new NewsTicker();
+
+/* ============================================================
+   MODULE: STAKEHOLDER PRESSURE SYSTEM
+============================================================ */
+
+const STAKEHOLDERS = {
+  industry: {
+    icon: '🏭', name: 'Industry',
+    likes: ['financialResilience', 'gridAndStorage'],
+    dislikes: ['energyTransition'],
+    metricWatch: 'financialStability',
+    threshold: 50,
+  },
+  public: {
+    icon: '👥', name: 'Public',
+    likes: ['socialSupport', 'adaptation'],
+    dislikes: [],
+    metricWatch: 'socialStability',
+    threshold: 45,
+  },
+  science: {
+    icon: '🔬', name: 'Scientists',
+    likes: ['energyTransition', 'research'],
+    dislikes: [],
+    metricWatch: 'netZeroProgress',
+    threshold: 40,
+  },
+  treasury: {
+    icon: '🏛️', name: 'Treasury',
+    likes: ['financialResilience'],
+    dislikes: ['socialSupport'],
+    metricWatch: 'financialStability',
+    threshold: 55,
+  },
+};
+
+class StakeholderManager {
+  constructor() {
+    this.approval = { industry: 60, public: 55, science: 50, treasury: 65 };
+  }
+
+  reset() {
+    this.approval = { industry: 60, public: 55, science: 50, treasury: 65 };
+  }
+
+  update(decisions, state) {
+    for (const [key, sh] of Object.entries(STAKEHOLDERS)) {
+      let delta = 0;
+      for (const cat of sh.likes) {
+        if (decisions[cat] > 0) delta += decisions[cat] * 5;
+      }
+      for (const cat of sh.dislikes) {
+        if (decisions[cat] > 0) delta -= decisions[cat] * 4;
+      }
+      const watchVal = state[sh.metricWatch] || 0;
+      if (watchVal < sh.threshold) delta -= 5;
+      if (watchVal > sh.threshold + 20) delta += 3;
+      delta += (Math.random() - 0.5) * 4;
+      this.approval[key] = Math.max(0, Math.min(100, this.approval[key] + delta));
+    }
+  }
+
+  applyEffects(state) {
+    let totalPressure = 0;
+    if (this.approval.industry < 30) {
+      state.financialStability = Math.max(0, state.financialStability - 3);
+      totalPressure++;
+    }
+    if (this.approval.public < 30) {
+      state.socialStability = Math.max(0, state.socialStability - 4);
+      totalPressure++;
+    }
+    if (this.approval.science < 30) {
+      state.netZeroProgress = Math.max(0, state.netZeroProgress - 2);
+      totalPressure++;
+    }
+    if (this.approval.treasury < 30) {
+      state.nextTurnBudgetPenalty += 5;
+      totalPressure++;
+    }
+    if (this.approval.public > 75) {
+      state.socialCapital = Math.min(60, state.socialCapital + 1);
+    }
+    if (this.approval.science > 75) {
+      state.netZeroProgress = Math.min(100, state.netZeroProgress + 1);
+    }
+    return totalPressure;
+  }
+
+  getDemands() {
+    const demands = [];
+    if (this.approval.industry < 40) demands.push({ group: 'Industry', demand: 'Invest in Financial Resilience' });
+    if (this.approval.public < 40) demands.push({ group: 'Public', demand: 'Invest in Social Support' });
+    if (this.approval.science < 40) demands.push({ group: 'Scientists', demand: 'Invest in Energy Transition' });
+    if (this.approval.treasury < 40) demands.push({ group: 'Treasury', demand: 'Cut spending' });
+    return demands;
+  }
+}
+
+const stakeholderMgr = new StakeholderManager();
+
+/* ============================================================
+   MODULE: POLICY MOMENTUM SYSTEM
+============================================================ */
+
+class MomentumTracker {
+  constructor() {
+    this.streaks = {
+      energyTransition: 0,
+      gridAndStorage: 0,
+      adaptation: 0,
+      socialSupport: 0,
+      financialResilience: 0,
+    };
+  }
+
+  reset() {
+    for (const k of Object.keys(this.streaks)) this.streaks[k] = 0;
+  }
+
+  updateStreaks(decisions) {
+    for (const cat of Object.keys(this.streaks)) {
+      if (decisions[cat] > 0) {
+        this.streaks[cat]++;
+      } else {
+        this.streaks[cat] = 0;
+      }
+    }
+  }
+
+  applyBonuses(state) {
+    const bonuses = [];
+    const s = this.streaks;
+    if (s.energyTransition >= 2) {
+      const bonus = Math.min(s.energyTransition - 1, 3) * 3;
+      state.netZeroProgress = Math.min(100, state.netZeroProgress + bonus);
+      bonuses.push({ cat: 'energyTransition', turns: s.energyTransition, desc: `+${bonus}% Net Zero` });
+    }
+    if (s.gridAndStorage >= 2) {
+      const bonus = Math.min(s.gridAndStorage - 1, 3) * 2;
+      state.gridReliability = Math.min(100, state.gridReliability + bonus);
+      bonuses.push({ cat: 'gridAndStorage', turns: s.gridAndStorage, desc: `+${bonus} Grid` });
+    }
+    if (s.adaptation >= 2) {
+      const bonus = Math.min(s.adaptation - 1, 3) * 2;
+      state.infrastructure.adaptation += bonus * 5;
+      bonuses.push({ cat: 'adaptation', turns: s.adaptation, desc: `+${bonus * 5} Adapt Infra` });
+    }
+    if (s.socialSupport >= 2) {
+      const bonus = Math.min(s.socialSupport - 1, 3) * 2;
+      state.socialCapital = Math.min(60, state.socialCapital + bonus);
+      bonuses.push({ cat: 'socialSupport', turns: s.socialSupport, desc: `+${bonus} Social Capital` });
+    }
+    if (s.financialResilience >= 2) {
+      const bonus = Math.min(s.financialResilience - 1, 3) * 3;
+      state.strandedAssets = Math.max(0, state.strandedAssets - bonus);
+      bonuses.push({ cat: 'financialResilience', turns: s.financialResilience, desc: `-${bonus} Stranded Assets` });
+    }
+    return bonuses;
+  }
+
+  getStreakFor(cat) {
+    return this.streaks[cat] || 0;
+  }
+}
+
+const momentumTracker = new MomentumTracker();
+
+/* ============================================================
+   MODULE: CASCADING CRISIS SYSTEM
+============================================================ */
+
+class CrisisTracker {
+  constructor() {
+    this._hits = { grid: 0, financial: 0, social: 0 };
+  }
+
+  reset() {
+    this._hits = { grid: 0, financial: 0, social: 0 };
+  }
+
+  recordEvent(event) {
+    if (!event) return;
+    const eff = event.effects || {};
+    if (eff.gridReliability && eff.gridReliability < 0) this._hits.grid++;
+    else this._hits.grid = Math.max(0, this._hits.grid - 1);
+
+    if (eff.financialStability && eff.financialStability < 0) this._hits.financial++;
+    else this._hits.financial = Math.max(0, this._hits.financial - 1);
+
+    if (eff.socialStability && eff.socialStability < 0) this._hits.social++;
+    else this._hits.social = Math.max(0, this._hits.social - 1);
+  }
+
+  applyCascade(state) {
+    let cascaded = false;
+    if (this._hits.grid >= 2) {
+      const penalty = (this._hits.grid - 1) * 5;
+      state.gridReliability = Math.max(0, state.gridReliability - penalty);
+      cascaded = true;
+    }
+    if (this._hits.financial >= 2) {
+      const penalty = (this._hits.financial - 1) * 4;
+      state.financialStability = Math.max(0, state.financialStability - penalty);
+      cascaded = true;
+    }
+    if (this._hits.social >= 2) {
+      const penalty = (this._hits.social - 1) * 4;
+      state.socialStability = Math.max(0, state.socialStability - penalty);
+      cascaded = true;
+    }
+    return cascaded;
+  }
+
+  investmentRecovery(decisions) {
+    if (decisions.gridAndStorage > 0) this._hits.grid = Math.max(0, this._hits.grid - 1);
+    if (decisions.financialResilience > 0) this._hits.financial = Math.max(0, this._hits.financial - 1);
+    if (decisions.socialSupport > 0 || decisions.adaptation > 0) this._hits.social = Math.max(0, this._hits.social - 1);
+  }
+}
+
+const crisisTracker = new CrisisTracker();
 
 /* ============================================================
    MODULE: SIMULATION RUNNER
