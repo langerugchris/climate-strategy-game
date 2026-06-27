@@ -2142,6 +2142,246 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== SOUND TOGGLE ===== */
+#sound-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.15s;
+}
+#sound-toggle:hover { color: var(--text-primary); }
+#sound-toggle.active { color: var(--accent-blue-lt); }
+
+/* ===== NEWSPAPER OVERLAY ===== */
+#newspaper-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 800;
+  animation: np-fadeIn 0.3s ease;
+}
+#newspaper-card {
+  background: #f5f0e8;
+  color: #1a1a1a;
+  width: min(92vw, 520px);
+  max-height: 88vh;
+  overflow-y: auto;
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  font-family: var(--font-editorial);
+  animation: np-slideUp 0.4s ease;
+}
+#newspaper-masthead {
+  text-align: center;
+  border-bottom: 3px double #1a1a1a;
+  padding-bottom: var(--gap-sm);
+  margin-bottom: var(--gap-md);
+}
+#newspaper-name {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  line-height: 1.1;
+}
+#newspaper-date {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+  font-style: italic;
+}
+.newspaper-headline {
+  margin-bottom: var(--gap-md);
+  padding-bottom: var(--gap-md);
+  border-bottom: 1px solid #ccc;
+}
+.newspaper-headline:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.headline-title {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 4px;
+  color: #1a1a1a;
+}
+.headline-body {
+  font-size: 12.5px;
+  color: #444;
+  line-height: 1.5;
+}
+.headline-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #999;
+  margin-bottom: 3px;
+  font-family: var(--font-system);
+}
+#newspaper-dismiss {
+  display: block;
+  width: 100%;
+  margin-top: var(--gap-md);
+  padding: 10px;
+  background: #1a1a1a;
+  color: #f5f0e8;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-system);
+  transition: background 0.15s;
+}
+#newspaper-dismiss:hover { background: #333; }
+
+/* ===== CHALLENGE MODE ===== */
+#challenge-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 24px;
+  background: var(--bg-elevated);
+  color: var(--accent-blue-lt);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s, color 0.15s;
+}
+#challenge-btn:hover { background: var(--accent-blue); color: white; }
+
+#challenge-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-primary);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+#challenge-content {
+  max-width: 700px;
+  width: 100%;
+  padding: var(--gap-xl);
+  text-align: center;
+}
+#challenge-heading {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: var(--gap-sm);
+  color: var(--text-primary);
+}
+#challenge-subheading {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-lg);
+}
+.challenge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-lg);
+  text-align: left;
+}
+.challenge-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+}
+.challenge-card:hover {
+  border-color: var(--accent-blue-lt);
+  transform: translateY(-2px);
+}
+.challenge-card.completed { border-color: var(--status-good); }
+.challenge-card-icon { font-size: 28px; margin-bottom: var(--gap-sm); }
+.challenge-card-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.challenge-card-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.challenge-card-constraint {
+  font-size: 10px;
+  color: var(--status-warn);
+  margin-top: var(--gap-sm);
+  font-weight: 600;
+}
+.challenge-card-badge {
+  font-size: 10px;
+  color: var(--status-good);
+  margin-top: 4px;
+  font-weight: 600;
+}
+#challenge-back-btn {
+  padding: 10px 30px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#challenge-back-btn:hover { background: var(--bg-tertiary); }
+
+#challenge-indicator {
+  display: none;
+  font-size: 11px;
+  color: var(--status-warn);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+#challenge-indicator.active { display: block; }
+
+#challenge-complete-banner {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--status-good);
+  color: #000;
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 900;
+  animation: np-slideUp 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,200,83,0.3);
+}
+
+@keyframes np-slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes np-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -2160,8 +2400,10 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <span id="challenge-indicator"></span>
   </div>
   <div id="header-right">
+    <button id="sound-toggle" class="active" title="Toggle Sound">🔊</button>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2985,7 +3227,18 @@ body { transition: filter 2s ease; }
     </div>
     <button id="hook-btn">New Game →</button>
     <button id="hook-continue-btn" class="hidden" style="display:none;margin-top:10px;width:100%;padding:12px 24px;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;">↺ Continue saved game — <span id="hook-continue-label"></span></button>
+    <button id="challenge-btn">🏆 Challenge Mode</button>
     <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
+  </div>
+</div>
+
+<!-- CHALLENGE SCREEN -->
+<div id="challenge-screen" class="hidden">
+  <div id="challenge-content">
+    <div id="challenge-heading">Challenge Mode</div>
+    <p id="challenge-subheading">Test your skills with specific constraints. Complete challenges to prove your mastery of climate policy.</p>
+    <div class="challenge-grid" id="challenge-grid"></div>
+    <button id="challenge-back-btn">← Back to Menu</button>
   </div>
 </div>
 
@@ -3055,6 +3308,19 @@ body { transition: filter 2s ease; }
           <div class="diff-option-name">Extreme <span class="diff-badge extreme">Crisis</span></div>
           <div class="diff-option-desc">£60bn budget · rapid warming · relentless events</div>
         </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-label">Sound</div>
+      <div style="display:flex;align-items:center;gap:var(--gap-md);">
+        <button id="settings-sound-toggle" style="padding:8px 16px;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:var(--radius-md);cursor:pointer;font-size:13px;font-weight:600;transition:background 0.15s;">🔊 Sound On</button>
+        <span style="font-size:11px;color:var(--text-secondary);">Procedural audio effects for key interactions</span>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-label">Challenges</div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
+        Completed: <strong id="settings-challenge-count">0</strong> / ${CHALLENGES.length}. Access Challenge Mode from the main menu.
       </div>
     </div>
     <div class="settings-section">
@@ -4307,10 +4573,12 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          soundMgr.deallocate();
         } else {
-          this.engine.allocateBlock(cat);
+          const result = this.engine.allocateBlock(cat);
+          if (result.success) soundMgr.allocate();
+          else soundMgr.click();
         }
-        // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
         this._noSpendWarned = false;
         this.render(this.engine.getState());
@@ -4371,6 +4639,10 @@ class UI {
     const hookBtn = document.getElementById('hook-btn');
     if (hookBtn) {
       hookBtn.addEventListener('click', () => {
+        soundMgr.click();
+        challengeMgr.clearActive();
+        const ci = document.getElementById('challenge-indicator');
+        if (ci) ci.classList.remove('active');
         document.getElementById('hook-screen').classList.add('hidden');
         // Show scenario selection before advisor briefing
         const scenarioScreen = document.getElementById('scenario-screen');
@@ -4411,6 +4683,7 @@ class UI {
       this._noSpendWarned = false;
       this.elNoSpendWarning.classList.add('hidden');
 
+      soundMgr.turnAdvance();
       this.elEndTurnBtn.disabled = true;
       await runSimulationPhase(this.engine, this, effectsMgr);
       this.elEndTurnBtn.disabled = false;
@@ -4420,8 +4693,10 @@ class UI {
     this.elEventDismiss.addEventListener('click', () => {
       this.hideEventModal();
       if (this._pendingEndgame) {
+        if (this._pendingEndgameSound) soundMgr.endgameGood(); else soundMgr.endgameBad();
         this.showEndgame(this._pendingEndgame);
         this._pendingEndgame = null;
+        this._pendingEndgameSound = null;
       } else {
         this.render(this.engine.getState());
       }
@@ -4456,7 +4731,21 @@ class UI {
     const settingsCloseBtn = document.getElementById('settings-close-btn');
     if (settingsBtn) {
       settingsBtn.addEventListener('click', () => {
+        soundMgr.click();
         this._refreshHighScoreInSettings();
+        const sst = document.getElementById('settings-sound-toggle');
+        if (sst) {
+          sst.textContent = soundMgr.muted ? '🔇 Sound Off' : '🔊 Sound On';
+          sst.onclick = () => {
+            const isOn = soundMgr.toggle();
+            sst.textContent = isOn ? '🔊 Sound On' : '🔇 Sound Off';
+            const stb = document.getElementById('sound-toggle');
+            if (stb) { stb.classList.toggle('active', isOn); stb.textContent = isOn ? '🔊' : '🔇'; }
+            if (isOn) soundMgr.click();
+          };
+        }
+        const scc = document.getElementById('settings-challenge-count');
+        if (scc) scc.textContent = challengeMgr.getCompletionCount();
         settingsModal.classList.remove('hidden');
       });
     }
@@ -4533,6 +4822,10 @@ class UI {
 
     // Restart — show scenario screen rather than jumping straight in
     this.elRestartBtn.addEventListener('click', () => {
+      soundMgr.click();
+      challengeMgr.clearActive();
+      const ci = document.getElementById('challenge-indicator');
+      if (ci) ci.classList.remove('active');
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
       document.getElementById('endgame-timeline')?.remove();
@@ -5162,6 +5455,7 @@ class UI {
           <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
         </div>
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
+        ${challengeMgr.activeChallenge ? `<div style="margin-top:var(--gap-md);padding:var(--gap-sm) var(--gap-md);border-radius:var(--radius-md);font-size:13px;font-weight:700;${challengeMgr.isCompleted(challengeMgr.activeChallenge.id) ? 'background:#0c2a1a;color:var(--status-good);border:1px solid var(--status-good)' : 'background:#2a0e08;color:var(--status-danger);border:1px solid var(--status-danger)'}">🏆 Challenge: ${challengeMgr.activeChallenge.name} — ${challengeMgr.isCompleted(challengeMgr.activeChallenge.id) ? 'COMPLETED!' : 'Not met'}</div>` : ''}
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
@@ -5744,6 +6038,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
+    soundMgr.simTick();
     await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
@@ -5751,6 +6046,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
       if (eligible.length > 0) {
         const evt = eligible[Math.floor(Math.random() * eligible.length)];
         fxMgr.haptic('medium');
+        soundMgr.miniEvent();
         await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
         minisFired++;
       }
@@ -5775,31 +6071,43 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
 
+  // Show newspaper headlines between turns
+  const newsData = newspaperGen.generate(result.logEntry, engine.state);
+  if (newsData.headlines.length > 0) {
+    await newspaperGen.show(newsData, soundMgr);
+  }
+
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
+  // Check challenge completion
+  const challengeResult = challengeMgr.checkCompletion(engine.state);
+
   if (result.endgame) {
-    // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
+    const isGood = result.endgame.scenario === 'ORDERLY' || result.endgame.scenario === 'TURBULENT' || result.endgame.scenario === 'MANAGED';
     if (result.event) {
       fxMgr.haptic('heavy');
       fxMgr.shake();
+      soundMgr.eventAlert();
       ui._pendingEndgame = result.endgame;
+      ui._pendingEndgameSound = isGood;
       ui.showEventModal(result.event);
     } else {
+      if (isGood) soundMgr.endgameGood(); else soundMgr.endgameBad();
       ui.showEndgame(result.endgame);
     }
+    if (challengeResult) challengeMgr.showCompletionBanner(challengeResult);
   } else if (result.event) {
     fxMgr.haptic('heavy');
     fxMgr.shake();
+    soundMgr.eventAlert();
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
   } else {
-    // Auto-save mid-game progress
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
@@ -5875,6 +6183,7 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
     const cleanup = (handler) => {
       handler(engine.state);
       fxMgr.haptic('light');
+      soundMgr.choice();
       panel.classList.add('sim-fade-out');
       setTimeout(() => { panel.remove(); resolve(); }, 300);
     };
@@ -5948,13 +6257,431 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: SOUND MANAGER
+============================================================ */
+
+class SoundManager {
+  constructor() {
+    this._KEY = 'uk_climate_sound_v1';
+    this._ctx = null;
+    this._muted = this._loadMuted();
+    this._volume = 0.3;
+  }
+
+  _loadMuted() {
+    try { return localStorage.getItem(this._KEY) === 'muted'; } catch { return false; }
+  }
+
+  _saveMuted() {
+    try { localStorage.setItem(this._KEY, this._muted ? 'muted' : 'on'); } catch {}
+  }
+
+  get muted() { return this._muted; }
+
+  toggle() {
+    this._muted = !this._muted;
+    this._saveMuted();
+    return !this._muted;
+  }
+
+  _ensureCtx() {
+    if (!this._ctx) {
+      this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  }
+
+  _tone(freq, duration, type = 'sine', vol = 1) {
+    if (this._muted) return;
+    try {
+      const ctx = this._ensureCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(this._volume * vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + duration);
+    } catch {}
+  }
+
+  _chord(freqs, duration, type = 'sine', vol = 0.5) {
+    freqs.forEach(f => this._tone(f, duration, type, vol / freqs.length));
+  }
+
+  _noise(duration, vol = 0.3) {
+    if (this._muted) return;
+    try {
+      const ctx = this._ensureCtx();
+      const bufferSize = Math.round(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(this._volume * vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      source.connect(gain);
+      gain.connect(ctx.destination);
+      source.start();
+    } catch {}
+  }
+
+  click() { this._noise(0.04, 0.12); }
+
+  allocate() {
+    this._tone(520, 0.12, 'sine', 0.35);
+    setTimeout(() => this._tone(660, 0.08, 'sine', 0.25), 50);
+  }
+
+  deallocate() {
+    this._tone(440, 0.12, 'sine', 0.35);
+    setTimeout(() => this._tone(350, 0.08, 'sine', 0.25), 50);
+  }
+
+  turnAdvance() {
+    this._tone(440, 0.15, 'sine', 0.25);
+    setTimeout(() => this._tone(554, 0.15, 'sine', 0.25), 100);
+    setTimeout(() => this._tone(660, 0.2, 'sine', 0.3), 200);
+  }
+
+  simTick() { this._tone(800, 0.05, 'square', 0.08); }
+
+  eventAlert() {
+    this._tone(440, 0.2, 'sawtooth', 0.2);
+    setTimeout(() => this._tone(440, 0.2, 'sawtooth', 0.2), 250);
+    setTimeout(() => this._tone(554, 0.3, 'sawtooth', 0.25), 500);
+  }
+
+  miniEvent() {
+    this._tone(660, 0.12, 'triangle', 0.25);
+    setTimeout(() => this._tone(880, 0.08, 'triangle', 0.2), 100);
+  }
+
+  choice() {
+    this._tone(523, 0.08, 'sine', 0.25);
+    setTimeout(() => this._tone(659, 0.1, 'sine', 0.3), 60);
+  }
+
+  newspaper() {
+    this._noise(0.03, 0.08);
+    setTimeout(() => this._tone(600, 0.05, 'sine', 0.12), 30);
+  }
+
+  endgameGood() {
+    this._chord([523, 659, 784], 0.4, 'sine', 0.35);
+    setTimeout(() => this._chord([587, 740, 880], 0.5, 'sine', 0.4), 350);
+    setTimeout(() => this._chord([659, 784, 1047], 0.8, 'sine', 0.45), 700);
+  }
+
+  endgameBad() {
+    this._chord([440, 523, 659], 0.5, 'sine', 0.3);
+    setTimeout(() => this._chord([392, 466, 587], 0.6, 'sine', 0.25), 400);
+    setTimeout(() => this._chord([349, 440, 523], 0.8, 'sawtooth', 0.15), 800);
+  }
+}
+
+/* ============================================================
+   MODULE: NEWSPAPER GENERATOR
+============================================================ */
+
+class NewspaperGenerator {
+  constructor() {
+    this._papers = [
+      'The Climate Times',
+      'The Westminster Gazette',
+      'The Energy Standard',
+      'The Green Telegraph',
+      'The Policy Observer',
+    ];
+  }
+
+  generate(logEntry, state) {
+    const headlines = [];
+    const year = logEntry.year + 5;
+
+    const tempDelta = logEntry.afterTemp - logEntry.snapshot.temperature;
+    if (state.temperature >= 2.0 && logEntry.snapshot.temperature < 2.0) {
+      headlines.push({
+        tag: 'BREAKING',
+        title: 'UK breaches 2°C warming threshold — Paris Agreement target missed',
+        body: 'Climate scientists confirmed the UK warming pathway has exceeded the 2°C limit set by the Paris Agreement, triggering calls for emergency action.',
+      });
+    } else if (tempDelta > 0.25) {
+      headlines.push({
+        tag: 'CLIMATE',
+        title: `Temperatures surge past ${logEntry.afterTemp.toFixed(1)}°C as warming accelerates`,
+        body: `Scientists warned that the UK’s warming trajectory has steepened significantly, with temperatures rising ${tempDelta.toFixed(2)}°C in a single policy period.`,
+      });
+    } else if (state.temperature < 1.5) {
+      headlines.push({
+        tag: 'CLIMATE',
+        title: `UK remains on track for 1.5°C target at ${state.temperature.toFixed(1)}°C`,
+        body: 'Government policy has kept the UK warming pathway within the most ambitious Paris Agreement goal.',
+      });
+    }
+
+    const nzDelta = logEntry.afterNZ - logEntry.snapshot.netZeroProgress;
+    if (state.netZeroProgress >= 100 && logEntry.snapshot.netZeroProgress < 100) {
+      headlines.push({
+        tag: 'BREAKING',
+        title: 'UK achieves Net Zero — historic milestone reached',
+        body: 'After years of sustained investment, the UK has officially reached Net Zero emissions, though questions remain about the transition’s long-term costs.',
+      });
+    } else if (nzDelta >= 15) {
+      headlines.push({
+        tag: 'ENERGY',
+        title: `Renewables boom drives Net Zero progress to ${Math.round(state.netZeroProgress)}%`,
+        body: 'Record investment in wind and solar has accelerated the UK’s decarbonisation faster than any previous period.',
+      });
+    } else if (state.netZeroProgress < 50 && state.turn >= 3) {
+      headlines.push({
+        tag: 'EDITORIAL',
+        title: `Net Zero at just ${Math.round(state.netZeroProgress)}% with time running out`,
+        body: `With fewer than ${5 - state.turn} policy terms remaining, critics say the government’s pace is dangerously slow.`,
+      });
+    }
+
+    if (logEntry.event) {
+      const eventMap = {
+        'Coastal Flooding': { tag: 'DISASTER', title: 'East Anglian communities devastated as flood defences fail', body: 'Thousands displaced as the worst coastal flooding in a decade struck Norfolk and Suffolk.' },
+        'Catastrophic Thames': { tag: 'EMERGENCY', title: 'Thames Barrier overwhelmed — London floods', body: 'Central London submerged as the Thames Barrier was breached for the first time in its history.' },
+        'Extended Heatwave': { tag: 'HEALTH', title: 'NHS declares critical incident as heatwave deaths mount', body: 'Hospitals reported record admissions as temperatures exceeded 40°C for the fifth consecutive day.' },
+        'Extreme Heat': { tag: 'EMERGENCY', title: 'Government declares extreme heat national emergency', body: 'With excess mortality exceeding 10,000, the Prime Minister addressed the nation from Downing Street.' },
+        'Severe Atlantic': { tag: 'WEATHER', title: 'Storm causes widespread devastation across the north', body: 'Infrastructure damage from the most powerful Atlantic storm in decades will take months to repair.' },
+        'Fossil Asset': { tag: 'FINANCE', title: 'Pension funds reel as fossil assets written down', body: 'International accounting rules forced sudden write-downs of North Sea assets, threatening retirement savings.' },
+        'Fuel Poverty': { tag: 'POLITICS', title: 'Thousands march as energy bills reach record highs', body: 'The largest protests in a generation erupted across major cities over soaring household energy costs.' },
+        'National Grid Blackout': { tag: 'CRISIS', title: 'National Grid blackout plunges millions into darkness', body: 'Cascading grid failure left hospitals on generators and millions without power for over 12 hours.' },
+      };
+      const match = Object.entries(eventMap).find(([key]) => logEntry.event.includes(key));
+      if (match) headlines.push(match[1]);
+    }
+
+    if (state.socialStability < 40) {
+      headlines.push({ tag: 'SOCIETY', title: 'Public trust in climate transition collapses', body: `With social stability at ${Math.round(state.socialStability)}%, voters say the government has lost control of the energy transition.` });
+    } else if (logEntry.afterSoc - logEntry.snapshot.socialStability > 8) {
+      headlines.push({ tag: 'SOCIETY', title: 'Public confidence in green transition rises sharply', body: 'Government investment in social support has begun restoring public trust in the climate programme.' });
+    }
+
+    if (state.financialStability < 40) {
+      headlines.push({ tag: 'MARKETS', title: 'Bank of England warns of systemic financial risk', body: `Financial stability at ${Math.round(state.financialStability)}% as fossil exposure cascades through the banking system.` });
+    }
+
+    if (state.gridReliability < 45) {
+      headlines.push({ tag: 'ENERGY', title: 'Grid reliability dangerously low, warns National Grid', body: `At ${Math.round(state.gridReliability)}%, widespread blackout risk has reached critical levels.` });
+    } else if (state.gridReliability >= 85) {
+      headlines.push({ tag: 'ENERGY', title: 'UK grid achieves record reliability amid renewable shift', body: 'Battery storage and smart grid technology are keeping lights on as renewables dominate the energy mix.' });
+    }
+
+    if (headlines.length < 2) {
+      const decisions = logEntry.decisions;
+      if (decisions.some(d => d.includes('Energy'))) {
+        headlines.push({ tag: 'POLICY', title: 'Government doubles down on renewable energy', body: 'Ministers announced a major new wind and solar programme as part of the five-year climate strategy.' });
+      } else if (decisions.some(d => d.includes('Grid'))) {
+        headlines.push({ tag: 'INFRASTRUCTURE', title: 'Multi-billion grid modernisation programme launched', body: 'Significant resources committed to battery storage and nuclear to ensure grid stability.' });
+      } else if (decisions.some(d => d.includes('Social'))) {
+        headlines.push({ tag: 'WELFARE', title: 'Just Transition fund targets hardest-hit communities', body: 'New support programmes aim to protect workers and families most affected by the fossil fuel phase-out.' });
+      } else if (decisions.some(d => d.includes('No investment'))) {
+        headlines.push({ tag: 'EDITORIAL', title: 'A wasted term? Government under fire for climate inaction', body: 'Opposition leaders attacked the government for failing to make any significant climate investment.' });
+      }
+    }
+
+    const paperName = this._papers[state.turn % this._papers.length];
+    const months = ['January', 'March', 'June', 'September', 'November'];
+    const date = `${months[state.turn % months.length]} ${year}`;
+
+    return { paper: paperName, date, headlines: headlines.slice(0, 3) };
+  }
+
+  show(data, soundMgr) {
+    return new Promise(resolve => {
+      const overlay = document.createElement('div');
+      overlay.id = 'newspaper-overlay';
+
+      const headlinesHtml = data.headlines.map(h => `
+        <div class="newspaper-headline">
+          <div class="headline-tag">${h.tag}</div>
+          <div class="headline-title">${h.title}</div>
+          <div class="headline-body">${h.body}</div>
+        </div>`).join('');
+
+      overlay.innerHTML = `
+        <div id="newspaper-card">
+          <div id="newspaper-masthead">
+            <div id="newspaper-name">${data.paper}</div>
+            <div id="newspaper-date">${data.date}</div>
+          </div>
+          ${headlinesHtml}
+          <button id="newspaper-dismiss">Continue →</button>
+        </div>`;
+
+      document.body.appendChild(overlay);
+      if (soundMgr) soundMgr.newspaper();
+
+      const dismiss = () => {
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.3s';
+        setTimeout(() => { overlay.remove(); resolve(); }, 300);
+      };
+
+      overlay.querySelector('#newspaper-dismiss').addEventListener('click', dismiss, { once: true });
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) dismiss(); }, { once: true });
+    });
+  }
+}
+
+/* ============================================================
+   MODULE: CHALLENGE MANAGER
+============================================================ */
+
+const CHALLENGES = [
+  {
+    id: 'no_nuclear',
+    icon: '☢️',
+    name: 'No Nuclear',
+    desc: 'Achieve Net Zero without increasing nuclear capacity beyond its starting level.',
+    constraint: 'Nuclear must stay at or below 13',
+    check: (s) => s.netZeroProgress >= 100 && s.energy.nuclear <= 13,
+  },
+  {
+    id: 'speed_run',
+    icon: '⏱️',
+    name: 'Speed Run',
+    desc: 'Achieve Net Zero in 3 turns or fewer.',
+    constraint: 'Must reach 100% Net Zero by Turn 3 (2040)',
+    check: (s) => s.netZeroProgress >= 100 && s.turn <= 3,
+  },
+  {
+    id: 'people_first',
+    icon: '🤝',
+    name: 'People First',
+    desc: 'Keep social stability above 60% every turn while reaching Net Zero.',
+    constraint: 'Social stability must never drop below 60%',
+    check: (s, hist) => s.netZeroProgress >= 100 && hist.every(h => h.socialStability >= 60),
+  },
+  {
+    id: 'climate_champion',
+    icon: '🌡️',
+    name: 'Climate Champion',
+    desc: 'Keep temperature below 1.5°C while achieving Net Zero.',
+    constraint: 'Temperature must stay below 1.5°C throughout',
+    check: (s, hist) => s.netZeroProgress >= 100 && s.temperature < 1.5 && hist.every(h => h.temperature < 1.5),
+  },
+  {
+    id: 'balanced',
+    icon: '⚖️',
+    name: 'Balanced Portfolio',
+    desc: 'Invest in every category at least once and score 70+.',
+    constraint: 'Must use all 6 investment categories',
+    check: (s) => {
+      const cats = new Set();
+      for (const entry of (s.log || [])) {
+        for (const d of entry.decisions) {
+          if (d.includes('Energy Transition')) cats.add('et');
+          if (d.includes('Grid')) cats.add('gs');
+          if (d.includes('Adaptation')) cats.add('ad');
+          if (d.includes('Social')) cats.add('ss');
+          if (d.includes('Financial')) cats.add('fr');
+          if (d.includes('R&D')) cats.add('rd');
+        }
+      }
+      return cats.size >= 6 && calculateScore(s).total >= 70;
+    },
+  },
+  {
+    id: 'storm_survivor',
+    icon: '🔥',
+    name: 'Storm Survivor',
+    desc: 'Achieve Net Zero despite 3+ climate events on Hard or Extreme.',
+    constraint: 'Hard/Extreme difficulty required',
+    check: (s) => s.netZeroProgress >= 100 && s.eventCount >= 3 && (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme'),
+  },
+];
+
+class ChallengeManager {
+  constructor() {
+    this._KEY = 'uk_climate_challenges_v1';
+    this.completed = this._load();
+    this.activeChallenge = null;
+  }
+
+  _load() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      return raw ? new Set(JSON.parse(raw)) : new Set();
+    } catch { return new Set(); }
+  }
+
+  _save() {
+    try { localStorage.setItem(this._KEY, JSON.stringify([...this.completed])); } catch {}
+  }
+
+  setActive(id) {
+    this.activeChallenge = CHALLENGES.find(c => c.id === id) || null;
+  }
+
+  clearActive() {
+    this.activeChallenge = null;
+  }
+
+  checkCompletion(state) {
+    if (!this.activeChallenge) return null;
+    if (this.activeChallenge.check(state, turnHistory.data)) {
+      this.completed.add(this.activeChallenge.id);
+      this._save();
+      return this.activeChallenge;
+    }
+    return null;
+  }
+
+  isCompleted(id) { return this.completed.has(id); }
+
+  getCompletionCount() { return this.completed.size; }
+
+  renderScreen() {
+    const grid = document.getElementById('challenge-grid');
+    if (!grid) return;
+    grid.innerHTML = CHALLENGES.map(c => {
+      const done = this.isCompleted(c.id);
+      return `<div class="challenge-card ${done ? 'completed' : ''}" data-challenge="${c.id}">
+        <div class="challenge-card-icon">${c.icon}</div>
+        <div class="challenge-card-name">${c.name}</div>
+        <div class="challenge-card-desc">${c.desc}</div>
+        <div class="challenge-card-constraint">${c.constraint}</div>
+        ${done ? '<div class="challenge-card-badge">✓ Completed</div>' : ''}
+      </div>`;
+    }).join('');
+  }
+
+  showCompletionBanner(challenge) {
+    const banner = document.createElement('div');
+    banner.id = 'challenge-complete-banner';
+    banner.textContent = `🏆 Challenge Complete: ${challenge.name}!`;
+    document.body.appendChild(banner);
+    setTimeout(() => {
+      banner.style.opacity = '0';
+      banner.style.transition = 'opacity 0.5s';
+      setTimeout(() => banner.remove(), 500);
+    }, 3000);
+  }
+}
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
-const engine       = new GameEngine();
-const techTree     = new TechTreeManager();
-const effectsMgr   = new EffectsManager();
-const legacySystem = new LegacySystem();
+const engine        = new GameEngine();
+const techTree      = new TechTreeManager();
+const effectsMgr    = new EffectsManager();
+const legacySystem  = new LegacySystem();
+const soundMgr      = new SoundManager();
+const newspaperGen  = new NewspaperGenerator();
+const challengeMgr  = new ChallengeManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -5981,6 +6708,59 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Sound toggle button
+const soundToggleBtn = document.getElementById('sound-toggle');
+if (soundToggleBtn) {
+  soundToggleBtn.classList.toggle('active', !soundMgr.muted);
+  soundToggleBtn.textContent = soundMgr.muted ? '🔇' : '🔊';
+  soundToggleBtn.addEventListener('click', () => {
+    const isOn = soundMgr.toggle();
+    soundToggleBtn.classList.toggle('active', isOn);
+    soundToggleBtn.textContent = isOn ? '🔊' : '🔇';
+    if (isOn) soundMgr.click();
+  });
+}
+
+// Challenge mode buttons
+const challengeBtn = document.getElementById('challenge-btn');
+const challengeScreen = document.getElementById('challenge-screen');
+const challengeBackBtn = document.getElementById('challenge-back-btn');
+if (challengeBtn && challengeScreen) {
+  challengeBtn.addEventListener('click', () => {
+    soundMgr.click();
+    challengeMgr.renderScreen();
+    document.getElementById('hook-screen').classList.add('hidden');
+    challengeScreen.classList.remove('hidden');
+
+    challengeScreen.querySelectorAll('.challenge-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.challenge;
+        soundMgr.choice();
+        challengeMgr.setActive(id);
+        challengeScreen.classList.add('hidden');
+        const ci = document.getElementById('challenge-indicator');
+        if (ci) {
+          ci.textContent = `🏆 ${challengeMgr.activeChallenge.name}`;
+          ci.classList.add('active');
+        }
+        const scenarioScreen = document.getElementById('scenario-screen');
+        if (scenarioScreen) {
+          const sdl = document.getElementById('scenario-diff-label');
+          if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
+          scenarioScreen.classList.remove('hidden');
+        }
+      });
+    });
+  });
+}
+if (challengeBackBtn) {
+  challengeBackBtn.addEventListener('click', () => {
+    soundMgr.click();
+    challengeScreen.classList.add('hidden');
+    document.getElementById('hook-screen').classList.remove('hidden');
+  });
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
