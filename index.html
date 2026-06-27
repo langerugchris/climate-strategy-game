@@ -2142,6 +2142,196 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== SYNERGY BADGES ===== */
+#synergy-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0;
+  min-height: 0;
+  transition: all 0.3s ease;
+}
+#synergy-bar:empty { display: none; }
+#synergy-bar::before {
+  content: 'Synergies:';
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  align-self: center;
+  margin-right: 2px;
+}
+.synergy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0c2a1a, #1a3828);
+  color: var(--status-good);
+  border: 1px solid rgba(0,200,83,0.3);
+  animation: synergy-pop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  cursor: default;
+  position: relative;
+}
+.synergy-badge .synergy-icon { font-size: 12px; }
+.synergy-badge .synergy-effect {
+  color: var(--accent-green-lt);
+  font-size: 9px;
+  font-weight: 400;
+  margin-left: 2px;
+}
+@keyframes synergy-pop {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ===== TURN OBJECTIVES ===== */
+#objectives-section {
+  margin-top: var(--gap-md);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+#objectives-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+.objective-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  padding: 4px 0;
+  color: var(--text-secondary);
+  transition: color 0.3s;
+}
+.objective-check {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1.5px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+.objective-item.completed .objective-check {
+  background: var(--accent-green);
+  border-color: var(--accent-green-lt);
+  color: white;
+}
+.objective-item.completed {
+  color: var(--accent-green-lt);
+}
+.objective-bonus {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.objective-item.completed .objective-bonus {
+  color: var(--accent-green-lt);
+}
+
+/* ===== ADVISOR TIP ===== */
+#advisor-tip {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(29,112,184,0.08);
+  border-left: 2px solid var(--accent-blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  transition: opacity 0.3s;
+}
+#advisor-tip:empty { display: none; }
+#advisor-tip .tip-label {
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ===== INTERNATIONAL BENCHMARK (ENDGAME) ===== */
+#endgame-benchmark {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+#benchmark-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+  text-align: center;
+}
+.benchmark-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 50px;
+  gap: 6px;
+  align-items: center;
+  padding: 5px 8px;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.benchmark-row:last-child { border-bottom: none; }
+.benchmark-row.player-row {
+  background: rgba(83,144,217,0.12);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(83,144,217,0.3);
+  font-weight: 600;
+}
+.benchmark-country {
+  color: var(--text-primary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.benchmark-bar-track {
+  height: 6px;
+  background: var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.benchmark-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+.benchmark-score {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.benchmark-label {
+  grid-column: 1 / -1;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding-left: 4px;
+}
+
+/* ===== SYNERGY LOG ENTRY ===== */
+.log-synergy {
+  font-size: 11px;
+  color: var(--accent-green-lt);
+  margin-top: 3px;
+  padding-left: 2px;
+}
 </style>
 </head>
 <body>
@@ -2299,6 +2489,12 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <!-- Turn Objectives -->
+      <div id="objectives-section">
+        <div id="objectives-title">Turn Objectives</div>
+        <div id="objectives-list"></div>
+      </div>
+
     </div>
   </aside>
 
@@ -2312,6 +2508,7 @@ body { transition: filter 2s ease; }
         </div>
       </div>
       <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
+      <div id="advisor-tip"></div>
     </div>
 
     <div id="investment-cards">
@@ -2900,6 +3097,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <div id="synergy-bar"></div>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -3375,6 +3573,176 @@ const STARTER_SCENARIOS = {
 };
 
 /* ============================================================
+   POLICY SYNERGY SYSTEM
+============================================================ */
+
+const SYNERGY_COMBOS = [
+  {
+    id: 'balanced_grid',
+    name: 'Balanced Grid',
+    icon: '⚡',
+    requires: ['energyTransition', 'gridAndStorage'],
+    desc: 'Renewables + backup',
+    effectDesc: 'Grid +5',
+    apply(s) { s.gridReliability = Math.min(100, s.gridReliability + 5); },
+  },
+  {
+    id: 'just_transition',
+    name: 'Just Transition',
+    icon: '🤝',
+    requires: ['energyTransition', 'socialSupport'],
+    desc: 'Green jobs cushion phase-out',
+    effectDesc: 'Social +4',
+    apply(s) { s.socialStability = Math.min(100, s.socialStability + 4); s.socialCapital = Math.min(60, s.socialCapital + 2); },
+  },
+  {
+    id: 'managed_decline',
+    name: 'Managed Decline',
+    icon: '📉',
+    requires: ['energyTransition', 'financialResilience'],
+    desc: 'Orderly fossil wind-down',
+    effectDesc: 'Stranded -6',
+    apply(s) { s.strandedAssets = Math.max(0, s.strandedAssets - 6); },
+  },
+  {
+    id: 'community_shield',
+    name: 'Community Shield',
+    icon: '🛡️',
+    requires: ['adaptation', 'socialSupport'],
+    desc: 'Resilient communities',
+    effectDesc: 'Social +3',
+    apply(s) { s.socialStability = Math.min(100, s.socialStability + 3); },
+  },
+  {
+    id: 'green_finance',
+    name: 'Green Finance',
+    icon: '💚',
+    requires: ['gridAndStorage', 'financialResilience'],
+    desc: 'Infrastructure confidence',
+    effectDesc: 'Financial +4',
+    apply(s) { s.financialStability = Math.min(100, s.financialStability + 4); },
+  },
+  {
+    id: 'triple_lock',
+    name: 'Triple Lock',
+    icon: '🔒',
+    requires: ['socialSupport', 'financialResilience', 'adaptation'],
+    desc: 'Full institutional resilience',
+    effectDesc: 'All stability +3',
+    apply(s) {
+      s.socialStability = Math.min(100, s.socialStability + 3);
+      s.financialStability = Math.min(100, s.financialStability + 3);
+      s.socialCapital = Math.min(60, s.socialCapital + 3);
+    },
+  },
+];
+
+function getActiveSynergies(decisions) {
+  return SYNERGY_COMBOS.filter(combo =>
+    combo.requires.every(cat => decisions[cat] > 0)
+  );
+}
+
+/* ============================================================
+   TURN OBJECTIVES
+============================================================ */
+
+const TURN_OBJECTIVES = [
+  {
+    turn: 0,
+    objectives: [
+      { id: 'obj_0a', label: 'Launch renewables programme', check: (d, s) => d.energyTransition >= 1, bonus: 2 },
+      { id: 'obj_0b', label: 'Build grid backup capacity', check: (d, s) => d.gridAndStorage >= 1, bonus: 2 },
+      { id: 'obj_0c', label: 'Activate a policy synergy', check: (d, s) => getActiveSynergies(d).length >= 1, bonus: 3 },
+    ],
+  },
+  {
+    turn: 1,
+    objectives: [
+      { id: 'obj_1a', label: 'Reach 50% Net Zero progress', check: (d, s) => s.netZeroProgress >= 50, bonus: 3 },
+      { id: 'obj_1b', label: 'Keep all stability metrics above 55%', check: (d, s) => s.gridReliability >= 55 && s.financialStability >= 55 && s.socialStability >= 55, bonus: 3 },
+      { id: 'obj_1c', label: 'Invest in social support', check: (d, s) => d.socialSupport >= 1, bonus: 2 },
+    ],
+  },
+  {
+    turn: 2,
+    objectives: [
+      { id: 'obj_2a', label: 'Reach 70% Net Zero progress', check: (d, s) => s.netZeroProgress >= 70, bonus: 3 },
+      { id: 'obj_2b', label: 'Purchase a tech upgrade', check: (d, s) => d.research >= 1, bonus: 2 },
+      { id: 'obj_2c', label: 'Trigger two synergies in one turn', check: (d, s) => getActiveSynergies(d).length >= 2, bonus: 4 },
+    ],
+  },
+  {
+    turn: 3,
+    objectives: [
+      { id: 'obj_3a', label: 'Reach 90% Net Zero progress', check: (d, s) => s.netZeroProgress >= 90, bonus: 3 },
+      { id: 'obj_3b', label: 'Build adaptation infrastructure', check: (d, s) => s.infrastructure.adaptation >= 50, bonus: 3 },
+      { id: 'obj_3c', label: 'Keep temperature below 1.7°C', check: (d, s) => s.temperature < 1.7, bonus: 4 },
+    ],
+  },
+  {
+    turn: 4,
+    objectives: [
+      { id: 'obj_4a', label: 'Achieve Net Zero', check: (d, s) => s.netZeroProgress >= 100, bonus: 5 },
+      { id: 'obj_4b', label: 'Finish with all metrics above 60%', check: (d, s) => s.gridReliability >= 60 && s.financialStability >= 60 && s.socialStability >= 60, bonus: 4 },
+      { id: 'obj_4c', label: 'Keep temperature below 2.0°C', check: (d, s) => s.temperature < 2.0, bonus: 4 },
+    ],
+  },
+];
+
+/* ============================================================
+   INTERNATIONAL BENCHMARKS
+============================================================ */
+
+const INTERNATIONAL_BENCHMARKS = [
+  { country: 'Denmark', flag: 'DK', score: 82, temp: 1.3, nz: 100, label: 'Early mover — aggressive wind investment and high social cohesion enabled rapid transition' },
+  { country: 'Germany', flag: 'DE', score: 58, temp: 1.7, nz: 85, label: 'Industrial disruption — Energiewende advanced renewables but coal exit and grid stability proved painful' },
+  { country: 'France', flag: 'FR', score: 68, temp: 1.5, nz: 92, label: 'Nuclear advantage — existing low-carbon baseload simplified the energy transition' },
+  { country: 'China', flag: 'CN', score: 52, temp: 1.9, nz: 70, label: 'State-directed scale — massive renewable deployment offset by continued coal reliance' },
+  { country: 'United States', flag: 'US', score: 42, temp: 2.1, nz: 55, label: 'Policy volatility — strong innovation capacity undermined by political polarisation on climate' },
+  { country: 'Australia', flag: 'AU', score: 35, temp: 2.3, nz: 40, label: 'Fossil reliance — coal and gas exports delayed domestic transition despite exceptional solar potential' },
+];
+
+/* ============================================================
+   ADVISOR TIP SYSTEM
+============================================================ */
+
+function getAdvisorTip(state, decisions) {
+  const tips = [];
+
+  if (decisions.energyTransition > 0 && decisions.gridAndStorage === 0 && state.gridReliability < 70) {
+    tips.push('You\'re building renewables without grid backup. Pair with Grid & Storage to avoid reliability problems.');
+  }
+  if (decisions.energyTransition > 0 && decisions.socialSupport === 0 && state.socialStability < 65) {
+    tips.push('Rapid decarbonisation raises bills. Consider Social Support to maintain public consent.');
+  }
+  if (decisions.energyTransition > 0 && decisions.financialResilience === 0 && state.strandedAssets > 20) {
+    tips.push('Energy transition creates stranded assets. Pair with Financial Resilience to protect pensions.');
+  }
+  if (state.temperature > 1.5 && decisions.adaptation === 0 && state.infrastructure.adaptation < 50) {
+    tips.push('Above 1.5°C, climate events intensify. Adaptation investment now will save costs later.');
+  }
+  if (state.netZeroProgress < 50 && state.turn >= 2 && decisions.energyTransition === 0) {
+    tips.push('Net Zero progress is falling behind schedule. Energy Transition investment is needed soon.');
+  }
+  if (state.gridReliability < 50 && decisions.gridAndStorage === 0) {
+    tips.push('Grid reliability is critically low. Without Grid & Storage investment, blackouts are likely.');
+  }
+  if (Object.values(decisions).every(v => v === 0)) {
+    tips.push('Allocate investment blocks to shape the UK\'s climate future. Combine categories to unlock synergy bonuses.');
+  }
+  const synergies = getActiveSynergies(decisions);
+  if (synergies.length > 0 && Object.values(decisions).filter(v => v > 0).length === synergies[0].requires.length) {
+    const unused = Object.keys(decisions).filter(k => k !== 'research' && decisions[k] === 0 && state.budget - state.spentThisTurn >= BLOCK_COSTS[k]);
+    if (unused.length > 0) {
+      tips.push('Synergy active! You still have budget remaining — adding another category could unlock additional bonuses.');
+    }
+  }
+
+  return tips.length > 0 ? tips[0] : '';
+}
+
+/* ============================================================
    TURN HISTORY TRACKER
 ============================================================ */
 
@@ -3575,6 +3943,7 @@ class GameEngine {
       currentRandomEvent: null,
       eventCount: 0,
       lastEventTurn: -1,
+      objectiveBonusTotal: 0,
       log: [],
       lastSnapshot: null,
     };
@@ -3681,7 +4050,7 @@ class GameEngine {
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
     const backup          = e.nuclear + e.storage + (e.gas * 0.5);
     const renew           = Math.max(e.wind + e.solar, 1);
-    const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
+    let gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
 
     // Mirror _recalcFinancial
     const strandedDrag  = strandedAssets * 0.55;
@@ -3697,6 +4066,16 @@ class GameEngine {
     const energyBurden = Math.max(0, (infra.energyTransition - infra.socialSupport) * 0.07);
     const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
     socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
+
+    // Mirror synergy bonuses (applied after recalcs, same as engine)
+    const projSynergies = getActiveSynergies(d);
+    const projProxy = { gridReliability, financialStability, socialStability, socialCapital, strandedAssets };
+    for (const syn of projSynergies) {
+      syn.apply(projProxy);
+    }
+    gridReliability = clamp(projProxy.gridReliability, 0, 100);
+    financialStability = clamp(projProxy.financialStability, 0, 100);
+    socialStability = clamp(projProxy.socialStability, 0, 100);
 
     return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
   }
@@ -3730,6 +4109,15 @@ class GameEngine {
     // Phase 5: Social formula
     this._recalcSocial();
 
+    // Phase 5b: Apply synergy bonuses (after recalcs so they're additive)
+    const activeSynergies = getActiveSynergies(s.currentDecisions);
+    for (const synergy of activeSynergies) {
+      synergy.apply(s);
+    }
+    s.gridReliability = Math.min(100, Math.max(0, s.gridReliability));
+    s.financialStability = Math.min(100, Math.max(0, s.financialStability));
+    s.socialStability = Math.min(100, Math.max(0, s.socialStability));
+
     // Phase 6: Temperature
     this._progressTemp();
 
@@ -3756,13 +4144,29 @@ class GameEngine {
       s.netZeroAchieved = true;
     }
 
-    // Phase 10: Build log entry
+    // Phase 10: Check turn objectives
+    const turnObjectives = TURN_OBJECTIVES.find(t => t.turn === s.turn);
+    const completedObjectives = [];
+    let objectiveBonus = 0;
+    if (turnObjectives) {
+      for (const obj of turnObjectives.objectives) {
+        if (obj.check(s.currentDecisions, s)) {
+          completedObjectives.push(obj);
+          objectiveBonus += obj.bonus;
+        }
+      }
+    }
+    s.objectiveBonusTotal = (s.objectiveBonusTotal || 0) + objectiveBonus;
+
+    // Phase 10b: Build log entry
     const decisions = this._describeDecisions(s.currentDecisions);
     const logEntry = {
       turn: s.turn,
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      synergies: activeSynergies.map(sy => sy.name),
+      completedObjectives: completedObjectives.map(o => ({ label: o.label, bonus: o.bonus })),
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -4042,8 +4446,11 @@ function calculateScore(state) {
   const eventPenalty = s.eventCount * 1.5;
   const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
 
-  const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
-  return { total, tempScore, nzScore, stabScore, resScore };
+  // Objective bonus (0-variable): earned from completing turn objectives
+  const objBonus = s.objectiveBonusTotal || 0;
+
+  const total = Math.min(100, tempScore + nzScore + stabScore + resScore + objBonus);
+  return { total, tempScore, nzScore, stabScore, resScore, objBonus };
 }
 
 /* ============================================================
@@ -4538,6 +4945,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('endgame-benchmark')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -4615,6 +5023,9 @@ class UI {
     this._renderEnergyMix(state);
     this._renderBudget(state);
     this._renderCards(state);
+    this._renderSynergies(state);
+    this._renderAdvisorTip(state);
+    this._renderObjectives(state);
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
@@ -4955,6 +5366,48 @@ class UI {
     }
   }
 
+  _renderSynergies(state) {
+    const bar = document.getElementById('synergy-bar');
+    if (!bar) return;
+    const synergies = getActiveSynergies(state.currentDecisions);
+    if (synergies.length === 0) {
+      bar.innerHTML = '';
+      return;
+    }
+    bar.innerHTML = synergies.map(s =>
+      `<span class="synergy-badge" title="${s.desc}"><span class="synergy-icon">${s.icon}</span>${s.name}<span class="synergy-effect">${s.effectDesc}</span></span>`
+    ).join('');
+  }
+
+  _renderAdvisorTip(state) {
+    const tipEl = document.getElementById('advisor-tip');
+    if (!tipEl) return;
+    const tip = getAdvisorTip(state, state.currentDecisions);
+    if (tip) {
+      tipEl.innerHTML = `<span class="tip-label">Advisor: </span>${tip}`;
+    } else {
+      tipEl.innerHTML = '';
+    }
+  }
+
+  _renderObjectives(state) {
+    const list = document.getElementById('objectives-list');
+    if (!list) return;
+    const turnObj = TURN_OBJECTIVES.find(t => t.turn === state.turn);
+    if (!turnObj) {
+      list.innerHTML = '<div style="font-size:11px;color:var(--text-muted)">No objectives this turn</div>';
+      return;
+    }
+    list.innerHTML = turnObj.objectives.map(obj => {
+      const done = obj.check(state.currentDecisions, state);
+      return `<div class="objective-item ${done ? 'completed' : ''}">
+        <div class="objective-check">${done ? '✓' : ''}</div>
+        <span>${obj.label}</span>
+        <span class="objective-bonus">+${obj.bonus}</span>
+      </div>`;
+    }).join('');
+  }
+
   _buildTurnNarrative(entry) {
     const d = {
       energyTransition: 0, gridAndStorage: 0, adaptation: 0,
@@ -4997,6 +5450,17 @@ class UI {
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+
+    // Synergies activated
+    if (entry.synergies && entry.synergies.length > 0) {
+      html += `<div class="log-synergy">Synergies: ${entry.synergies.join(', ')}</div>`;
+    }
+
+    // Objectives completed
+    if (entry.completedObjectives && entry.completedObjectives.length > 0) {
+      const objText = entry.completedObjectives.map(o => `${o.label} (+${o.bonus})`).join(', ');
+      html += `<div class="log-synergy">Objectives: ${objText}</div>`;
+    }
 
     // Event notice
     if (entry.event) {
@@ -5150,6 +5614,13 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    // Build international benchmark
+    const benchmarkHtml = this._buildInternationalBenchmark(score);
+
+    const objBonusLine = score.objBonus > 0
+      ? `<div class="score-dim"><span class="score-dim-val">+${score.objBonus}</span><span class="score-dim-name">Objectives</span></div>`
+      : '';
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
@@ -5160,12 +5631,13 @@ class UI {
           <div class="score-dim"><span class="score-dim-val">${score.nzScore}/30</span><span class="score-dim-name">Net Zero</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.stabScore}/30</span><span class="score-dim-name">Stability</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
+          ${objBonusLine}
         </div>
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml + benchmarkHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5261,6 +5733,40 @@ class UI {
       </div>`;
     }
     html += `</div></div>`;
+    return html;
+  }
+
+  _buildInternationalBenchmark(playerScore) {
+    const entries = INTERNATIONAL_BENCHMARKS.map(b => ({
+      ...b,
+      isPlayer: false,
+    }));
+    entries.push({
+      country: 'Your UK',
+      flag: 'GB',
+      score: playerScore.total,
+      temp: this.engine.state.temperature,
+      nz: Math.round(this.engine.state.netZeroProgress),
+      label: 'Your strategy — how did you compare?',
+      isPlayer: true,
+    });
+    entries.sort((a, b) => b.score - a.score);
+
+    let html = `<div id="endgame-benchmark">
+      <div id="benchmark-title">International Comparison</div>`;
+
+    for (const entry of entries) {
+      const barColor = entry.score >= 70 ? 'var(--status-good)' : entry.score >= 50 ? 'var(--status-warn)' : 'var(--status-danger)';
+      html += `<div class="benchmark-row ${entry.isPlayer ? 'player-row' : ''}">
+        <span class="benchmark-country">${entry.country}</span>
+        <div class="benchmark-bar-track">
+          <div class="benchmark-bar-fill" style="width:${entry.score}%;background:${barColor}"></div>
+        </div>
+        <span class="benchmark-score">${entry.score}</span>
+        <span class="benchmark-label">${entry.isPlayer ? `${entry.temp.toFixed(1)}°C · ${entry.nz}% Net Zero` : entry.label}</span>
+      </div>`;
+    }
+    html += `<div style="font-size:10px;color:var(--text-muted);margin-top:8px;text-align:center;font-style:italic;">Illustrative comparison — based on stylised NGFS pathway modelling</div></div>`;
     return html;
   }
 
