@@ -2141,7 +2141,113 @@ body { transition: filter 2s ease; }
     flex-direction: column;
   }
   .timeline-turn { min-width: unset; }
+
+  #news-ticker { font-size: 11px; }
 }
+
+/* ===== NEWS TICKER ===== */
+#news-ticker {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 6px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-system);
+}
+#news-ticker::before {
+  content: 'BREAKING';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: var(--status-danger);
+  color: white;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  z-index: 2;
+}
+#news-ticker-track {
+  display: inline-block;
+  padding-left: 80px;
+  animation: ticker-scroll 30s linear infinite;
+}
+#news-ticker-track span {
+  margin-right: 60px;
+  color: var(--text-secondary);
+}
+#news-ticker-track span .ticker-source {
+  color: var(--text-muted);
+  font-style: italic;
+}
+@keyframes ticker-scroll {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ===== SOUND TOGGLE ===== */
+#sound-toggle {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, border-color 0.15s;
+  line-height: 1;
+}
+#sound-toggle:hover { color: var(--text-primary); border-color: var(--border-strong); }
+#sound-toggle.active { color: var(--accent-blue-lt); border-color: var(--accent-blue-lt); }
+
+/* ===== INTERNATIONAL COMPARISON ===== */
+#intl-comparison {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+#intl-comparison-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+}
+.intl-country-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+}
+.intl-country-row:last-child { border-bottom: none; }
+.intl-country-flag { font-size: 18px; flex-shrink: 0; }
+.intl-country-name { width: 100px; color: var(--text-primary); font-weight: 600; }
+.intl-country-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.intl-country-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+.intl-country-val { width: 50px; text-align: right; font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.intl-player-row { background: rgba(29,112,184,0.1); border-radius: var(--radius-sm); padding: 6px var(--gap-sm) !important; }
+.intl-player-row .intl-country-name { color: var(--accent-blue-lt); }
 </style>
 </head>
 <body>
@@ -2162,6 +2268,7 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
+    <button id="sound-toggle" title="Toggle sound">🔇</button>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2916,6 +3023,11 @@ body { transition: filter 2s ease; }
   </aside>
 
 </main>
+
+<!-- NEWS TICKER -->
+<div id="news-ticker">
+  <div id="news-ticker-track"></div>
+</div>
 
 <!-- METRIC TOOLTIP -->
 <div id="metric-tooltip">
@@ -4307,8 +4419,10 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          soundMgr.deallocate();
         } else {
           this.engine.allocateBlock(cat);
+          soundMgr.allocate();
         }
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
@@ -4538,6 +4652,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('intl-comparison')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -4618,6 +4733,7 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    newsTicker.update(state);
   }
 
   _renderHeader(state) {
@@ -5150,6 +5266,9 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    // Build international comparison
+    const intlHtml = buildInternationalComparison(score.total);
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
@@ -5165,7 +5284,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + intlHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5724,6 +5843,75 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_drought',
+    icon: '🏜️',
+    title: 'Summer Drought Emergency',
+    prompt: 'Reservoir levels have dropped to critical. Water rationing is being considered.',
+    explanation: 'Climate change intensifies droughts. Desalination plants solve the immediate crisis but are energy-intensive and expensive. Mandatory restrictions are free but deeply unpopular and damage agriculture.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Social Stability: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🏗️ Emergency desalination plants',
+      consequence: 'Costs £7bn next turn · maintains water supply · +2% emissions (energy-intensive)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.max(0, s.netZeroProgress - 2); },
+    },
+    optB: {
+      label: '🚿 Mandatory water restrictions',
+      consequence: 'No cost · −6 Social Stability (deeply unpopular) · −3 Financial (agriculture hit)',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 6); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'mini_tech_breakthrough',
+    icon: '🔬',
+    title: 'Hydrogen Breakthrough',
+    prompt: 'UK researchers have achieved a green hydrogen cost breakthrough. How do you capitalise?',
+    explanation: 'Green hydrogen could decarbonise heavy industry and heating. Scaling up fast requires massive upfront spending but could accelerate Net Zero. Licensing the technology earns revenue but lets others lead.',
+    contextFn: (s) => ({
+      label: 'Net Zero',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Budget: £${Math.round(s.budget)}bn`,
+    }),
+    optA: {
+      label: '🏭 Scale up domestic hydrogen production',
+      consequence: 'Costs £12bn next turn · +8% Net Zero progress · +3 Grid Reliability',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.gridReliability = Math.min(100, s.gridReliability + 3); },
+    },
+    optB: {
+      label: '📜 License technology internationally',
+      consequence: '+£8bn revenue next turn · +2% Net Zero · +4 Financial Stability (royalties)',
+      effect: (s) => { s.nextTurnBudgetPenalty -= 8; s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); s.financialStability = Math.min(100, s.financialStability + 4); },
+    },
+    condition: (s) => s.infrastructure.energyTransition > 30,
+  },
+  {
+    id: 'mini_biodiversity',
+    icon: '🦉',
+    title: 'Biodiversity Crisis Report',
+    prompt: 'A landmark report reveals catastrophic species loss across UK habitats. Parliament demands action.',
+    explanation: 'Biodiversity loss undermines food security and public health. Nature restoration is popular and builds long-term resilience but costs money. Fast-tracking renewable permits on protected land is cheaper but damages ecosystems and public trust.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Adaptation built: ${Math.round(s.infrastructure.adaptation)}`,
+    }),
+    optA: {
+      label: '🌳 National Nature Restoration Fund',
+      consequence: 'Costs £5bn next turn · +5 Social · +adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.socialStability = Math.min(100, s.socialStability + 5); s.infrastructure.adaptation += 12; },
+    },
+    optB: {
+      label: '⚡ Fast-track renewables on protected land',
+      consequence: 'No cost · +4% Net Zero · −4 Social Capital (environmental backlash)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); s.socialCapital = Math.max(0, s.socialCapital - 4); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5731,6 +5919,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
+  soundMgr.turnAdvance();
 
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
@@ -5744,6 +5933,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
+    soundMgr.simTick();
     await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
@@ -5751,6 +5941,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
       if (eligible.length > 0) {
         const evt = eligible[Math.floor(Math.random() * eligible.length)];
         fxMgr.haptic('medium');
+        soundMgr.miniEvent();
         await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
         minisFired++;
       }
@@ -5782,9 +5973,12 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
+    const isGoodEnd = result.endgame.scenario === 'ORDERLY' || result.endgame.scenario === 'MANAGED';
+    if (isGoodEnd) soundMgr.victory(); else soundMgr.defeat();
     if (result.event) {
       fxMgr.haptic('heavy');
       fxMgr.shake();
+      soundMgr.eventAlert();
       ui._pendingEndgame = result.endgame;
       ui.showEventModal(result.event);
     } else {
@@ -5793,6 +5987,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   } else if (result.event) {
     fxMgr.haptic('heavy');
     fxMgr.shake();
+    soundMgr.eventAlert();
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
@@ -5887,6 +6082,216 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /* ============================================================
+   MODULE: SOUND MANAGER (Web Audio API — procedural, no files)
+============================================================ */
+
+class SoundManager {
+  constructor() {
+    this._ctx = null;
+    this._enabled = false;
+    this._KEY = 'uk_climate_sound';
+    try { this._enabled = localStorage.getItem(this._KEY) === 'on'; } catch {}
+  }
+
+  _ensureCtx() {
+    if (!this._ctx) {
+      this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  }
+
+  toggle() {
+    this._enabled = !this._enabled;
+    try { localStorage.setItem(this._KEY, this._enabled ? 'on' : 'off'); } catch {}
+    if (this._enabled) this._ensureCtx();
+    return this._enabled;
+  }
+
+  get enabled() { return this._enabled; }
+
+  _tone(freq, duration, type = 'sine', vol = 0.15) {
+    if (!this._enabled) return;
+    const ctx = this._ensureCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  }
+
+  click() { this._tone(800, 0.06, 'square', 0.05); }
+
+  allocate() {
+    this._tone(523, 0.08, 'sine', 0.1);
+    setTimeout(() => this._tone(659, 0.08, 'sine', 0.08), 50);
+  }
+
+  deallocate() { this._tone(440, 0.1, 'triangle', 0.08); }
+
+  turnAdvance() {
+    if (!this._enabled) return;
+    [523, 659, 784].forEach((f, i) => setTimeout(() => this._tone(f, 0.15, 'sine', 0.12), i * 100));
+  }
+
+  eventAlert() {
+    if (!this._enabled) return;
+    [330, 262, 330, 262].forEach((f, i) => setTimeout(() => this._tone(f, 0.2, 'sawtooth', 0.08), i * 150));
+  }
+
+  miniEvent() {
+    this._tone(440, 0.15, 'triangle', 0.1);
+    setTimeout(() => this._tone(554, 0.15, 'triangle', 0.08), 120);
+  }
+
+  victory() {
+    if (!this._enabled) return;
+    [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => this._tone(f, 0.3, 'sine', 0.12), i * 150));
+  }
+
+  defeat() {
+    if (!this._enabled) return;
+    [330, 294, 262, 196].forEach((f, i) => setTimeout(() => this._tone(f, 0.4, 'sawtooth', 0.06), i * 200));
+  }
+
+  simTick() { this._tone(660, 0.04, 'sine', 0.04); }
+}
+
+const soundMgr = new SoundManager();
+
+/* ============================================================
+   MODULE: NEWS TICKER
+============================================================ */
+
+class NewsTicker {
+  constructor() {
+    this._track = document.getElementById('news-ticker-track');
+    this._headlines = [];
+  }
+
+  _generateHeadlines(state) {
+    const h = [];
+    const yr = state.year;
+
+    if (state.temperature < 1.3) {
+      h.push(`UK on track to limit warming — ${state.temperature.toFixed(1)}°C pathway "achievable" says Met Office`);
+      h.push(`Green investment boom: UK renewable sector creates 45,000 jobs in ${yr}`);
+    } else if (state.temperature < 1.8) {
+      h.push(`Climate scientists warn: UK warming at ${state.temperature.toFixed(1)}°C — "window narrowing" for Paris targets`);
+      h.push(`Energy bills rise 12% as transition costs hit households — Treasury under pressure`);
+    } else if (state.temperature < 2.2) {
+      h.push(`BREAKING: UK passes 2°C pathway — IPCC: "adaptation now as important as mitigation"`);
+      h.push(`Insurance firms withdraw flood cover from 340,000 UK properties`);
+    } else {
+      h.push(`Climate emergency: UK at ${state.temperature.toFixed(1)}°C pathway — PM faces calls for emergency summit`);
+      h.push(`NHS declares heat-health national incident for third consecutive summer`);
+    }
+
+    if (state.gridReliability < 40) {
+      h.push(`National Grid issues "insufficient margin" warning — rolling blackouts possible this winter`);
+    } else if (state.gridReliability > 80) {
+      h.push(`UK grid stability at record high — battery storage revolution "exceeding all forecasts"`);
+    }
+
+    if (state.financialStability < 40) {
+      h.push(`Bank of England stress test: 3 major pension funds "critically exposed" to stranded fossil assets`);
+    } else if (state.financialStability > 80) {
+      h.push(`City of London named global green finance capital — £200bn in sustainable bonds issued`);
+    }
+
+    if (state.socialStability < 40) {
+      h.push(`Fuel poverty protests spread to 15 cities — unions demand emergency government action`);
+    } else if (state.socialStability > 80) {
+      h.push(`Public support for Net Zero at all-time high — "just transition" programme credited`);
+    }
+
+    if (state.netZeroProgress >= 90) {
+      h.push(`UK within reach of Net Zero — CCC: "historic achievement if sustained"`);
+    } else if (state.netZeroProgress < 30 && state.turn >= 2) {
+      h.push(`Climate Action Tracker downgrades UK to "critically insufficient" — Net Zero 2050 target "slipping away"`);
+    }
+
+    if (state.energy.gas < 10) {
+      h.push(`Last UK gas power station to close — end of an era for fossil electricity`);
+    }
+    if (state.energy.wind > 80) {
+      h.push(`UK offshore wind capacity surpasses 80GW — "world leader" says IEA`);
+    }
+    if (state.energy.nuclear > 40) {
+      h.push(`Sizewell D approved — UK nuclear fleet to provide 40% of baseload by ${yr + 8}`);
+    }
+    if (state.strandedAssets > 60) {
+      h.push(`North Sea oil majors write down £40bn in stranded reserves — pension funds scramble`);
+    }
+
+    h.push(`BBC Verify: What does ${state.temperature.toFixed(1)}°C warming mean for UK farming?`);
+    h.push(`Ofgem review: grid reliability at ${Math.round(state.gridReliability)}% — ${state.gridReliability > 60 ? '"adequate for winter demand"' : '"below safe operating margin"'}`);
+
+    return h;
+  }
+
+  update(state) {
+    if (!this._track) return;
+    this._headlines = this._generateHeadlines(state);
+    const shuffled = this._headlines.sort(() => Math.random() - 0.5).slice(0, 5);
+    this._track.innerHTML = shuffled.map(h => `<span>${h}</span>`).join('');
+    this._track.style.animation = 'none';
+    void this._track.offsetWidth;
+    const duration = Math.max(20, shuffled.join('').length * 0.12);
+    this._track.style.animation = `ticker-scroll ${duration}s linear infinite`;
+  }
+}
+
+const newsTicker = new NewsTicker();
+
+/* ============================================================
+   MODULE: INTERNATIONAL COMPARISON
+============================================================ */
+
+const INTL_BENCHMARKS = [
+  { flag: '🇩🇰', name: 'Denmark',    nzYear: 2050, renewPct: 80, tempPath: 1.4, score: 82 },
+  { flag: '🇩🇪', name: 'Germany',    nzYear: 2045, renewPct: 65, tempPath: 1.6, score: 68 },
+  { flag: '🇫🇷', name: 'France',     nzYear: 2050, renewPct: 40, tempPath: 1.5, score: 72 },
+  { flag: '🇺🇸', name: 'USA',        nzYear: 2050, renewPct: 45, tempPath: 2.1, score: 48 },
+  { flag: '🇨🇳', name: 'China',      nzYear: 2060, renewPct: 50, tempPath: 2.4, score: 40 },
+  { flag: '🇮🇳', name: 'India',      nzYear: 2070, renewPct: 35, tempPath: 2.6, score: 32 },
+  { flag: '🇯🇵', name: 'Japan',      nzYear: 2050, renewPct: 38, tempPath: 1.8, score: 55 },
+  { flag: '🇸🇪', name: 'Sweden',     nzYear: 2045, renewPct: 75, tempPath: 1.3, score: 88 },
+];
+
+function buildInternationalComparison(playerScore) {
+  const entries = INTL_BENCHMARKS.map(c => ({ ...c, isPlayer: false }));
+  entries.push({ flag: '🇬🇧', name: 'Your UK', score: playerScore, isPlayer: true });
+  entries.sort((a, b) => b.score - a.score);
+
+  let html = `<div id="intl-comparison">
+    <div id="intl-comparison-title">How You Compare — International Climate Scorecard</div>`;
+
+  for (const c of entries) {
+    const pct = Math.max(2, c.score);
+    const color = c.score >= 70 ? 'var(--status-good)' : c.score >= 45 ? 'var(--status-warn)' : 'var(--status-danger)';
+    html += `<div class="intl-country-row ${c.isPlayer ? 'intl-player-row' : ''}">
+      <span class="intl-country-flag">${c.flag}</span>
+      <span class="intl-country-name">${c.name}</span>
+      <div class="intl-country-bar-track">
+        <div class="intl-country-bar-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <span class="intl-country-val">${c.score}/100</span>
+    </div>`;
+  }
+
+  html += `<div style="font-size:10px;color:var(--text-muted);margin-top:var(--gap-sm);line-height:1.4;">
+    Benchmark scores based on Climate Action Tracker ratings, NGFS scenarios, and national NDC commitments. Illustrative comparison — real outcomes vary.
+  </div></div>`;
+  return html;
+}
+
+/* ============================================================
    MODULE: LEGACY SYSTEM
 ============================================================ */
 
@@ -5955,6 +6360,19 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+
+// Sound toggle button
+const _soundBtn = document.getElementById('sound-toggle');
+if (_soundBtn) {
+  if (soundMgr.enabled) _soundBtn.classList.add('active');
+  _soundBtn.textContent = soundMgr.enabled ? '🔊' : '🔇';
+  _soundBtn.addEventListener('click', () => {
+    const on = soundMgr.toggle();
+    _soundBtn.textContent = on ? '🔊' : '🔇';
+    _soundBtn.classList.toggle('active', on);
+    if (on) soundMgr.click();
+  });
+}
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
