@@ -1622,6 +1622,24 @@ body { transition: filter 2s ease; }
   flex-shrink: 0;
 }
 #settings-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+#audio-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+#audio-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+#audio-btn.muted { opacity: 0.5; }
 
 /* ===== SETTINGS MODAL ===== */
 #settings-modal {
@@ -2162,7 +2180,8 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="audio-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
+    <button id="settings-btn" title="Settings" aria-label="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2966,6 +2985,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_independence">
+        <span class="scenario-card-icon">⚛️</span>
+        <div class="scenario-card-name">Energy Independence</div>
+        <div class="scenario-card-desc">A previous government pursued nuclear and domestic energy at all costs. The grid is strong — but North Sea decommissioning has left a mountain of stranded assets.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
+          <div class="scenario-stat">Grid: <span>80% (strong)</span></div>
+          <div class="scenario-stat">Stranded Assets: <span>25 (high)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="late_start">
+        <span class="scenario-card-icon">⏰</span>
+        <div class="scenario-card-name">Late Start</div>
+        <div class="scenario-card-desc">Years of inaction have left the UK behind on climate. Temperature is already higher, Net Zero progress is minimal — but a generous budget and public mandate await.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Temperature: <span>1.35°C (elevated)</span></div>
+          <div class="scenario-stat">Net Zero: <span>20% (behind)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3166,6 +3207,31 @@ const RANDOM_EVENTS = [
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
+  },
+  {
+    id: 'DROUGHT', type: 'HEATWAVE', severity: 'MODERATE', icon: '🏜️',
+    title: 'Severe Drought — Water Rationing',
+    description: 'Record low rainfall across southern England. Reservoirs at 30%. Hosepipe bans escalate to emergency water rationing.',
+    story: 'Margaret Leung, a market gardener in Kent, watched half her crops wither. "My family has farmed this land for four generations. We\'ve never seen anything like this. The reservoir dried up in June."',
+    effects: { socialStability: -12, financialStability: -8, temperature: 0.02 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'CYBER_ATTACK', type: 'GRID', severity: 'MODERATE', icon: '🔒',
+    title: 'Cyber Attack on Energy Grid',
+    description: 'A state-sponsored cyber attack targets the UK\'s smart grid infrastructure. Automated systems disrupted for 48 hours.',
+    story: 'At the National Grid Control Centre in Wokingham, engineers switched to manual operations for 48 hours straight. "The irony," said one operator, "is that the old analogue systems saved us."',
+    effects: { gridReliability: -15, financialStability: -8 },
+    infraDamage: true, budgetPenaltyNext: 15,
+  },
+  {
+    id: 'SUPPLY_CHAIN', type: 'FINANCIAL', severity: 'MODERATE', icon: '🚢',
+    title: 'Critical Mineral Supply Shock',
+    description: 'Trade disruptions cut off lithium and rare earth imports. Battery and solar panel production grinds to a halt.',
+    story: 'The Sunderland battery gigafactory shut its doors for six weeks. 3,000 workers sent home. The supply chains that were meant to power the transition turned out to be brittle.',
+    effects: { financialStability: -10, gridReliability: -6 },
+    infraDamage: false, budgetPenaltyNext: 20,
   },
 ];
 
@@ -3370,6 +3436,27 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_independence: {
+    label: 'Energy Independence',
+    apply(state) {
+      state.energy.nuclear = Math.min(80, state.energy.nuclear + 20);
+      state.energy.wind = Math.min(120, state.energy.wind + 10);
+      state.gridReliability = 80;
+      state.strandedAssets = 25;
+      state.energy.gas = Math.max(0, state.energy.gas - 15);
+      state._budgetOverride = 90;
+    },
+  },
+  late_start: {
+    label: 'Late Start',
+    apply(state) {
+      state.temperature = 1.35;
+      state.netZeroProgress = 20;
+      state.socialStability = 55;
+      state.infrastructure.adaptation = 5;
+      state._budgetOverride = 110;
     },
   },
 };
@@ -3928,6 +4015,8 @@ class GameEngine {
         { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
         { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
         { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[9], w: 12 },  // CYBER_ATTACK
+        { e: RANDOM_EVENTS[10], w: 10 }, // SUPPLY_CHAIN
       ];
     } else if (s.temperature < 2.0) {
       pool = [
@@ -3937,6 +4026,9 @@ class GameEngine {
         { e: RANDOM_EVENTS[4], w: 20 },  // STORM
         { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
         { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 12 },  // DROUGHT
+        { e: RANDOM_EVENTS[9], w: 8 },   // CYBER_ATTACK
+        { e: RANDOM_EVENTS[10], w: 10 }, // SUPPLY_CHAIN
       ];
     } else {
       pool = [
@@ -3946,6 +4038,8 @@ class GameEngine {
         { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
         { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
         { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 18 },  // DROUGHT
+        { e: RANDOM_EVENTS[10], w: 8 },  // SUPPLY_CHAIN
       ];
     }
 
@@ -4307,8 +4401,10 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          effectsMgr.sfxDeallocate();
         } else {
-          this.engine.allocateBlock(cat);
+          const res = this.engine.allocateBlock(cat);
+          if (res.success) effectsMgr.sfxAllocate();
         }
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
@@ -4412,6 +4508,7 @@ class UI {
       this.elNoSpendWarning.classList.add('hidden');
 
       this.elEndTurnBtn.disabled = true;
+      effectsMgr.sfxAdvance();
       await runSimulationPhase(this.engine, this, effectsMgr);
       this.elEndTurnBtn.disabled = false;
     });
@@ -4462,6 +4559,16 @@ class UI {
     }
     if (settingsCloseBtn) {
       settingsCloseBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+    }
+
+    // Audio toggle
+    const audioBtn = document.getElementById('audio-btn');
+    if (audioBtn) {
+      audioBtn.addEventListener('click', () => {
+        const enabled = effectsMgr.toggleAudio();
+        audioBtn.textContent = enabled ? '🔊' : '🔇';
+        audioBtn.classList.toggle('muted', !enabled);
+      });
     }
     document.querySelectorAll('.diff-option').forEach(opt => {
       opt.addEventListener('click', () => {
@@ -5032,6 +5139,7 @@ class UI {
   }
 
   showEventModal(event) {
+    effectsMgr.sfxEvent();
     this.elEventIcon.textContent  = event.icon;
     this.elEventTitle.textContent = event.title;
     this.elEventDesc.textContent  = event.description;
@@ -5090,6 +5198,8 @@ class UI {
   }
 
   showEndgame(result) {
+    const isVictory = result.colour === 'orderly' || result.colour === 'managed';
+    if (isVictory) effectsMgr.sfxVictory(); else effectsMgr.sfxDefeat();
     const s = this.engine.state;
 
     this.elEndgameCard.className = result.colour;
@@ -5410,6 +5520,72 @@ class UI {
 class EffectsManager {
   constructor() {
     this._shakeTimer = null;
+    this._audioCtx = null;
+    this._audioEnabled = true;
+    this._masterGain = null;
+    this._ambientOsc = null;
+  }
+
+  _ensureAudio() {
+    if (this._audioCtx) return;
+    try {
+      this._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      this._masterGain = this._audioCtx.createGain();
+      this._masterGain.gain.value = 0.3;
+      this._masterGain.connect(this._audioCtx.destination);
+    } catch { this._audioEnabled = false; }
+  }
+
+  _playTone(freq, duration, type = 'sine', volume = 0.15) {
+    if (!this._audioEnabled) return;
+    this._ensureAudio();
+    if (!this._audioCtx || this._audioCtx.state === 'suspended') {
+      this._audioCtx?.resume();
+      return;
+    }
+    const osc = this._audioCtx.createOscillator();
+    const gain = this._audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(volume, this._audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this._audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(this._masterGain);
+    osc.start();
+    osc.stop(this._audioCtx.currentTime + duration);
+  }
+
+  sfxClick() { this._playTone(880, 0.08, 'sine', 0.06); }
+  sfxAllocate() { this._playTone(523, 0.12, 'triangle', 0.1); this._playTone(659, 0.12, 'triangle', 0.08); }
+  sfxDeallocate() { this._playTone(440, 0.1, 'triangle', 0.08); }
+
+  sfxAdvance() {
+    [523, 659, 784].forEach((f, i) => setTimeout(() => this._playTone(f, 0.2, 'sine', 0.1), i * 100));
+  }
+
+  sfxEvent() {
+    this._playTone(220, 0.4, 'sawtooth', 0.08);
+    setTimeout(() => this._playTone(185, 0.5, 'sawtooth', 0.06), 200);
+  }
+
+  sfxVictory() {
+    [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => this._playTone(f, 0.35, 'sine', 0.12), i * 150));
+  }
+
+  sfxDefeat() {
+    [440, 370, 311, 262].forEach((f, i) => setTimeout(() => this._playTone(f, 0.4, 'sawtooth', 0.06), i * 200));
+  }
+
+  sfxMiniEvent() {
+    this._playTone(660, 0.15, 'square', 0.05);
+    setTimeout(() => this._playTone(880, 0.15, 'square', 0.05), 120);
+  }
+
+  sfxSimTick() { this._playTone(1200, 0.04, 'sine', 0.03); }
+
+  toggleAudio() {
+    this._audioEnabled = !this._audioEnabled;
+    return this._audioEnabled;
   }
 
   applyHeat(temperature) {
@@ -5724,6 +5900,52 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_biodiversity',
+    icon: '🦉',
+    title: 'Biodiversity vs. Solar Farm',
+    prompt: 'A proposed solar farm conflicts with a protected wildlife habitat. What\'s your priority?',
+    explanation: 'Large solar farms need land — sometimes land that supports endangered species. Building on it accelerates the transition but damages ecological systems. Relocating to brownfield sites is slower and more expensive but preserves biodiversity.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Solar capacity: ${Math.round(s.energy.solar)}`,
+    }),
+    optA: {
+      label: '☀️ Build on greenfield site',
+      consequence: '+8 Solar capacity · −3 Social (public backlash) · faster Net Zero',
+      effect: (s) => { s.energy.solar = Math.min(100, s.energy.solar + 8); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    optB: {
+      label: '🌿 Relocate to brownfield site',
+      consequence: 'Costs £4bn next turn · +4 Solar capacity · +2 Social (public approval)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.energy.solar = Math.min(100, s.energy.solar + 4); s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    condition: (s) => s.energy.solar > 30 && s.netZeroProgress < 80,
+  },
+  {
+    id: 'mini_hydrogen',
+    icon: '💨',
+    title: 'Hydrogen Strategy Decision',
+    prompt: 'The hydrogen industry is requesting government backing. How do you invest?',
+    explanation: 'Hydrogen can decarbonise heavy industry and heating — but "green" hydrogen from electrolysis needs massive renewable power, while "blue" hydrogen from natural gas with carbon capture is cheaper but keeps fossil infrastructure alive.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Gas dependency: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '🟢 Back green hydrogen (electrolysis)',
+      consequence: 'Costs £7bn next turn · −4 Grid (draws power) · +5% Net Zero progress',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.gridReliability = Math.max(0, s.gridReliability - 4); s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); },
+    },
+    optB: {
+      label: '🔵 Back blue hydrogen (gas + CCS)',
+      consequence: 'Costs £4bn next turn · +3 Grid · +2% Net Zero · keeps gas infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.gridReliability = Math.min(100, s.gridReliability + 3); s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); s.energy.gas = Math.min(100, s.energy.gas + 3); },
+    },
+    condition: (s) => s.infrastructure.energyTransition > 40,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5744,6 +5966,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
+    fxMgr.sfxSimTick();
     await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
@@ -5871,6 +6094,7 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
       </div>`;
 
     overlay.querySelector('#sim-card').appendChild(panel);
+    fxMgr.sfxMiniEvent();
 
     const cleanup = (handler) => {
       handler(engine.state);
