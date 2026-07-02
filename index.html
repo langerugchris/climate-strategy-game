@@ -2142,6 +2142,161 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== POSITIVE EVENT MODAL ===== */
+#event-card.positive-event {
+  border-color: var(--status-good);
+}
+#event-card.positive-event #event-title-display {
+  color: var(--status-good);
+}
+#event-card.positive-event #event-story-display {
+  border-left-color: var(--status-good);
+  background: rgba(0,200,83,0.04);
+}
+
+/* ===== ENDGAME TREND CHARTS ===== */
+#endgame-trends {
+  margin: var(--gap-lg) 0;
+}
+#endgame-trends-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.endgame-trends-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-md);
+}
+@media (max-width: 600px) {
+  .endgame-trends-grid { grid-template-columns: 1fr; }
+}
+.endgame-trend-chart {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+}
+.trend-chart-final {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+  margin-top: 2px;
+}
+.trend-chart-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.trend-chart-svg {
+  width: 100%;
+  height: 60px;
+  display: block;
+}
+.trend-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.trend-area {
+  opacity: 0.10;
+}
+.trend-dot {
+  r: 3.5;
+}
+.trend-label {
+  font-size: 9px;
+  fill: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.trend-value-label {
+  font-size: 8px;
+  fill: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+.trend-grid-line {
+  stroke: var(--border-subtle);
+  stroke-width: 0.5;
+}
+.trend-threshold-line {
+  stroke: var(--status-danger);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+  opacity: 0.5;
+}
+
+/* ===== CUMULATIVE EMISSIONS ===== */
+.emissions-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.emissions-budget-text {
+  font-weight: 600;
+}
+
+/* ===== WEATHER EFFECTS ===== */
+.weather-cloud {
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.weather-cloud.active {
+  opacity: 1;
+}
+@keyframes cloud-drift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(40px); }
+}
+@keyframes rain-fall {
+  0%   { transform: translateY(0); opacity: 0.7; }
+  100% { transform: translateY(30px); opacity: 0; }
+}
+.rain-drop {
+  animation: rain-fall 1.2s linear infinite;
+}
+@keyframes sun-pulse {
+  0%, 100% { r: 14; opacity: 0.85; }
+  50%      { r: 16; opacity: 1; }
+}
+.weather-sun {
+  animation: sun-pulse 4s ease-in-out infinite;
+}
+
+/* ===== MINI-EVENT: INTERNATIONAL CONTEXT ===== */
+.mini-event-context-intl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  background: rgba(29,112,184,0.08);
+  border-left: 2px solid var(--accent-blue-lt);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 5px 8px;
+  margin-bottom: var(--gap-md);
+}
+
+/* ===== POSITIVE MINI-EVENT ===== */
+.mini-btn.opt-pos {
+  background: rgba(0,200,83,0.12);
+  color: var(--text-primary);
+  border-color: rgba(0,200,83,0.4);
+}
+.mini-btn.opt-pos:hover { background: rgba(0,200,83,0.22); }
+#mini-event-panel.positive-mini {
+  border-color: var(--status-good);
+}
+#mini-event-panel.positive-mini .mini-event-title {
+  color: var(--status-good);
+}
 </style>
 </head>
 <body>
@@ -2268,6 +2423,19 @@ body { transition: filter 2s ease; }
           <div class="bar-ghost" id="ghost-nz"></div>
         </div>
         <div class="sparkline-container" id="spark-nz"></div>
+      </div>
+
+      <!-- Cumulative Emissions -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">💨 Cumulative Emissions</span>
+          <span class="metric-value"><span id="val-emissions">0</span> MtCO₂</span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill warn" id="bar-emissions" style="width:0%"></div>
+        </div>
+        <div class="emissions-label">Carbon budget remaining: <span class="emissions-budget-text" id="val-emissions-budget">3,200</span> MtCO₂</div>
+        <div class="sparkline-container" id="spark-emissions"></div>
       </div>
 
       <!-- Energy Mix -->
@@ -2889,6 +3057,47 @@ body { transition: filter 2s ease; }
           <rect x="617" y="154" width="12" height="8" fill="#050d1a"/>
         </g>
 
+        <!-- WEATHER EFFECTS -->
+        <g id="weather-layer">
+          <!-- Clouds -->
+          <g id="weather-cloud-1" class="weather-cloud" transform="translate(60,25)">
+            <ellipse cx="0" cy="0" rx="22" ry="9" fill="#3a4560" opacity="0.5"/>
+            <ellipse cx="14" cy="-3" rx="16" ry="7" fill="#3a4560" opacity="0.45"/>
+            <ellipse cx="-10" cy="-2" rx="14" ry="6" fill="#3a4560" opacity="0.4"/>
+            <animateTransform attributeName="transform" type="translate" values="60,25;100,25;60,25" dur="45s" repeatCount="indefinite"/>
+          </g>
+          <g id="weather-cloud-2" class="weather-cloud" transform="translate(340,18)">
+            <ellipse cx="0" cy="0" rx="26" ry="10" fill="#3a4560" opacity="0.45"/>
+            <ellipse cx="18" cy="-4" rx="18" ry="8" fill="#3a4560" opacity="0.4"/>
+            <ellipse cx="-14" cy="-1" rx="15" ry="7" fill="#3a4560" opacity="0.35"/>
+            <animateTransform attributeName="transform" type="translate" values="340,18;380,18;340,18" dur="55s" repeatCount="indefinite"/>
+          </g>
+          <g id="weather-cloud-3" class="weather-cloud" transform="translate(580,30)">
+            <ellipse cx="0" cy="0" rx="20" ry="8" fill="#3a4560" opacity="0.5"/>
+            <ellipse cx="12" cy="-3" rx="14" ry="6" fill="#3a4560" opacity="0.4"/>
+            <animateTransform attributeName="transform" type="translate" values="580,30;620,30;580,30" dur="50s" repeatCount="indefinite"/>
+          </g>
+          <!-- Rain group (hidden by default) -->
+          <g id="weather-rain" opacity="0">
+            <line x1="100" y1="50" x2="98" y2="65" stroke="#5390d9" stroke-width="1" opacity="0.5" class="rain-drop"/>
+            <line x1="180" y1="45" x2="178" y2="60" stroke="#5390d9" stroke-width="1" opacity="0.4" class="rain-drop" style="animation-delay:0.3s"/>
+            <line x1="260" y1="55" x2="258" y2="70" stroke="#5390d9" stroke-width="1" opacity="0.5" class="rain-drop" style="animation-delay:0.6s"/>
+            <line x1="350" y1="42" x2="348" y2="57" stroke="#5390d9" stroke-width="1" opacity="0.4" class="rain-drop" style="animation-delay:0.2s"/>
+            <line x1="440" y1="50" x2="438" y2="65" stroke="#5390d9" stroke-width="1" opacity="0.5" class="rain-drop" style="animation-delay:0.8s"/>
+            <line x1="530" y1="48" x2="528" y2="63" stroke="#5390d9" stroke-width="1" opacity="0.4" class="rain-drop" style="animation-delay:0.4s"/>
+            <line x1="620" y1="52" x2="618" y2="67" stroke="#5390d9" stroke-width="1" opacity="0.5" class="rain-drop" style="animation-delay:0.7s"/>
+            <line x1="710" y1="46" x2="708" y2="61" stroke="#5390d9" stroke-width="1" opacity="0.4" class="rain-drop" style="animation-delay:0.1s"/>
+          </g>
+          <!-- Heat shimmer (hidden by default) -->
+          <g id="weather-heat" opacity="0">
+            <rect x="0" y="145" width="800" height="17" fill="url(#sg-sky)" opacity="0.15">
+              <animate attributeName="opacity" values="0.08;0.2;0.08" dur="3s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+          <!-- Sun glow (for low temp / good state) -->
+          <circle id="weather-sun" cx="758" cy="20" r="0" fill="#ffd600" opacity="0" class="weather-sun"/>
+        </g>
+
         <!-- FLOOD WATER OVERLAY — shown when adaptation fails -->
         <rect id="flood-water" x="0" y="200" width="800" height="80" fill="#1565c0" opacity="0.55" rx="0">
           <animate id="flood-anim" attributeName="y" from="200" to="148" dur="2s" fill="freeze" begin="indefinite"/>
@@ -3170,6 +3379,58 @@ const RANDOM_EVENTS = [
 ];
 
 /* ============================================================
+   POSITIVE EVENTS (BREAKTHROUGHS)
+============================================================ */
+
+const POSITIVE_EVENTS = [
+  {
+    id: 'WIND_COST_DROP', icon: '🌬️',
+    title: 'Offshore Wind Cost Revolution',
+    description: 'A breakthrough in turbine manufacturing halves the cost of offshore wind. The UK\'s North Sea position gives it first-mover advantage.',
+    story: 'Aberdeen\'s harbour — once the gateway to oil — is now the staging ground for the world\'s cheapest offshore wind farms. Orders are flooding in from across Europe.',
+    effects: { netZeroProgress: 8 },
+    bonus: (s) => { s.energy.wind = Math.min(120, s.energy.wind + 12); },
+    condition: (s) => s.energy.wind >= 30 && s.infrastructure.energyTransition >= 30,
+  },
+  {
+    id: 'BATTERY_BREAKTHROUGH', icon: '🔋',
+    title: 'Solid-State Battery Breakthrough',
+    description: 'UK researchers develop a commercially viable solid-state battery with 3× energy density. Grid storage costs plummet.',
+    story: 'The Faraday Institution\'s lead researcher, Dr. Chen Wei, held up a battery the size of a suitcase. "This replaces an entire shipping container of lithium-ion cells," she said. "Grid storage just became cheap."',
+    effects: { gridReliability: 10 },
+    bonus: (s) => { s.energy.storage = Math.min(100, s.energy.storage + 15); },
+    condition: (s) => s.infrastructure.gridAndStorage >= 35,
+  },
+  {
+    id: 'GREEN_BOND_BOOM', icon: '📈',
+    title: 'Green Bond Market Boom',
+    description: 'International investors pour capital into UK green bonds. The government\'s climate commitment has attracted record foreign investment.',
+    story: 'The London Stock Exchange\'s green bond index hit a record high. "The UK is now seen as the safest climate investment destination in Europe," said the FT\'s lead analyst.',
+    effects: { financialStability: 12 },
+    bonus: (s) => { s.propertyValue = Math.min(100, s.propertyValue + 8); },
+    condition: (s) => s.financialStability >= 55 && s.netZeroProgress >= 40,
+  },
+  {
+    id: 'CCS_VIABLE', icon: '🏭',
+    title: 'Carbon Capture Becomes Viable',
+    description: 'UK-developed carbon capture technology achieves cost-parity with other emission reduction methods. Industrial emissions can now be captured at scale.',
+    story: 'The Teesside carbon capture cluster — once dismissed as "throwing good money after bad" — is now capturing 10 million tonnes of CO₂ per year. Other nations are asking to license the technology.',
+    effects: { netZeroProgress: 12 },
+    bonus: (s) => {},
+    condition: (s) => s.temperature > 1.3 && s.infrastructure.energyTransition >= 30,
+  },
+  {
+    id: 'COMMUNITY_SUCCESS', icon: '🏘️',
+    title: 'Community Energy Revolution',
+    description: 'Local community energy cooperatives are spreading rapidly, giving households direct ownership of renewable generation and cutting bills.',
+    story: 'In Todmorden, West Yorkshire, the community solar cooperative now powers 2,400 homes and returns £280 per household per year. "People used to argue about the wind farm. Now they argue about who gets to invest more," said the chair.',
+    effects: { socialStability: 10 },
+    bonus: (s) => { s.socialCapital = Math.min(60, s.socialCapital + 6); },
+    condition: (s) => s.infrastructure.socialSupport >= 20 && s.socialStability >= 50,
+  },
+];
+
+/* ============================================================
    DIFFICULTY SYSTEM
 ============================================================ */
 
@@ -3297,6 +3558,14 @@ const METRIC_TOOLTIPS = {
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
+  },
+  emissions: {
+    title: '💨 Cumulative Emissions',
+    desc: 'Total CO₂ emissions since the start of the simulation. Represents the UK\'s running contribution to climate change — past emissions cannot be undone.',
+    drivers: '↑ Raised by: gas-heavy energy mix, delayed transition\n↓ Reduced by: high renewable share, Net Zero progress, carbon capture',
+    threshold: 'The UK\'s remaining carbon budget to stay within 1.5°C is approximately 3,200 MtCO₂ from 2025. Exceeding it makes Paris compliance extremely difficult.',
+    thresholdGood: false,
+    source: 'Based on UK Climate Change Committee carbon budget analysis',
   },
 };
 
@@ -3517,6 +3786,7 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      cumulativeEmissions: state.cumulativeEmissions || 0,
     });
   }
   reset() { this.data = []; }
@@ -3561,6 +3831,8 @@ class GameEngine {
       strandedAssets: 0,
       propertyValue: 100,
       socialCapital: 0,
+      cumulativeEmissions: 0,
+      carbonBudgetTotal: 3200,
       currentDecisions: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -3763,6 +4035,7 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      eventPositive: event ? !!event.isPositive : false,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -3907,12 +4180,55 @@ class GameEngine {
 
     if (s.netZeroAchieved) delta *= 0.45;
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
+
+    // Cumulative emissions: higher gas share = more emissions per 5-year period
+    const baseEmissions = 350; // MtCO2 per 5-year period at current UK levels
+    const emissionsFactor = 0.3 + gasShare * 1.2 - renewShare * 0.4;
+    const periodEmissions = Math.round(baseEmissions * Math.max(0.05, emissionsFactor));
+    s.cumulativeEmissions += periodEmissions;
+  }
+
+  _resolvePositiveEvent() {
+    const s = this.state;
+    // Positive events: check if one should fire (independent of negative events)
+    // Higher chance when player is investing well
+    const investmentLevel = Object.values(s.infrastructure).reduce((a, b) => a + b, 0);
+    const baseProb = 0.15 + (investmentLevel / 1000) * 0.20;
+    const prob = Math.min(baseProb, 0.40);
+
+    if (Math.random() >= prob) return null;
+
+    const eligible = POSITIVE_EVENTS.filter(e => e.condition(s));
+    if (eligible.length === 0) return null;
+
+    const selected = eligible[Math.floor(Math.random() * eligible.length)];
+
+    // Apply effects
+    const applied = {};
+    for (const [key, val] of Object.entries(selected.effects)) {
+      applied[key] = val;
+      if (s[key] !== undefined) {
+        s[key] = this._clamp(s[key] + val, 0, 100);
+      }
+    }
+
+    // Apply bonus function
+    if (selected.bonus) selected.bonus(s);
+
+    return { ...selected, appliedEffects: applied, isPositive: true };
   }
 
   _resolveEvent() {
     const s = this.state;
     // Cooldown: no event if one fired last turn
     if (s.turn > 0 && s.turn - 1 === s.lastEventTurn) return null;
+
+    // Check for positive breakthrough first
+    const positiveEvent = this._resolvePositiveEvent();
+    if (positiveEvent) {
+      s.lastEventTurn = s.turn;
+      return positiveEvent;
+    }
 
     const excess = Math.max(s.temperature - 1.1, 0);
     const prob   = Math.min((0.10 + (excess / 0.1) * 0.015) * difficultyMgr.preset.eventProbMod, 0.70);
@@ -4343,6 +4659,8 @@ class UI {
         if (!payload) return;
         // Restore engine state
         Object.assign(engine.state, payload.engineState);
+        if (engine.state.cumulativeEmissions === undefined) engine.state.cumulativeEmissions = 0;
+        if (engine.state.carbonBudgetTotal === undefined) engine.state.carbonBudgetTotal = 3200;
         // Restore tech tree
         techTree.reset();
         for (const id of payload.techPurchased) {
@@ -4671,6 +4989,23 @@ class UI {
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
     }
+
+    // Cumulative emissions
+    const emissionsEl = document.getElementById('val-emissions');
+    const emissionsBar = document.getElementById('bar-emissions');
+    const emissionsBudget = document.getElementById('val-emissions-budget');
+    if (emissionsEl) {
+      const ce = state.cumulativeEmissions || 0;
+      const budget = state.carbonBudgetTotal || 3200;
+      const remaining = Math.max(0, budget - ce);
+      const pct = Math.min(100, (ce / budget) * 100);
+      emissionsEl.textContent = Math.round(ce).toLocaleString();
+      if (emissionsBar) {
+        emissionsBar.style.width = pct + '%';
+        emissionsBar.className = 'bar-fill ' + (pct > 80 ? 'danger' : pct > 50 ? 'warn' : 'info');
+      }
+      if (emissionsBudget) emissionsBudget.textContent = Math.round(remaining).toLocaleString();
+    }
   }
 
   _renderSparklines() {
@@ -4680,6 +5015,7 @@ class UI {
       { containerId: 'spark-fin',  key: 'financialStability', color: '#5390d9', invert: false, min: 0, max: 100 },
       { containerId: 'spark-soc',  key: 'socialStability', color: '#ffd600', invert: false, min: 0, max: 100 },
       { containerId: 'spark-nz',   key: 'netZeroProgress', color: '#448aff', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-emissions', key: 'cumulativeEmissions', color: '#ff7043', invert: true, min: 0, max: 3200 },
     ];
 
     for (const s of series) {
@@ -4953,6 +5289,30 @@ class UI {
       const smokeOpacity = Math.max(0, (gasShare - 0.15) / 0.4);
       smokeGroup.style.opacity = smokeOpacity;
     }
+
+    // Weather effects based on temperature
+    const temp = state.temperature;
+    const clouds = [document.getElementById('weather-cloud-1'), document.getElementById('weather-cloud-2'), document.getElementById('weather-cloud-3')];
+    const rainDrops = document.querySelectorAll('.rain-drop');
+    const heatShimmer = document.getElementById('heat-shimmer');
+    const sunGlow = document.getElementById('sun-glow');
+
+    const stormIntensity = Math.max(0, (temp - 1.3) / 1.2);
+    const heatIntensity = Math.max(0, (temp - 1.8) / 0.8);
+
+    clouds.forEach(c => {
+      if (!c) return;
+      c.classList.toggle('active', temp > 1.3);
+      c.style.opacity = Math.min(0.7, stormIntensity * 0.7);
+    });
+    rainDrops.forEach(d => {
+      d.style.opacity = temp > 1.5 ? Math.min(0.8, (temp - 1.5) / 0.8) : 0;
+    });
+    if (heatShimmer) heatShimmer.style.opacity = heatIntensity * 0.15;
+    if (sunGlow) {
+      sunGlow.style.opacity = heatIntensity * 0.5;
+      sunGlow.setAttribute('r', 15 + heatIntensity * 10);
+    }
   }
 
   _buildTurnNarrative(entry) {
@@ -5000,7 +5360,10 @@ class UI {
 
     // Event notice
     if (entry.event) {
-      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+      const isPositive = entry.eventPositive;
+      const evtColor = isPositive ? 'var(--status-good, #4caf81)' : 'var(--status-danger)';
+      const evtIcon = isPositive ? '🌟' : '⚠';
+      html += `<div class="log-text" style="color:${evtColor};margin-top:4px;">${evtIcon} ${entry.event}</div>`;
     }
 
     // Metric chips
@@ -5037,6 +5400,10 @@ class UI {
     this.elEventDesc.textContent  = event.description;
     const storyEl = document.getElementById('event-story-display');
     if (storyEl) storyEl.textContent = event.story || '';
+
+    // Positive vs negative event styling
+    const card = this.elEventModal.querySelector('.event-card') || this.elEventModal;
+    card.classList.toggle('positive-event', !!event.isPositive);
 
     // Flood visual effect
     if (event.type === 'FLOOD') {
@@ -5128,6 +5495,10 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Cumulative Emissions</div>
+        <div class="endgame-metric-val ${(s.cumulativeEmissions || 0) > 2400 ? 'danger' : (s.cumulativeEmissions || 0) > 1600 ? 'warn' : 'good'}">${Math.round(s.cumulativeEmissions || 0).toLocaleString()} MtCO₂</div>
       </div>`;
 
     this.elEndgameNarr.innerHTML = result.narrative;
@@ -5165,7 +5536,8 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    const trendChartsHtml = this._buildTrendCharts();
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', trendChartsHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5264,6 +5636,62 @@ class UI {
     return html;
   }
 
+  _buildTrendCharts() {
+    const history = turnHistory.data;
+    if (history.length < 2) return '';
+
+    const charts = [
+      { key: 'temperature', label: 'Temperature', unit: '°C', color: '#ff7043', min: 1.0, max: 3.0, decimals: 1, invert: true },
+      { key: 'gridReliability', label: 'Grid Reliability', unit: '%', color: '#4caf81', min: 0, max: 100, decimals: 0, invert: false },
+      { key: 'financialStability', label: 'Financial Stability', unit: '%', color: '#5390d9', min: 0, max: 100, decimals: 0, invert: false },
+      { key: 'socialStability', label: 'Social Stability', unit: '%', color: '#ffd600', min: 0, max: 100, decimals: 0, invert: false },
+      { key: 'netZeroProgress', label: 'Net Zero', unit: '%', color: '#448aff', min: 0, max: 100, decimals: 0, invert: false },
+      { key: 'cumulativeEmissions', label: 'Cumulative Emissions', unit: 'Mt', color: '#e57373', min: 0, max: 3200, decimals: 0, invert: true },
+    ];
+
+    let html = '<div class="endgame-trends"><div class="endgame-trends-title">Performance Trends</div><div class="endgame-trends-grid">';
+
+    for (const chart of charts) {
+      const data = history.map(h => h[chart.key] ?? 0);
+      const w = 180, h_svg = 60, pad = 6;
+      const range = chart.max - chart.min || 1;
+      const points = data.map((v, i) => ({
+        x: pad + (i / Math.max(data.length - 1, 1)) * (w - pad * 2),
+        y: pad + (1 - (v - chart.min) / range) * (h_svg - pad * 2),
+        v,
+      }));
+
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaPath = linePath + ` L${points[points.length - 1].x.toFixed(1)},${h_svg} L${points[0].x.toFixed(1)},${h_svg} Z`;
+
+      const lastVal = data[data.length - 1];
+      const firstVal = data[0];
+      const trend = chart.invert
+        ? (lastVal < firstVal ? '#00c853' : '#ff3d00')
+        : (lastVal > firstVal ? '#00c853' : lastVal < firstVal ? '#ff3d00' : '#909cb8');
+
+      const dots = points.map(p => {
+        const label = chart.decimals ? p.v.toFixed(chart.decimals) : Math.round(p.v);
+        return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${chart.color}" opacity="0.8"><title>${label}${chart.unit}</title></circle>`;
+      }).join('');
+
+      const finalDisplay = chart.decimals ? lastVal.toFixed(chart.decimals) : Math.round(lastVal).toLocaleString();
+
+      html += `<div class="endgame-trend-chart">
+        <div class="trend-chart-label">${chart.label}</div>
+        <svg class="trend-chart-svg" viewBox="0 0 ${w} ${h_svg}" preserveAspectRatio="none">
+          <path d="${areaPath}" fill="${trend}" opacity="0.15"/>
+          <path d="${linePath}" fill="none" stroke="${trend}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          ${dots}
+        </svg>
+        <div class="trend-chart-final" style="color:${trend}">${finalDisplay}${chart.unit}</div>
+      </div>`;
+    }
+
+    html += '</div></div>';
+    return html;
+  }
+
   // ===== METRIC TOOLTIP =====
   _initTooltips() {
     this._tooltip = document.getElementById('metric-tooltip');
@@ -5273,6 +5701,7 @@ class UI {
       'val-fin':  'fin',
       'val-soc':  'soc',
       'val-nz':   'nz',
+      'val-emissions': 'emissions',
     };
     // Also attach to metric-name spans
     const nameMap = {
@@ -5281,6 +5710,7 @@ class UI {
       '🏦 Financial Stability':'fin',
       '🏘️ Social Stability':   'soc',
       '🌱 Net Zero Progress':  'nz',
+      '💨 Cumulative Emissions': 'emissions',
     };
 
     document.querySelectorAll('.metric-name').forEach(el => {
@@ -5723,6 +6153,98 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_carbon_border',
+    icon: '🛃',
+    title: 'Carbon Border Tax Debate',
+    prompt: 'The EU is imposing carbon border tariffs. How does the UK respond?',
+    explanation: 'The EU\'s CBAM taxes imports from countries without equivalent carbon pricing. The UK can mirror it — protecting green industries but raising import costs — or negotiate an exemption that keeps trade flowing but undermines your domestic carbon price signal.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🛡️ Mirror the EU carbon border tariff',
+      consequence: 'Costs £3bn next turn · +5 Net Zero progress · −3 Financial (import costs rise)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '🤝 Negotiate bilateral exemption',
+      consequence: 'No cost · +3 Financial · −4 Net Zero (weakens carbon price signal)',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 4); },
+    },
+    condition: (s) => s.netZeroProgress > 25,
+  },
+  {
+    id: 'mini_cop_negotiation',
+    icon: '🌍',
+    title: 'COP Climate Summit',
+    prompt: 'World leaders are negotiating binding emissions targets. What stance do you take?',
+    explanation: 'At the annual COP summit, the UK can lead by pledging aggressive cuts — boosting international credibility and Net Zero momentum but committing to costly domestic targets. Or play it safe with modest pledges that keep options open but draw criticism from climate-vulnerable nations.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Social Stability: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '📢 Pledge aggressive binding targets',
+      consequence: 'Costs £7bn next turn · +8 Net Zero · +3 Social (leadership praised) · locks in commitments',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optB: {
+      label: '🕊️ Modest voluntary pledges',
+      consequence: 'No cost · +2 Net Zero · −3 Social (seen as lagging behind)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_green_export',
+    icon: '📦',
+    title: 'Green Tech Export Opportunity',
+    prompt: 'Developing nations want to buy British renewable technology. How do you respond?',
+    explanation: 'UK companies have developed cutting-edge offshore wind and hydrogen tech. Government-backed export deals create jobs and revenue but divert engineering capacity from domestic deployment. Focusing domestically ensures the UK hits its own targets but misses a lucrative market window.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Wind capacity: ${Math.round(s.energy.wind)}`,
+    }),
+    optA: {
+      label: '🏭 Back government export deals',
+      consequence: '+6 Financial · −3 Grid Reliability (engineers diverted) · builds trade relationships',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 6); s.gridReliability = Math.max(0, s.gridReliability - 3); },
+    },
+    optB: {
+      label: '🏠 Prioritise domestic deployment',
+      consequence: '+4 Grid Reliability · +3 Net Zero · misses export revenue window',
+      effect: (s) => { s.gridReliability = Math.min(100, s.gridReliability + 4); s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    },
+    condition: (s) => s.energy.wind > 20 || s.infrastructure.energyTransition > 40,
+  },
+  {
+    id: 'mini_fossil_embargo',
+    icon: '🚫',
+    title: 'Fossil Fuel Import Crisis',
+    prompt: 'A major gas supplier has cut exports due to geopolitical conflict. What do you do?',
+    explanation: 'A sudden disruption to LNG imports has exposed the UK\'s remaining fossil fuel dependency. Emergency domestic drilling keeps the lights on but sets back the transition. Accelerating the shift to renewables solves the long-term problem but causes short-term grid instability.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Gas share: ${Math.round(s.energy.gas)}%`,
+    }),
+    optA: {
+      label: '⛽ Emergency domestic gas extraction',
+      consequence: 'Costs £10bn next turn · +5 Grid · +10 Stranded Assets · −5 Net Zero',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.gridReliability = Math.min(100, s.gridReliability + 5); s.strandedAssets = Math.min(100, s.strandedAssets + 10); s.netZeroProgress = Math.max(0, s.netZeroProgress - 5); },
+    },
+    optB: {
+      label: '⚡ Accelerate emergency renewable build-out',
+      consequence: 'Costs £8bn next turn · −6 Grid this term · +8 Net Zero · reduces future gas dependency',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.gridReliability = Math.max(0, s.gridReliability - 6); s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.energy.gas = Math.max(5, s.energy.gas - 5); },
+    },
+    condition: (s) => s.energy.gas > 15,
   },
 ];
 
