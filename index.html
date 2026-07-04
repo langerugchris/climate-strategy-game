@@ -346,7 +346,7 @@ body {
 
 #energy-mix-legend {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 3px 8px;
 }
 
@@ -672,6 +672,15 @@ body {
   letter-spacing: 0.08em;
   color: var(--text-secondary);
   margin-bottom: 3px;
+}
+
+.log-narrative {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-family: var(--font-editorial);
+  font-style: italic;
+  margin-bottom: 4px;
 }
 
 .log-text {
@@ -1013,6 +1022,82 @@ body {
 }
 
 #advisor-dismiss-btn:hover { background: var(--accent-blue-lt); }
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1700;
+  pointer-events: none;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  pointer-events: auto;
+}
+#tutorial-highlight {
+  position: absolute;
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 4000px rgba(0,0,0,0.6), 0 0 20px var(--accent-blue-lt);
+  z-index: 1;
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+#tutorial-tooltip {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-md) var(--gap-lg);
+  max-width: 320px;
+  z-index: 2;
+  pointer-events: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+#tutorial-step-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: 6px;
+}
+#tutorial-step-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-md);
+}
+#tutorial-progress {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+#tutorial-actions {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: flex-end;
+}
+.tutorial-btn {
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+#tutorial-next-btn {
+  background: var(--accent-blue);
+  color: white;
+}
+#tutorial-next-btn:hover { background: var(--accent-blue-lt); }
+#tutorial-skip-btn {
+  background: none;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+#tutorial-skip-btn:hover { color: var(--text-secondary); border-color: var(--border-strong); }
 
 /* ===== SCROLLBARS ===== */
 ::-webkit-scrollbar { width: 6px; }
@@ -1623,6 +1708,103 @@ body { transition: filter 2s ease; }
 }
 #settings-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
 
+/* ===== HELP BUTTON ===== */
+#help-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 700;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+#help-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+
+/* ===== HELP MODAL ===== */
+#help-modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1600;
+  padding: var(--gap-lg);
+}
+#help-modal.hidden { display: none; }
+#help-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 540px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+#help-card h2 {
+  font-size: 18px;
+  margin-bottom: var(--gap-lg);
+  color: var(--text-primary);
+}
+.help-section {
+  margin-bottom: var(--gap-md);
+}
+.help-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-blue-lt);
+  margin-bottom: 6px;
+}
+.help-section p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+.glossary-grid {
+  display: grid;
+  gap: var(--gap-sm);
+}
+.glossary-entry {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--gap-sm);
+  font-size: 12px;
+  padding: 6px 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  align-items: start;
+}
+.glossary-entry strong {
+  color: var(--text-primary);
+  font-size: 11px;
+}
+.glossary-entry span {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+#help-close-btn {
+  margin-top: var(--gap-md);
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+#help-close-btn:hover { background: var(--accent-blue-lt); }
+
 /* ===== SETTINGS MODAL ===== */
 #settings-modal {
   position: fixed; inset: 0;
@@ -1716,6 +1898,15 @@ body { transition: filter 2s ease; }
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+#legacy-indicator {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--energy-nuclear);
+  display: block;
+  margin-top: 2px;
+}
+#legacy-indicator:empty { display: none; }
 
 /* ===== SPARKLINE CHARTS ===== */
 .sparkline-container {
@@ -2160,8 +2351,10 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <span id="legacy-indicator"></span>
   </div>
   <div id="header-right">
+    <button id="help-btn" title="Help & Glossary">?</button>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2278,6 +2471,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:0"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2489,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">0</span>
           </div>
         </div>
       </div>
@@ -2674,6 +2872,30 @@ body { transition: filter 2s ease; }
           <ellipse cx="392" cy="85"  rx="6"  ry="5"  fill="#7890a0" opacity="0.13"/>
           <ellipse cx="393" cy="77"  rx="4"  ry="4"  fill="#7890a0" opacity="0.09"/>
           <text x="392" y="148" text-anchor="middle" fill="#b39ddb" font-size="8" font-family="monospace" opacity="0.5">☢</text>
+        </g>
+
+        <!-- RESEARCH LAB — appears when R&D upgrades purchased -->
+        <g id="research-lab-1" visibility="hidden">
+          <rect x="370" y="130" width="50" height="32" rx="2" fill="#1a1040" stroke="#7c4dff" stroke-width="1"/>
+          <rect x="370" y="130" width="50" height="6" rx="2" fill="#7c4dff" opacity="0.45"/>
+          <rect x="375" y="140" width="8" height="6" rx="1" fill="#311b92" opacity="0.8"/>
+          <rect x="386" y="140" width="8" height="6" rx="1" fill="#7c4dff" opacity="0.35"/>
+          <rect x="397" y="140" width="8" height="6" rx="1" fill="#311b92" opacity="0.8"/>
+          <rect x="408" y="140" width="8" height="6" rx="1" fill="#7c4dff" opacity="0.35"/>
+          <rect x="375" y="150" width="8" height="6" rx="1" fill="#7c4dff" opacity="0.35"/>
+          <rect x="386" y="150" width="8" height="6" rx="1" fill="#311b92" opacity="0.8"/>
+          <rect x="397" y="150" width="8" height="6" rx="1" fill="#7c4dff" opacity="0.35"/>
+          <rect x="408" y="150" width="8" height="6" rx="1" fill="#311b92" opacity="0.8"/>
+          <text x="395" y="128" text-anchor="middle" fill="#b39ddb" font-size="7" font-family="monospace" opacity="0.65">R&amp;D</text>
+        </g>
+
+        <g id="research-lab-2" visibility="hidden">
+          <line x1="395" y1="118" x2="395" y2="125" stroke="#7c4dff" stroke-width="1.5"/>
+          <circle cx="395" cy="115" r="3.5" fill="none" stroke="#7c4dff" stroke-width="1" opacity="0.7">
+            <animate attributeName="r" values="3.5;5;3.5" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.7;0.3;0.7" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="395" cy="115" r="1.5" fill="#b39ddb" opacity="0.8"/>
         </g>
 
         <!-- ===== COMMUNITY ZONE (x 430–607) ===== -->
@@ -3065,6 +3287,62 @@ body { transition: filter 2s ease; }
     </div>
     <!-- High scores injected here by JS -->
     <button id="settings-close-btn">Done</button>
+  </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-backdrop"></div>
+  <div id="tutorial-highlight"></div>
+  <div id="tutorial-tooltip">
+    <div id="tutorial-progress"></div>
+    <div id="tutorial-step-title"></div>
+    <div id="tutorial-step-text"></div>
+    <div id="tutorial-actions">
+      <button class="tutorial-btn" id="tutorial-skip-btn">Skip Tutorial</button>
+      <button class="tutorial-btn" id="tutorial-next-btn">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- HELP / GLOSSARY MODAL -->
+<div id="help-modal" class="hidden">
+  <div id="help-card">
+    <h2>How to Play</h2>
+    <div id="help-content">
+      <div class="help-section">
+        <div class="help-section-title">Overview</div>
+        <p>You are the UK's Climate Strategy Minister. Over 5 terms (2025-2050), allocate investment blocks to navigate the energy transition while maintaining social and economic stability.</p>
+      </div>
+      <div class="help-section">
+        <div class="help-section-title">Each Turn</div>
+        <p>Choose up to 2 blocks per investment category. Each block costs budget and produces effects that accumulate across turns. Infrastructure you build is permanent.</p>
+      </div>
+      <div class="help-section">
+        <div class="help-section-title">Win Condition</div>
+        <p>Achieve Net Zero (100%) while keeping Grid Reliability, Financial Stability, and Social Stability above critical thresholds. Score 72+ to meet the UN 1.5C pathway.</p>
+      </div>
+      <div class="help-section">
+        <div class="help-section-title">Key Risks</div>
+        <p><strong>Grid Collapse:</strong> Too much renewable energy without storage or backup causes blackouts. Balance wind/solar with batteries and nuclear.</p>
+        <p><strong>Social Unrest:</strong> Rapid decarbonisation without social support causes public backlash. Fund just-transition programmes to maintain consent.</p>
+        <p><strong>Financial Shock:</strong> Stranded fossil fuel assets damage pension funds and banks. Invest in financial resilience to cushion the blow.</p>
+      </div>
+      <div class="help-section">
+        <div class="help-section-title">Glossary</div>
+        <div class="glossary-grid">
+          <div class="glossary-entry"><strong>Net Zero Progress</strong><span>Percentage of the way to net-zero carbon emissions. Built by Energy Transition investment.</span></div>
+          <div class="glossary-entry"><strong>Stranded Assets</strong><span>Fossil fuel infrastructure that loses value as the economy decarbonises. Creates financial drag on pensions and banks.</span></div>
+          <div class="glossary-entry"><strong>Social Capital</strong><span>Cumulative public trust, built through Social Support investment. Provides a persistent stability bonus across terms.</span></div>
+          <div class="glossary-entry"><strong>Grid Reliability</strong><span>How stable the electricity supply is. Depends on backup capacity (nuclear + storage + gas) relative to renewables.</span></div>
+          <div class="glossary-entry"><strong>Tipping Points</strong><span>Above 1.5C, warming accelerates nonlinearly through feedback loops, making further temperature rises harder to prevent.</span></div>
+          <div class="glossary-entry"><strong>R&D Upgrades</strong><span>Research blocks unlock permanent multipliers that boost the effectiveness of all future investment in that area.</span></div>
+          <div class="glossary-entry"><strong>Adaptation</strong><span>Infrastructure like flood defences and heat resilience. Mitigates up to 50% of damage from climate events.</span></div>
+          <div class="glossary-entry"><strong>Energy Burden</strong><span>Social stability penalty when energy transition outpaces social support — rapid decarbonisation without cushioning public costs.</span></div>
+        </div>
+      </div>
+    </div>
+    <button id="help-close-btn">Close</button>
   </div>
 </div>
 
@@ -4018,6 +4296,7 @@ class GameEngine {
     this.state.budget = this.getEffectiveBudget();
     const bonuses = legacySystem.startingBonuses();
     if (bonuses.budgetBonus > 0) this.state.budget += bonuses.budgetBonus;
+    if (bonuses.nuclearUnlocked) this.state.energy.nuclear = Math.min(100, this.state.energy.nuclear + 8);
   }
 }
 
@@ -4265,10 +4544,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4384,11 +4665,14 @@ class UI {
       });
     }
 
-    // Advisor overlay dismiss
+    // Advisor overlay dismiss → launch tutorial for first-time players
     const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (typeof tutorialMgr !== 'undefined' && tutorialMgr.shouldShow()) {
+          setTimeout(() => tutorialMgr.start(), 400);
+        }
       });
     }
 
@@ -4449,6 +4733,17 @@ class UI {
 
     // Init metric tooltips
     this._initTooltips();
+
+    // Help modal
+    const helpBtn = document.getElementById('help-btn');
+    const helpModal = document.getElementById('help-modal');
+    const helpCloseBtn = document.getElementById('help-close-btn');
+    if (helpBtn) {
+      helpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
+    }
+    if (helpCloseBtn) {
+      helpCloseBtn.addEventListener('click', () => helpModal.classList.add('hidden'));
+    }
 
     // Settings modal
     const settingsBtn = document.getElementById('settings-btn');
@@ -4801,10 +5096,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage || 0;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage || 0);
   }
 
   _renderBudget(state) {
@@ -4946,6 +5243,11 @@ class UI {
       show(`fin-${idx}`, lvl.finance >= threshold, preview(res.finance, lvl.finance, threshold));
     });
 
+    // RESEARCH LAB — based on tech tree upgrades purchased
+    const researchLevel = techTree._purchased.size;
+    show('research-lab-1', researchLevel >= 1, dec.research > 0 && researchLevel < 1);
+    show('research-lab-2', researchLevel >= 3, dec.research > 0 && researchLevel >= 1 && researchLevel < 3);
+
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
@@ -4994,6 +5296,10 @@ class UI {
     div.className = 'log-entry ' + (entry.event ? 'event' : overallGood ? 'good' : 'warn');
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
+
+    // Narrative summary of decisions
+    const narrative = this._buildTurnNarrative(entry);
+    html += `<div class="log-narrative">${narrative}</div>`;
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
@@ -5887,6 +6193,144 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /* ============================================================
+   MODULE: TUTORIAL SYSTEM
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done';
+    this._step = 0;
+    this._active = false;
+    this._steps = [
+      {
+        title: 'National Indicators',
+        text: 'These metrics show the health of the UK. Temperature, grid reliability, financial stability, and social stability all interact — let any one collapse and the game ends badly.',
+        target: '#metrics-panel',
+        position: 'right',
+      },
+      {
+        title: 'Temperature & Net Zero',
+        text: 'Your primary goal: reach Net Zero (100%) while keeping temperature below 1.5°C. Above 1.5°C, warming accelerates through tipping-point feedback loops.',
+        target: '#metric-temp',
+        fallback: '.metric-block',
+        position: 'right',
+      },
+      {
+        title: 'Investment Decisions',
+        text: 'Each turn, allocate investment blocks across 6 categories. You can place up to 2 blocks per category. Each block costs budget but builds permanent infrastructure.',
+        target: '#investment-cards',
+        position: 'left',
+      },
+      {
+        title: 'Budget Management',
+        text: 'Your budget resets each turn. Surplus budget doesn\'t carry over, so spending wisely each turn matters more than saving. Financial stability above 80% grants a £20bn bonus.',
+        target: '#budget-status',
+        position: 'below',
+      },
+      {
+        title: 'Energy Mix',
+        text: 'Watch how your investments change the energy mix. Reducing gas dependence cuts emissions, but renewables need storage backup or the grid becomes unreliable.',
+        target: '#energy-mix-section',
+        position: 'right',
+      },
+      {
+        title: 'Policy Record',
+        text: 'Your decisions and their consequences are logged here. After each turn, check how metrics shifted and whether random events struck.',
+        target: '#log-panel',
+        position: 'left',
+      },
+    ];
+
+    this.overlay = document.getElementById('tutorial-overlay');
+    this.highlight = document.getElementById('tutorial-highlight');
+    this.tooltip = document.getElementById('tutorial-tooltip');
+    this.titleEl = document.getElementById('tutorial-step-title');
+    this.textEl = document.getElementById('tutorial-step-text');
+    this.progressEl = document.getElementById('tutorial-progress');
+    this.nextBtn = document.getElementById('tutorial-next-btn');
+    this.skipBtn = document.getElementById('tutorial-skip-btn');
+
+    if (this.nextBtn) this.nextBtn.addEventListener('click', () => this._advance());
+    if (this.skipBtn) this.skipBtn.addEventListener('click', () => this._finish());
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return true; }
+  }
+
+  start() {
+    if (!this.shouldShow() || !this.overlay) return;
+    this._step = 0;
+    this._active = true;
+    this.overlay.classList.remove('hidden');
+    this._showStep();
+  }
+
+  _showStep() {
+    const step = this._steps[this._step];
+    if (!step) { this._finish(); return; }
+
+    this.titleEl.textContent = step.title;
+    this.textEl.textContent = step.text;
+    this.progressEl.textContent = `Step ${this._step + 1} of ${this._steps.length}`;
+    this.nextBtn.textContent = this._step === this._steps.length - 1 ? 'Got it!' : 'Next';
+
+    let target = document.querySelector(step.target);
+    if (!target && step.fallback) target = document.querySelector(step.fallback);
+
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      this.highlight.style.left = (rect.left - 4) + 'px';
+      this.highlight.style.top = (rect.top - 4) + 'px';
+      this.highlight.style.width = (rect.width + 8) + 'px';
+      this.highlight.style.height = (rect.height + 8) + 'px';
+      this.highlight.style.display = 'block';
+
+      const ttWidth = 320;
+      const ttHeight = 200;
+      let ttLeft, ttTop;
+
+      if (step.position === 'right') {
+        ttLeft = rect.right + 16;
+        ttTop = rect.top + rect.height / 2 - ttHeight / 2;
+      } else if (step.position === 'left') {
+        ttLeft = rect.left - ttWidth - 16;
+        ttTop = rect.top + rect.height / 2 - ttHeight / 2;
+      } else {
+        ttLeft = rect.left + rect.width / 2 - ttWidth / 2;
+        ttTop = rect.bottom + 16;
+      }
+
+      ttLeft = Math.max(16, Math.min(window.innerWidth - ttWidth - 16, ttLeft));
+      ttTop = Math.max(16, Math.min(window.innerHeight - ttHeight - 16, ttTop));
+
+      this.tooltip.style.left = ttLeft + 'px';
+      this.tooltip.style.top = ttTop + 'px';
+    } else {
+      this.highlight.style.display = 'none';
+      this.tooltip.style.left = '50%';
+      this.tooltip.style.top = '50%';
+      this.tooltip.style.transform = 'translate(-50%, -50%)';
+    }
+  }
+
+  _advance() {
+    this._step++;
+    if (this._step >= this._steps.length) {
+      this._finish();
+    } else {
+      this._showStep();
+    }
+  }
+
+  _finish() {
+    this._active = false;
+    if (this.overlay) this.overlay.classList.add('hidden');
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+}
+
+/* ============================================================
    MODULE: LEGACY SYSTEM
 ============================================================ */
 
@@ -5955,6 +6399,7 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const tutorialMgr  = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -5973,6 +6418,12 @@ if (_bonuses.budgetBonus > 0) {
 // Set header subtitle
 const _titleEl = document.querySelector('#game-title p');
 if (_titleEl) _titleEl.textContent = 'HM Government \u00B7 Climate Risk Simulation';
+
+// Show legacy level in header if player has history
+const _legacyEl = document.getElementById('legacy-indicator');
+if (_legacyEl && legacySystem.level() > 1) {
+  _legacyEl.textContent = `${_bonuses.title} \u00B7 Level ${legacySystem.level()}`;
+}
 
 // Move scene section to full-width strip below game-main
 const sceneSection = document.getElementById('scene-section');
