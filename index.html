@@ -1386,6 +1386,159 @@ body { transition: filter 2s ease; }
   #event-card { padding: var(--gap-lg); }
 }
 
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  pointer-events: none;
+}
+#tutorial-overlay.hidden { display: none; }
+.tutorial-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  pointer-events: auto;
+}
+.tutorial-highlight {
+  position: absolute;
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.65), 0 0 20px var(--accent-blue-lt);
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+.tutorial-card {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 340px;
+  width: 90vw;
+  pointer-events: auto;
+  animation: slideUp 0.3s ease;
+  z-index: 2;
+}
+.tutorial-step-indicator {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-sm);
+}
+.tutorial-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+}
+.tutorial-card p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-md);
+}
+.tutorial-actions {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: flex-end;
+}
+.tutorial-btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+.tutorial-btn.primary {
+  background: var(--accent-blue);
+  color: white;
+}
+.tutorial-btn.primary:hover { background: var(--accent-blue-lt); }
+.tutorial-btn.secondary {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+}
+.tutorial-btn.secondary:hover { background: var(--border-strong); }
+
+/* ===== AUDIO TOGGLE ===== */
+#audio-toggle {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+#audio-toggle:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+#audio-toggle.muted { color: var(--text-muted); opacity: 0.5; }
+
+/* ===== ENDGAME INVESTMENT BREAKDOWN ===== */
+#endgame-investment-breakdown {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+#endgame-investment-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+}
+.invest-breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-bottom: 8px;
+}
+.invest-breakdown-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 130px;
+  flex-shrink: 0;
+}
+.invest-breakdown-track {
+  flex: 1;
+  height: 14px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.invest-breakdown-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 1s ease;
+}
+.invest-breakdown-fill.energy { background: var(--energy-wind); }
+.invest-breakdown-fill.grid { background: var(--energy-storage); }
+.invest-breakdown-fill.adapt { background: var(--energy-nuclear); }
+.invest-breakdown-fill.social { background: var(--status-warn); }
+.invest-breakdown-fill.finance { background: var(--accent-blue-lt); }
+.invest-breakdown-fill.research { background: var(--status-info); }
+.invest-breakdown-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 50px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ===== HOOK SCREEN ===== */
 #hook-screen {
   position: fixed;
@@ -2162,7 +2315,8 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="audio-toggle" title="Toggle sound" aria-label="Toggle sound effects">🔊</button>
+    <button id="settings-btn" title="Settings" aria-label="Open settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2181,7 +2335,7 @@ body { transition: filter 2s ease; }
 <main id="game-main">
 
   <!-- LEFT: METRICS PANEL -->
-  <aside class="panel" id="metrics-panel">
+  <aside class="panel" id="metrics-panel" role="complementary" aria-label="Climate metrics dashboard">
     <div class="panel-title">National Indicators</div>
     <div id="metrics-inner">
 
@@ -2303,7 +2457,7 @@ body { transition: filter 2s ease; }
   </aside>
 
   <!-- CENTRE: DECISIONS PANEL -->
-  <section class="panel" id="decisions-panel">
+  <section class="panel" id="decisions-panel" role="main" aria-label="Investment decisions">
     <div id="decision-header">
       <div id="decision-header-top">
         <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
@@ -2900,12 +3054,12 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
-      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      <button id="end-turn-btn" aria-label="Advance to next turn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
 
   <!-- RIGHT: LOG PANEL -->
-  <aside class="panel" id="log-panel">
+  <aside class="panel" id="log-panel" role="log" aria-label="Policy record and events">
     <div class="panel-title">Policy Record</div>
     <div id="log-scroll">
       <div class="log-entry welcome">
@@ -2963,6 +3117,28 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="nuclear_renaissance">
+        <span class="scenario-card-icon">⚛️</span>
+        <div class="scenario-card-name">Nuclear Renaissance</div>
+        <div class="scenario-card-desc">A previous administration bet heavily on nuclear power. The grid is reliable — but renewables lag behind and the programme consumed most of the budget.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£75bn/turn</span></div>
+          <div class="scenario-stat">Nuclear: <span>40 (high baseload)</span></div>
+          <div class="scenario-stat">Grid: <span>80% (strong)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="climate_emergency">
+        <span class="scenario-card-icon">🔥</span>
+        <div class="scenario-card-name">Climate Emergency</div>
+        <div class="scenario-card-desc">A series of extreme weather events has pushed the UK to declare a climate emergency. Temperature is already elevated and public pressure for action is intense.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temperature: <span>1.5°C (elevated)</span></div>
+          <div class="scenario-stat">Social Capital: <span>+30 (public mandate)</span></div>
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
         </div>
       </div>
 
@@ -3067,6 +3243,9 @@ body { transition: filter 2s ease; }
     <button id="settings-close-btn">Done</button>
   </div>
 </div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden"></div>
 
 <!-- MOBILE TAB BAR -->
 <div id="mobile-tabs">
@@ -3370,6 +3549,26 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  nuclear_renaissance: {
+    label: 'Nuclear Renaissance',
+    apply(state) {
+      state.energy.nuclear = 40;
+      state.energy.wind = 18;
+      state.energy.solar = 4;
+      state.gridReliability = 80;
+      state.netZeroProgress = 28;
+      state._budgetOverride = 75;
+    },
+  },
+  climate_emergency: {
+    label: 'Climate Emergency',
+    apply(state) {
+      state.temperature = 1.5;
+      state.socialCapital = 30;
+      state.socialStability = 80;
+      state._budgetOverride = 110;
     },
   },
 };
@@ -4307,8 +4506,10 @@ class UI {
         effectsMgr.haptic('light');
         if (isMinus) {
           this.engine.deallocateBlock(cat);
+          audioMgr.deallocate();
         } else {
           this.engine.allocateBlock(cat);
+          audioMgr.allocate();
         }
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
@@ -4389,6 +4590,9 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (tutorialMgr.shouldShow()) {
+          setTimeout(() => tutorialMgr.start(), 400);
+        }
       });
     }
 
@@ -4412,6 +4616,7 @@ class UI {
       this.elNoSpendWarning.classList.add('hidden');
 
       this.elEndTurnBtn.disabled = true;
+      audioMgr.endTurn();
       await runSimulationPhase(this.engine, this, effectsMgr);
       this.elEndTurnBtn.disabled = false;
     });
@@ -4538,6 +4743,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('endgame-investment-breakdown')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -5083,6 +5289,7 @@ class UI {
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
 
     this.elEventModal.classList.remove('hidden');
+    audioMgr.event();
   }
 
   hideEventModal() {
@@ -5149,6 +5356,10 @@ class UI {
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
+    if (newAchievements.length > 0) audioMgr.achievement();
+
+    // Build investment breakdown
+    const investBreakdownHtml = buildInvestmentBreakdown(s);
 
     const scoreHtml = `
       <div id="endgame-score-section">
@@ -5165,9 +5376,10 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', investBreakdownHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
+    audioMgr.endgame();
 
     // Staggered reveal of metric tiles
     const tiles = this.elEndgameMetrics.querySelectorAll('.endgame-metric-tile');
@@ -5948,6 +6160,246 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: AUDIO MANAGER (Web Audio API — synthesized, no files)
+============================================================ */
+
+class AudioManager {
+  constructor() {
+    this._KEY = 'uk_climate_audio_v1';
+    this._ctx = null;
+    this.enabled = this._loadPref();
+  }
+
+  _loadPref() {
+    try { return localStorage.getItem(this._KEY) !== 'off'; } catch { return true; }
+  }
+
+  _savePref() {
+    try { localStorage.setItem(this._KEY, this.enabled ? 'on' : 'off'); } catch {}
+  }
+
+  toggle() {
+    this.enabled = !this.enabled;
+    this._savePref();
+    return this.enabled;
+  }
+
+  _ensureCtx() {
+    if (!this._ctx) {
+      try { this._ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch { return null; }
+    }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  }
+
+  _play(freq, duration, type, gain) {
+    if (!this.enabled) return;
+    const ctx = this._ensureCtx();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(gain, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.connect(g);
+    g.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  }
+
+  allocate() {
+    this._play(880, 0.08, 'sine', 0.12);
+  }
+
+  deallocate() {
+    this._play(440, 0.06, 'sine', 0.08);
+  }
+
+  endTurn() {
+    if (!this.enabled) return;
+    const ctx = this._ensureCtx();
+    if (!ctx) return;
+    [523, 659, 784].forEach((f, i) => {
+      setTimeout(() => this._play(f, 0.15, 'sine', 0.1), i * 80);
+    });
+  }
+
+  event() {
+    if (!this.enabled) return;
+    const ctx = this._ensureCtx();
+    if (!ctx) return;
+    this._play(220, 0.3, 'sawtooth', 0.08);
+    setTimeout(() => this._play(185, 0.4, 'sawtooth', 0.06), 150);
+  }
+
+  endgame() {
+    if (!this.enabled) return;
+    const ctx = this._ensureCtx();
+    if (!ctx) return;
+    [392, 494, 587, 784].forEach((f, i) => {
+      setTimeout(() => this._play(f, 0.25, 'sine', 0.1), i * 120);
+    });
+  }
+
+  achievement() {
+    if (!this.enabled) return;
+    const ctx = this._ensureCtx();
+    if (!ctx) return;
+    [659, 784, 988, 1175].forEach((f, i) => {
+      setTimeout(() => this._play(f, 0.12, 'triangle', 0.08), i * 60);
+    });
+  }
+
+  click() {
+    this._play(1200, 0.03, 'sine', 0.06);
+  }
+}
+
+/* ============================================================
+   MODULE: TUTORIAL MANAGER
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done_v1';
+    this._overlay = document.getElementById('tutorial-overlay');
+    this._currentStep = 0;
+    this._steps = [
+      {
+        target: '#metrics-panel',
+        title: 'Climate Metrics',
+        text: 'These gauges track the UK\'s climate and stability indicators. Temperature, grid reliability, financial stability, social stability, and Net Zero progress all interact — neglect one and the others suffer.',
+      },
+      {
+        target: '#investment-cards',
+        title: 'Investment Decisions',
+        text: 'Each turn, allocate your budget across six investment areas using the + and - buttons. Each category costs a different amount per block — and creates different trade-offs. You can invest up to 2 blocks per category.',
+      },
+      {
+        target: '#energy-mix-section',
+        title: 'Energy Mix',
+        text: 'This shows the UK\'s energy composition. As you invest in Energy Transition, wind and solar grow while gas declines. Grid & Storage adds nuclear and battery capacity. The mix directly affects temperature and grid reliability.',
+      },
+      {
+        target: '#action-bar',
+        title: 'End Turn',
+        text: 'When you\'ve made your investment choices, click this button to advance 5 years. A simulation runs showing the consequences of your decisions — including possible climate events and policy crises you\'ll need to respond to.',
+      },
+      {
+        target: '#log-panel',
+        title: 'Policy Record',
+        text: 'Every turn\'s decisions and outcomes are logged here, along with advisor briefings for the next term. Use this to track your strategy across the full 25-year period.',
+      },
+    ];
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return false; }
+  }
+
+  markDone() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  start() {
+    if (!this._overlay) return;
+    this._currentStep = 0;
+    this._overlay.classList.remove('hidden');
+    this._renderStep();
+  }
+
+  _renderStep() {
+    const step = this._steps[this._currentStep];
+    if (!step) { this._finish(); return; }
+
+    const target = document.querySelector(step.target);
+    if (!target) { this._currentStep++; this._renderStep(); return; }
+
+    const rect = target.getBoundingClientRect();
+
+    const cardLeft = rect.right + 12 > window.innerWidth - 20
+      ? Math.max(10, rect.left - 360)
+      : rect.right + 12;
+    const cardTop = Math.min(rect.top, window.innerHeight - 250);
+
+    this._overlay.innerHTML = `
+      <div class="tutorial-backdrop"></div>
+      <div class="tutorial-highlight" style="top:${rect.top - 4}px;left:${rect.left - 4}px;width:${rect.width + 8}px;height:${rect.height + 8}px;"></div>
+      <div class="tutorial-card" style="top:${Math.max(10, cardTop)}px;left:${Math.max(10, cardLeft)}px;">
+        <div class="tutorial-step-indicator">Step ${this._currentStep + 1} of ${this._steps.length}</div>
+        <h3>${step.title}</h3>
+        <p>${step.text}</p>
+        <div class="tutorial-actions">
+          <button class="tutorial-btn secondary" id="tutorial-skip">Skip tour</button>
+          <button class="tutorial-btn primary" id="tutorial-next">${this._currentStep < this._steps.length - 1 ? 'Next' : 'Got it!'}</button>
+        </div>
+      </div>`;
+
+    document.getElementById('tutorial-skip').addEventListener('click', () => this._finish());
+    document.getElementById('tutorial-next').addEventListener('click', () => {
+      audioMgr.click();
+      this._currentStep++;
+      this._renderStep();
+    });
+  }
+
+  _finish() {
+    this.markDone();
+    if (this._overlay) {
+      this._overlay.classList.add('hidden');
+      this._overlay.innerHTML = '';
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: INVESTMENT BREAKDOWN (Endgame)
+============================================================ */
+
+function buildInvestmentBreakdown(state) {
+  const log = state.log || [];
+  const totals = { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0 };
+  const labels = { energyTransition: 'Energy Transition', gridAndStorage: 'Grid & Storage', adaptation: 'Adaptation', socialSupport: 'Social Support', financialResilience: 'Financial Resilience', research: 'R&D' };
+  const colors = { energyTransition: 'energy', gridAndStorage: 'grid', adaptation: 'adapt', socialSupport: 'social', financialResilience: 'finance', research: 'research' };
+
+  for (const entry of log) {
+    for (const dec of entry.decisions) {
+      const m = dec.match(/×(\d)/);
+      if (!m) continue;
+      const blocks = parseInt(m[1]);
+      for (const cat of Object.keys(totals)) {
+        if (dec.toLowerCase().includes(labels[cat].toLowerCase()) ||
+            (cat === 'research' && dec.includes('R&D'))) {
+          totals[cat] += blocks * BLOCK_COSTS[cat];
+          break;
+        }
+      }
+    }
+  }
+
+  const maxSpend = Math.max(...Object.values(totals), 1);
+  const totalSpent = Object.values(totals).reduce((a, b) => a + b, 0);
+
+  let html = `<div id="endgame-investment-breakdown">
+    <div id="endgame-investment-title">Cumulative Investment (£${totalSpent}bn total)</div>`;
+
+  for (const [cat, amount] of Object.entries(totals)) {
+    const pct = (amount / maxSpend) * 100;
+    html += `<div class="invest-breakdown-row">
+      <div class="invest-breakdown-label">${labels[cat]}</div>
+      <div class="invest-breakdown-track">
+        <div class="invest-breakdown-fill ${colors[cat]}" style="width:${pct}%"></div>
+      </div>
+      <div class="invest-breakdown-value">£${amount}bn</div>
+    </div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -5955,6 +6407,8 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const audioMgr     = new AudioManager();
+const tutorialMgr  = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -5981,6 +6435,35 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Accessibility: add ARIA labels to block buttons
+const _ariaLabels = {
+  energyTransition: 'Energy Transition',
+  gridAndStorage: 'Grid & Storage',
+  adaptation: 'Adaptation',
+  socialSupport: 'Social Support',
+  financialResilience: 'Financial Resilience',
+  research: 'R&D',
+};
+for (const [cat, label] of Object.entries(_ariaLabels)) {
+  const plus = document.getElementById(`plus-${cat}`);
+  const minus = document.getElementById(`minus-${cat}`);
+  if (plus) plus.setAttribute('aria-label', `Add ${label} block`);
+  if (minus) minus.setAttribute('aria-label', `Remove ${label} block`);
+}
+
+// Audio toggle
+const _audioBtn = document.getElementById('audio-toggle');
+if (_audioBtn) {
+  _audioBtn.textContent = audioMgr.enabled ? '🔊' : '🔇';
+  _audioBtn.classList.toggle('muted', !audioMgr.enabled);
+  _audioBtn.addEventListener('click', () => {
+    const on = audioMgr.toggle();
+    _audioBtn.textContent = on ? '🔊' : '🔇';
+    _audioBtn.classList.toggle('muted', !on);
+    if (on) audioMgr.click();
+  });
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
