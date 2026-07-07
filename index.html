@@ -1014,6 +1014,139 @@ body {
 
 #advisor-dismiss-btn:hover { background: var(--accent-blue-lt); }
 
+/* ===== RESET TURN BUTTON ===== */
+#reset-turn-btn {
+  padding: 10px 16px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+#reset-turn-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+#reset-turn-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ===== LEGACY TITLE BADGE ===== */
+#legacy-title-badge {
+  display: inline-block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-left: var(--gap-sm);
+}
+#legacy-title-badge .legacy-level {
+  color: var(--accent-blue-lt);
+  font-weight: 700;
+}
+
+/* ===== HOOK LEGACY DISPLAY ===== */
+#hook-legacy {
+  margin-bottom: var(--gap-lg);
+  text-align: center;
+}
+#hook-legacy-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-xs);
+}
+#hook-legacy-xp-bar-track {
+  width: 60%;
+  margin: 0 auto;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: 3px;
+  overflow: hidden;
+}
+#hook-legacy-xp-bar-fill {
+  height: 100%;
+  background: var(--accent-blue-lt);
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+#hook-legacy-xp-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: var(--gap-xs);
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 3000;
+}
+#tutorial-overlay.hidden { display: none; }
+.tutorial-tooltip {
+  position: fixed;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-md) var(--gap-lg);
+  max-width: 320px;
+  z-index: 3001;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.tutorial-tooltip h3 {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-xs);
+}
+.tutorial-tooltip p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-md);
+}
+.tutorial-step-indicator {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-sm);
+}
+.tutorial-btn-row {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: flex-end;
+}
+.tutorial-btn {
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.tutorial-btn-next {
+  background: var(--accent-blue);
+  color: white;
+}
+.tutorial-btn-next:hover { background: var(--accent-blue-lt); }
+.tutorial-btn-skip {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+.tutorial-highlight {
+  position: relative;
+  z-index: 3001;
+  box-shadow: 0 0 0 4px var(--accent-blue), 0 0 16px rgba(29,112,184,0.4);
+  border-radius: var(--radius-md);
+}
+
 /* ===== SCROLLBARS ===== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -2160,9 +2293,10 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <span id="legacy-title-badge"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="settings-btn" title="Settings" aria-label="Open settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2181,7 +2315,7 @@ body { transition: filter 2s ease; }
 <main id="game-main">
 
   <!-- LEFT: METRICS PANEL -->
-  <aside class="panel" id="metrics-panel">
+  <aside class="panel" id="metrics-panel" role="region" aria-label="National Indicators">
     <div class="panel-title">National Indicators</div>
     <div id="metrics-inner">
 
@@ -2191,7 +2325,7 @@ body { transition: filter 2s ease; }
           <span class="metric-name">🌡️ UK Warming Pathway</span>
           <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span></span>
         </div>
-        <div class="bar-track temp-track" style="position:relative">
+        <div class="bar-track temp-track" style="position:relative" role="meter" aria-label="UK Warming Pathway" aria-valuemin="1.1" aria-valuemax="3.0" aria-valuenow="1.1">
           <div class="temp-needle" id="bar-temp" style="left:5%"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:2px;">
@@ -2209,7 +2343,7 @@ body { transition: filter 2s ease; }
           <span class="metric-name">💷 Budget</span>
           <span class="metric-value">£<span id="val-budget-rem">100</span>bn left</span>
         </div>
-        <div class="bar-track budget-track">
+        <div class="bar-track budget-track" role="meter" aria-label="Budget remaining" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
           <div class="bar-fill good" id="bar-budget" style="width:100%"></div>
         </div>
         <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">Budget: £<span id="val-budget-total">100</span>bn this turn</div>
@@ -2221,7 +2355,7 @@ body { transition: filter 2s ease; }
           <span class="metric-name">⚡ Grid Reliability</span>
           <span class="metric-value"><span id="val-grid">65</span>% <span class="metric-delta" id="delta-grid"></span><span class="proj-label" id="proj-grid"></span></span>
         </div>
-        <div class="bar-track" style="position:relative">
+        <div class="bar-track" style="position:relative" role="meter" aria-label="Grid Reliability" aria-valuemin="0" aria-valuemax="100" aria-valuenow="65">
           <div class="bar-fill" id="bar-grid" style="width:65%"></div>
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
           <div class="bar-ghost" id="ghost-grid"></div>
@@ -2235,7 +2369,7 @@ body { transition: filter 2s ease; }
           <span class="metric-name">🏦 Financial Stability</span>
           <span class="metric-value"><span id="val-fin">70</span>% <span class="metric-delta" id="delta-fin"></span><span class="proj-label" id="proj-fin"></span></span>
         </div>
-        <div class="bar-track" style="position:relative">
+        <div class="bar-track" style="position:relative" role="meter" aria-label="Financial Stability" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">
           <div class="bar-fill" id="bar-fin" style="width:70%"></div>
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
           <div class="bar-ghost" id="ghost-fin"></div>
@@ -2249,7 +2383,7 @@ body { transition: filter 2s ease; }
           <span class="metric-name">🏘️ Social Stability</span>
           <span class="metric-value"><span id="val-soc">75</span>% <span class="metric-delta" id="delta-soc"></span><span class="proj-label" id="proj-soc"></span></span>
         </div>
-        <div class="bar-track" style="position:relative">
+        <div class="bar-track" style="position:relative" role="meter" aria-label="Social Stability" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
           <div class="bar-fill" id="bar-soc" style="width:75%"></div>
           <div class="threshold-marker" style="left:40%" title="Below 40%: cascade risk — instability worsens each turn"></div>
           <div class="bar-ghost" id="ghost-soc"></div>
@@ -2263,7 +2397,7 @@ body { transition: filter 2s ease; }
           <span class="metric-name">🌱 Net Zero Progress</span>
           <span class="metric-value"><span id="val-nz">0</span>% <span class="metric-delta" id="delta-nz"></span><span class="proj-label" id="proj-nz"></span></span>
         </div>
-        <div class="bar-track" style="position:relative">
+        <div class="bar-track" style="position:relative" role="meter" aria-label="Net Zero Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
           <div class="bar-fill info" id="bar-nz" style="width:0%"></div>
           <div class="bar-ghost" id="ghost-nz"></div>
         </div>
@@ -2273,11 +2407,12 @@ body { transition: filter 2s ease; }
       <!-- Energy Mix -->
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
-        <div id="energy-mix-bar">
+        <div id="energy-mix-bar" role="img" aria-label="Energy mix breakdown showing wind, solar, nuclear, gas, and storage shares">
           <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:29"></div>
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2430,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2314,7 +2453,7 @@ body { transition: filter 2s ease; }
       <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
     </div>
 
-    <div id="investment-cards">
+    <div id="investment-cards" role="group" aria-label="Investment categories">
 
       <!-- Energy Transition -->
       <div class="investment-card" id="card-energyTransition">
@@ -2327,9 +2466,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition">−</button>
+              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition" aria-label="Remove one Energy Transition block">−</button>
               <span class="block-count" id="count-energyTransition">0</span>
-              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition">+</button>
+              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition" aria-label="Add one Energy Transition block">+</button>
             </div>
           </div>
         </div>
@@ -2353,9 +2492,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£35bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage">−</button>
+              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage" aria-label="Remove one Grid and Storage block">−</button>
               <span class="block-count" id="count-gridAndStorage">0</span>
-              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage">+</button>
+              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage" aria-label="Add one Grid and Storage block">+</button>
             </div>
           </div>
         </div>
@@ -2379,9 +2518,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£25bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-adaptation" data-cat="adaptation">−</button>
+              <button class="block-btn" id="minus-adaptation" data-cat="adaptation" aria-label="Remove one Adaptation block">−</button>
               <span class="block-count" id="count-adaptation">0</span>
-              <button class="block-btn" id="plus-adaptation" data-cat="adaptation">+</button>
+              <button class="block-btn" id="plus-adaptation" data-cat="adaptation" aria-label="Add one Adaptation block">+</button>
             </div>
           </div>
         </div>
@@ -2405,9 +2544,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£20bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport">−</button>
+              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport" aria-label="Remove one Social Support block">−</button>
               <span class="block-count" id="count-socialSupport">0</span>
-              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport">+</button>
+              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport" aria-label="Add one Social Support block">+</button>
             </div>
           </div>
         </div>
@@ -2430,9 +2569,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience">−</button>
+              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience" aria-label="Remove one Financial Resilience block">−</button>
               <span class="block-count" id="count-financialResilience">0</span>
-              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience">+</button>
+              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience" aria-label="Add one Financial Resilience block">+</button>
             </div>
           </div>
         </div>
@@ -2455,9 +2594,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£15bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-research" data-cat="research">−</button>
+              <button class="block-btn" id="minus-research" data-cat="research" aria-label="Remove one R&amp;D block">−</button>
               <span class="block-count" id="count-research">0</span>
-              <button class="block-btn" id="plus-research" data-cat="research">+</button>
+              <button class="block-btn" id="plus-research" data-cat="research" aria-label="Add one R&amp;D block">+</button>
             </div>
           </div>
         </div>
@@ -2900,14 +3039,15 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
-      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      <button id="reset-turn-btn" disabled aria-label="Clear all allocations this turn">↺ Reset</button>
+      <button id="end-turn-btn" aria-label="Advance to next five-year period">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
 
   <!-- RIGHT: LOG PANEL -->
   <aside class="panel" id="log-panel">
     <div class="panel-title">Policy Record</div>
-    <div id="log-scroll">
+    <div id="log-scroll" role="log" aria-label="Policy Record">
       <div class="log-entry welcome">
         <div class="log-year">2025 — Briefing</div>
         <div class="log-text">UK Climate Strategy simulation begins. Warming pathway: 1.1°C above pre-industrial. UK has already cut emissions 50% since 1990 — Net Zero Progress starts at 35%. You have 5 five-year terms to shape the nation's response. Allocate investment blocks each turn — but watch the trade-offs.</div>
@@ -2983,6 +3123,13 @@ body { transition: filter 2s ease; }
       <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
       <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
     </div>
+    <div id="hook-legacy" style="display:none;">
+      <div id="hook-legacy-title"></div>
+      <div id="hook-legacy-xp-bar-track">
+        <div id="hook-legacy-xp-bar-fill"></div>
+      </div>
+      <div id="hook-legacy-xp-label"></div>
+    </div>
     <button id="hook-btn">New Game →</button>
     <button id="hook-continue-btn" class="hidden" style="display:none;margin-top:10px;width:100%;padding:12px 24px;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;">↺ Continue saved game — <span id="hook-continue-label"></span></button>
     <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
@@ -3031,6 +3178,9 @@ body { transition: filter 2s ease; }
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
   </div>
 </div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden"></div>
 
 <!-- SETTINGS MODAL -->
 <div id="settings-modal" class="hidden">
@@ -3375,10 +3525,6 @@ const STARTER_SCENARIOS = {
 };
 
 /* ============================================================
-   TURN HISTORY TRACKER
-============================================================ */
-
-/* ============================================================
    SAVE / LOAD SYSTEM
 ============================================================ */
 
@@ -3624,6 +3770,15 @@ class GameEngine {
     if (s.currentDecisions[category] <= 0) return;
     s.currentDecisions[category]--;
     s.spentThisTurn -= BLOCK_COSTS[category];
+  }
+
+  resetTurn() {
+    const s = this.state;
+    if (s.isResolvingTurn) return;
+    for (const cat of Object.keys(s.currentDecisions)) {
+      s.currentDecisions[cat] = 0;
+    }
+    s.spentThisTurn = 0;
   }
 
   // Returns projected metric values after applying current decisions — pure, no state mutation
@@ -4040,7 +4195,8 @@ function calculateScore(state) {
   // Resilience Score (0-10): adaptation built, events survived
   const adaptLevel = s.infrastructure.adaptation / 100;
   const eventPenalty = s.eventCount * 1.5;
-  const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
+  const eventBonus = Math.max(0, 5 - s.eventCount * 2.5);
+  const resScore = Math.round(Math.max(0, Math.min(10, 10 * adaptLevel - eventPenalty + eventBonus)));
 
   const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
   return { total, tempScore, nzScore, stabScore, resScore };
@@ -4228,6 +4384,104 @@ function buildShareText(state, result) {
 }
 
 /* ============================================================
+   TUTORIAL MANAGER
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done';
+    this._step = 0;
+    this._steps = [
+      {
+        target: '#investment-cards',
+        title: 'Investment Cards',
+        text: 'These are your policy levers. Each card represents a different investment area with real trade-offs. Allocate blocks to shape the UK\'s climate future.',
+        position: 'right',
+      },
+      {
+        target: '.block-controls',
+        title: 'Allocation Controls',
+        text: 'Use + and − to add or remove investment blocks. Each block costs budget and produces specific effects shown on the card. You can allocate up to 2 blocks per area.',
+        position: 'top',
+      },
+      {
+        target: '#metrics-panel',
+        title: 'National Indicators',
+        text: 'Track the consequences of your decisions here. Temperature, grid reliability, financial and social stability all respond to your investments — and to climate events.',
+        position: 'right',
+      },
+      {
+        target: '#action-bar',
+        title: 'Advance the Clock',
+        text: 'When you\'ve made your allocations, click Advance to move to the next five-year period. You have 5 terms to reach Net Zero by 2050.',
+        position: 'top',
+      },
+    ];
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return false; }
+  }
+
+  markDone() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  start() {
+    if (!this.shouldShow()) return;
+    this._step = 0;
+    this._showStep();
+  }
+
+  _showStep() {
+    const overlay = document.getElementById('tutorial-overlay');
+    if (!overlay) return;
+    document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+
+    if (this._step >= this._steps.length) { this._finish(); return; }
+
+    const step = this._steps[this._step];
+    const targetEl = document.querySelector(step.target);
+    if (!targetEl) { this._step++; this._showStep(); return; }
+
+    targetEl.classList.add('tutorial-highlight');
+    overlay.classList.remove('hidden');
+    overlay.innerHTML = `
+      <div class="tutorial-tooltip" id="tutorial-tip">
+        <div class="tutorial-step-indicator">Step ${this._step + 1} of ${this._steps.length}</div>
+        <h3>${step.title}</h3>
+        <p>${step.text}</p>
+        <div class="tutorial-btn-row">
+          <button class="tutorial-btn tutorial-btn-skip" id="tutorial-skip">Skip tutorial</button>
+          <button class="tutorial-btn tutorial-btn-next" id="tutorial-next">${this._step < this._steps.length - 1 ? 'Next' : 'Got it'}</button>
+        </div>
+      </div>`;
+
+    const tip = document.getElementById('tutorial-tip');
+    const rect = targetEl.getBoundingClientRect();
+    if (step.position === 'right') {
+      tip.style.left = Math.min(rect.right + 16, window.innerWidth - 340) + 'px';
+      tip.style.top = Math.max(16, rect.top) + 'px';
+    } else {
+      tip.style.left = Math.max(16, rect.left) + 'px';
+      tip.style.top = Math.max(16, rect.top - tip.offsetHeight - 16) + 'px';
+    }
+
+    document.getElementById('tutorial-next').addEventListener('click', () => { this._step++; this._showStep(); });
+    document.getElementById('tutorial-skip').addEventListener('click', () => this._finish());
+  }
+
+  _finish() {
+    this.markDone();
+    document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+    const overlay = document.getElementById('tutorial-overlay');
+    if (overlay) { overlay.classList.add('hidden'); overlay.innerHTML = ''; }
+  }
+}
+
+const tutorialMgr = new TutorialManager();
+
+/* ============================================================
    UI CLASS
 ============================================================ */
 
@@ -4265,15 +4519,18 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
-    this.elBudStatus  = document.getElementById('budget-status');
-    this.elBudDisplay = document.getElementById('budget-remaining-display');
-    this.elTotalSpend = document.getElementById('total-spend');
-    this.elEndTurnBtn = document.getElementById('end-turn-btn');
+    this.elBudStatus    = document.getElementById('budget-status');
+    this.elBudDisplay   = document.getElementById('budget-remaining-display');
+    this.elTotalSpend   = document.getElementById('total-spend');
+    this.elEndTurnBtn   = document.getElementById('end-turn-btn');
+    this.elResetTurnBtn = document.getElementById('reset-turn-btn');
 
     this.elLogScroll  = document.getElementById('log-scroll');
 
@@ -4316,6 +4573,17 @@ class UI {
         this.render(this.engine.getState());
       });
     });
+
+    // Reset turn button
+    if (this.elResetTurnBtn) {
+      this.elResetTurnBtn.addEventListener('click', () => {
+        this.engine.resetTurn();
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
+      });
+    }
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
     const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
@@ -4389,6 +4657,7 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        tutorialMgr.start();
       });
     }
 
@@ -4506,11 +4775,15 @@ class UI {
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
         this._lastLogLength = 0;
+        const _lb = legacySystem.startingBonuses();
+        let bonusHtml = '';
+        if (_lb.budgetBonus > 0) bonusHtml += `<div class="log-entry info"><div class="log-text">Legacy bonus: +£${_lb.budgetBonus}bn budget (${_lb.title} rank)</div></div>`;
+        if (_lb.nuclearUnlocked) bonusHtml += `<div class="log-entry info"><div class="log-text">Legacy bonus: Nuclear programme fast-tracked (${_lb.title} rank)</div></div>`;
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
             <div class="log-year">2025 — Briefing</div>
             <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard'}</strong>. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
-          </div>`;
+          </div>${bonusHtml}`;
         this.render(this.engine.getState());
       });
     }
@@ -4556,6 +4829,11 @@ class UI {
     const preset = difficultyMgr.selectedPreset;
     const badge = difficultyMgr.selected;
     el.innerHTML = `<span class="diff-badge ${badge}">${preset.label}</span>`;
+
+    const legEl = document.getElementById('legacy-title-badge');
+    if (legEl && legacySystem.data.runs > 0) {
+      legEl.innerHTML = `<span class="legacy-level">Lv ${legacySystem.level()}</span> ${legacySystem.title()}`;
+    }
   }
 
   _refreshHighScoreInSettings() {
@@ -4647,6 +4925,7 @@ class UI {
     const prevTemp = state.lastSnapshot ? state.lastSnapshot.temperature : state.temperature;
     this._rollNumber(this.elValTemp, prevTemp, state.temperature, 800, 1);
     this.elBarTemp.style.left   = Math.max(1, Math.min(99, tempPct)) + '%';
+    this.elBarTemp.parentElement.setAttribute('aria-valuenow', state.temperature.toFixed(1));
     this._renderDelta(this.elDeltaTemp, state.temperature, state.lastSnapshot ? state.lastSnapshot.temperature : null, true, 2);
 
     // Other metrics
@@ -4669,6 +4948,7 @@ class UI {
         ? (val >= 100 ? 'good' : val >= 60 ? 'info' : val >= 30 ? 'warn' : 'danger')
         : (val >= 60 ? 'good' : val >= 35 ? 'warn' : 'danger');
       bar.className = 'bar-fill ' + status;
+      bar.parentElement.setAttribute('aria-valuenow', Math.round(val));
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
     }
   }
@@ -4801,10 +5081,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4825,6 +5107,10 @@ class UI {
 
     // Budget status class
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+
+    if (this.elResetTurnBtn) {
+      this.elResetTurnBtn.disabled = state.spentThisTurn === 0;
+    }
   }
 
   _renderCards(state) {
@@ -5973,6 +6259,24 @@ if (_bonuses.budgetBonus > 0) {
 // Set header subtitle
 const _titleEl = document.querySelector('#game-title p');
 if (_titleEl) _titleEl.textContent = 'HM Government \u00B7 Climate Risk Simulation';
+
+// Populate hook legacy display if player has history
+const _hookLegacy = document.getElementById('hook-legacy');
+if (_hookLegacy && legacySystem.data.runs > 0) {
+  _hookLegacy.style.display = 'block';
+  const _xpThresholds = [0, 150, 350, 600, 900];
+  const _lvl = legacySystem.level();
+  const _xp = legacySystem.data.xp;
+  const _lvlIndex = [1,3,5,7,10].indexOf(_lvl);
+  const _currentThreshold = _xpThresholds[_lvlIndex] || 0;
+  const _nextThreshold = _lvl >= 10 ? 900 : (_xpThresholds[_lvlIndex + 1] || 900);
+  const _pct = _lvl >= 10 ? 100 : Math.round(((_xp - _currentThreshold) / (_nextThreshold - _currentThreshold)) * 100);
+  document.getElementById('hook-legacy-title').textContent = `${legacySystem.title()} \u2014 Level ${_lvl}`;
+  document.getElementById('hook-legacy-xp-bar-fill').style.width = _pct + '%';
+  document.getElementById('hook-legacy-xp-label').textContent = _lvl >= 10
+    ? `${_xp} XP \u2014 Max Level Reached`
+    : `${_xp} / ${_nextThreshold} XP to next rank`;
+}
 
 // Move scene section to full-width strip below game-main
 const sceneSection = document.getElementById('scene-section');
