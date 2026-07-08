@@ -2142,6 +2142,172 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== NEWS TICKER ===== */
+#news-ticker-bar {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+}
+#news-ticker-label {
+  background: var(--accent-blue);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+#news-ticker-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+#news-ticker-content {
+  display: flex;
+  gap: 60px;
+  white-space: nowrap;
+  animation: tickerScroll 28s linear infinite;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-left: 100%;
+}
+#news-ticker-content .ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+#news-ticker-content .ticker-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-blue-lt);
+  flex-shrink: 0;
+}
+#news-ticker-content .ticker-flash {
+  color: var(--status-danger);
+  font-weight: 600;
+}
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ===== STAKEHOLDER PANEL ===== */
+#stakeholder-section {
+  margin-top: var(--gap-md);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+#stakeholder-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+.stakeholder-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.stakeholder-icon {
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.stakeholder-name {
+  font-size: 11px;
+  color: var(--text-secondary);
+  width: 56px;
+  flex-shrink: 0;
+}
+.stakeholder-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.stakeholder-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease, background 0.4s;
+  min-width: 2px;
+}
+.stakeholder-val {
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.stakeholder-bar-fill.sh-good   { background: var(--status-good); }
+.stakeholder-bar-fill.sh-warn   { background: var(--status-warn); }
+.stakeholder-bar-fill.sh-danger { background: var(--status-danger); }
+.stakeholder-delta {
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.stakeholder-delta.sh-up   { color: var(--status-good); }
+.stakeholder-delta.sh-down { color: var(--status-danger); }
+.stakeholder-delta.sh-same { color: var(--text-muted); }
+
+/* ===== SYNERGY TOAST ===== */
+#synergy-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-green-lt);
+  border-radius: var(--radius-md);
+  padding: 10px 20px;
+  font-size: 13px;
+  color: var(--accent-green-lt);
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  z-index: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  text-align: center;
+  max-width: 400px;
+}
+#synergy-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+#synergy-toast .synergy-icon {
+  margin-right: 6px;
+}
+
+@media (max-width: 768px) {
+  #news-ticker-bar { height: 24px; }
+  #news-ticker-content { font-size: 11px; }
+  #news-ticker-label { font-size: 9px; padding: 0 6px; }
+}
 </style>
 </head>
 <body>
@@ -2176,6 +2342,21 @@ body { transition: filter 2s ease; }
     </div>
   </div>
 </header>
+
+<!-- ===== NEWS TICKER ===== -->
+<div id="news-ticker-bar">
+  <div id="news-ticker-label">Breaking</div>
+  <div id="news-ticker-track">
+    <div id="news-ticker-content">
+      <span class="ticker-item"><span class="ticker-dot"></span>UK Climate Strategy simulation begins — new government takes office</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Net Zero 2050 target confirmed as legally binding</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Public mood cautiously optimistic as policy term begins</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SYNERGY TOAST ===== -->
+<div id="synergy-toast"></div>
 
 <!-- ===== MAIN LAYOUT ===== -->
 <main id="game-main">
@@ -2296,6 +2477,39 @@ body { transition: filter 2s ease; }
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
+        </div>
+      </div>
+
+      <!-- Stakeholder Approval -->
+      <div id="stakeholder-section">
+        <div id="stakeholder-title">Stakeholder Approval</div>
+        <div class="stakeholder-row">
+          <span class="stakeholder-icon">🏭</span>
+          <span class="stakeholder-name">Industry</span>
+          <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill sh-good" id="sh-bar-industry" style="width:60%"></div></div>
+          <span class="stakeholder-val" id="sh-val-industry">60</span>
+          <span class="stakeholder-delta sh-same" id="sh-delta-industry"></span>
+        </div>
+        <div class="stakeholder-row">
+          <span class="stakeholder-icon">🌿</span>
+          <span class="stakeholder-name">Green</span>
+          <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill sh-good" id="sh-bar-green" style="width:55%"></div></div>
+          <span class="stakeholder-val" id="sh-val-green">55</span>
+          <span class="stakeholder-delta sh-same" id="sh-delta-green"></span>
+        </div>
+        <div class="stakeholder-row">
+          <span class="stakeholder-icon">👥</span>
+          <span class="stakeholder-name">Public</span>
+          <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill sh-good" id="sh-bar-public" style="width:65%"></div></div>
+          <span class="stakeholder-val" id="sh-val-public">65</span>
+          <span class="stakeholder-delta sh-same" id="sh-delta-public"></span>
+        </div>
+        <div class="stakeholder-row">
+          <span class="stakeholder-icon">💹</span>
+          <span class="stakeholder-name">Markets</span>
+          <div class="stakeholder-bar-track"><div class="stakeholder-bar-fill sh-good" id="sh-bar-markets" style="width:60%"></div></div>
+          <span class="stakeholder-val" id="sh-val-markets">60</span>
+          <span class="stakeholder-delta sh-same" id="sh-delta-markets"></span>
         </div>
       </div>
 
@@ -3169,6 +3383,9 @@ const RANDOM_EVENTS = [
   },
 ];
 
+// Expanded events are appended at init (after EXPANDED_EVENTS is defined)
+// See _appendExpandedEvents() call in INITIALISATION section.
+
 /* ============================================================
    DIFFICULTY SYSTEM
 ============================================================ */
@@ -3387,7 +3604,7 @@ class SaveManager {
     this._KEY = 'uk_climate_save_v2';
   }
 
-  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
+  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty, stakeholderData) {
     try {
       const payload = {
         version: 2,
@@ -3397,6 +3614,7 @@ class SaveManager {
         techPurchased: [...techPurchased],
         activeScenario,
         activeDifficulty,
+        stakeholderData: stakeholderData || null,
       };
       localStorage.setItem(this._KEY, JSON.stringify(payload));
     } catch (e) { /* storage full or unavailable */ }
@@ -3919,35 +4137,47 @@ class GameEngine {
 
     if (Math.random() >= prob) return null;
 
-    // Build weighted pool based on temperature
+    // Build weighted pool based on temperature — lookup by id for stability
+    const evtById = (id) => RANDOM_EVENTS.find(e => e.id === id);
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: evtById('FINANCIAL_SHOCK'), w: 25 },
+        { e: evtById('STORM'), w: 20 },
+        { e: evtById('FLOOD_MINOR'), w: 20 },
+        { e: evtById('HEATWAVE_MOD'), w: 10 },
+        { e: evtById('SOCIAL_UNREST'), w: 10 },
+        { e: evtById('SUPPLY_CHAIN'), w: 10 },
+        { e: evtById('CYBER_GRID'), w: 5 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: evtById('FLOOD_MINOR'), w: 15 },
+        { e: evtById('FLOOD_MAJOR'), w: 10 },
+        { e: evtById('HEATWAVE_MOD'), w: 15 },
+        { e: evtById('DROUGHT'), w: 10 },
+        { e: evtById('STORM'), w: 15 },
+        { e: evtById('SOCIAL_UNREST'), w: 12 },
+        { e: evtById('FINANCIAL_SHOCK'), w: 10 },
+        { e: evtById('SUPPLY_CHAIN'), w: 5 },
+        { e: evtById('CLIMATE_REFUGEE'), w: 5 },
+        { e: evtById('CYBER_GRID'), w: 3 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: evtById('FLOOD_MAJOR'), w: 16 },
+        { e: evtById('HEATWAVE_MAJOR'), w: 16 },
+        { e: evtById('STORM'), w: 12 },
+        { e: evtById('WINTER_STORM'), w: 8 },
+        { e: evtById('GRID_FAILURE'), w: 10 },
+        { e: evtById('SOCIAL_UNREST'), w: 10 },
+        { e: evtById('FINANCIAL_SHOCK'), w: 8 },
+        { e: evtById('INSURANCE_CRISIS'), w: 7 },
+        { e: evtById('CLIMATE_REFUGEE'), w: 7 },
+        { e: evtById('DROUGHT'), w: 6 },
       ];
     }
+    pool = pool.filter(item => item.e);
 
     // Filter conditional events
     pool = pool.filter(item => !item.e.condition || item.e.condition(s));
@@ -4353,6 +4583,8 @@ class UI {
         turnHistory.data = payload.historyData || [];
         this._activeScenario = payload.activeScenario || 'standard';
         if (payload.activeDifficulty) difficultyMgr.active = payload.activeDifficulty;
+        // Restore stakeholders
+        if (payload.stakeholderData) stakeholderMgr.loadState(payload.stakeholderData);
         // Restore log entries
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4505,6 +4737,8 @@ class UI {
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
+        stakeholderMgr.reset();
+        newsTicker.setDefault();
         this._lastLogLength = 0;
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4616,8 +4850,36 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    if (typeof stakeholderMgr !== 'undefined') this._renderStakeholders(stakeholderMgr);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+  }
+
+  _renderStakeholders(shMgr) {
+    const groups = ['industry', 'green', 'public', 'markets'];
+    const deltas = shMgr.getDeltas();
+    for (const g of groups) {
+      const val = shMgr.approval[g];
+      const barEl = document.getElementById(`sh-bar-${g}`);
+      const valEl = document.getElementById(`sh-val-${g}`);
+      const deltaEl = document.getElementById(`sh-delta-${g}`);
+      if (barEl) {
+        barEl.style.width = val + '%';
+        barEl.className = 'stakeholder-bar-fill ' +
+          (val >= 60 ? 'sh-good' : val >= 35 ? 'sh-warn' : 'sh-danger');
+      }
+      if (valEl) valEl.textContent = val;
+      if (deltaEl) {
+        const d = deltas[g];
+        if (Math.abs(d) < 1) {
+          deltaEl.textContent = '';
+          deltaEl.className = 'stakeholder-delta sh-same';
+        } else {
+          deltaEl.textContent = (d > 0 ? '+' : '') + d;
+          deltaEl.className = 'stakeholder-delta ' + (d > 0 ? 'sh-up' : 'sh-down');
+        }
+      }
+    }
   }
 
   _renderHeader(state) {
@@ -5128,6 +5390,10 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Avg Approval</div>
+        <div class="endgame-metric-val ${(() => { const avg = Math.round((stakeholderMgr.approval.industry + stakeholderMgr.approval.green + stakeholderMgr.approval.public + stakeholderMgr.approval.markets) / 4); return avg >= 60 ? 'good' : avg >= 35 ? 'warn' : 'danger'; })()}">${Math.round((stakeholderMgr.approval.industry + stakeholderMgr.approval.green + stakeholderMgr.approval.public + stakeholderMgr.approval.markets) / 4)}%</div>
       </div>`;
 
     this.elEndgameNarr.innerHTML = result.narrative;
@@ -5728,12 +5994,37 @@ const MINI_EVENTS_POOL = [
 
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
+  const decisionsThisTurn = { ...engine.state.currentDecisions };
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
 
+  // Snapshot stakeholders before turn
+  stakeholderMgr.snapshot();
+
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
+
+  // Apply synergy bonuses
+  const synergies = synergyMgr.checkAndApply(decisionsThisTurn, engine.state);
+
+  // Update stakeholder approval based on decisions and events
+  stakeholderMgr.applyDecisions(decisionsThisTurn, engine.state);
+  if (result.event) {
+    stakeholderMgr.applyEventImpact(result.event);
+  }
+
+  // Apply stakeholder gameplay effects
+  const shEffects = stakeholderMgr.getGameplayEffects();
+  if (shEffects.socialMod) {
+    engine.state.socialStability = Math.max(0, Math.min(100, engine.state.socialStability + shEffects.socialMod));
+  }
+  if (shEffects.financialMod) {
+    engine.state.financialStability = Math.max(0, Math.min(100, engine.state.financialStability + shEffects.financialMod));
+  }
+  if (shEffects.nzMod) {
+    engine.state.netZeroProgress = Math.max(0, Math.min(100, engine.state.netZeroProgress + shEffects.nzMod));
+  }
 
   // Build and mount overlay
   const overlay = _buildSimOverlay(startYear);
@@ -5768,15 +6059,24 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   await _delay(500);
   overlay.remove();
 
-  // Recalculate next-turn budget to include any mini-event penalties
-  // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
+  // Recalculate next-turn budget to include any mini-event penalties and stakeholder effects
   engine.state.budget = engine.getEffectiveBudget();
+  const shBudget = stakeholderMgr.getGameplayEffects().budgetMod;
+  if (shBudget) engine.state.budget = Math.max(20, engine.state.budget + shBudget);
 
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
 
+  // Update news ticker
+  newsTicker.update(engine.state, decisionsThisTurn, result.event, stakeholderMgr.getState());
+
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
+
+  // Show synergy toast after a brief delay
+  if (synergies.length > 0) {
+    setTimeout(() => synergyMgr.showToast(synergies), 600);
+  }
 
   if (result.endgame) {
     // Game over — clear save, record analytics
@@ -5796,11 +6096,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, stakeholderMgr.getState());
     ui.render(engine.getState());
   } else {
     // Auto-save mid-game progress
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, stakeholderMgr.getState());
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
@@ -5948,13 +6248,469 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: STAKEHOLDER SYSTEM
+============================================================ */
+
+class StakeholderManager {
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.approval = { industry: 60, green: 55, public: 65, markets: 60 };
+    this._snapshot = null;
+  }
+
+  snapshot() {
+    this._snapshot = { ...this.approval };
+  }
+
+  getDeltas() {
+    if (!this._snapshot) return { industry: 0, green: 0, public: 0, markets: 0 };
+    return {
+      industry: this.approval.industry - this._snapshot.industry,
+      green:    this.approval.green    - this._snapshot.green,
+      public:   this.approval.public   - this._snapshot.public,
+      markets:  this.approval.markets  - this._snapshot.markets,
+    };
+  }
+
+  _clamp(v) { return Math.max(0, Math.min(100, Math.round(v))); }
+
+  applyDecisions(decisions, state) {
+    const a = this.approval;
+    const et = decisions.energyTransition;
+    const gs = decisions.gridAndStorage;
+    const ad = decisions.adaptation;
+    const ss = decisions.socialSupport;
+    const fr = decisions.financialResilience;
+    const rs = decisions.research;
+
+    // Energy Transition: greens love it, industry hates rapid change, markets worried about stranded assets
+    if (et > 0) {
+      a.green    = this._clamp(a.green    + et * 8);
+      a.industry = this._clamp(a.industry - et * 6);
+      a.markets  = this._clamp(a.markets  - et * 3);
+      a.public   = this._clamp(a.public   + et * 2);
+    }
+
+    // Grid & Storage: everyone generally approves, industry likes nuclear
+    if (gs > 0) {
+      a.industry = this._clamp(a.industry + gs * 4);
+      a.green    = this._clamp(a.green    + gs * 2);
+      a.public   = this._clamp(a.public   + gs * 3);
+      a.markets  = this._clamp(a.markets  + gs * 3);
+    }
+
+    // Adaptation: public and green like resilience, markets neutral, industry meh
+    if (ad > 0) {
+      a.public   = this._clamp(a.public   + ad * 5);
+      a.green    = this._clamp(a.green    + ad * 3);
+      a.markets  = this._clamp(a.markets  + ad * 1);
+      a.industry = this._clamp(a.industry + ad * 1);
+    }
+
+    // Social Support: public loves it, industry dislikes cost, markets wary
+    if (ss > 0) {
+      a.public   = this._clamp(a.public   + ss * 7);
+      a.green    = this._clamp(a.green    + ss * 2);
+      a.industry = this._clamp(a.industry - ss * 3);
+      a.markets  = this._clamp(a.markets  - ss * 2);
+    }
+
+    // Financial Resilience: markets love it, industry likes it, green indifferent
+    if (fr > 0) {
+      a.markets  = this._clamp(a.markets  + fr * 7);
+      a.industry = this._clamp(a.industry + fr * 4);
+      a.public   = this._clamp(a.public   + fr * 1);
+      a.green    = this._clamp(a.green    - fr * 2);
+    }
+
+    // Research: everyone mildly positive
+    if (rs > 0) {
+      a.green    = this._clamp(a.green    + rs * 3);
+      a.markets  = this._clamp(a.markets  + rs * 2);
+      a.industry = this._clamp(a.industry + rs * 2);
+      a.public   = this._clamp(a.public   + rs * 1);
+    }
+
+    // No investment: everyone loses faith
+    const totalBlocks = et + gs + ad + ss + fr + rs;
+    if (totalBlocks === 0) {
+      a.green    = this._clamp(a.green    - 8);
+      a.public   = this._clamp(a.public   - 5);
+      a.markets  = this._clamp(a.markets  - 4);
+      a.industry = this._clamp(a.industry - 2);
+    }
+
+    // State-based modifiers
+    if (state.temperature > 1.8) {
+      a.green    = this._clamp(a.green    - 5);
+      a.public   = this._clamp(a.public   - 3);
+    }
+    if (state.gridReliability < 45) {
+      a.industry = this._clamp(a.industry - 6);
+      a.public   = this._clamp(a.public   - 4);
+    }
+    if (state.financialStability < 40) {
+      a.markets  = this._clamp(a.markets  - 8);
+    }
+    if (state.socialStability < 45) {
+      a.public   = this._clamp(a.public   - 6);
+    }
+  }
+
+  applyEventImpact(event) {
+    const a = this.approval;
+    if (event.type === 'FLOOD' || event.type === 'HEATWAVE' || event.type === 'STORM') {
+      a.public   = this._clamp(a.public   - 4);
+      a.green    = this._clamp(a.green    - 2);
+    }
+    if (event.type === 'FINANCIAL') {
+      a.markets  = this._clamp(a.markets  - 6);
+      a.industry = this._clamp(a.industry - 3);
+    }
+    if (event.type === 'SOCIAL') {
+      a.public   = this._clamp(a.public   - 8);
+    }
+    if (event.type === 'GRID') {
+      a.industry = this._clamp(a.industry - 5);
+      a.public   = this._clamp(a.public   - 5);
+    }
+  }
+
+  getGameplayEffects() {
+    const a = this.approval;
+    const effects = { budgetMod: 0, socialMod: 0, financialMod: 0, nzMod: 0 };
+
+    // High industry approval: budget bonus (lobbying for government spending)
+    if (a.industry >= 75) effects.budgetMod += 5;
+    else if (a.industry < 30) effects.budgetMod -= 10;
+
+    // High green approval: Net Zero bonus
+    if (a.green >= 75) effects.nzMod += 3;
+    else if (a.green < 25) effects.nzMod -= 3;
+
+    // High public approval: social stability bonus
+    if (a.public >= 75) effects.socialMod += 4;
+    else if (a.public < 30) effects.socialMod -= 6;
+
+    // High market approval: financial stability bonus
+    if (a.markets >= 75) effects.financialMod += 3;
+    else if (a.markets < 30) effects.financialMod -= 5;
+
+    return effects;
+  }
+
+  getState() { return { ...this.approval }; }
+
+  loadState(saved) {
+    if (saved) this.approval = { ...saved };
+  }
+}
+
+/* ============================================================
+   MODULE: NEWS TICKER
+============================================================ */
+
+class NewsTicker {
+  constructor() {
+    this._el = null;
+  }
+
+  _getElement() {
+    if (!this._el) this._el = document.getElementById('news-ticker-content');
+    return this._el;
+  }
+
+  update(state, decisions, event, stakeholders) {
+    const headlines = [];
+
+    // Decision-based headlines
+    if (decisions.energyTransition >= 2) {
+      headlines.push('Government announces largest-ever renewable energy programme');
+    } else if (decisions.energyTransition === 1) {
+      headlines.push('New wind and solar investments confirmed for next five years');
+    }
+
+    if (decisions.gridAndStorage >= 2) {
+      headlines.push('Major grid modernisation and battery storage rollout approved');
+    } else if (decisions.gridAndStorage === 1) {
+      headlines.push('Grid upgrade programme receives Treasury backing');
+    }
+
+    if (decisions.adaptation >= 2) {
+      headlines.push('Nationwide flood defence and heat resilience programme launched');
+    } else if (decisions.adaptation === 1) {
+      headlines.push('Climate adaptation funding boosted in spending review');
+    }
+
+    if (decisions.socialSupport >= 2) {
+      headlines.push('Historic investment in just transition support for affected communities');
+    } else if (decisions.socialSupport === 1) {
+      headlines.push('New retraining and energy bill support announced');
+    }
+
+    if (decisions.financialResilience >= 2) {
+      headlines.push('Treasury launches comprehensive financial stability package');
+    } else if (decisions.financialResilience === 1) {
+      headlines.push('Financial sector stress-testing expanded for climate risk');
+    }
+
+    if (decisions.research >= 1) {
+      headlines.push('Government boosts climate research and innovation funding');
+    }
+
+    // State-based headlines
+    if (state.temperature > 2.0) {
+      headlines.push({ text: 'UK warming pathway passes 2°C threshold — Paris Agreement target breached', flash: true });
+    } else if (state.temperature > 1.5) {
+      headlines.push({ text: 'Scientists warn UK warming approaching dangerous 1.5°C limit', flash: true });
+    }
+
+    if (state.netZeroProgress >= 100) {
+      headlines.push('UK achieves Net Zero — historic milestone celebrated across the nation');
+    } else if (state.netZeroProgress >= 80) {
+      headlines.push('Net Zero within reach as clean energy transition accelerates');
+    }
+
+    if (state.gridReliability < 40) {
+      headlines.push({ text: 'National Grid warns of imminent blackout risk across England', flash: true });
+    }
+
+    if (state.socialStability < 35) {
+      headlines.push({ text: 'Widespread protests erupt as public anger over energy costs boils over', flash: true });
+    }
+
+    if (state.financialStability < 35) {
+      headlines.push({ text: 'Bank of England issues emergency stability warning', flash: true });
+    }
+
+    // Event-based headlines
+    if (event) {
+      headlines.unshift({ text: `BREAKING: ${event.title}`, flash: true });
+    }
+
+    // Stakeholder-based headlines
+    if (stakeholders) {
+      if (stakeholders.industry < 25) headlines.push('CBI warns of "hostile environment" for British industry');
+      if (stakeholders.green > 80) headlines.push('Environmental groups praise government\'s "world-leading" climate action');
+      if (stakeholders.public > 80) headlines.push('PM approval ratings surge as public backs climate strategy');
+      if (stakeholders.markets > 80) headlines.push('FTSE rallies as investors back UK green transition');
+    }
+
+    // Ambient headlines to fill gaps
+    const ambient = [
+      `Year ${state.year}: UK economic outlook revised amid global uncertainty`,
+      'COP summit delegates point to UK as test case for managed transition',
+      'Infrastructure investment creating thousands of green jobs across the north',
+      'Climate policy debate dominates Prime Minister\'s Questions',
+    ];
+    while (headlines.length < 3) {
+      headlines.push(ambient[Math.floor(Math.random() * ambient.length)]);
+    }
+
+    this._render(headlines);
+  }
+
+  _render(headlines) {
+    const el = this._getElement();
+    if (!el) return;
+
+    el.innerHTML = headlines.map(h => {
+      const isObj = typeof h === 'object';
+      const text = isObj ? h.text : h;
+      const flash = isObj && h.flash;
+      return `<span class="ticker-item"><span class="ticker-dot"></span><span${flash ? ' class="ticker-flash"' : ''}>${text}</span></span>`;
+    }).join('');
+
+    el.style.animation = 'none';
+    el.offsetHeight;
+    const dur = Math.max(20, headlines.length * 8);
+    el.style.animation = `tickerScroll ${dur}s linear infinite`;
+  }
+
+  setDefault() {
+    this._render([
+      'UK Climate Strategy simulation begins — new government takes office',
+      'Net Zero 2050 target confirmed as legally binding',
+      'Public mood cautiously optimistic as policy term begins',
+    ]);
+  }
+}
+
+/* ============================================================
+   MODULE: POLICY SYNERGY SYSTEM
+============================================================ */
+
+const POLICY_SYNERGIES = [
+  {
+    id: 'green_grid',
+    name: 'Integrated Clean Power',
+    icon: '⚡',
+    requires: { energyTransition: 1, gridAndStorage: 1 },
+    desc: 'Pairing renewables with grid storage maximises clean energy delivery',
+    effect: (state) => {
+      state.netZeroProgress = Math.min(100, state.netZeroProgress + 4);
+      state.energy.storage = Math.min(100, state.energy.storage + 3);
+    },
+  },
+  {
+    id: 'just_transition',
+    name: 'Just Transition Package',
+    icon: '🤝',
+    requires: { energyTransition: 1, socialSupport: 1 },
+    desc: 'Supporting workers through energy transition builds lasting public consent',
+    effect: (state) => {
+      state.socialCapital = Math.min(60, state.socialCapital + 5);
+      state.socialStability = Math.min(100, state.socialStability + 3);
+    },
+  },
+  {
+    id: 'green_finance',
+    name: 'Green Finance Framework',
+    icon: '🌱',
+    requires: { energyTransition: 1, financialResilience: 1 },
+    desc: 'Coordinating energy transition with financial reform reduces stranded asset risk',
+    effect: (state) => {
+      state.strandedAssets = Math.max(0, state.strandedAssets - 6);
+      state.financialStability = Math.min(100, state.financialStability + 3);
+    },
+  },
+  {
+    id: 'resilient_communities',
+    name: 'Resilient Communities',
+    icon: '🏠',
+    requires: { adaptation: 1, socialSupport: 1 },
+    desc: 'Climate-proofing and community investment create self-sufficient neighbourhoods',
+    effect: (state) => {
+      state.infrastructure.adaptation += 8;
+      state.socialStability = Math.min(100, state.socialStability + 2);
+    },
+  },
+  {
+    id: 'total_package',
+    name: 'Comprehensive Strategy',
+    icon: '🌟',
+    requires: { energyTransition: 1, gridAndStorage: 1, socialSupport: 1 },
+    desc: 'A balanced three-pillar approach earns cross-party support',
+    effect: (state) => {
+      state.socialCapital = Math.min(60, state.socialCapital + 3);
+      state.netZeroProgress = Math.min(100, state.netZeroProgress + 3);
+    },
+  },
+  {
+    id: 'innovation_pipeline',
+    name: 'Innovation Pipeline',
+    icon: '🔬',
+    requires: { research: 1, gridAndStorage: 1 },
+    desc: 'Research paired with grid investment accelerates technology deployment',
+    effect: (state) => {
+      state.energy.storage = Math.min(100, state.energy.storage + 4);
+    },
+  },
+];
+
+class SynergyManager {
+  checkAndApply(decisions, state) {
+    const triggered = [];
+    for (const syn of POLICY_SYNERGIES) {
+      let match = true;
+      for (const [cat, minBlocks] of Object.entries(syn.requires)) {
+        if ((decisions[cat] || 0) < minBlocks) { match = false; break; }
+      }
+      if (match) {
+        syn.effect(state);
+        triggered.push(syn);
+      }
+    }
+    return triggered;
+  }
+
+  showToast(synergies) {
+    if (synergies.length === 0) return;
+    const toast = document.getElementById('synergy-toast');
+    if (!toast) return;
+    const names = synergies.map(s => `${s.icon} ${s.name}`).join('  ·  ');
+    toast.innerHTML = `<span class="synergy-icon">✨</span> Synergy Bonus! ${names}`;
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 3500);
+  }
+}
+
+/* ============================================================
+   MODULE: EXPANDED RANDOM EVENTS
+============================================================ */
+
+const EXPANDED_EVENTS = [
+  {
+    id: 'DROUGHT', type: 'HEATWAVE', severity: 'MODERATE', icon: '☀️',
+    title: 'Summer Drought Emergency',
+    description: 'Three consecutive dry months trigger hosepipe bans and crop failures across southern England. Reservoir levels fall below 30%.',
+    story: 'Farmer Tom Hargreaves watched his wheat field in Hampshire crack and yellow. "Third failed harvest in a row," he said. "Insurance won\'t cover climate losses any more."',
+    effects: { socialStability: -8, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'SUPPLY_CHAIN', type: 'FINANCIAL', severity: 'MODERATE', icon: '🚢',
+    title: 'Global Supply Chain Disruption',
+    description: 'Extreme weather abroad disrupts imports of critical minerals for battery and solar manufacturing. Costs spike across the green energy sector.',
+    story: 'Lithium prices tripled overnight after floods closed three Chinese processing plants. The UK\'s battery gigafactory in Sunderland halted production for six weeks.',
+    effects: { financialStability: -8, gridReliability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'CYBER_GRID', type: 'GRID', severity: 'MODERATE', icon: '🔒',
+    title: 'Grid Cyber Attack',
+    description: 'A sophisticated cyber attack targets the National Grid\'s control systems. Emergency protocols activated as regions experience rolling blackouts.',
+    story: 'GCHQ traced the attack to a state-sponsored group exploiting a vulnerability in smart meter firmware. Three million homes lost power for up to 14 hours.',
+    effects: { gridReliability: -15, socialStability: -8, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 15,
+    condition: (s) => s.energy.storage > 15,
+  },
+  {
+    id: 'CLIMATE_REFUGEE', type: 'SOCIAL', severity: 'MODERATE', icon: '🏠',
+    title: 'Climate Migration Surge',
+    description: 'Record numbers of climate refugees arrive from severely affected regions. Housing and public services are under acute pressure.',
+    story: 'Councils in Kent and Dover reported emergency accommodation at 200% capacity. Community groups mobilised to provide food and clothing, but resources were stretched thin.',
+    effects: { socialStability: -12, financialStability: -4 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.6,
+  },
+  {
+    id: 'INSURANCE_CRISIS', type: 'FINANCIAL', severity: 'MAJOR', icon: '📜',
+    title: 'Insurance Market Collapse',
+    description: 'Major insurers withdraw from flood-risk postcodes. Millions of homeowners face uninsurable properties and mortgage defaults loom.',
+    story: 'When Aviva and Direct Line pulled out of the FloodRe scheme, 1.4 million households in flood zones discovered their homes were effectively unmortgageable.',
+    effects: { propertyValue: -18, financialStability: -12, socialStability: -8 },
+    infraDamage: false, budgetPenaltyNext: 20,
+    condition: (s) => s.propertyValue < 70 && s.temperature > 1.5,
+  },
+  {
+    id: 'WINTER_STORM', type: 'STORM', severity: 'MAJOR', icon: '❄️',
+    title: 'Polar Vortex Collapse',
+    description: 'Weakened jet stream sends Arctic air plunging across Britain. Transport paralysed, energy demand surges to record levels.',
+    story: 'Snowdrifts blocked the M62 for three days. Ambulances couldn\'t reach rural Yorkshire communities. The Army deployed to evacuate 800 people from stranded vehicles.',
+    effects: { gridReliability: -12, socialStability: -10, propertyValue: -5 },
+    infraDamage: true, budgetPenaltyNext: 15,
+  },
+];
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
-const engine       = new GameEngine();
-const techTree     = new TechTreeManager();
-const effectsMgr   = new EffectsManager();
-const legacySystem = new LegacySystem();
+const engine         = new GameEngine();
+const techTree       = new TechTreeManager();
+const effectsMgr     = new EffectsManager();
+const legacySystem   = new LegacySystem();
+const stakeholderMgr = new StakeholderManager();
+const newsTicker     = new NewsTicker();
+const synergyMgr     = new SynergyManager();
+
+// Append expanded events to the main pool
+for (const evt of EXPANDED_EVENTS) RANDOM_EVENTS.push(evt);
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -5981,6 +6737,7 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+ui._renderStakeholders(stakeholderMgr);
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
