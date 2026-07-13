@@ -1586,6 +1586,56 @@ body { transition: filter 2s ease; }
   pointer-events: none;
 }
 
+/* ===== CARBON BUDGET ===== */
+.carbon-budget-track {
+  height: 12px;
+  background: linear-gradient(90deg, var(--status-danger) 0%, var(--status-warn) 35%, var(--status-good) 100%);
+}
+#bar-carbon {
+  background: rgba(11, 13, 23, 0.75);
+  position: absolute;
+  right: 0;
+  left: auto !important;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.carbon-budget-track .threshold-marker::after {
+  content: '1.5°C';
+}
+
+/* ===== INTERNATIONAL CONTEXT ===== */
+#endgame-intl-section {
+  margin-top: var(--gap-lg);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+#endgame-intl-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+}
+.intl-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+}
+.intl-row:last-child { border-bottom: none; }
+.intl-flag { font-size: 16px; flex-shrink: 0; }
+.intl-name { flex: 1; color: var(--text-secondary); }
+.intl-temp { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 48px; text-align: right; }
+.intl-temp.good { color: var(--status-good); }
+.intl-temp.warn { color: var(--status-warn); }
+.intl-temp.danger { color: var(--status-danger); }
+.intl-row.you { background: rgba(29,112,184,0.12); border-radius: var(--radius-sm); padding: 5px 6px; }
+.intl-you-tag { font-size: 9px; background: var(--accent-blue); color: white; border-radius: 3px; padding: 1px 4px; margin-left: 4px; font-weight: 700; }
+
 /* ===== CARD CITATION ===== */
 .card-citation {
   font-size: 10px;
@@ -1868,7 +1918,7 @@ body { transition: filter 2s ease; }
 }
 #scenario-screen.hidden { display: none; }
 #scenario-content {
-  max-width: 640px;
+  max-width: 820px;
   width: 100%;
   text-align: center;
 }
@@ -2268,6 +2318,22 @@ body { transition: filter 2s ease; }
           <div class="bar-ghost" id="ghost-nz"></div>
         </div>
         <div class="sparkline-container" id="spark-nz"></div>
+      </div>
+
+      <!-- Carbon Budget -->
+      <div class="metric-block" id="carbon-budget-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🏭 Carbon Budget</span>
+          <span class="metric-value"><span id="val-carbon">100</span>% remaining</span>
+        </div>
+        <div class="bar-track carbon-budget-track" style="position:relative">
+          <div class="bar-fill info" id="bar-carbon" style="width:100%"></div>
+          <div class="threshold-marker" style="left:25%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:2px;">
+          <span>Depleted</span>
+          <span>UK 1.5°C budget</span>
+        </div>
       </div>
 
       <!-- Energy Mix -->
@@ -2966,6 +3032,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="nuclear_renaissance">
+        <span class="scenario-card-icon">⚛️</span>
+        <div class="scenario-card-name">Nuclear Renaissance</div>
+        <div class="scenario-card-desc">A bold nuclear programme is already underway. Baseload power is strong, but renewables lag behind and public opinion on nuclear is fragile.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£95bn/turn</span></div>
+          <div class="scenario-stat">Nuclear: <span>35 (high)</span></div>
+          <div class="scenario-stat">Wind/Solar: <span>reduced</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="energy_independence">
+        <span class="scenario-card-icon">🔋</span>
+        <div class="scenario-card-name">Energy Independence</div>
+        <div class="scenario-card-desc">Geopolitical shocks have made energy sovereignty the national priority. Gas imports are banned, but the domestic replacement isn't ready. Grid stress is high.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Gas: <span>15 (restricted)</span></div>
+          <div class="scenario-stat">Grid: <span>45% (stressed)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3221,6 +3309,10 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'carbon_saver', icon: '🏭', name: 'Carbon Miser', desc: 'Finish with 40%+ carbon budget remaining', check: (s) => getCarbonBudgetPct(s) >= 40 },
+  { id: 'balanced_portfolio', icon: '📊', name: 'Balanced Portfolio', desc: 'Invest in all 6 categories in a single turn', check: (s) => s.log.some(e => e.decisions.length >= 6 && !e.decisions[0].includes('No investment')) },
+  { id: 'speed_run', icon: '🏃', name: 'Speed Runner', desc: 'Achieve Net Zero in 2 turns', check: (s) => s.netZeroProgress >= 100 && s.turn <= 2 },
+  { id: 'diplomat', icon: '🌐', name: 'Global Leader', desc: 'Finish with temperature below 1.4°C and Net Zero achieved', check: (s) => s.temperature < 1.4 && s.netZeroProgress >= 100 },
 ];
 
 class AchievementManager {
@@ -3370,6 +3462,33 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  nuclear_renaissance: {
+    label: 'Nuclear Renaissance',
+    apply(state) {
+      state.energy.nuclear = 35;
+      state.energy.wind    = Math.max(0, state.energy.wind  - 10);
+      state.energy.solar   = Math.max(0, state.energy.solar - 3);
+      state.energy.storage = 8;
+      state.gridReliability = 75;
+      state.socialStability = 68;
+      state.netZeroProgress = 40;
+      state._budgetOverride = 95;
+    },
+  },
+  energy_independence: {
+    label: 'Energy Independence',
+    apply(state) {
+      state.energy.gas     = 15;
+      state.energy.wind    = 35;
+      state.energy.solar   = 10;
+      state.energy.storage = 8;
+      state.gridReliability = 45;
+      state.socialStability = 70;
+      state.netZeroProgress = 45;
+      state.strandedAssets  = 5;
+      state._budgetOverride = 110;
     },
   },
 };
@@ -4022,6 +4141,106 @@ class GameEngine {
 }
 
 /* ============================================================
+   CARBON BUDGET TRACKER
+============================================================ */
+
+function getCarbonBudgetPct(state) {
+  const totalBudget = 100;
+  const gasContrib = state.energy.gas * 0.6;
+  const tempContrib = Math.max(0, (state.temperature - 1.1) * 25);
+  const nzReduction = state.netZeroProgress * 0.3;
+  const spent = Math.min(totalBudget, gasContrib + tempContrib - nzReduction);
+  return Math.max(0, Math.round(totalBudget - spent));
+}
+
+/* ============================================================
+   INTERNATIONAL COMPARISON DATA
+============================================================ */
+
+const INTL_NATIONS = [
+  { flag: '🇩🇰', name: 'Denmark',      baseTemp: 1.15, nzTarget: 2050, ambition: 0.92 },
+  { flag: '🇸🇪', name: 'Sweden',       baseTemp: 1.18, nzTarget: 2045, ambition: 0.88 },
+  { flag: '🇩🇪', name: 'Germany',      baseTemp: 1.25, nzTarget: 2045, ambition: 0.78 },
+  { flag: '🇫🇷', name: 'France',       baseTemp: 1.20, nzTarget: 2050, ambition: 0.82 },
+  { flag: '🇺🇸', name: 'United States', baseTemp: 1.40, nzTarget: 2050, ambition: 0.55 },
+  { flag: '🇨🇳', name: 'China',        baseTemp: 1.50, nzTarget: 2060, ambition: 0.45 },
+  { flag: '🇮🇳', name: 'India',        baseTemp: 1.55, nzTarget: 2070, ambition: 0.35 },
+  { flag: '🇦🇺', name: 'Australia',    baseTemp: 1.35, nzTarget: 2050, ambition: 0.60 },
+];
+
+function buildInternationalContext(ukTemp) {
+  const nations = INTL_NATIONS.map(n => {
+    const jitter = (n.ambition - 0.5) * 0.3;
+    const projTemp = +(n.baseTemp + (ukTemp - 1.1) * (1 - n.ambition * 0.4) - jitter * 0.2).toFixed(1);
+    const status = projTemp < 1.6 ? 'good' : projTemp < 2.0 ? 'warn' : 'danger';
+    return { ...n, projTemp, status };
+  });
+  nations.push({ flag: '🇬🇧', name: 'United Kingdom', projTemp: +ukTemp.toFixed(1), status: ukTemp < 1.6 ? 'good' : ukTemp < 2.0 ? 'warn' : 'danger', isYou: true });
+  nations.sort((a, b) => a.projTemp - b.projTemp);
+
+  let html = `<div id="endgame-intl-section">
+    <div id="endgame-intl-title">International Comparison (illustrative)</div>`;
+  for (const n of nations) {
+    html += `<div class="intl-row${n.isYou ? ' you' : ''}">
+      <span class="intl-flag">${n.flag}</span>
+      <span class="intl-name">${n.name}${n.isYou ? '<span class="intl-you-tag">YOU</span>' : ''}</span>
+      <span class="intl-temp ${n.status}">${n.projTemp}°C</span>
+    </div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+/* ============================================================
+   TURN NARRATIVE GENERATOR
+============================================================ */
+
+function generateTurnNarrative(entry, state) {
+  const year = entry.year;
+  const endYear = year + 5;
+  const parts = [];
+
+  const tempDelta = entry.afterTemp - entry.snapshot.temperature;
+  const socDelta = entry.afterSoc - entry.snapshot.socialStability;
+  const finDelta = entry.afterFin - entry.snapshot.financialStability;
+  const nzDelta = entry.afterNZ - entry.snapshot.netZeroProgress;
+
+  if (nzDelta > 15) {
+    parts.push(`A historic push toward Net Zero defined the ${year}–${endYear} period, with progress surging to ${Math.round(entry.afterNZ)}%.`);
+  } else if (nzDelta > 5) {
+    parts.push(`Steady progress on decarbonisation continued through the ${year}–${endYear} term, bringing Net Zero to ${Math.round(entry.afterNZ)}%.`);
+  } else if (nzDelta <= 0) {
+    parts.push(`The ${year}–${endYear} term saw stalled climate progress, with Net Zero tracking at just ${Math.round(entry.afterNZ)}%.`);
+  }
+
+  if (tempDelta > 0.3) {
+    parts.push(`Temperatures climbed sharply to ${entry.afterTemp.toFixed(1)}°C, triggering alarm among climate scientists.`);
+  } else if (entry.afterTemp > 1.8) {
+    parts.push(`With temperature at ${entry.afterTemp.toFixed(1)}°C, the pathway to 1.5°C is now almost certainly closed.`);
+  }
+
+  if (socDelta < -10) {
+    parts.push(`Public discontent deepened as social stability fell to ${Math.round(entry.afterSoc)}%, testing the government's mandate.`);
+  } else if (socDelta > 8) {
+    parts.push(`Social cohesion strengthened, rising to ${Math.round(entry.afterSoc)}%, reflecting effective public engagement.`);
+  }
+
+  if (finDelta < -10) {
+    parts.push(`Financial markets were rattled, with stability dropping to ${Math.round(entry.afterFin)}% amid transition costs.`);
+  }
+
+  if (entry.event) {
+    parts.push(`The period was marked by the ${entry.event}, which tested national resilience.`);
+  }
+
+  if (parts.length === 0) {
+    parts.push(`The ${year}–${endYear} period proceeded without major disruption as the transition continued at a measured pace.`);
+  }
+
+  return parts.join(' ');
+}
+
+/* ============================================================
    SCORE CALCULATION
 ============================================================ */
 
@@ -4538,6 +4757,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('endgame-intl-section')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -4616,8 +4836,22 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderCarbonBudget(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+  }
+
+  _renderCarbonBudget(state) {
+    const pct = getCarbonBudgetPct(state);
+    const valEl = document.getElementById('val-carbon');
+    const barEl = document.getElementById('bar-carbon');
+    if (valEl) valEl.textContent = pct;
+    if (barEl) {
+      const coverPct = Math.max(0, 100 - pct);
+      barEl.style.width = coverPct + '%';
+      barEl.className = 'bar-fill ' + (pct > 50 ? 'good' : pct > 25 ? 'warn' : 'danger');
+      barEl.style.background = 'rgba(11, 13, 23, 0.75)';
+    }
   }
 
   _renderHeader(state) {
@@ -4995,8 +5229,12 @@ class UI {
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
+    // Narrative prose
+    const narrative = generateTurnNarrative(entry, this.engine.state);
+    html += `<div class="log-narrative">${narrative}</div>`;
+
     // Decisions
-    html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+    html += `<div class="log-text" style="font-size:11px;color:var(--text-muted);margin-top:2px">${entry.decisions.join('; ')}</div>`;
 
     // Event notice
     if (entry.event) {
@@ -5165,7 +5403,8 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    const intlHtml = buildInternationalContext(s.temperature);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + intlHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5723,6 +5962,75 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_cyber_attack',
+    icon: '💻',
+    title: 'Grid Cyber Attack',
+    prompt: 'A state-sponsored cyber attack has targeted National Grid control systems. How do you respond?',
+    explanation: 'Modern energy grids are increasingly digital and vulnerable to cyber warfare. Isolating systems stops the attack but causes controlled brownouts. A full counter-operation maintains supply but costs heavily and risks escalation.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Storage capacity: ${Math.round(s.energy.storage)}`,
+    }),
+    optA: {
+      label: '🛡️ Isolate systems (controlled brownouts)',
+      consequence: 'No cost · −8 Grid Reliability · −3 Social · prevents further damage',
+      effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 8); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    optB: {
+      label: '⚔️ Full counter-operation',
+      consequence: 'Costs £12bn next turn · maintains grid · +5 Grid infrastructure (hardens defences)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.infrastructure.gridAndStorage += 5; },
+    },
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
+  {
+    id: 'mini_intl_summit',
+    icon: '🌐',
+    title: 'International Climate Summit',
+    prompt: 'The UK is hosting a major climate summit. What stance do you take?',
+    explanation: 'International summits set the pace for global action. Pledging aggressively wins diplomatic influence and accelerates global emissions cuts — but commits you to faster domestic action that may strain stability. A cautious pledge keeps options open but misses the chance to lead.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🏳️ Pledge aggressive 2035 interim target',
+      consequence: '+8% Net Zero progress · −5 Financial (accelerated spending) · −0.05°C temperature benefit',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.financialStability = Math.max(0, s.financialStability - 5); s.temperature = Math.max(1.0, s.temperature - 0.05); },
+    },
+    optB: {
+      label: '🤝 Reaffirm existing 2050 commitment',
+      consequence: '+3 Social Capital (seen as prudent) · no acceleration · no cost',
+      effect: (s) => { s.socialCapital = Math.min(60, s.socialCapital + 3); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_housing_crisis',
+    icon: '🏠',
+    title: 'Housing Retrofit Crisis',
+    prompt: 'Millions of UK homes are energy-inefficient. A cold snap has exposed the problem. What do you prioritise?',
+    explanation: 'The UK has some of the least energy-efficient housing in Europe. Retrofitting reduces energy demand and bills permanently, but is slow and expensive. Emergency heating subsidies are fast but don\'t fix the underlying problem and increase fossil fuel use.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Gas in mix: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '🔨 Launch mass retrofit programme',
+      consequence: 'Costs £10bn next turn · −3 Gas demand · +5% Net Zero · slow to feel (+2 Social)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.energy.gas = Math.max(0, s.energy.gas - 3); s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    optB: {
+      label: '💷 Emergency heating bill subsidy',
+      consequence: 'Costs £7bn next turn · +6 Social (instant relief) · +3 Gas demand (more fossil burning)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.socialStability = Math.min(100, s.socialStability + 6); s.energy.gas = Math.min(100, s.energy.gas + 3); },
+    },
+    condition: (s) => s.energy.gas > 10,
   },
 ];
 
