@@ -346,8 +346,8 @@ body {
 
 #energy-mix-legend {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px 8px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px 6px;
 }
 
 .legend-item {
@@ -2142,6 +2142,115 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== CARBON BUDGET TRACKER ===== */
+.carbon-budget-block {
+  margin-bottom: var(--gap-md);
+  padding-bottom: var(--gap-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.carbon-budget-label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 4px;
+}
+.carbon-budget-label .cb-name { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+.carbon-budget-label .cb-value { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.carbon-budget-track {
+  height: 10px; background: var(--bg-tertiary); border-radius: 5px;
+  overflow: hidden; position: relative;
+}
+.carbon-budget-fill {
+  height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1), background 0.6s;
+}
+.carbon-budget-targets {
+  display: flex; justify-content: space-between; margin-top: 3px;
+  font-size: 10px; color: var(--text-muted);
+}
+.cb-target-marker {
+  position: absolute; top: 0; bottom: 0; width: 2px;
+  background: var(--status-warn); opacity: 0.8;
+}
+
+/* ===== INTERNATIONAL STANDING ===== */
+.intl-standing-block { margin-bottom: var(--gap-md); }
+.intl-standing-row {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+}
+.intl-standing-row .intl-icon { font-size: 13px; }
+.intl-standing-row .intl-label { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
+.intl-standing-row .intl-value { margin-left: auto; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.intl-standing-detail {
+  font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 2px;
+}
+
+/* ===== NEWS TICKER ===== */
+.news-ticker {
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-elevated));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin: var(--gap-sm);
+  padding: var(--gap-sm) var(--gap-md);
+  animation: fadeIn 0.5s ease;
+}
+.news-ticker-header {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--status-info);
+  margin-bottom: 6px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.news-ticker-header .ticker-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--status-info); animation: tickerPulse 2s ease infinite;
+}
+@keyframes tickerPulse {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+.news-headline {
+  font-family: var(--font-editorial);
+  font-size: 12px; line-height: 1.45;
+  color: var(--text-primary);
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(42, 48, 80, 0.4);
+}
+.news-headline:last-child { border-bottom: none; }
+.news-headline .headline-source {
+  font-family: var(--font-system); font-size: 9px;
+  color: var(--text-muted); font-style: italic;
+  margin-top: 2px; display: block;
+}
+
+/* ===== CLIMATE SUMMIT MODAL ===== */
+#summit-modal {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--gap-lg);
+}
+#summit-card {
+  background: var(--bg-secondary); border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg); padding: var(--gap-lg);
+  max-width: 520px; width: 100%;
+  animation: slideUp 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+#summit-card h2 {
+  font-size: 18px; margin-bottom: var(--gap-sm);
+  color: var(--accent-blue-lt);
+}
+#summit-card .summit-desc {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  margin-bottom: var(--gap-md);
+}
+.summit-options { display: flex; flex-direction: column; gap: var(--gap-sm); }
+.summit-btn {
+  background: var(--bg-elevated); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md); padding: 12px var(--gap-md);
+  color: var(--text-primary); cursor: pointer; text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.summit-btn:hover { border-color: var(--accent-blue-lt); background: var(--bg-tertiary); }
+.summit-btn .summit-btn-label { font-weight: 700; font-size: 13px; display: block; margin-bottom: 4px; }
+.summit-btn .summit-btn-effect { font-size: 11px; color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -2270,6 +2379,40 @@ body { transition: filter 2s ease; }
         <div class="sparkline-container" id="spark-nz"></div>
       </div>
 
+      <!-- Carbon Budget -->
+      <div class="carbon-budget-block">
+        <div class="carbon-budget-label">
+          <span class="cb-name">🏭 Carbon Budget Remaining</span>
+          <span class="cb-value" id="val-carbon-budget">4.3 GtCO₂</span>
+        </div>
+        <div class="carbon-budget-track">
+          <div class="carbon-budget-fill" id="bar-carbon-budget" style="width:100%;background:var(--status-good)"></div>
+          <div class="cb-target-marker" style="left:35%" title="1.5°C budget limit"></div>
+        </div>
+        <div class="carbon-budget-targets">
+          <span>0 Gt (Net Zero)</span>
+          <span style="color:var(--status-warn)">▲ 1.5°C limit</span>
+          <span>4.3 Gt (2025)</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:3px;line-height:1.4;">
+          Cumulative UK emissions remaining · based on CCC Sixth Carbon Budget
+        </div>
+        <div class="sparkline-container" id="spark-carbon"></div>
+      </div>
+
+      <!-- International Standing -->
+      <div class="intl-standing-block">
+        <div class="intl-standing-row">
+          <span class="intl-icon">🌍</span>
+          <span class="intl-label">International Standing</span>
+          <span class="intl-value"><span id="val-intl">50</span>/100</span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill info" id="bar-intl" style="width:50%"></div>
+        </div>
+        <div class="intl-standing-detail" id="intl-detail">UK is seen as a moderate climate actor on the world stage.</div>
+      </div>
+
       <!-- Energy Mix -->
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
@@ -2278,6 +2421,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage"  style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2439,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2907,6 +3055,7 @@ body { transition: filter 2s ease; }
   <!-- RIGHT: LOG PANEL -->
   <aside class="panel" id="log-panel">
     <div class="panel-title">Policy Record</div>
+    <div id="news-ticker-area"></div>
     <div id="log-scroll">
       <div class="log-entry welcome">
         <div class="log-year">2025 — Briefing</div>
@@ -2998,6 +3147,15 @@ body { transition: filter 2s ease; }
     <blockquote id="event-story-display"></blockquote>
     <div id="event-effects-display"></div>
     <button id="event-dismiss-btn">Acknowledge &amp; Continue</button>
+  </div>
+</div>
+
+<!-- CLIMATE SUMMIT MODAL -->
+<div id="summit-modal" class="hidden">
+  <div id="summit-card">
+    <h2 id="summit-title">🌍 Global Climate Summit</h2>
+    <div class="summit-desc" id="summit-desc"></div>
+    <div class="summit-options" id="summit-options"></div>
   </div>
 </div>
 
@@ -3221,6 +3379,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'climate_diplomat', icon: '🕊️', name: 'Climate Diplomat', desc: 'Finish with International Standing above 80', check: (s) => s.internationalStanding >= 80 },
+  { id: 'carbon_negative', icon: '🌿', name: 'Carbon Negative', desc: 'Exhaust zero carbon budget (reach Net Zero before budget runs out)', check: (s) => s.carbonBudget > 0 && s.netZeroProgress >= 100 },
 ];
 
 class AchievementManager {
@@ -3297,6 +3457,22 @@ const METRIC_TOOLTIPS = {
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
+  },
+  carbon: {
+    title: '🏭 Carbon Budget Remaining',
+    desc: 'The total remaining CO₂ the UK can emit while staying within a fair share of the global carbon budget. Once exhausted, every additional tonne borrows from future generations.',
+    drivers: '↓ Depleted by: gas-heavy energy mix, delayed transition\n↓ Depleted slower by: rapid decarbonisation, Net Zero achievement',
+    threshold: '1.5 GtCO₂ = approximate threshold for staying within a 1.5°C-compatible pathway. Reaching 0 means the UK has spent its entire fair share.',
+    thresholdGood: false,
+    source: 'Based on CCC Sixth Carbon Budget and IPCC AR6 remaining budgets',
+  },
+  intl: {
+    title: '🌍 International Standing',
+    desc: 'The UK\'s reputation and influence in global climate diplomacy. High standing unlocks cooperation benefits and technology sharing. Low standing leads to trade friction and diplomatic isolation.',
+    drivers: '↑ Raised by: Net Zero progress, renewable energy share, climate summits, adaptation investment\n↓ Lowered by: high gas dependency, stranded assets, social breakdown, rejecting international cooperation',
+    threshold: 'Above 70: recognised as a global climate leader. Below 30: risk of diplomatic isolation and trade penalties.',
+    thresholdGood: true,
+    source: 'Composite indicator reflecting NGFS international cooperation modelling',
   },
 };
 
@@ -3517,6 +3693,8 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      carbonBudget: state.carbonBudget,
+      internationalStanding: state.internationalStanding,
     });
   }
   reset() { this.data = []; }
@@ -3561,6 +3739,8 @@ class GameEngine {
       strandedAssets: 0,
       propertyValue: 100,
       socialCapital: 0,
+      carbonBudget: 4.3,
+      internationalStanding: 50,
       currentDecisions: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -3712,6 +3892,8 @@ class GameEngine {
       gridReliability: s.gridReliability,
       financialStability: s.financialStability,
       socialStability: s.socialStability,
+      carbonBudget: s.carbonBudget,
+      internationalStanding: s.internationalStanding,
       energy: Object.assign({}, s.energy),
     };
 
@@ -3732,6 +3914,12 @@ class GameEngine {
 
     // Phase 6: Temperature
     this._progressTemp();
+
+    // Phase 6b: Carbon budget depletion
+    this._depleteCarbon();
+
+    // Phase 6c: International standing
+    this._recalcInternational();
 
     // Phase 7: Random event
     const event = this._resolveEvent();
@@ -3909,6 +4097,34 @@ class GameEngine {
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
   }
 
+  _depleteCarbon() {
+    const s = this.state;
+    const e = s.energy;
+    const total = Math.max(e.wind + e.solar + e.nuclear + e.gas + e.storage, 1);
+    const gasShare = e.gas / total;
+    let emissions = 0.6 + gasShare * 0.8;
+    if (s.netZeroAchieved) emissions *= 0.15;
+    emissions *= (1 + (s.turn * 0.05));
+    s.carbonBudget = Math.max(0, Math.round((s.carbonBudget - emissions) * 100) / 100);
+  }
+
+  _recalcInternational() {
+    const s = this.state;
+    let standing = 50;
+    standing += Math.min(20, s.netZeroProgress * 0.2);
+    if (s.temperature < 1.5) standing += 10;
+    else if (s.temperature > 2.0) standing -= 15;
+    const e = s.energy;
+    const total = Math.max(e.wind + e.solar + e.nuclear + e.gas + e.storage, 1);
+    const renewShare = (e.wind + e.solar) / total;
+    standing += Math.round(renewShare * 15);
+    if (s.infrastructure.adaptation > 50) standing += 5;
+    if (s.carbonBudget <= 0) standing += 10;
+    if (s.socialBreakdownOccurred) standing -= 30;
+    standing -= Math.max(0, s.strandedAssets * 0.1);
+    s.internationalStanding = this._clamp(Math.round(standing), 0, 100);
+  }
+
   _resolveEvent() {
     const s = this.state;
     // Cooldown: no event if one fired last turn
@@ -4037,10 +4253,11 @@ function calculateScore(state) {
   const stabAvg = (s.financialStability + s.socialStability) / 2;
   const stabScore = Math.round((stabAvg / 100) * 30);
 
-  // Resilience Score (0-10): adaptation built, events survived
+  // Resilience Score (0-10): adaptation built, events survived, international standing
   const adaptLevel = s.infrastructure.adaptation / 100;
   const eventPenalty = s.eventCount * 1.5;
-  const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
+  const intlBonus = s.internationalStanding >= 60 ? 2 : s.internationalStanding < 30 ? -2 : 0;
+  const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0) + intlBonus));
 
   const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
   return { total, tempScore, nzScore, stabScore, resScore };
@@ -4143,6 +4360,9 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
+  if (s.internationalStanding >= 70) {
+    parts.push(`The UK's international leadership — culminating in ambitious climate diplomacy — inspired other major economies to accelerate their own transitions. Carbon budget management was disciplined: ${s.carbonBudget.toFixed(1)} GtCO₂ remains unspent.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4171,6 +4391,9 @@ function buildHotHouseNarrative(s) {
     parts.push(`Gas remained a dominant part of the energy mix throughout the period. Each year of inaction allowed fossil infrastructure to entrench further, making the eventual transition both more expensive and more disruptive.`);
   }
   parts.push(`Insurance markets are contracting as flood and heat risk becomes uninsurable across large areas of the UK. Property values in coastal and low-lying areas have collapsed. The NHS faces unprecedented pressure from heat-related illness and infectious disease spread.`);
+  if (s.carbonBudget <= 0) {
+    parts.push(`The UK's carbon budget has been fully exhausted — every tonne emitted now pushes the country further beyond its fair share of the global carbon budget. International standing has deteriorated as allies view UK climate policy as a failure.`);
+  }
 
   if (s.eventCount > 2) {
     parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, recovery time between shocks shrank until resilience collapsed entirely.`);
@@ -4224,7 +4447,7 @@ function buildShareText(state, result) {
     MANAGED: '🌤️ Managed Transition',
   };
   const label = scenarios[result.scenario] || result.title;
-  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
+  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\nCarbon Budget: ${state.carbonBudget.toFixed(1)} GtCO₂ remaining | Int'l Standing: ${Math.round(state.internationalStanding)}/100\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
 }
 
 /* ============================================================
@@ -4265,10 +4488,19 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
+
+    this.elValCarbon  = document.getElementById('val-carbon-budget');
+    this.elBarCarbon  = document.getElementById('bar-carbon-budget');
+    this.elValIntl    = document.getElementById('val-intl');
+    this.elBarIntl    = document.getElementById('bar-intl');
+    this.elIntlDetail = document.getElementById('intl-detail');
+    this.elNewsArea   = document.getElementById('news-ticker-area');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4505,6 +4737,9 @@ class UI {
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
+        summitMgr.reset();
+        headlineGen._lastHeadlines = [];
+        if (this.elNewsArea) this.elNewsArea.innerHTML = '';
         this._lastLogLength = 0;
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4671,6 +4906,31 @@ class UI {
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
     }
+
+    // Carbon Budget
+    if (this.elValCarbon) {
+      this.elValCarbon.textContent = state.carbonBudget.toFixed(1) + ' GtCO₂';
+      const cbPct = Math.max(0, (state.carbonBudget / 4.3) * 100);
+      this.elBarCarbon.style.width = cbPct + '%';
+      this.elBarCarbon.style.background = cbPct > 50 ? 'var(--status-good)' : cbPct > 20 ? 'var(--status-warn)' : 'var(--status-danger)';
+    }
+
+    // International Standing
+    if (this.elValIntl) {
+      this.elValIntl.textContent = Math.round(state.internationalStanding);
+      this.elBarIntl.style.width = state.internationalStanding + '%';
+      const intlStatus = state.internationalStanding >= 70 ? 'good'
+        : state.internationalStanding >= 40 ? 'info' : 'danger';
+      this.elBarIntl.className = 'bar-fill ' + intlStatus;
+      if (this.elIntlDetail) {
+        const s = state.internationalStanding;
+        this.elIntlDetail.textContent = s >= 80 ? 'UK recognised as a global climate leader.'
+          : s >= 60 ? 'UK is seen as a constructive partner in climate diplomacy.'
+          : s >= 40 ? 'UK is seen as a moderate climate actor on the world stage.'
+          : s >= 20 ? 'International partners question UK commitment to climate targets.'
+          : 'UK faces diplomatic isolation on climate issues.';
+      }
+    }
   }
 
   _renderSparklines() {
@@ -4680,6 +4940,7 @@ class UI {
       { containerId: 'spark-fin',  key: 'financialStability', color: '#5390d9', invert: false, min: 0, max: 100 },
       { containerId: 'spark-soc',  key: 'socialStability', color: '#ffd600', invert: false, min: 0, max: 100 },
       { containerId: 'spark-nz',   key: 'netZeroProgress', color: '#448aff', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-carbon', key: 'carbonBudget', color: '#ff7043', invert: false, min: 0, max: 4.5, decimals: 1 },
     ];
 
     for (const s of series) {
@@ -4801,10 +5062,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    if (this.elSegStorage) this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    if (this.elLegStorage) this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4825,6 +5088,55 @@ class UI {
 
     // Budget status class
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+  }
+
+  _renderNewsTicker(headlines) {
+    if (!this.elNewsArea || !headlines || headlines.length === 0) return;
+    const html = `<div class="news-ticker">
+      <div class="news-ticker-header"><span class="ticker-dot"></span>Press Briefing — ${engine.state.year}</div>
+      ${headlines.map(h => `<div class="news-headline">${h.text}<span class="headline-source">— ${h.source}</span></div>`).join('')}
+    </div>`;
+    this.elNewsArea.innerHTML = html;
+  }
+
+  _showSummitModal(summit) {
+    return new Promise(resolve => {
+      const modal = document.getElementById('summit-modal');
+      const title = document.getElementById('summit-title');
+      const desc = document.getElementById('summit-desc');
+      const opts = document.getElementById('summit-options');
+      if (!modal || !opts) { resolve(); return; }
+
+      title.textContent = summit.title;
+      desc.textContent = summit.desc;
+
+      opts.innerHTML = summit.options
+        .filter(o => o.condition(engine.state))
+        .map((o, i) => `<button class="summit-btn" data-idx="${i}">
+          <span class="summit-btn-label">${o.label}</span>
+          <span class="summit-btn-effect">${o.desc}</span>
+          <span class="summit-btn-effect" style="color:var(--status-info);margin-top:4px;">${o.consequence}</span>
+        </button>`).join('');
+
+      modal.classList.remove('hidden');
+      effectsMgr.haptic('medium');
+
+      const handler = (e) => {
+        const btn = e.target.closest('.summit-btn');
+        if (!btn) return;
+        const idx = parseInt(btn.dataset.idx);
+        const eligible = summit.options.filter(o => o.condition(engine.state));
+        if (eligible[idx]) {
+          eligible[idx].effect(engine.state);
+          engine.state.budget = engine.getEffectiveBudget();
+        }
+        effectsMgr.haptic('light');
+        modal.classList.add('hidden');
+        opts.removeEventListener('click', handler);
+        resolve();
+      };
+      opts.addEventListener('click', handler);
+    });
   }
 
   _renderCards(state) {
@@ -5126,6 +5438,14 @@ class UI {
         <div class="endgame-metric-val ${socStatus}">${Math.round(s.socialStability)}%</div>
       </div>
       <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Carbon Budget</div>
+        <div class="endgame-metric-val ${s.carbonBudget > 1.5 ? 'good' : s.carbonBudget > 0 ? 'warn' : 'danger'}">${s.carbonBudget.toFixed(1)} Gt</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Int'l Standing</div>
+        <div class="endgame-metric-val ${s.internationalStanding >= 60 ? 'good' : s.internationalStanding >= 30 ? 'warn' : 'danger'}">${Math.round(s.internationalStanding)}/100</div>
+      </div>
+      <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
       </div>`;
@@ -5282,6 +5602,21 @@ class UI {
       '🏘️ Social Stability':   'soc',
       '🌱 Net Zero Progress':  'nz',
     };
+    // Attach to cb-name and intl-label elements too
+    const cbName = document.querySelector('.cb-name');
+    if (cbName) {
+      cbName.style.cursor = 'help';
+      cbName.addEventListener('mouseenter', (e) => this._showTooltip('carbon', e.target));
+      cbName.addEventListener('mouseleave', () => this._hideTooltip());
+      cbName.addEventListener('click', (e) => { e.stopPropagation(); this._toggleTooltip('carbon', e.target); });
+    }
+    const intlLabel = document.querySelector('.intl-label');
+    if (intlLabel) {
+      intlLabel.style.cursor = 'help';
+      intlLabel.addEventListener('mouseenter', (e) => this._showTooltip('intl', e.target));
+      intlLabel.addEventListener('mouseleave', () => this._hideTooltip());
+      intlLabel.addEventListener('click', (e) => { e.stopPropagation(); this._toggleTooltip('intl', e.target); });
+    }
 
     document.querySelectorAll('.metric-name').forEach(el => {
       const key = nameMap[el.textContent.trim()];
@@ -5702,6 +6037,29 @@ const MINI_EVENTS_POOL = [
     condition: (s) => s.energy.gas < 28 || s.infrastructure.energyTransition > 60,
   },
   {
+    id: 'mini_trade_deal',
+    icon: '🌐',
+    title: 'Green Trade Agreement',
+    prompt: 'The EU offers a green trade deal with carbon border adjustments. How do you respond?',
+    explanation: 'Carbon border adjustment mechanisms (CBAMs) are tariffs on imports from countries with weaker climate policy. Joining aligns the UK with the EU\'s climate standards — boosting international standing and incentivising domestic industry to decarbonise — but raises costs for some importers. Declining keeps trade flexibility but signals weak climate commitment.',
+    contextFn: (s) => ({
+      label: 'Int\'l Standing',
+      value: `${Math.round(s.internationalStanding)}/100`,
+      note: s.internationalStanding > 60 ? 'respected partner' : 'opportunity to improve',
+    }),
+    optA: {
+      label: '🤝 Join the CBAM framework',
+      consequence: 'Costs £4bn adjustment · +12 International Standing · +3 Net Zero (industry incentive)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.internationalStanding = Math.min(100, s.internationalStanding + 12); s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    },
+    optB: {
+      label: '🏴 Maintain independent trade policy',
+      consequence: 'No cost · −8 International Standing · +3 Financial Stability (trade flexibility)',
+      effect: (s) => { s.internationalStanding = Math.max(0, s.internationalStanding - 8); s.financialStability = Math.min(100, s.financialStability + 3); },
+    },
+    condition: (s) => s.internationalStanding >= 30 && s.turn >= 1,
+  },
+  {
     id: 'mini_nuclear_delay',
     icon: '⚛️',
     title: 'Nuclear Plant Delay',
@@ -5774,6 +6132,16 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
+
+  // Generate and display headlines
+  const headlines = headlineGen.generate(engine.state, result.logEntry.snapshot);
+  ui._renderNewsTicker(headlines);
+
+  // Check for climate summit
+  const summit = summitMgr.checkForSummit(engine.state);
+  if (summit) {
+    await ui._showSummitModal(summit);
+  }
 
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
@@ -5887,6 +6255,227 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /* ============================================================
+   MODULE: HEADLINE GENERATOR
+============================================================ */
+
+class HeadlineGenerator {
+  constructor() {
+    this._lastHeadlines = [];
+  }
+
+  generate(state, snapshot) {
+    const s = state;
+    const headlines = [];
+
+    if (snapshot) {
+      const tempDelta = s.temperature - snapshot.temperature;
+      if (tempDelta > 0.3) {
+        headlines.push({ text: `UK warming accelerates: pathway reaches ${s.temperature.toFixed(1)}°C as global emissions rise`, source: 'Met Office' });
+      }
+      if (s.netZeroProgress >= 100 && snapshot.netZeroProgress < 100) {
+        headlines.push({ text: 'BREAKING: UK achieves Net Zero emissions target — first major economy to meet 2050 commitment', source: 'Reuters' });
+      }
+      if (s.netZeroProgress - snapshot.netZeroProgress > 15) {
+        headlines.push({ text: `Net Zero progress leaps to ${Math.round(s.netZeroProgress)}% as renewable investment pays off`, source: 'Financial Times' });
+      }
+      if (s.gridReliability < 40 && snapshot.gridReliability >= 40) {
+        headlines.push({ text: 'National Grid issues emergency warning: blackout risk at highest level since 2025', source: 'BBC News' });
+      }
+      if (s.financialStability < 40 && snapshot.financialStability >= 40) {
+        headlines.push({ text: 'Bank of England triggers emergency liquidity measures as financial stability deteriorates', source: 'Financial Times' });
+      }
+      if (s.socialStability < 40 && snapshot.socialStability >= 40) {
+        headlines.push({ text: 'Public trust in climate transition collapses — protests spread to major cities', source: 'The Guardian' });
+      }
+      if (snapshot.carbonBudget > 1.5 && s.carbonBudget <= 1.5) {
+        headlines.push({ text: 'Scientists warn: UK carbon budget nearly exhausted — 1.5°C target slipping out of reach', source: 'Nature' });
+      }
+    }
+
+    const e = s.energy;
+    if (e.wind + e.solar > e.gas * 2.5 && e.gas > 0) {
+      headlines.push({ text: `Renewables now generate ${Math.round(e.wind + e.solar)}% of UK electricity — gas share falls to ${Math.round(e.gas)}%`, source: 'Energy Voice' });
+    }
+    if (e.gas <= 5 && e.gas >= 0) {
+      headlines.push({ text: 'Last UK gas power station set to close as fossil fuel era ends', source: 'BBC News' });
+    }
+    if (e.nuclear > 30) {
+      headlines.push({ text: `Nuclear renaissance: UK nuclear fleet now supplies ${Math.round(e.nuclear)}% of electricity`, source: 'World Nuclear News' });
+    }
+    if (s.strandedAssets > 50) {
+      headlines.push({ text: `Pension funds face £${Math.round(s.strandedAssets * 1.2)}bn in stranded fossil assets — retirees brace for impact`, source: 'Financial Times' });
+    }
+    if (s.temperature > 2.0) {
+      headlines.push({ text: `2°C breached: climate scientists say tipping points now "locked in" — adaptation becomes priority`, source: 'IPCC' });
+    }
+    if (s.internationalStanding > 80) {
+      headlines.push({ text: 'UK hailed as global climate leader at COP — other nations pledge to follow', source: 'UN News' });
+    }
+    if (s.internationalStanding < 30) {
+      headlines.push({ text: 'UK faces diplomatic isolation as climate allies criticise lack of ambition', source: 'The Economist' });
+    }
+    if (s.infrastructure.adaptation > 80) {
+      headlines.push({ text: 'UK flood defences and heat resilience rated "world-class" by international review', source: 'Environment Agency' });
+    }
+    if (s.socialCapital > 40) {
+      headlines.push({ text: 'Public support for climate transition at record high — "just transition" programme credited', source: 'Ipsos' });
+    }
+    if (s.carbonBudget <= 0 && s.netZeroProgress < 100) {
+      headlines.push({ text: 'Carbon budget exhausted: UK has emitted its fair share — every tonne now borrows from the future', source: 'Carbon Brief' });
+    }
+
+    const contextual = this._getContextualHeadlines(s);
+    headlines.push(...contextual);
+
+    const unique = headlines.filter((h, i) =>
+      headlines.findIndex(h2 => h2.text === h.text) === i
+    );
+
+    const selected = [];
+    const shuffled = unique.sort(() => Math.random() - 0.5);
+    for (const h of shuffled) {
+      if (selected.length >= 3) break;
+      if (!this._lastHeadlines.includes(h.text)) {
+        selected.push(h);
+      }
+    }
+    if (selected.length === 0 && unique.length > 0) {
+      selected.push(unique[0]);
+    }
+
+    this._lastHeadlines = selected.map(h => h.text);
+    return selected;
+  }
+
+  _getContextualHeadlines(s) {
+    const headlines = [];
+    const year = s.year;
+
+    if (year >= 2035 && year <= 2040) {
+      if (s.netZeroProgress < 50) {
+        headlines.push({ text: 'CCC warns UK "significantly off track" for Net Zero — calls for immediate policy escalation', source: 'Climate Change Committee' });
+      }
+    }
+    if (year >= 2040) {
+      if (s.energy.gas > 20) {
+        headlines.push({ text: `${Math.round(s.energy.gas)}% gas dependency in ${year}: "Unconscionable", says UN climate envoy`, source: 'Al Jazeera' });
+      }
+    }
+    if (year >= 2045) {
+      if (s.temperature < 1.5) {
+        headlines.push({ text: 'UK pathway consistent with 1.5°C — Paris Agreement target within reach', source: 'Met Office' });
+      }
+    }
+    return headlines;
+  }
+}
+
+/* ============================================================
+   MODULE: CLIMATE SUMMIT SYSTEM
+============================================================ */
+
+const CLIMATE_SUMMITS = [
+  {
+    year: 2030,
+    title: '🌍 COP35 — Global Climate Summit 2030',
+    desc: 'The world meets to assess progress on the Paris Agreement. As a major economy, the UK must decide its stance. Your current emissions trajectory and international standing will shape the options available.',
+    options: [
+      {
+        label: '🤝 Lead an Ambitious Coalition',
+        desc: 'Pledge accelerated targets and fund developing nations. Costs £15bn but earns global respect and technology-sharing benefits.',
+        condition: (s) => s.internationalStanding >= 40 && s.netZeroProgress >= 40,
+        effect: (s) => {
+          s.nextTurnBudgetPenalty += 15;
+          s.internationalStanding = Math.min(100, s.internationalStanding + 25);
+          s.netZeroProgress = Math.min(100, s.netZeroProgress + 5);
+        },
+        consequence: '−£15bn · +25 International Standing · +5 Net Zero (tech sharing)',
+      },
+      {
+        label: '📋 Support the Consensus',
+        desc: 'Back the multilateral agreement without taking a leading role. Modest cost, modest benefit.',
+        condition: () => true,
+        effect: (s) => {
+          s.nextTurnBudgetPenalty += 5;
+          s.internationalStanding = Math.min(100, s.internationalStanding + 10);
+        },
+        consequence: '−£5bn · +10 International Standing',
+      },
+      {
+        label: '🛡️ Protect National Interests',
+        desc: 'Prioritise domestic concerns over global commitments. No cost, but the world notices.',
+        condition: () => true,
+        effect: (s) => {
+          s.internationalStanding = Math.max(0, s.internationalStanding - 15);
+          s.socialStability = Math.min(100, s.socialStability + 5);
+        },
+        consequence: '−15 International Standing · +5 Social (domestic popularity)',
+      },
+    ],
+  },
+  {
+    year: 2040,
+    title: '🌍 COP45 — Global Stocktake 2040',
+    desc: 'A decade after COP35, the world assesses whether collective action has been sufficient. Developing nations demand climate reparations. The UK must decide how to respond.',
+    options: [
+      {
+        label: '💰 Fund the Loss & Damage Facility',
+        desc: 'Contribute significantly to climate reparations. Expensive but builds lasting international goodwill and unlocks joint research.',
+        condition: (s) => s.financialStability >= 50,
+        effect: (s) => {
+          s.nextTurnBudgetPenalty += 20;
+          s.internationalStanding = Math.min(100, s.internationalStanding + 30);
+          s.netZeroProgress = Math.min(100, s.netZeroProgress + 3);
+          s.socialCapital = Math.min(60, s.socialCapital + 5);
+        },
+        consequence: '−£20bn · +30 International Standing · +3 NZ · +5 Social Capital',
+      },
+      {
+        label: '🔬 Offer Technology Transfer Instead',
+        desc: 'Share clean energy technology rather than direct funding. Lower cost, still constructive.',
+        condition: (s) => s.infrastructure.energyTransition > 40,
+        effect: (s) => {
+          s.nextTurnBudgetPenalty += 8;
+          s.internationalStanding = Math.min(100, s.internationalStanding + 15);
+          s.netZeroProgress = Math.min(100, s.netZeroProgress + 4);
+        },
+        consequence: '−£8bn · +15 International Standing · +4 Net Zero (shared innovation)',
+      },
+      {
+        label: '🚫 Reject Reparations Framework',
+        desc: 'Argue developed nations have already contributed enough. No cost, but severe diplomatic fallout.',
+        condition: () => true,
+        effect: (s) => {
+          s.internationalStanding = Math.max(0, s.internationalStanding - 25);
+          s.temperature = Math.round((s.temperature + 0.03) * 100) / 100;
+        },
+        consequence: '−25 International Standing · +0.03°C (global cooperation weakens)',
+      },
+    ],
+  },
+];
+
+class ClimateSummitManager {
+  constructor() {
+    this._fired = new Set();
+  }
+
+  checkForSummit(state) {
+    for (const summit of CLIMATE_SUMMITS) {
+      if (state.year === summit.year && !this._fired.has(summit.year)) {
+        this._fired.add(summit.year);
+        return summit;
+      }
+    }
+    return null;
+  }
+
+  reset() {
+    this._fired.clear();
+  }
+}
+
+/* ============================================================
    MODULE: LEGACY SYSTEM
 ============================================================ */
 
@@ -5955,6 +6544,8 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const headlineGen  = new HeadlineGenerator();
+const summitMgr    = new ClimateSummitManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
