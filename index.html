@@ -1868,7 +1868,7 @@ body { transition: filter 2s ease; }
 }
 #scenario-screen.hidden { display: none; }
 #scenario-content {
-  max-width: 640px;
+  max-width: 820px;
   width: 100%;
   text-align: center;
 }
@@ -2141,6 +2141,153 @@ body { transition: filter 2s ease; }
     flex-direction: column;
   }
   .timeline-turn { min-width: unset; }
+}
+
+/* ===== NEWSPAPER HEADLINE SYSTEM ===== */
+.log-headline {
+  margin: 6px 0 4px;
+  padding: 8px 10px;
+  border-left: 3px solid var(--accent-blue);
+  background: var(--bg-elevated);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.log-headline-paper {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+.log-headline-text {
+  font-family: var(--font-editorial);
+  font-size: 14px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+.log-headline-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* ===== INVESTMENT CARD PREVIEW TOOLTIP ===== */
+.card-preview {
+  display: none;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+}
+.investment-card:hover .card-preview,
+.investment-card.preview-visible .card-preview {
+  display: block;
+}
+.card-preview-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.card-preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+}
+.card-preview-metric {
+  color: var(--text-secondary);
+}
+.card-preview-val {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.card-preview-val.pos { color: var(--status-good); }
+.card-preview-val.neg { color: var(--status-danger); }
+.card-preview-val.neutral { color: var(--text-muted); }
+
+/* ===== TURN BREAKDOWN SECTION ===== */
+.log-breakdown {
+  margin-top: 6px;
+}
+.log-breakdown-toggle {
+  font-size: 11px;
+  color: var(--accent-blue-lt);
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 2px 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.log-breakdown-toggle:hover {
+  color: var(--text-primary);
+}
+.log-breakdown-content {
+  display: none;
+  padding: 6px 0 2px;
+}
+.log-breakdown-content.expanded {
+  display: block;
+}
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-metric {
+  min-width: 60px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.breakdown-arrow {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.breakdown-reason {
+  flex: 1;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+/* ===== SIM OVERLAY HEADLINE ===== */
+#sim-headline {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.04);
+  border-left: 3px solid var(--accent-blue-lt);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#sim-headline.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+#sim-headline-paper {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+#sim-headline-text {
+  font-family: var(--font-editorial);
+  font-size: 15px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.35;
 }
 </style>
 </head>
@@ -2966,6 +3113,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="industrial_heartlands">
+        <span class="scenario-card-icon">🏭</span>
+        <div class="scenario-card-name">Industrial Heartlands</div>
+        <div class="scenario-card-desc">A government rooted in coal and steel communities. High social cohesion but deep fossil dependency. The workforce is loyal — but the grid runs on gas.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£95bn/turn</span></div>
+          <div class="scenario-stat">Gas: <span>45 (very high)</span></div>
+          <div class="scenario-stat">Social Capital: <span>+15 bonus</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="tech_pioneer">
+        <span class="scenario-card-icon">🔬</span>
+        <div class="scenario-card-name">Tech Pioneer</div>
+        <div class="scenario-card-desc">The previous government poured money into R&amp;D but neglected communities. You inherit advanced technology and grid storage — but social trust is fragile.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
+          <div class="scenario-stat">Storage: <span>25 (advanced)</span></div>
+          <div class="scenario-stat">Social: <span>55% (fragile)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3221,6 +3390,26 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'diplomat', icon: '🕊️', name: 'The Diplomat', desc: 'Finish with all metrics above 60%', check: (s) => s.gridReliability >= 60 && s.financialStability >= 60 && s.socialStability >= 60 && s.netZeroProgress >= 60 },
+  { id: 'speedrunner', icon: '⏱️', name: 'Speed Runner', desc: 'Achieve Net Zero by Turn 2', check: (s) => s.netZeroAchieved && s.turn <= 2 },
+  { id: 'no_gas', icon: '🚫', name: 'Clean Grid', desc: 'Reduce gas to 0 and keep grid above 70%', check: (s) => s.energy.gas <= 0 && s.gridReliability >= 70 },
+  { id: 'comeback', icon: '🔄', name: 'Comeback Kid', desc: 'Finish above 60% on a metric that was below 30%', check: (s) => {
+    if (!s.log || s.log.length < 2) return false;
+    const minGrid = Math.min(...s.log.map(l => l.afterGrid));
+    const minFin = Math.min(...s.log.map(l => l.afterFin));
+    const minSoc = Math.min(...s.log.map(l => l.afterSoc));
+    return (minGrid < 30 && s.gridReliability >= 60) || (minFin < 30 && s.financialStability >= 60) || (minSoc < 30 && s.socialStability >= 60);
+  }},
+  { id: 'diversified', icon: '🎯', name: 'Diversified Portfolio', desc: 'Invest in all 6 categories in a single turn', check: (s) => {
+    if (!s.log) return false;
+    return s.log.some(entry => {
+      let cats = 0;
+      for (const d of entry.decisions) {
+        if (d.includes('×')) cats++;
+      }
+      return cats >= 6;
+    });
+  }},
 ];
 
 class AchievementManager {
@@ -3370,6 +3559,29 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  industrial_heartlands: {
+    label: 'Industrial Heartlands',
+    apply(state) {
+      state.energy.gas = 45;
+      state.energy.wind = 18;
+      state.energy.solar = 3;
+      state.socialCapital = 15;
+      state.socialStability = 80;
+      state.strandedAssets = 5;
+      state._budgetOverride = 95;
+    },
+  },
+  tech_pioneer: {
+    label: 'Tech Pioneer',
+    apply(state) {
+      state.energy.storage = 25;
+      state.energy.nuclear = 20;
+      state.socialStability = 55;
+      state.socialCapital = -5;
+      state.netZeroProgress = 40;
+      state._budgetOverride = 90;
     },
   },
 };
@@ -4228,6 +4440,230 @@ function buildShareText(state, result) {
 }
 
 /* ============================================================
+   NEWSPAPER HEADLINE GENERATOR
+============================================================ */
+
+const NEWSPAPER_NAMES = [
+  'The Financial Times',
+  'The Guardian',
+  'The Times',
+  'The Telegraph',
+  'BBC News',
+  'The Independent',
+  'The Observer',
+];
+
+function generateHeadline(entry, state) {
+  const tempDelta = entry.afterTemp - entry.snapshot.temperature;
+  const nzDelta = entry.afterNZ - entry.snapshot.netZeroProgress;
+  const gridDelta = entry.afterGrid - entry.snapshot.gridReliability;
+  const finDelta = entry.afterFin - entry.snapshot.financialStability;
+  const socDelta = entry.afterSoc - entry.snapshot.socialStability;
+
+  const headlines = [];
+
+  if (entry.afterNZ >= 100 && entry.snapshot.netZeroProgress < 100) {
+    headlines.push({
+      priority: 100,
+      text: 'Britain Reaches Net Zero — Historic Climate Target Met',
+      sub: `After decades of policy and investment, the UK has met its legally binding 2050 target. Final temperature: ${entry.afterTemp.toFixed(1)}°C.`,
+    });
+  }
+
+  if (entry.event) {
+    const eventHeadlines = {
+      'Coastal Flooding': `Storm Surge Devastates East Anglia as Flood Defences Fail`,
+      'Catastrophic Thames': `Thames Barrier Overwhelmed: Central London Under Water`,
+      'Extended Heatwave': `40°C+ Heatwave Shuts Down Britain — Hospitals at Breaking Point`,
+      'Extreme Heat': `National Emergency as Heat Deaths Reach Record Levels`,
+      'Severe Atlantic': `Storm Wreaks Havoc Across Northern England`,
+      'Fossil Asset': `Pension Funds Reel as North Sea Assets Written Off`,
+      'Fuel Poverty': `Thousands March Against Energy Bills: "We're Just Cold"`,
+      'National Grid': `Lights Go Out: Cascading Grid Failure Hits Millions`,
+    };
+    for (const [key, text] of Object.entries(eventHeadlines)) {
+      if (entry.event.includes(key)) {
+        headlines.push({ priority: 90, text, sub: `Government faces mounting pressure to respond as ${entry.event} disrupts national services.` });
+        break;
+      }
+    }
+  }
+
+  if (tempDelta > 0.3) {
+    headlines.push({
+      priority: 80,
+      text: `UK Warming Accelerates to ${entry.afterTemp.toFixed(1)}°C — Scientists Sound Alarm`,
+      sub: `Temperature rose ${tempDelta.toFixed(2)}°C this term. ${entry.afterTemp > 2.0 ? 'Paris Agreement threshold now breached.' : 'Tipping point feedbacks may already be activated.'}`,
+    });
+  }
+
+  if (nzDelta >= 20) {
+    headlines.push({
+      priority: 75,
+      text: `Green Revolution: UK Net Zero Progress Surges to ${Math.round(entry.afterNZ)}%`,
+      sub: `Aggressive investment in renewables and grid modernisation drives fastest decarbonisation in a generation.`,
+    });
+  }
+
+  if (socDelta < -15) {
+    headlines.push({
+      priority: 85,
+      text: `Social Fabric Fraying as Transition Costs Hit Hardest-Up Communities`,
+      sub: `Social stability fell ${Math.abs(Math.round(socDelta))} points. ${entry.afterSoc < 40 ? 'Political analysts warn the government may lose its mandate to continue.' : 'Opposition demands emergency support package.'}`,
+    });
+  }
+
+  if (finDelta < -12) {
+    headlines.push({
+      priority: 82,
+      text: `Markets Rattled as Financial Stability Slides to ${Math.round(entry.afterFin)}%`,
+      sub: `Stranded fossil assets and climate event costs cascade through pension funds and regional banks.`,
+    });
+  }
+
+  if (gridDelta < -15) {
+    headlines.push({
+      priority: 78,
+      text: `Grid Crisis Deepens: Reliability Falls to ${Math.round(entry.afterGrid)}%`,
+      sub: `Insufficient backup capacity for the renewable buildout threatens rolling blackouts across England.`,
+    });
+  }
+
+  if (entry.afterGrid >= 85 && gridDelta > 5) {
+    headlines.push({
+      priority: 60,
+      text: `UK Grid Hits ${Math.round(entry.afterGrid)}% Reliability — "Most Resilient in Europe"`,
+      sub: `Storage and nuclear investment creates a stable foundation for the clean energy transition.`,
+    });
+  }
+
+  if (socDelta > 10 && entry.afterSoc >= 70) {
+    headlines.push({
+      priority: 55,
+      text: `Public Confidence Surges as Just Transition Programme Delivers`,
+      sub: `Social stability climbed to ${Math.round(entry.afterSoc)}%. Community investment and retraining schemes win broad public support.`,
+    });
+  }
+
+  if (headlines.length === 0) {
+    if (nzDelta > 0) {
+      headlines.push({
+        priority: 30,
+        text: `Steady Progress: Net Zero at ${Math.round(entry.afterNZ)}% as Policy Holds Course`,
+        sub: `No major shocks this term. Analysts describe the government's approach as "methodical if unspectacular".`,
+      });
+    } else {
+      headlines.push({
+        priority: 30,
+        text: `Mixed Signals as Climate Programme Enters Year ${entry.year + 5}`,
+        sub: `Temperature at ${entry.afterTemp.toFixed(1)}°C. Grid: ${Math.round(entry.afterGrid)}%. The transition continues — but critics say it's too slow.`,
+      });
+    }
+  }
+
+  headlines.sort((a, b) => b.priority - a.priority);
+  const chosen = headlines[0];
+  chosen.paper = NEWSPAPER_NAMES[Math.floor(Math.random() * NEWSPAPER_NAMES.length)];
+  return chosen;
+}
+
+/* ============================================================
+   TURN BREAKDOWN GENERATOR
+============================================================ */
+
+function generateTurnBreakdown(entry) {
+  const rows = [];
+  const snap = entry.snapshot;
+
+  const tempDelta = entry.afterTemp - snap.temperature;
+  if (Math.abs(tempDelta) >= 0.01) {
+    const reasons = [];
+    if (tempDelta > 0.2) reasons.push('gas dependency, tipping point feedback');
+    else if (tempDelta > 0.1) reasons.push('moderate warming from remaining emissions');
+    else reasons.push('residual warming, partially offset by renewables');
+    rows.push({ metric: 'Temp', before: snap.temperature.toFixed(1) + '°C', after: entry.afterTemp.toFixed(1) + '°C', delta: (tempDelta > 0 ? '+' : '') + tempDelta.toFixed(2), bad: tempDelta > 0, reason: reasons.join('; ') });
+  }
+
+  const gridDelta = entry.afterGrid - snap.gridReliability;
+  if (Math.abs(gridDelta) >= 1) {
+    const reasons = [];
+    if (gridDelta > 0) reasons.push('backup capacity improved relative to renewables');
+    else reasons.push('renewable growth outpaced backup storage');
+    if (entry.event && (entry.event.includes('Storm') || entry.event.includes('Grid'))) reasons.push('event damage');
+    rows.push({ metric: 'Grid', before: Math.round(snap.gridReliability) + '%', after: Math.round(entry.afterGrid) + '%', delta: (gridDelta > 0 ? '+' : '') + Math.round(gridDelta), bad: gridDelta < 0, reason: reasons.join('; ') });
+  }
+
+  const finDelta = entry.afterFin - snap.financialStability;
+  if (Math.abs(finDelta) >= 1) {
+    const reasons = [];
+    if (finDelta < 0) reasons.push('stranded asset drag on pension funds');
+    else reasons.push('financial resilience investment, property recovery');
+    if (entry.event && entry.event.includes('Financial')) reasons.push('asset write-down event');
+    rows.push({ metric: 'Financial', before: Math.round(snap.financialStability) + '%', after: Math.round(entry.afterFin) + '%', delta: (finDelta > 0 ? '+' : '') + Math.round(finDelta), bad: finDelta < 0, reason: reasons.join('; ') });
+  }
+
+  const socDelta = entry.afterSoc - snap.socialStability;
+  if (Math.abs(socDelta) >= 1) {
+    const reasons = [];
+    if (socDelta > 0) reasons.push('social investment, community trust');
+    else {
+      reasons.push('transition costs, energy burden');
+      if (entry.afterGrid < 50) reasons.push('grid instability driving public anger');
+    }
+    if (entry.event && (entry.event.includes('Protest') || entry.event.includes('Unrest'))) reasons.push('social unrest event');
+    rows.push({ metric: 'Social', before: Math.round(snap.socialStability) + '%', after: Math.round(entry.afterSoc) + '%', delta: (socDelta > 0 ? '+' : '') + Math.round(socDelta), bad: socDelta < 0, reason: reasons.join('; ') });
+  }
+
+  const nzDelta = entry.afterNZ - snap.netZeroProgress;
+  if (Math.abs(nzDelta) >= 1) {
+    const reasons = [];
+    if (nzDelta > 0) reasons.push('energy transition investment, fossil phase-out');
+    else reasons.push('gas rebound from lack of energy investment');
+    rows.push({ metric: 'Net Zero', before: Math.round(snap.netZeroProgress) + '%', after: Math.round(entry.afterNZ) + '%', delta: (nzDelta > 0 ? '+' : '') + Math.round(nzDelta), bad: nzDelta < 0, reason: reasons.join('; ') });
+  }
+
+  return rows;
+}
+
+/* ============================================================
+   INVESTMENT PREVIEW CALCULATOR
+============================================================ */
+
+function calculateCardPreview(category, engine) {
+  const s = engine.getState();
+  const currentCount = s.currentDecisions[category];
+  if (currentCount >= MAX_BLOCKS_PER_CAT) return null;
+
+  const tempD = { ...s.currentDecisions };
+  tempD[category] = currentCount + 1;
+
+  const origD = s.currentDecisions;
+  engine.state.currentDecisions = tempD;
+  engine.state.spentThisTurn = s.spentThisTurn + BLOCK_COSTS[category];
+  const projected = engine.getProjection();
+  engine.state.currentDecisions = origD;
+  engine.state.spentThisTurn = s.spentThisTurn;
+
+  const current = engine.getProjection();
+
+  if (s.spentThisTurn === 0) {
+    return {
+      grid: projected.gridReliability - s.gridReliability,
+      fin: projected.financialStability - s.financialStability,
+      soc: projected.socialStability - s.socialStability,
+      nz: projected.netZeroProgress - s.netZeroProgress,
+    };
+  }
+
+  return {
+    grid: projected.gridReliability - current.gridReliability,
+    fin: projected.financialStability - current.financialStability,
+    soc: projected.socialStability - current.socialStability,
+    nz: projected.netZeroProgress - current.netZeroProgress,
+  };
+}
+
+/* ============================================================
    UI CLASS
 ============================================================ */
 
@@ -4843,8 +5279,44 @@ class UI {
       card.classList.toggle('allocated',      count > 0 && count < MAX_BLOCKS_PER_CAT);
       card.classList.toggle('maxed',          count >= MAX_BLOCKS_PER_CAT);
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
+
+      this._renderCardPreview(cat, card, canAdd);
     }
     this._renderResearchCard();
+  }
+
+  _renderCardPreview(category, card, canAdd) {
+    let previewEl = card.querySelector('.card-preview');
+    if (!previewEl) {
+      previewEl = document.createElement('div');
+      previewEl.className = 'card-preview';
+      card.appendChild(previewEl);
+    }
+
+    if (!canAdd) {
+      previewEl.innerHTML = '';
+      return;
+    }
+
+    const preview = calculateCardPreview(category, this.engine);
+    if (!preview) {
+      previewEl.innerHTML = '';
+      return;
+    }
+
+    const fmtVal = (v, label) => {
+      if (Math.abs(v) < 1) return `<span class="card-preview-val neutral">—</span>`;
+      const sign = v > 0 ? '+' : '';
+      const cls = v > 0 ? 'pos' : 'neg';
+      return `<span class="card-preview-val ${cls}">${sign}${Math.round(v)}%</span>`;
+    };
+
+    previewEl.innerHTML = `
+      <div class="card-preview-title">Impact of next block</div>
+      <div class="card-preview-row"><span class="card-preview-metric">Grid</span>${fmtVal(preview.grid)}</div>
+      <div class="card-preview-row"><span class="card-preview-metric">Financial</span>${fmtVal(preview.fin)}</div>
+      <div class="card-preview-row"><span class="card-preview-metric">Social</span>${fmtVal(preview.soc)}</div>
+      <div class="card-preview-row"><span class="card-preview-metric">Net Zero</span>${fmtVal(preview.nz)}</div>`;
   }
 
   _renderResearchCard() {
@@ -4995,6 +5467,14 @@ class UI {
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
+    // Newspaper headline
+    const headline = generateHeadline(entry, this.engine.state);
+    html += `<div class="log-headline">
+      <div class="log-headline-paper">${headline.paper}</div>
+      <div class="log-headline-text">${headline.text}</div>
+      <div class="log-headline-sub">${headline.sub}</div>
+    </div>`;
+
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
 
@@ -5011,6 +5491,23 @@ class UI {
     html += this._chip('Soc',  Math.round(entry.snapshot.socialStability), Math.round(entry.afterSoc), false, '%');
     html += this._chip('NZ',   Math.round(entry.snapshot.netZeroProgress), Math.round(entry.afterNZ), false, '%');
     html += '</div>';
+
+    // Turn breakdown
+    const breakdownRows = generateTurnBreakdown(entry);
+    if (breakdownRows.length > 0) {
+      const breakdownId = `breakdown-${entry.turn}`;
+      html += `<div class="log-breakdown">
+        <button class="log-breakdown-toggle" onclick="document.getElementById('${breakdownId}').classList.toggle('expanded');this.textContent=this.textContent.includes('Show')?'Hide breakdown ▲':'Show breakdown ▼'">Show breakdown ▼</button>
+        <div class="log-breakdown-content" id="${breakdownId}">`;
+      for (const row of breakdownRows) {
+        html += `<div class="breakdown-row">
+          <span class="breakdown-metric">${row.metric}</span>
+          <span class="breakdown-arrow">${row.before} → ${row.after} (${row.delta})</span>
+          <span class="breakdown-reason">${row.reason}</span>
+        </div>`;
+      }
+      html += `</div></div>`;
+    }
 
     div.innerHTML = html;
     this.elLogScroll.appendChild(div);
@@ -5724,6 +6221,52 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_international_summit',
+    icon: '🌍',
+    title: 'International Climate Summit',
+    prompt: 'The UK is asked to pledge faster emissions cuts at a global summit. How do you respond?',
+    explanation: 'International leadership on climate builds diplomatic capital and can unlock green trade deals. But committing to faster cuts without the infrastructure to deliver risks credibility — and costs money upfront. A cautious pledge avoids overcommitting but draws criticism from climate allies.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🏆 Pledge aggressive 5-year acceleration',
+      consequence: 'Costs £10bn next turn · +8% Net Zero · −3 Financial (front-loaded transition costs)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '🤝 Reaffirm existing commitments only',
+      consequence: 'No cost · +2 Social Capital (seen as responsible) · no Net Zero acceleration',
+      effect: (s) => { s.socialCapital = Math.min(60, s.socialCapital + 2); },
+    },
+    condition: (s) => s.netZeroProgress < 85,
+  },
+  {
+    id: 'mini_battery_breakthrough',
+    icon: '🔋',
+    title: 'Battery Technology Breakthrough',
+    prompt: 'A UK startup has developed solid-state batteries. How do you capitalise?',
+    explanation: 'Solid-state batteries could revolutionise grid storage — storing more energy in less space, with longer lifespans. Public funding locks in UK manufacturing jobs and supply chains, but costs money. Licensing the technology to private firms costs nothing but sends manufacturing overseas.',
+    contextFn: (s) => ({
+      label: 'Storage',
+      value: `${Math.round(s.energy.storage)}`,
+      note: `Grid: ${Math.round(s.gridReliability)}%`,
+    }),
+    optA: {
+      label: '🏭 Fund UK gigafactory buildout',
+      consequence: 'Costs £8bn next turn · Storage +8 · +4 Social (manufacturing jobs)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.energy.storage = Math.min(100, s.energy.storage + 8); s.socialStability = Math.min(100, s.socialStability + 4); },
+    },
+    optB: {
+      label: '📜 License to international manufacturers',
+      consequence: 'No cost · Storage +3 · +5 Financial (licensing revenue)',
+      effect: (s) => { s.energy.storage = Math.min(100, s.energy.storage + 3); s.financialStability = Math.min(100, s.financialStability + 5); },
+    },
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5761,7 +6304,18 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
-  await _delay(1500);
+
+  // Show headline preview in overlay
+  if (result.logEntry) {
+    const headline = generateHeadline(result.logEntry, engine.state);
+    const headlineEl = overlay.querySelector('#sim-headline');
+    if (headlineEl) {
+      overlay.querySelector('#sim-headline-paper').textContent = headline.paper;
+      overlay.querySelector('#sim-headline-text').textContent = headline.text;
+      setTimeout(() => headlineEl.classList.add('visible'), 200);
+    }
+  }
+  await _delay(2500);
 
   // Dismiss overlay
   overlay.classList.add('sim-fade-out');
@@ -5819,6 +6373,10 @@ function _buildSimOverlay(startYear) {
         <div id="sim-progress-fill" style="width:0%"></div>
       </div>
       <div id="sim-status">Running 5-year policy simulation\u2026</div>
+      <div id="sim-headline">
+        <div id="sim-headline-paper"></div>
+        <div id="sim-headline-text"></div>
+      </div>
     </div>`;
   return d;
 }
