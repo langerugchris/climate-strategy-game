@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -2142,6 +2142,94 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .sparkline-dot, .bar-fill, .bar-ghost { transition: none !important; }
+}
+
+/* ===== RESET ALL BUTTON ===== */
+#reset-alloc-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+}
+#reset-alloc-btn:hover {
+  color: var(--status-danger);
+  border-color: var(--status-danger);
+}
+#reset-alloc-btn.hidden { display: none; }
+
+/* ===== LEGACY DISPLAY ===== */
+#legacy-display {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+#legacy-title-label {
+  color: var(--accent-blue-lt);
+  font-weight: 700;
+  font-size: 12px;
+}
+#legacy-xp-bar {
+  width: 60px;
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 2px;
+  overflow: hidden;
+}
+#legacy-xp-fill {
+  height: 100%;
+  background: var(--accent-blue-lt);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* ===== ACHIEVEMENT HINTS ===== */
+.achievement-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.3;
+  font-style: italic;
+}
+
+/* ===== LOG TURN DETAIL EXPANSION ===== */
+.log-entry { cursor: pointer; }
+.log-entry:hover { background: rgba(83,144,217,0.04); }
+.log-turn-detail {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  display: none;
+}
+.log-turn-detail.expanded { display: block; }
+.log-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+.log-detail-label { color: var(--text-muted); }
+.log-detail-val { font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -2160,6 +2248,11 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <div id="legacy-display">
+      <span id="legacy-title-label"></span>
+      <span id="legacy-level-label"></span>
+      <div id="legacy-xp-bar"><div id="legacy-xp-fill" style="width:0%"></div></div>
+    </div>
   </div>
   <div id="header-right">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -2899,7 +2992,7 @@ body { transition: filter 2s ease; }
 
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
-      <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span> <button id="reset-alloc-btn" class="hidden">Reset all</button></div>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -4018,6 +4111,9 @@ class GameEngine {
     this.state.budget = this.getEffectiveBudget();
     const bonuses = legacySystem.startingBonuses();
     if (bonuses.budgetBonus > 0) this.state.budget += bonuses.budgetBonus;
+    if (bonuses.nuclearUnlocked) {
+      this.state.energy.nuclear = this._clamp(this.state.energy.nuclear + 10, 0, 80);
+    }
   }
 }
 
@@ -4330,6 +4426,26 @@ class UI {
       }
     });
 
+    // Reset all allocations button
+    const resetAllocBtn = document.getElementById('reset-alloc-btn');
+    if (resetAllocBtn) {
+      resetAllocBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const s = this.engine.state;
+        if (s.isResolvingTurn) return;
+        for (const cat of this.categories) {
+          while (s.currentDecisions[cat] > 0) {
+            this.engine.deallocateBlock(cat);
+          }
+        }
+        effectsMgr.haptic('light');
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        this.render(this.engine.getState());
+      });
+    }
+
     // Hook screen → advisor overlay
     // Check for saved game and show continue button
     const hookContinueBtn = document.getElementById('hook-continue-btn');
@@ -4616,8 +4732,47 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderLegacy();
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+  }
+
+  _renderLegacy() {
+    const titleEl = document.getElementById('legacy-title-label');
+    const levelEl = document.getElementById('legacy-level-label');
+    const fillEl  = document.getElementById('legacy-xp-fill');
+    if (!titleEl) return;
+
+    const lvl = legacySystem.level();
+    const title = legacySystem.title();
+    const xp = legacySystem.data.xp;
+
+    titleEl.textContent = title;
+
+    const XP_THRESHOLDS = [0, 150, 350, 600, 900];
+    let currentThreshold = 0;
+    let nextThreshold = 150;
+    for (let i = XP_THRESHOLDS.length - 1; i >= 0; i--) {
+      if (xp >= XP_THRESHOLDS[i]) {
+        currentThreshold = XP_THRESHOLDS[i];
+        nextThreshold = i < XP_THRESHOLDS.length - 1 ? XP_THRESHOLDS[i + 1] : XP_THRESHOLDS[i];
+        break;
+      }
+    }
+
+    const progress = currentThreshold === nextThreshold ? 100
+      : Math.round(((xp - currentThreshold) / (nextThreshold - currentThreshold)) * 100);
+
+    levelEl.textContent = `Lv.${lvl}`;
+    fillEl.style.width = progress + '%';
+
+    const bonuses = legacySystem.startingBonuses();
+    const display = document.getElementById('legacy-display');
+    if (display) {
+      display.title = `${title} (Level ${lvl}) · ${xp} XP · ${legacySystem.data.runs} runs`
+        + (bonuses.budgetBonus > 0 ? ` · +£${bonuses.budgetBonus}bn budget bonus` : '')
+        + (bonuses.nuclearUnlocked ? ' · Nuclear boost unlocked' : '');
+    }
   }
 
   _renderHeader(state) {
@@ -4825,6 +4980,10 @@ class UI {
 
     // Budget status class
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+
+    // Show/hide reset button
+    const resetBtn = document.getElementById('reset-alloc-btn');
+    if (resetBtn) resetBtn.classList.toggle('hidden', spent === 0);
   }
 
   _renderCards(state) {
@@ -4995,8 +5154,8 @@ class UI {
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
-    // Decisions
-    html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+    // Narrative summary
+    html += `<div class="log-text">${this._buildTurnNarrative(entry)}</div>`;
 
     // Event notice
     if (entry.event) {
@@ -5012,7 +5171,27 @@ class UI {
     html += this._chip('NZ',   Math.round(entry.snapshot.netZeroProgress), Math.round(entry.afterNZ), false, '%');
     html += '</div>';
 
+    // Expandable detail section
+    html += `<div class="log-turn-detail">`;
+    html += `<div class="log-detail-row"><span class="log-detail-label">Investments</span></div>`;
+    for (const dec of entry.decisions) {
+      html += `<div class="log-detail-row"><span class="log-detail-val" style="font-size:11px">${dec}</span></div>`;
+    }
+    html += `<div class="log-detail-row" style="margin-top:4px"><span class="log-detail-label">Before → After</span></div>`;
+    html += `<div class="log-detail-row"><span class="log-detail-label">Temperature</span><span class="log-detail-val">${entry.snapshot.temperature.toFixed(1)}°C → ${entry.afterTemp.toFixed(1)}°C</span></div>`;
+    html += `<div class="log-detail-row"><span class="log-detail-label">Grid</span><span class="log-detail-val">${Math.round(entry.snapshot.gridReliability)}% → ${Math.round(entry.afterGrid)}%</span></div>`;
+    html += `<div class="log-detail-row"><span class="log-detail-label">Financial</span><span class="log-detail-val">${Math.round(entry.snapshot.financialStability)}% → ${Math.round(entry.afterFin)}%</span></div>`;
+    html += `<div class="log-detail-row"><span class="log-detail-label">Social</span><span class="log-detail-val">${Math.round(entry.snapshot.socialStability)}% → ${Math.round(entry.afterSoc)}%</span></div>`;
+    html += `<div class="log-detail-row"><span class="log-detail-label">Net Zero</span><span class="log-detail-val">${Math.round(entry.snapshot.netZeroProgress)}% → ${Math.round(entry.afterNZ)}%</span></div>`;
+    html += `</div>`;
+
     div.innerHTML = html;
+
+    div.addEventListener('click', () => {
+      const detail = div.querySelector('.log-turn-detail');
+      if (detail) detail.classList.toggle('expanded');
+    });
+
     this.elLogScroll.appendChild(div);
 
     // Inject advisor briefing for next turn (based on post-turn state)
@@ -5248,15 +5427,31 @@ class UI {
   }
 
   _buildAchievementsDisplay(newlyEarned) {
+    const ACHIEVEMENT_HINTS = {
+      net_zero_pioneer: 'Reach Net Zero faster than expected',
+      steady_hand: 'Keep all metrics above the danger zone',
+      weatherproof: 'Can you avoid all climate events?',
+      paris_compliant: 'Stay below the Paris Agreement threshold',
+      peoples_champion: 'Prioritise social stability above all',
+      fiscal_hawk: 'Keep the financial system rock-solid',
+      grid_master: 'Build a grid that never wavers',
+      researcher: 'Invest heavily in R&D every chance you get',
+      perfect_score: 'Excel across all scoring dimensions',
+      survivor: 'Endure multiple crises without breaking',
+      gas_free: 'Eliminate fossil fuels entirely',
+      hard_mode: 'Win under harsh conditions',
+    };
+
     let html = `<div id="achievements-section"><div id="achievements-title">Achievements (${achievementMgr.unlocked.size}/${ACHIEVEMENTS.length})</div><div class="achievements-grid">`;
     for (const ach of ACHIEVEMENTS) {
       const earned = achievementMgr.isUnlocked(ach.id);
       const isNew = newlyEarned.some(a => a.id === ach.id);
+      const hint = ACHIEVEMENT_HINTS[ach.id] || 'Keep playing to discover';
       html += `<div class="achievement-card ${earned ? 'earned' : ''}${isNew ? ' new' : ''}">
         <div class="achievement-icon">${earned ? ach.icon : '🔒'}</div>
         <div class="achievement-info">
           <div class="achievement-name">${ach.name}</div>
-          <div class="achievement-desc">${earned ? ach.desc : '???'}</div>
+          <div class="${earned ? 'achievement-desc' : 'achievement-hint'}">${earned ? ach.desc : hint}</div>
         </div>
       </div>`;
     }
@@ -5724,6 +5919,75 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_trade_deal',
+    icon: '🌍',
+    title: 'International Climate Pact',
+    prompt: 'The EU offers a green trade deal. It accelerates decarbonisation but requires binding emissions targets that constrain your flexibility.',
+    explanation: 'International cooperation can unlock cheaper clean technology through shared supply chains and trade preferences. However, binding commitments limit future policy flexibility — you may need to cut faster than planned, even if domestic politics makes that painful.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🤝 Sign the binding pact',
+      consequence: '+8% Net Zero progress · −6 Financial (compliance costs) · renewable tech discount next turn',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.financialStability = Math.max(0, s.financialStability - 6); s.energy.wind = Math.min(120, s.energy.wind + 4); s.energy.solar = Math.min(100, s.energy.solar + 3); },
+    },
+    optB: {
+      label: '🏴 Maintain sovereignty',
+      consequence: 'No commitment · +3 Social (popular with base) · miss out on trade benefits',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    condition: (s) => s.netZeroProgress > 30 && s.netZeroProgress < 85,
+  },
+  {
+    id: 'mini_carbon_border',
+    icon: '🏗️',
+    title: 'Carbon Border Adjustment',
+    prompt: 'Trading partners impose carbon tariffs on UK exports. How do you respond?',
+    explanation: 'Carbon border adjustments penalise countries with weaker climate policy. You can accelerate your own carbon pricing to comply and keep export markets — but that raises costs for domestic industry. Alternatively, retaliatory trade measures protect jobs short-term but risk isolation.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Gas share: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '💰 Align UK carbon pricing',
+      consequence: 'Costs £7bn next turn · +5% Net Zero progress · −4 Social (higher energy bills)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.max(0, s.socialStability - 4); s.energy.gas = Math.max(0, s.energy.gas - 3); },
+    },
+    optB: {
+      label: '🛡️ Impose retaliatory tariffs',
+      consequence: 'No direct cost · +4 Social (protects jobs) · −8 Financial (trade disruption)',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 4); s.financialStability = Math.max(0, s.financialStability - 8); },
+    },
+    condition: (s) => s.energy.gas > 15 && s.turn >= 1,
+  },
+  {
+    id: 'mini_climate_refugees',
+    icon: '🏚️',
+    title: 'Climate Migration Pressure',
+    prompt: 'Extreme heat in Southern Europe and North Africa is driving migration to the UK. How do you respond?',
+    explanation: 'Climate migration is increasing globally. Investing in resettlement and integration is expensive but builds social resilience and international goodwill. Tightening borders is politically popular short-term but increases social tension as climate displacement worsens.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🏠 Fund resettlement programmes',
+      consequence: 'Costs £8bn next turn · +5 Social Capital · −3 Social short-term (integration challenges)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.socialCapital = Math.min(60, s.socialCapital + 5); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    optB: {
+      label: '🚧 Tighten border controls',
+      consequence: 'Costs £4bn next turn · +5 Social short-term · −4 Social Capital (international reputation)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.socialStability = Math.min(100, s.socialStability + 5); s.socialCapital = Math.max(0, s.socialCapital - 4); },
+    },
+    condition: (s) => s.temperature > 1.5,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5744,6 +6008,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
+    _setSimStatus(overlay, _getSimNarrative(engine, offset - 1));
     await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
@@ -5804,6 +6069,47 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
+}
+
+function _getSimNarrative(engine, yearOffset) {
+  const s = engine.state;
+  const d = s.currentDecisions;
+  const messages = [];
+
+  if (d.energyTransition > 0) {
+    messages.push('Wind farms coming online across the North Sea\u2026');
+    messages.push('Solar panel installations accelerating nationwide\u2026');
+    messages.push('Gas-fired plants entering managed shutdown\u2026');
+  }
+  if (d.gridAndStorage > 0) {
+    messages.push('Battery storage facilities reaching operational capacity\u2026');
+    messages.push('Smart grid infrastructure being deployed\u2026');
+    messages.push('Nuclear capacity assessments underway\u2026');
+  }
+  if (d.adaptation > 0) {
+    messages.push('Flood defence construction progressing along coastlines\u2026');
+    messages.push('Heat resilience programmes rolling out to vulnerable communities\u2026');
+  }
+  if (d.socialSupport > 0) {
+    messages.push('Just Transition retraining programmes enrolling workers\u2026');
+    messages.push('Community energy cooperatives receiving government backing\u2026');
+  }
+  if (d.financialResilience > 0) {
+    messages.push('Pension funds adjusting fossil fuel exposure\u2026');
+    messages.push('Green bond market expanding with government guarantees\u2026');
+  }
+  if (d.research > 0) {
+    messages.push('Research councils accelerating clean energy breakthroughs\u2026');
+  }
+
+  if (s.temperature > 1.8) messages.push('Climate feedback loops intensifying across the Arctic\u2026');
+  if (s.gridReliability < 50) messages.push('Grid operators managing rolling demand constraints\u2026');
+  if (s.socialStability < 55) messages.push('Public unease growing over transition costs\u2026');
+  if (s.netZeroProgress > 80) messages.push('Net Zero targets within striking distance\u2026');
+
+  if (messages.length === 0) messages.push('Running 5-year policy simulation\u2026');
+
+  return messages[yearOffset % messages.length];
 }
 
 function _buildSimOverlay(startYear) {
