@@ -317,6 +317,139 @@ body {
   border-top: 1px solid var(--border-subtle);
 }
 
+/* ===== TRAJECTORY INDICATOR ===== */
+.trajectory-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 8px 12px;
+  margin-top: var(--gap-md);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  font-size: 11px;
+  color: var(--text-secondary);
+  transition: border-color 0.3s, background 0.3s;
+}
+.trajectory-indicator.on-track {
+  border-color: var(--status-good);
+  background: rgba(0, 200, 83, 0.06);
+}
+.trajectory-indicator.at-risk {
+  border-color: var(--status-warn);
+  background: rgba(255, 214, 0, 0.06);
+}
+.trajectory-indicator.off-track {
+  border-color: var(--status-danger);
+  background: rgba(255, 61, 0, 0.06);
+}
+.trajectory-icon { font-size: 14px; flex-shrink: 0; }
+.trajectory-text { line-height: 1.3; }
+
+/* ===== TECH TREE OVERLAY ===== */
+#tech-tree-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+#tech-tree-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+#tech-tree-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 420px;
+  width: 90vw;
+}
+#tech-tree-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: var(--gap-md);
+  color: var(--text-primary);
+}
+.tech-node {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+  transition: border-color 0.2s, opacity 0.2s;
+}
+.tech-node.purchased {
+  border-color: var(--status-good);
+  background: rgba(0, 200, 83, 0.06);
+}
+.tech-node.next {
+  border-color: var(--accent-blue-lt);
+  background: rgba(83, 144, 217, 0.08);
+}
+.tech-node.locked { opacity: 0.5; }
+.tech-node-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.tech-node-info { flex: 1; }
+.tech-node-name { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.tech-node-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+.tech-node-status { font-size: 10px; font-weight: 600; margin-top: 3px; }
+.tech-node-status.done { color: var(--status-good); }
+.tech-node-status.current { color: var(--accent-blue-lt); }
+.tech-node-status.locked-label { color: var(--text-muted); }
+#tech-tree-close {
+  margin-top: var(--gap-md);
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+}
+#tech-tree-close:hover { background: var(--border-subtle); }
+
+/* ===== ENDGAME TRAJECTORY CHART ===== */
+#endgame-trajectory {
+  margin-top: var(--gap-md);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+#endgame-trajectory-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+.traj-chart-svg {
+  width: 100%;
+  height: 140px;
+}
+.traj-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: var(--gap-sm);
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.traj-legend-item { display: flex; align-items: center; gap: 4px; }
+.traj-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
 #energy-mix-title {
   font-size: 11px;
   font-weight: 700;
@@ -2270,6 +2403,12 @@ body { transition: filter 2s ease; }
         <div class="sparkline-container" id="spark-nz"></div>
       </div>
 
+      <!-- Trajectory Indicator -->
+      <div id="trajectory-indicator" class="trajectory-indicator">
+        <div class="trajectory-icon" id="traj-icon">🎯</div>
+        <div class="trajectory-text" id="traj-text">Assessing trajectory...</div>
+      </div>
+
       <!-- Energy Mix -->
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
@@ -2278,6 +2417,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2435,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2465,6 +2609,7 @@ body { transition: filter 2s ease; }
         <div class="card-effects">
           <span class="effect-tag pos" id="research-effect-tag">Solar blocks give 1.5× Net Zero progress</span>
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
+          <span class="effect-tag info" id="tech-tree-btn" style="cursor:pointer;text-decoration:underline">View Tech Tree →</span>
         </div>
         <div class="card-citation">Based on UKRI Net Zero Innovation portfolio</div>
       </div>
@@ -3080,6 +3225,15 @@ body { transition: filter 2s ease; }
     <button class="mobile-tab" data-panel="log-panel">
       <span class="mobile-tab-icon">📋</span>Log
     </button>
+  </div>
+</div>
+
+<!-- TECH TREE OVERLAY -->
+<div id="tech-tree-overlay">
+  <div id="tech-tree-card">
+    <div id="tech-tree-title">🔬 Research & Development Tree</div>
+    <div id="tech-tree-nodes"></div>
+    <button id="tech-tree-close">Close</button>
   </div>
 </div>
 
@@ -3992,7 +4146,7 @@ class GameEngine {
     }
 
     s.lastEventTurn = s.turn;
-    return { ...selectedEvent, appliedEffects: applied };
+    return { ...selectedEvent, appliedEffects: applied, mitigationPct: mitigate };
   }
 
   _describeDecisions(d) {
@@ -4265,10 +4419,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4447,6 +4603,20 @@ class UI {
       });
     }
 
+    // Tech Tree overlay
+    const techTreeBtn = document.getElementById('tech-tree-btn');
+    const techTreeOverlay = document.getElementById('tech-tree-overlay');
+    const techTreeCloseBtn = document.getElementById('tech-tree-close');
+    if (techTreeBtn) {
+      techTreeBtn.addEventListener('click', (e) => { e.stopPropagation(); this._showTechTree(); });
+    }
+    if (techTreeCloseBtn) {
+      techTreeCloseBtn.addEventListener('click', () => techTreeOverlay.classList.remove('visible'));
+    }
+    if (techTreeOverlay) {
+      techTreeOverlay.addEventListener('click', (e) => { if (e.target === techTreeOverlay) techTreeOverlay.classList.remove('visible'); });
+    }
+
     // Init metric tooltips
     this._initTooltips();
 
@@ -4535,6 +4705,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-trajectory')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -4616,6 +4787,7 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderTrajectory(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
   }
@@ -4801,10 +4973,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4866,6 +5040,130 @@ class UI {
       const doneEl = document.getElementById('research-all-done');
       if (doneEl) doneEl.style.display = 'none';
     }
+  }
+
+  _renderTrajectory(state) {
+    const el = document.getElementById('trajectory-indicator');
+    const icon = document.getElementById('traj-icon');
+    const text = document.getElementById('traj-text');
+    if (!el) return;
+
+    const turnsLeft = 5 - state.turn;
+    const nzRate = state.turn > 0 ? (state.netZeroProgress - 35) / state.turn : 0;
+    const projectedNZ = state.netZeroProgress + nzRate * turnsLeft;
+    const stabilityMin = Math.min(state.gridReliability, state.financialStability, state.socialStability);
+
+    let status, iconStr, msg;
+    if (projectedNZ >= 90 && stabilityMin >= 60 && state.temperature < 1.8) {
+      status = 'on-track';
+      iconStr = '✅';
+      msg = 'On track for Orderly Transition — maintain stability and keep investing in energy transition.';
+    } else if (projectedNZ >= 60 && stabilityMin >= 35 && state.temperature < 2.2) {
+      status = 'at-risk';
+      iconStr = '⚠️';
+      if (stabilityMin < 50) msg = `At risk — ${stabilityMin === state.gridReliability ? 'grid' : stabilityMin === state.financialStability ? 'financial' : 'social'} stability is dangerously low.`;
+      else if (projectedNZ < 80) msg = 'At risk — Net Zero progress needs acceleration. Invest more in energy transition or R&D.';
+      else msg = 'At risk — temperature rising faster than expected. Reduce gas dependency.';
+    } else {
+      status = 'off-track';
+      iconStr = '🚨';
+      if (stabilityMin < 35) msg = 'Off track — system stability critical. Prioritise social support and financial resilience.';
+      else if (state.temperature >= 2.2) msg = 'Off track — temperature exceeding 2°C pathway. Aggressive decarbonisation needed.';
+      else msg = 'Off track — Net Zero target unreachable at current pace. Major policy shift required.';
+    }
+
+    el.className = 'trajectory-indicator ' + status;
+    icon.textContent = iconStr;
+    text.textContent = msg;
+  }
+
+  _showTechTree() {
+    const overlay = document.getElementById('tech-tree-overlay');
+    const container = document.getElementById('tech-tree-nodes');
+    if (!overlay || !container) return;
+
+    const icons = ['☀️', '🔋', '🏘️', '💚', '🤖'];
+    let html = '';
+    RESEARCH_UPGRADES.forEach((upgrade, i) => {
+      const purchased = techTree._purchased.has(upgrade.id);
+      const isNext = !purchased && techTree.nextUpgrade()?.id === upgrade.id;
+      const cls = purchased ? 'purchased' : isNext ? 'next' : 'locked';
+      const statusLabel = purchased ? '✓ Purchased' : isNext ? '→ Next available' : 'Locked';
+      const statusCls = purchased ? 'done' : isNext ? 'current' : 'locked-label';
+      html += `<div class="tech-node ${cls}">
+        <div class="tech-node-icon">${icons[i]}</div>
+        <div class="tech-node-info">
+          <div class="tech-node-name">${upgrade.name}</div>
+          <div class="tech-node-desc">${upgrade.desc}</div>
+          <div class="tech-node-status ${statusCls}">${statusLabel}</div>
+        </div>
+      </div>`;
+    });
+    container.innerHTML = html;
+    overlay.classList.add('visible');
+  }
+
+  _buildTrajectoryChart(state) {
+    const data = turnHistory.data;
+    if (!data || data.length < 2) return '';
+
+    const w = 360, h = 130, padL = 30, padR = 10, padT = 10, padB = 24;
+    const chartW = w - padL - padR;
+    const chartH = h - padT - padB;
+    const n = data.length;
+
+    const series = [
+      { key: 'gridReliability', color: '#4caf81', label: 'Grid' },
+      { key: 'financialStability', color: '#5390d9', label: 'Financial' },
+      { key: 'socialStability', color: '#ffd600', label: 'Social' },
+      { key: 'netZeroProgress', color: '#448aff', label: 'Net Zero' },
+    ];
+
+    const tempSeries = { key: 'temperature', color: '#ff7043', label: 'Temp' };
+
+    let svg = `<svg class="traj-chart-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`;
+
+    // Grid lines
+    for (let pct of [25, 50, 75]) {
+      const y = padT + chartH - (pct / 100) * chartH;
+      svg += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border-subtle)" stroke-width="0.5" stroke-dasharray="3,3"/>`;
+      svg += `<text x="${padL - 4}" y="${y + 3}" text-anchor="end" fill="var(--text-muted)" font-size="8">${pct}%</text>`;
+    }
+
+    // X-axis labels (years)
+    const years = data.map((_, i) => 2025 + i * 5);
+    for (let i = 0; i < n; i++) {
+      const x = padL + (i / Math.max(n - 1, 1)) * chartW;
+      svg += `<text x="${x}" y="${h - 4}" text-anchor="middle" fill="var(--text-muted)" font-size="8">${years[i]}</text>`;
+    }
+
+    // Draw lines for stability metrics (0-100 scale)
+    for (const s of series) {
+      const points = data.map((d, i) => {
+        const x = padL + (i / Math.max(n - 1, 1)) * chartW;
+        const y = padT + chartH - (d[s.key] / 100) * chartH;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+      svg += `<polyline points="${points.join(' ')}" fill="none" stroke="${s.color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+      // End dot
+      const lastPt = points[points.length - 1].split(',');
+      svg += `<circle cx="${lastPt[0]}" cy="${lastPt[1]}" r="3" fill="${s.color}"/>`;
+    }
+
+    svg += `</svg>`;
+
+    // Legend
+    let legend = '<div class="traj-chart-legend">';
+    for (const s of series) {
+      legend += `<div class="traj-legend-item"><div class="traj-legend-dot" style="background:${s.color}"></div>${s.label}</div>`;
+    }
+    legend += '</div>';
+
+    return `<div id="endgame-trajectory">
+      <div id="endgame-trajectory-title">Metric Trajectory 2025–2050</div>
+      ${svg}
+      ${legend}
+    </div>`;
   }
 
   _renderScene(state) {
@@ -5080,6 +5378,13 @@ class UI {
           <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
         </div>`;
     }
+    if (event.mitigationPct && event.mitigationPct > 0) {
+      effectsHtml += `
+        <div class="event-effect-row" style="border-top:1px solid var(--border-subtle);padding-top:6px;margin-top:6px">
+          <span class="event-effect-label" style="color:var(--status-good)">🛡️ Adaptation reduced damage by</span>
+          <span class="event-effect-val" style="color:var(--status-good)">${Math.round(event.mitigationPct * 100)}%</span>
+        </div>`;
+    }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
 
     this.elEventModal.classList.remove('hidden');
@@ -5146,6 +5451,9 @@ class UI {
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
 
+    // Build trajectory chart
+    const trajectoryChartHtml = this._buildTrajectoryChart(s);
+
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
@@ -5165,7 +5473,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', trajectoryChartHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
