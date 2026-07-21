@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -2142,6 +2142,334 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== NEWSPAPER BRIEFING ===== */
+#newspaper-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+#newspaper-card {
+  background: #f5f0e8;
+  color: #1a1a1a;
+  max-width: 520px;
+  width: 92%;
+  border-radius: 3px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  overflow: hidden;
+  font-family: var(--font-editorial);
+  animation: slideUpFade 0.4s ease;
+}
+@keyframes slideUpFade {
+  from { opacity:0; transform: translateY(20px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.newspaper-masthead {
+  text-align: center;
+  padding: 18px 20px 10px;
+  border-bottom: 3px double #333;
+}
+.newspaper-masthead-title {
+  font-size: 26px;
+  font-weight: 700;
+  font-family: var(--font-editorial);
+  color: #1a1a1a;
+  letter-spacing: 0.04em;
+}
+.newspaper-masthead-date {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+  font-family: var(--font-system);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.newspaper-headline {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 16px 20px 8px;
+  color: #111;
+  font-family: var(--font-editorial);
+}
+.newspaper-subhead {
+  font-size: 13px;
+  color: #444;
+  padding: 0 20px 12px;
+  line-height: 1.5;
+  font-family: var(--font-editorial);
+}
+.newspaper-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #ccc;
+  border-top: 1px solid #ccc;
+}
+.newspaper-col {
+  background: #f5f0e8;
+  padding: 12px 14px;
+}
+.newspaper-col-head {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #222;
+  font-family: var(--font-editorial);
+}
+.newspaper-col-body {
+  font-size: 12px;
+  color: #444;
+  line-height: 1.55;
+  font-family: var(--font-editorial);
+}
+.newspaper-ticker {
+  display: flex;
+  gap: 12px;
+  padding: 10px 20px;
+  background: #222;
+  color: #f5f0e8;
+  font-size: 11px;
+  font-family: var(--font-system);
+  overflow: hidden;
+}
+.newspaper-ticker-item {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.newspaper-ticker-item::before {
+  content: '•';
+  margin-right: 6px;
+  color: var(--accent-blue-lt);
+}
+#newspaper-dismiss {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 14px 20px;
+  padding: 12px;
+  background: #1a1a1a;
+  color: #f5f0e8;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-system);
+  transition: background 0.15s;
+}
+#newspaper-dismiss:hover { background: #333; }
+
+/* ===== INTERNATIONAL CONTEXT (in metrics panel) ===== */
+.intl-section {
+  margin-top: var(--gap-sm);
+  padding-top: var(--gap-sm);
+  border-top: 1px solid var(--border-subtle);
+}
+.intl-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-xs);
+}
+.intl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 11px;
+}
+.intl-country {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+.intl-country-flag { font-size: 13px; }
+.intl-country-name { font-size: 11px; }
+.intl-val {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+}
+.intl-val.ahead { color: var(--status-good); }
+.intl-val.behind { color: var(--status-danger); }
+.intl-val.even { color: var(--text-muted); }
+
+/* ===== ELECTION MECHANIC ===== */
+#election-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 3500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+#election-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  max-width: 480px;
+  width: 92%;
+  padding: 24px;
+  text-align: center;
+  animation: slideUpFade 0.4s ease;
+}
+.election-icon { font-size: 48px; margin-bottom: 12px; }
+.election-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.election-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.election-result-box {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.election-result-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.election-result-text {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.election-result-text.landslide { color: var(--status-good); }
+.election-result-text.majority  { color: var(--accent-blue-lt); }
+.election-result-text.slim      { color: var(--status-warn); }
+.election-result-text.defeat    { color: var(--status-danger); }
+.election-effects {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.election-effect-tile {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  text-align: center;
+}
+.election-effect-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.election-effect-val {
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.election-effect-val.bonus { color: var(--status-good); }
+.election-effect-val.penalty { color: var(--status-danger); }
+#election-dismiss {
+  padding: 12px 24px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+}
+#election-dismiss:hover { background: var(--accent-blue-lt); }
+
+/* ===== TECH TREE CHOOSER ===== */
+#tech-chooser-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 3200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+#tech-chooser-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  max-width: 520px;
+  width: 92%;
+  padding: 24px;
+  animation: slideUpFade 0.4s ease;
+}
+.tech-chooser-title {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.tech-chooser-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 16px;
+}
+.tech-option {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.tech-option:hover {
+  border-color: var(--accent-blue-lt);
+  background: var(--bg-elevated);
+}
+.tech-option-name {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.tech-option-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.tech-option-icon {
+  font-size: 20px;
+  float: left;
+  margin-right: 10px;
+  margin-top: 2px;
+}
+.tech-purchased-list {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+}
+.tech-purchased-item {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 2px 0;
+}
+.tech-purchased-item::before {
+  content: '✓ ';
+  color: var(--status-good);
+}
 </style>
 </head>
 <body>
@@ -2297,6 +2625,12 @@ body { transition: filter 2s ease; }
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
         </div>
+      </div>
+
+      <!-- International Context -->
+      <div id="intl-context" class="intl-section">
+        <div class="intl-title">Global Context</div>
+        <div id="intl-rows"></div>
       </div>
 
     </div>
@@ -3167,6 +3501,32 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '🏜️',
+    title: 'Severe Drought — South-East England',
+    description: 'Three consecutive months without significant rainfall. Reservoirs at 30% capacity. Water rationing imposed across Greater London and the Home Counties.',
+    story: 'Thames Water declared a Level 4 drought emergency for the first time. Eleanor Chase, a nursery manager in Guildford, said her staff had been rationing drinking water since Tuesday. "The children don\'t understand why the taps don\'t work."',
+    effects: { socialStability: -10, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'SUPPLY_CHAIN', type: 'SUPPLY', severity: 'MODERATE', icon: '🚢',
+    title: 'Global Supply Chain Disruption',
+    description: 'Extreme weather events in Asia disrupt critical supply chains for solar panels and battery components. UK clean energy targets face delays.',
+    story: 'Siemens Gamesa confirmed that typhoon damage to their Taiwanese semiconductor partner had delayed 2GW of offshore wind turbine deliveries by 18 months. The Energy Secretary called it "a wake-up call for domestic manufacturing."',
+    effects: { financialStability: -8 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'GREEN_INNOVATION', type: 'POSITIVE', severity: 'MODERATE', icon: '💡',
+    title: 'Green Innovation Boom',
+    description: 'UK clean tech startups attract record investment. Battery manufacturing and hydrogen fuel cells drive new exports.',
+    story: 'Cambridge-based Nexeon reported a breakthrough in silicon anode battery technology, attracting £800m in Series D funding. The company pledged 3,000 new jobs in the North East.',
+    effects: { financialStability: 8, socialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.netZeroProgress > 50 && s.infrastructure.energyTransition > 30,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3581,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'landslide_win', icon: '🗳️', name: 'People\'s Mandate', desc: 'Win a landslide election victory', check: (s) => s.socialStability >= 75 && s.financialStability >= 65 },
+  { id: 'global_leader', icon: '🌐', name: 'Global Leader', desc: 'Finish ahead of all other nations in Net Zero progress', check: (s) => s.netZeroProgress >= 80 },
 ];
 
 class AchievementManager {
@@ -3654,7 +4016,7 @@ class GameEngine {
     const gs = d.gridAndStorage;
     if (gs > 0) {
       e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
+      e.nuclear = clamp(e.nuclear + gs * 5 + gs * techTree.multipliers.nuclearBonus, 0, 80);
       infra.gridAndStorage += gs * 35;
     }
     const ad = d.adaptation;
@@ -3813,7 +4175,7 @@ class GameEngine {
     const gs = d.gridAndStorage;
     if (gs > 0) {
       s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
+      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5 + gs * techTree.multipliers.nuclearBonus, 0, 80);
       s.infrastructure.gridAndStorage += gs * 35;
     }
 
@@ -3842,10 +4204,15 @@ class GameEngine {
       s.infrastructure.financialResilience += fr * 30;
     }
 
-    // Research — purchases next TechTree upgrade per block allocated
+    // Research — queues tech tree choices per block allocated
     const rs = d.research;
     for (let i = 0; i < rs; i++) {
       techTree.purchase();
+    }
+
+    // CCS passive bonus from tech tree
+    if (techTree.multipliers.ccsBonus > 0) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + techTree.multipliers.ccsBonus, 0, 100);
     }
   }
 
@@ -3920,37 +4287,45 @@ class GameEngine {
     if (Math.random() >= prob) return null;
 
     // Build weighted pool based on temperature
+    const byId = (id) => RANDOM_EVENTS.find(e => e.id === id);
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: byId('FINANCIAL_SHOCK'), w: 25 },
+        { e: byId('STORM'), w: 20 },
+        { e: byId('FLOOD_MINOR'), w: 20 },
+        { e: byId('HEATWAVE_MOD'), w: 10 },
+        { e: byId('SOCIAL_UNREST'), w: 10 },
+        { e: byId('SUPPLY_CHAIN'), w: 10 },
+        { e: byId('GREEN_INNOVATION'), w: 5 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: byId('FLOOD_MINOR'), w: 15 },
+        { e: byId('FLOOD_MAJOR'), w: 10 },
+        { e: byId('HEATWAVE_MOD'), w: 18 },
+        { e: byId('STORM'), w: 15 },
+        { e: byId('SOCIAL_UNREST'), w: 12 },
+        { e: byId('FINANCIAL_SHOCK'), w: 10 },
+        { e: byId('DROUGHT'), w: 10 },
+        { e: byId('SUPPLY_CHAIN'), w: 5 },
+        { e: byId('GREEN_INNOVATION'), w: 5 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: byId('FLOOD_MAJOR'), w: 18 },
+        { e: byId('HEATWAVE_MAJOR'), w: 18 },
+        { e: byId('STORM'), w: 15 },
+        { e: byId('GRID_FAILURE'), w: 13 },
+        { e: byId('SOCIAL_UNREST'), w: 12 },
+        { e: byId('FINANCIAL_SHOCK'), w: 10 },
+        { e: byId('DROUGHT'), w: 10 },
+        { e: byId('SUPPLY_CHAIN'), w: 4 },
       ];
     }
 
-    // Filter conditional events
-    pool = pool.filter(item => !item.e.condition || item.e.condition(s));
+    // Filter null entries and conditional events
+    pool = pool.filter(item => item.e && (!item.e.condition || item.e.condition(s)));
     if (pool.length === 0) return null;
 
     // Weighted random selection
@@ -4505,6 +4880,8 @@ class UI {
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
+        intlTracker.reset();
+        newspaperSys.reset();
         this._lastLogLength = 0;
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4613,6 +4990,7 @@ class UI {
     this._renderProjection(state);
     this._renderSparklines(state);
     this._renderEnergyMix(state);
+    this._renderIntlContext(state);
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
@@ -4807,6 +5185,20 @@ class UI {
     this.elLegGas.textContent     = Math.round(e.gas);
   }
 
+  _renderIntlContext(state) {
+    const container = document.getElementById('intl-rows');
+    if (!container) return;
+    const data = intlTracker.getComparison(state.netZeroProgress);
+    container.innerHTML = data.map(c => {
+      const cls = c.diff > 5 ? 'ahead' : c.diff < -5 ? 'behind' : 'even';
+      const sign = c.diff > 0 ? '+' : '';
+      return `<div class="intl-row">
+        <span class="intl-country"><span class="intl-country-flag">${c.flag}</span><span class="intl-country-name">${c.name}</span></span>
+        <span class="intl-val ${cls}">${c.nz}% NZ <small>(${sign}${c.diff})</small></span>
+      </div>`;
+    }).join('');
+  }
+
   _renderBudget(state) {
     const rem   = state.budget - state.spentThisTurn;
     const spent = state.spentThisTurn;
@@ -4848,9 +5240,9 @@ class UI {
   }
 
   _renderResearchCard() {
-    const nextUpgrade = techTree.nextUpgrade();
+    const available = techTree.availableUpgrades();
     const plusBtn = document.getElementById('plus-research');
-    if (!nextUpgrade || techTree.isComplete()) {
+    if (available.length === 0 || techTree.isComplete()) {
       const nameEl = document.getElementById('research-upgrade-name');
       if (nameEl) nameEl.textContent = 'All upgrades purchased';
       const tagEl = document.getElementById('research-effect-tag');
@@ -4860,9 +5252,9 @@ class UI {
       if (plusBtn) plusBtn.disabled = true;
     } else {
       const nameEl = document.getElementById('research-upgrade-name');
-      if (nameEl) nameEl.textContent = nextUpgrade.name;
+      if (nameEl) nameEl.textContent = `${available.length} upgrade${available.length > 1 ? 's' : ''} available`;
       const tagEl = document.getElementById('research-effect-tag');
-      if (tagEl) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
+      if (tagEl) { tagEl.textContent = `Choose after investing (${techTree._purchased.size}/${RESEARCH_UPGRADES.length} unlocked)`; tagEl.style.display = ''; }
       const doneEl = document.getElementById('research-all-done');
       if (doneEl) doneEl.style.display = 'none';
     }
@@ -5494,33 +5886,59 @@ class EffectsManager {
 const RESEARCH_UPGRADES = [
   {
     id:   'solar_supply_chain',
+    icon: '☀️',
     name: 'Solar Supply Chain',
     desc: 'Energy blocks give 1.5× Net Zero progress',
+    tier: 1,
     apply(m) { m.energyNZ = 1.5; },
   },
   {
     id:   'battery_density',
+    icon: '🔋',
     name: 'Battery Energy Density',
     desc: 'Grid blocks give 1.4× Storage per block',
+    tier: 1,
     apply(m) { m.gridStorage = 1.4; },
   },
   {
     id:   'community_networks',
+    icon: '🏘️',
     name: 'Community Resilience Hubs',
     desc: 'Social Support blocks give 1.5× Social Stability',
+    tier: 2,
     apply(m) { m.socialGain = 1.5; },
   },
   {
     id:   'green_finance_regs',
+    icon: '📊',
     name: 'Green Finance Regulations',
     desc: 'Financial Resilience blocks give 1.5× Stability gain',
+    tier: 2,
     apply(m) { m.finGain = 1.5; },
   },
   {
     id:   'ai_flood_prediction',
+    icon: '🛰️',
     name: 'AI Flood Prediction',
     desc: 'Adaptation blocks give 1.6× event damage mitigation',
+    tier: 2,
     apply(m) { m.adaptMitigate = 1.6; },
+  },
+  {
+    id:   'modular_nuclear',
+    icon: '⚛️',
+    name: 'Small Modular Reactors',
+    desc: 'Grid blocks give +3 additional Nuclear capacity',
+    tier: 3,
+    apply(m) { m.nuclearBonus = 3; },
+  },
+  {
+    id:   'carbon_capture',
+    icon: '🧪',
+    name: 'Carbon Capture & Storage',
+    desc: '+5 Net Zero progress per turn automatically',
+    tier: 3,
+    apply(m) { m.ccsBonus = 5; },
   },
 ];
 
@@ -5532,20 +5950,34 @@ class TechTreeManager {
       socialGain:    1.0,
       finGain:       1.0,
       adaptMitigate: 1.0,
+      nuclearBonus:  0,
+      ccsBonus:      0,
     };
     this._purchased = new Set();
+    this._pendingChoices = 0;
+  }
+
+  availableUpgrades() {
+    const maxTier = this._purchased.size < 2 ? 1 : this._purchased.size < 5 ? 2 : 3;
+    return RESEARCH_UPGRADES.filter(u => !this._purchased.has(u.id) && u.tier <= maxTier);
   }
 
   nextUpgrade() {
-    return RESEARCH_UPGRADES.find(u => !this._purchased.has(u.id)) || null;
+    const avail = this.availableUpgrades();
+    return avail.length > 0 ? avail[0] : null;
+  }
+
+  purchaseById(id) {
+    const upgrade = RESEARCH_UPGRADES.find(u => u.id === id);
+    if (!upgrade || this._purchased.has(id)) return null;
+    upgrade.apply(this.multipliers);
+    this._purchased.add(id);
+    return upgrade;
   }
 
   purchase() {
-    const upgrade = this.nextUpgrade();
-    if (!upgrade) return null;
-    upgrade.apply(this.multipliers);
-    this._purchased.add(upgrade.id);
-    return upgrade;
+    this._pendingChoices++;
+    return null;
   }
 
   isComplete() {
@@ -5553,8 +5985,240 @@ class TechTreeManager {
   }
 
   reset() {
-    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0, nuclearBonus:0, ccsBonus:0 };
     this._purchased.clear();
+    this._pendingChoices = 0;
+  }
+}
+
+/* ============================================================
+   MODULE: INTERNATIONAL CONTEXT
+============================================================ */
+
+const INTL_COUNTRIES = [
+  { flag: '🇪🇺', name: 'EU', baseNZ: 30,  pace: 11, volatility: 4 },
+  { flag: '🇺🇸', name: 'USA', baseNZ: 22, pace: 9,  volatility: 7 },
+  { flag: '🇨🇳', name: 'China', baseNZ: 18, pace: 13, volatility: 5 },
+  { flag: '🇮🇳', name: 'India', baseNZ: 10, pace: 8,  volatility: 3 },
+];
+
+class InternationalTracker {
+  constructor() {
+    this._progress = {};
+    this.reset();
+  }
+
+  reset() {
+    this._progress = {};
+    for (const c of INTL_COUNTRIES) {
+      this._progress[c.name] = c.baseNZ;
+    }
+  }
+
+  advanceTurn() {
+    for (const c of INTL_COUNTRIES) {
+      const delta = c.pace + (Math.random() * c.volatility * 2 - c.volatility);
+      this._progress[c.name] = Math.min(100, Math.max(0, this._progress[c.name] + delta));
+    }
+  }
+
+  getComparison(ukNZ) {
+    return INTL_COUNTRIES.map(c => ({
+      flag: c.flag,
+      name: c.name,
+      nz: Math.round(this._progress[c.name]),
+      diff: Math.round(ukNZ - this._progress[c.name]),
+    }));
+  }
+}
+
+/* ============================================================
+   MODULE: ELECTION SYSTEM
+============================================================ */
+
+class ElectionSystem {
+  evaluateElection(state) {
+    const soc = state.socialStability;
+    const nz = state.netZeroProgress;
+    const fin = state.financialStability;
+    const score = soc * 0.5 + fin * 0.25 + (nz > 60 ? 15 : nz > 40 ? 8 : 0) + state.socialCapital * 0.3;
+
+    if (score >= 70) {
+      return {
+        result: 'landslide',
+        icon: '🏛️',
+        title: 'Landslide Victory',
+        subtitle: 'Your government wins a commanding majority. The public backs your climate agenda.',
+        budgetBonus: 15,
+        socialBonus: 5,
+        text: 'Strong mandate renewed — £15bn budget bonus next term',
+      };
+    } else if (score >= 50) {
+      return {
+        result: 'majority',
+        icon: '🗳️',
+        title: 'Comfortable Majority',
+        subtitle: 'Your government is returned with a working majority. The mandate continues.',
+        budgetBonus: 5,
+        socialBonus: 0,
+        text: 'Mandate confirmed — £5bn budget bonus next term',
+      };
+    } else if (score >= 35) {
+      return {
+        result: 'slim',
+        icon: '⚖️',
+        title: 'Slim Majority',
+        subtitle: 'Your government scrapes through. Every vote in parliament will be a battle.',
+        budgetBonus: -10,
+        socialBonus: -3,
+        text: 'Weak mandate — £10bn budget cut, −3 Social Stability',
+      };
+    } else {
+      return {
+        result: 'defeat',
+        icon: '📉',
+        title: 'Electoral Defeat',
+        subtitle: 'The opposition wins power. Your successor inherits your climate mess — and limited patience.',
+        budgetBonus: -20,
+        socialBonus: -8,
+        text: 'Government falls — £20bn budget cut, −8 Social Stability',
+      };
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: NEWSPAPER BRIEFING SYSTEM
+============================================================ */
+
+const NEWSPAPER_HEADLINES = {
+  energy_boom: {
+    headline: 'Britain\'s Green Energy Revolution Accelerates',
+    subhead: 'Offshore wind capacity surges as new turbine farms come online across the North Sea.',
+    condition: (s) => s.infrastructure.energyTransition > 40 && s.energy.wind > 50,
+  },
+  grid_crisis: {
+    headline: 'Rolling Blackouts Hit Major Cities',
+    subhead: 'National Grid warns of "systemic fragility" as backup capacity falls below safe levels.',
+    condition: (s) => s.gridReliability < 40,
+  },
+  nz_milestone: {
+    headline: 'Net Zero Target Within Reach, Say Climate Advisors',
+    subhead: `Progress at ${0}% — the Climate Change Committee says the 2050 target is achievable if momentum holds.`,
+    condition: (s) => s.netZeroProgress >= 75 && s.netZeroProgress < 100,
+    dynamic: (s) => ({ subhead: `Progress at ${Math.round(s.netZeroProgress)}% — the Climate Change Committee says the 2050 target is achievable if momentum holds.` }),
+  },
+  nz_achieved: {
+    headline: 'NET ZERO ACHIEVED: Britain Meets Historic Climate Target',
+    subhead: 'The UK becomes one of the first major economies to reach net zero emissions.',
+    condition: (s) => s.netZeroProgress >= 100,
+  },
+  social_anger: {
+    headline: '"We Can\'t Afford This": Fuel Poverty Families Speak Out',
+    subhead: 'Energy bills and job losses are fuelling a backlash against the transition in former industrial heartlands.',
+    condition: (s) => s.socialStability < 45,
+  },
+  finance_warning: {
+    headline: 'Bank of England Issues Climate Stress Warning',
+    subhead: 'Stranded fossil assets threaten pension fund solvency. Regulators demand action.',
+    condition: (s) => s.financialStability < 45 || s.strandedAssets > 45,
+  },
+  temp_tipping: {
+    headline: 'Scientists Warn: 1.5°C Threshold Breached',
+    subhead: 'Climate tipping points are now in play. Permafrost methane and Arctic ice loss are accelerating warming.',
+    condition: (s) => s.temperature > 1.5 && s.temperature < 2.0,
+  },
+  temp_danger: {
+    headline: '2°C Barrier Broken — "Uncharted Territory"',
+    subhead: 'The Paris Agreement\'s danger threshold has been crossed. Physical climate risks are now severe and irreversible.',
+    condition: (s) => s.temperature >= 2.0,
+  },
+  property_boom: {
+    headline: 'Green Infrastructure Drives Property Market Revival',
+    subhead: 'Flood defences and adaptation investment are restoring confidence in coastal and urban property markets.',
+    condition: (s) => s.infrastructure.adaptation > 40 && s.propertyValue > 90,
+  },
+  research_breakthrough: {
+    headline: 'UK Research Labs Announce Major Climate Breakthrough',
+    subhead: 'Government-funded R&D programme delivers a breakthrough that could reshape the transition.',
+    condition: (s, tt) => tt._purchased.size >= 4,
+  },
+  gas_phaseout: {
+    headline: 'Last Gas Power Station Set to Close',
+    subhead: 'The UK\'s fossil fuel era draws to a close as the final gas-fired plant is decommissioned.',
+    condition: (s) => s.energy.gas <= 5,
+  },
+  balanced_success: {
+    headline: 'UK Named Global Leader in Just Transition',
+    subhead: 'International observers praise Britain\'s balance of climate ambition with social protection.',
+    condition: (s) => s.socialStability > 70 && s.financialStability > 70 && s.netZeroProgress > 60,
+  },
+};
+
+class NewspaperSystem {
+  constructor() {
+    this._shown = new Set();
+  }
+
+  reset() { this._shown.clear(); }
+
+  generateBriefing(state, techTree) {
+    const year = state.year;
+
+    let main = null;
+    const candidates = Object.entries(NEWSPAPER_HEADLINES)
+      .filter(([id, h]) => !this._shown.has(id) && h.condition(state, techTree));
+
+    if (candidates.length > 0) {
+      const [id, h] = candidates[Math.floor(Math.random() * candidates.length)];
+      const dynamic = h.dynamic ? h.dynamic(state) : {};
+      main = { headline: dynamic.headline || h.headline, subhead: dynamic.subhead || h.subhead };
+      this._shown.add(id);
+    } else {
+      main = this._fallbackHeadline(state);
+    }
+
+    const columns = this._generateColumns(state);
+    const ticker = this._generateTicker(state);
+
+    return { year, main, columns, ticker };
+  }
+
+  _fallbackHeadline(state) {
+    if (state.netZeroProgress > 60) {
+      return { headline: 'Climate Programme Continues Steady Progress', subhead: `Net Zero progress stands at ${Math.round(state.netZeroProgress)}%. The government insists the 2050 target remains on track.` };
+    }
+    return { headline: `Government Faces Climate Crossroads in ${state.year}`, subhead: 'The next five years will be critical for Britain\'s Net Zero ambition.' };
+  }
+
+  _generateColumns(state) {
+    const left = { head: 'Energy & Grid', body: '' };
+    const right = { head: 'Economy & Society', body: '' };
+
+    const total = state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas;
+    const renewPct = total > 0 ? Math.round(((state.energy.wind + state.energy.solar) / total) * 100) : 0;
+
+    left.body = `Renewables now supply ${renewPct}% of UK electricity. `;
+    if (state.gridReliability > 70) left.body += 'Grid reliability remains strong.';
+    else if (state.gridReliability > 45) left.body += 'Grid stability is under pressure as the energy mix shifts.';
+    else left.body += 'Grid failures are straining public patience and industrial output.';
+
+    right.body = `Social stability stands at ${Math.round(state.socialStability)}%. `;
+    if (state.financialStability > 65) right.body += 'Financial markets remain confident in the transition.';
+    else if (state.financialStability > 40) right.body += 'Financial markets are pricing in transition risk.';
+    else right.body += 'Pension funds and banks are under severe climate stress.';
+
+    return [left, right];
+  }
+
+  _generateTicker(state) {
+    const items = [];
+    items.push(`UK Temperature: ${state.temperature.toFixed(1)}°C`);
+    items.push(`Net Zero: ${Math.round(state.netZeroProgress)}%`);
+    if (state.strandedAssets > 20) items.push(`Stranded Assets: ${Math.round(state.strandedAssets)}`);
+    if (state.energy.storage > 20) items.push(`Storage Capacity: ${Math.round(state.energy.storage)}`);
+    items.push(`Budget: £${Math.round(state.budget)}bn`);
+    return items;
   }
 }
 
@@ -5735,6 +6399,9 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
 
+  // Advance international tracker
+  intlTracker.advanceTurn();
+
   // Build and mount overlay
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
@@ -5768,9 +6435,38 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   await _delay(500);
   overlay.remove();
 
+  // Recompute derived metrics after mini-event mutations
+  engine._recalcGrid();
+  engine._recalcFinancial();
+  engine._recalcSocial();
+
   // Recalculate next-turn budget to include any mini-event penalties
-  // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
   engine.state.budget = engine.getEffectiveBudget();
+
+  // Show tech tree chooser if pending
+  while (techTree._pendingChoices > 0 && !techTree.isComplete()) {
+    techTree._pendingChoices--;
+    const chosen = await _showTechChooser(techTree);
+    if (chosen) {
+      techTree.purchaseById(chosen);
+    }
+  }
+  techTree._pendingChoices = 0;
+
+  // Show newspaper briefing (not on game-ending turns)
+  if (!result.endgame) {
+    const briefing = newspaperSys.generateBriefing(engine.state, techTree);
+    await _showNewspaper(briefing);
+  }
+
+  // Election mechanic — fires after turns 2 and 4 (mid-term and final)
+  if (!result.endgame && (engine.state.turn === 2 || engine.state.turn === 4)) {
+    const electionResult = electionSys.evaluateElection(engine.state);
+    engine.state.budget = Math.max(20, engine.state.budget + electionResult.budgetBonus);
+    engine.state.socialStability = Math.max(0, Math.min(100, engine.state.socialStability + electionResult.socialBonus));
+    engine._recalcSocial();
+    await _showElection(electionResult);
+  }
 
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
@@ -5779,7 +6475,6 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   ui._addLogEntry(result.logEntry);
 
   if (result.endgame) {
-    // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
     if (result.event) {
@@ -5795,12 +6490,10 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     fxMgr.shake();
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, [...techTree._purchased], ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
   } else {
-    // Auto-save mid-game progress
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, [...techTree._purchased], ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
@@ -5886,6 +6579,106 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+function _showNewspaper(briefing) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.id = 'newspaper-overlay';
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const month = monthNames[Math.floor(Math.random() * 12)];
+    overlay.innerHTML = `
+      <div id="newspaper-card">
+        <div class="newspaper-masthead">
+          <div class="newspaper-masthead-title">The Climate Gazette</div>
+          <div class="newspaper-masthead-date">${month} ${briefing.year} · Special Edition</div>
+        </div>
+        <div class="newspaper-headline">${briefing.main.headline}</div>
+        <div class="newspaper-subhead">${briefing.main.subhead}</div>
+        <div class="newspaper-columns">
+          ${briefing.columns.map(c => `<div class="newspaper-col"><div class="newspaper-col-head">${c.head}</div><div class="newspaper-col-body">${c.body}</div></div>`).join('')}
+        </div>
+        <div class="newspaper-ticker">
+          ${briefing.ticker.map(t => `<span class="newspaper-ticker-item">${t}</span>`).join('')}
+        </div>
+        <button id="newspaper-dismiss">Continue →</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#newspaper-dismiss').addEventListener('click', () => {
+      overlay.classList.add('sim-fade-out');
+      setTimeout(() => { overlay.remove(); resolve(); }, 300);
+    }, { once: true });
+  });
+}
+
+function _showElection(result) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.id = 'election-overlay';
+    overlay.innerHTML = `
+      <div id="election-card">
+        <div class="election-icon">${result.icon}</div>
+        <div class="election-title">${result.title}</div>
+        <div class="election-subtitle">${result.subtitle}</div>
+        <div class="election-result-box">
+          <div class="election-result-label">Election Outcome</div>
+          <div class="election-result-text ${result.result}">${result.text}</div>
+        </div>
+        <div class="election-effects">
+          <div class="election-effect-tile">
+            <div class="election-effect-label">Budget Impact</div>
+            <div class="election-effect-val ${result.budgetBonus >= 0 ? 'bonus' : 'penalty'}">${result.budgetBonus >= 0 ? '+' : ''}£${result.budgetBonus}bn</div>
+          </div>
+          <div class="election-effect-tile">
+            <div class="election-effect-label">Social Impact</div>
+            <div class="election-effect-val ${result.socialBonus >= 0 ? 'bonus' : 'penalty'}">${result.socialBonus >= 0 ? '+' : ''}${result.socialBonus}%</div>
+          </div>
+        </div>
+        <button id="election-dismiss">Accept Result →</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#election-dismiss').addEventListener('click', () => {
+      overlay.classList.add('sim-fade-out');
+      setTimeout(() => { overlay.remove(); resolve(); }, 300);
+    }, { once: true });
+  });
+}
+
+function _showTechChooser(tree) {
+  return new Promise(resolve => {
+    const available = tree.availableUpgrades();
+    if (available.length === 0) { resolve(null); return; }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'tech-chooser-overlay';
+
+    const purchasedHtml = [...tree._purchased].map(id => {
+      const u = RESEARCH_UPGRADES.find(r => r.id === id);
+      return u ? `<div class="tech-purchased-item">${u.name} — ${u.desc}</div>` : '';
+    }).join('');
+
+    overlay.innerHTML = `
+      <div id="tech-chooser-card">
+        <div class="tech-chooser-title">🔬 Research Breakthrough</div>
+        <div class="tech-chooser-subtitle">Your R&D programme has produced results. Choose a technology to develop:</div>
+        ${available.map(u => `
+          <div class="tech-option" data-tech-id="${u.id}">
+            <span class="tech-option-icon">${u.icon}</span>
+            <div class="tech-option-name">${u.name}</div>
+            <div class="tech-option-desc">${u.desc}</div>
+          </div>`).join('')}
+        ${purchasedHtml ? `<div class="tech-purchased-list">${purchasedHtml}</div>` : ''}
+      </div>`;
+    document.body.appendChild(overlay);
+
+    overlay.querySelectorAll('.tech-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const id = opt.dataset.techId;
+        overlay.classList.add('sim-fade-out');
+        setTimeout(() => { overlay.remove(); resolve(id); }, 300);
+      }, { once: true });
+    });
+  });
+}
+
 /* ============================================================
    MODULE: LEGACY SYSTEM
 ============================================================ */
@@ -5955,6 +6748,9 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const intlTracker  = new InternationalTracker();
+const electionSys  = new ElectionSystem();
+const newspaperSys = new NewspaperSystem();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
