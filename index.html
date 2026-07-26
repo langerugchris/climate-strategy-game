@@ -547,6 +547,16 @@ body {
 .effect-tag.pos  { background: #0c2a1a; color: var(--status-good); }
 .effect-tag.neg  { background: #2a0e08; color: #ff7043; }
 .effect-tag.warn { background: #2a2000; color: var(--status-warn); }
+.effect-tag.synergy { background: #1a1040; color: #b388ff; }
+
+.synergy-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+  min-height: 0;
+}
+.synergy-row:empty { display: none; }
 
 /* ===== CARD RATIONALE ===== */
 .card-rationale {
@@ -726,6 +736,14 @@ body {
   max-width: 480px;
   width: 90vw;
   animation: slideUp 0.3s ease;
+}
+
+#event-modal.positive #event-card {
+  border-color: var(--status-good);
+}
+
+#event-modal.positive #event-title-display {
+  color: var(--status-good);
 }
 
 @keyframes slideUp {
@@ -2270,6 +2288,17 @@ body { transition: filter 2s ease; }
         <div class="sparkline-container" id="spark-nz"></div>
       </div>
 
+      <!-- Carbon Budget -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🏭 Carbon Budget</span>
+          <span class="metric-value"><span id="val-cb">100</span>% <span class="metric-delta" id="delta-cb"></span></span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill info" id="bar-cb" style="width:100%"></div>
+        </div>
+      </div>
+
       <!-- Energy Mix -->
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
@@ -2339,6 +2368,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag neg">Gas −7, Stranded +12</span>
           <span class="effect-tag warn">Grid risk if no Storage</span>
         </div>
+        <div class="synergy-row" id="synergy-energyTransition"></div>
         <div class="card-citation">Based on CCC Sixth Carbon Budget renewable build rates</div>
       </div>
 
@@ -2365,6 +2395,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Grid Reliability ↑</span>
           <span class="effect-tag pos">Enables high renewables</span>
         </div>
+        <div class="synergy-row" id="synergy-gridAndStorage"></div>
         <div class="card-citation">Based on National Grid ESO Future Energy Scenarios</div>
       </div>
 
@@ -2391,6 +2422,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Event damage −50%</span>
           <span class="effect-tag pos">Protects infrastructure</span>
         </div>
+        <div class="synergy-row" id="synergy-adaptation"></div>
         <div class="card-citation">Based on UK Climate Risk Assessment 2022</div>
       </div>
 
@@ -2416,6 +2448,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Social +8, Fin +3</span>
           <span class="effect-tag pos">Reduces unrest risk</span>
         </div>
+        <div class="synergy-row" id="synergy-socialSupport"></div>
         <div class="card-citation">Illustrative figures — educational simulation</div>
       </div>
 
@@ -2441,6 +2474,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos">Fin Stability +10</span>
           <span class="effect-tag pos">Stranded −8, Property +5</span>
         </div>
+        <div class="synergy-row" id="synergy-financialResilience"></div>
         <div class="card-citation">Based on Bank of England Climate Stress Testing 2022</div>
       </div>
 
@@ -2466,6 +2500,7 @@ body { transition: filter 2s ease; }
           <span class="effect-tag pos" id="research-effect-tag">Solar blocks give 1.5× Net Zero progress</span>
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
         </div>
+        <div class="synergy-row" id="synergy-research"></div>
         <div class="card-citation">Based on UKRI Net Zero Innovation portfolio</div>
       </div>
 
@@ -2966,6 +3001,18 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="emergency_powers">
+        <span class="scenario-card-icon">🚨</span>
+        <div class="scenario-card-name">Emergency Powers</div>
+        <div class="scenario-card-desc">A climate emergency has been declared after devastating floods. You have emergency funding but start behind — fossil dependency is high, infrastructure is damaged, and the clock is ticking.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£120bn/turn</span></div>
+          <div class="scenario-stat">Temperature: <span>1.4°C (elevated)</span></div>
+          <div class="scenario-stat">Net Zero: <span>20% (behind)</span></div>
+          <div class="scenario-stat">Gas dependency: <span>High</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3166,6 +3213,146 @@ const RANDOM_EVENTS = [
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
+  },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '🏜️',
+    title: 'Severe Drought — Southern England',
+    description: 'Reservoir levels reach historic lows. Hosepipe bans escalate to emergency water rationing across the south-east.',
+    story: 'The River Kennet ran dry for the first time in recorded history. Farmers in the Severn valley watched yields collapse — wheat output down 35%, potatoes unsalvageable. Food banks reported a 60% surge in demand.',
+    effects: { socialStability: -10, financialStability: -6 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'WILDFIRE', type: 'WILDFIRE', severity: 'MODERATE', icon: '🔥',
+    title: 'Moorland Wildfire Emergency',
+    description: 'Prolonged dry conditions ignite wildfires across Peak District and Yorkshire moors. Evacuations in surrounding towns.',
+    story: 'Saddleworth Moor burned for 12 days. RAF helicopters flew 340 sorties dropping water. In Stalybridge, residents packed cars at 3am as smoke turned the sky orange. The peat — thousands of years old — will not recover in any human lifetime.',
+    effects: { socialStability: -8, propertyValue: -6 },
+    infraDamage: false, budgetPenaltyNext: 5,
+    condition: (s) => s.temperature > 1.6,
+  },
+  {
+    id: 'SUPPLY_CHAIN', type: 'SUPPLY_CHAIN', severity: 'MODERATE', icon: '🚢',
+    title: 'Global Supply Chain Disruption',
+    description: 'Extreme weather across Asia disrupts critical mineral supply chains. Solar panel and battery costs spike. Transition projects stall.',
+    story: 'A typhoon in Guangdong shut three polysilicon refineries supplying 40% of Europe\'s solar cells. Delivery times for UK rooftop solar installations extended from 6 weeks to 9 months overnight.',
+    effects: { financialStability: -8 },
+    infraDamage: false, budgetPenaltyNext: 12,
+    condition: (s) => s.infrastructure.energyTransition > 30,
+  },
+];
+
+/* ============================================================
+   POSITIVE EVENTS — triggered by good performance
+============================================================ */
+
+const POSITIVE_EVENTS = [
+  {
+    id: 'TECH_BREAKTHROUGH', icon: '🔬', type: 'POSITIVE',
+    title: 'Battery Technology Breakthrough',
+    description: 'UK researchers achieve a major advance in solid-state battery density. Storage costs fall dramatically. International licensing revenue floods in.',
+    story: 'The Faraday Institution team in Oxford published results showing a 3× improvement in energy density. Share prices of UK battery startups doubled in a week. The PM called it "our Sputnik moment."',
+    effects: { financialStability: 8, gridReliability: 6 },
+    condition: (s) => s.infrastructure.gridAndStorage >= 40 && s.infrastructure.energyTransition >= 30,
+  },
+  {
+    id: 'INTL_AGREEMENT', icon: '🌍', type: 'POSITIVE',
+    title: 'International Climate Accord',
+    description: 'A landmark G20 agreement on carbon pricing accelerates global decarbonisation. UK praised as a model. Green investment surges.',
+    story: 'At the Bonn summit, the UK delegation\'s proposal for a global carbon floor price — £80/tonne, rising annually — was adopted unanimously. The FT called it "the deal that changed everything."',
+    effects: { financialStability: 6, socialStability: 5 },
+    condition: (s) => s.netZeroProgress >= 60,
+    bonusNZ: 5,
+  },
+  {
+    id: 'GREEN_JOBS_BOOM', icon: '💼', type: 'POSITIVE',
+    title: 'Green Jobs Boom',
+    description: 'Sustained transition investment triggers a manufacturing renaissance. Unemployment in former industrial heartlands falls to record lows.',
+    story: 'Nissan\'s Sunderland plant, once facing closure, now employs 8,000 workers building electric vans. Teesside\'s hydrogen cluster has become Europe\'s largest, drawing engineers from across the continent.',
+    effects: { socialStability: 10, financialStability: 5 },
+    condition: (s) => s.infrastructure.energyTransition >= 60 && s.infrastructure.socialSupport >= 40,
+  },
+  {
+    id: 'CARBON_CAPTURE_SCALE', icon: '🏭', type: 'POSITIVE',
+    title: 'Carbon Capture at Scale',
+    description: 'UK\'s industrial carbon capture programme exceeds targets. Negative emissions are now measurable. Net Zero accelerates.',
+    story: 'The Drax BECCS plant in Yorkshire captured its millionth tonne of CO2. Combined with peatland restoration in Scotland, the UK recorded its first month of net-negative emissions in September 2041.',
+    effects: { socialStability: 4 },
+    condition: (s) => s.netZeroProgress >= 70 && s.infrastructure.adaptation >= 30,
+    bonusNZ: 8,
+  },
+  {
+    id: 'COMMUNITY_ENERGY', icon: '🏘️', type: 'POSITIVE',
+    title: 'Community Energy Revolution',
+    description: 'Local energy cooperatives proliferate, giving communities ownership of the transition. Public support surges.',
+    story: 'Across Wales, 200 community energy schemes now provide cheaper electricity than the grid. In Swansea, the Gower Peninsula cooperative paid every household a £400 annual dividend from their shared wind turbine.',
+    effects: { socialStability: 12 },
+    condition: (s) => s.infrastructure.socialSupport >= 50 && s.infrastructure.gridAndStorage >= 30,
+    bonusSocialCapital: 6,
+  },
+  {
+    id: 'INSURANCE_REFORM', icon: '🛡️', type: 'POSITIVE',
+    title: 'Climate Insurance Innovation',
+    description: 'New parametric insurance products make climate risk affordable. Property markets stabilise in vulnerable areas.',
+    story: 'Flood Re 2.0 launched with government backing, offering automatic payouts within 48 hours of flooding. Property prices in at-risk areas recovered 15% within six months.',
+    effects: { financialStability: 10, propertyValue: 8 },
+    condition: (s) => s.infrastructure.adaptation >= 40 && s.infrastructure.financialResilience >= 30,
+  },
+];
+
+/* ============================================================
+   POLICY SYNERGY SYSTEM
+============================================================ */
+
+const POLICY_SYNERGIES = [
+  {
+    id: 'clean_grid',
+    name: 'Clean Grid Synergy',
+    requires: ['energyTransition', 'gridAndStorage'],
+    desc: 'Renewables + storage = reliable clean power',
+    effect: { gridReliability: 6, netZeroProgress: 3 },
+    icon: '⚡🔋',
+  },
+  {
+    id: 'just_transition',
+    name: 'Just Transition',
+    requires: ['energyTransition', 'socialSupport'],
+    desc: 'Decarbonising with community consent',
+    effect: { socialStability: 5, socialCapital: 3 },
+    icon: '⚡🤝',
+  },
+  {
+    id: 'financial_shield',
+    name: 'Financial Shield',
+    requires: ['financialResilience', 'adaptation'],
+    desc: 'Resilient finances + physical protection',
+    effect: { financialStability: 5, propertyValue: 4 },
+    icon: '🏦🌊',
+  },
+  {
+    id: 'research_energy',
+    name: 'Innovation Pipeline',
+    requires: ['research', 'energyTransition'],
+    desc: 'R&D accelerates clean energy deployment',
+    effect: { netZeroProgress: 5 },
+    icon: '🔬⚡',
+  },
+  {
+    id: 'social_finance',
+    name: 'Inclusive Economy',
+    requires: ['socialSupport', 'financialResilience'],
+    desc: 'Stable finances + social safety net',
+    effect: { socialStability: 4, financialStability: 3 },
+    icon: '🤝🏦',
+  },
+  {
+    id: 'full_stack',
+    name: 'Comprehensive Strategy',
+    requires: ['energyTransition', 'gridAndStorage', 'socialSupport'],
+    desc: 'The triple investment pays dividends',
+    effect: { netZeroProgress: 4, socialStability: 3, gridReliability: 3 },
+    icon: '🌟',
   },
 ];
 
@@ -3372,6 +3559,19 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  emergency_powers: {
+    label: 'Emergency Powers',
+    apply(state) {
+      state.temperature = 1.4;
+      state.energy.gas = 40;
+      state.energy.wind = 18;
+      state.energy.solar = 4;
+      state.socialStability = 60;
+      state.gridReliability = 55;
+      state.netZeroProgress = 20;
+      state._budgetOverride = 120;
+    },
+  },
 };
 
 /* ============================================================
@@ -3576,6 +3776,7 @@ class GameEngine {
       eventCount: 0,
       lastEventTurn: -1,
       log: [],
+      carbonBudget: 100,
       lastSnapshot: null,
     };
   }
@@ -3698,7 +3899,18 @@ class GameEngine {
     const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
     socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
 
-    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
+    // Apply synergy bonuses to projection
+    const synergies = this._checkSynergies(d);
+    for (const syn of synergies) {
+      for (const [key, val] of Object.entries(syn.effect)) {
+        if (key === 'netZeroProgress') netZeroProgress = clamp(netZeroProgress + val, 0, 100);
+        else if (key === 'gridReliability') gridReliability = clamp(gridReliability + val, 0, 100);
+        else if (key === 'financialStability') financialStability = clamp(financialStability + val, 0, 100);
+        else if (key === 'socialStability') socialStability = clamp(socialStability + val, 0, 100);
+      }
+    }
+
+    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress), synergies };
   }
 
   resolveTurn() {
@@ -3713,6 +3925,7 @@ class GameEngine {
       financialStability: s.financialStability,
       socialStability: s.socialStability,
       energy: Object.assign({}, s.energy),
+      carbonBudget: s.carbonBudget,
     };
 
     // Phase 1: Budget (already set at turn start; reset nextTurn penalty)
@@ -3733,12 +3946,15 @@ class GameEngine {
     // Phase 6: Temperature
     this._progressTemp();
 
-    // Phase 7: Random event
-    const event = this._resolveEvent();
+    // Phase 7: Random event (negative or positive)
+    let event = this._resolveEvent();
+    if (!event) {
+      event = this._resolvePositiveEvent();
+    }
     s.currentRandomEvent = event;
     if (event) {
-      s.eventCount++;
-      // Recalc formulas again after event damage
+      if (!event.isPositive) s.eventCount++;
+      // Recalc formulas again after event effects
       this._recalcGrid();
       this._recalcFinancial();
       this._recalcSocial();
@@ -3763,6 +3979,8 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      eventPositive: event ? !!event.isPositive : false,
+      synergies: s._lastSynergies || [],
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -3847,6 +4065,24 @@ class GameEngine {
     for (let i = 0; i < rs; i++) {
       techTree.purchase();
     }
+
+    // Apply policy synergies
+    const synergies = this._checkSynergies(d);
+    for (const syn of synergies) {
+      for (const [key, val] of Object.entries(syn.effect)) {
+        if (key === 'netZeroProgress') s.netZeroProgress = this._clamp(s.netZeroProgress + val, 0, 100);
+        else if (key === 'socialCapital') s.socialCapital = this._clamp(s.socialCapital + val, 0, 60);
+        else if (key === 'propertyValue') s.propertyValue = this._clamp(s.propertyValue + val, 0, 100);
+        else if (s[key] !== undefined) s[key] = this._clamp(s[key] + val, 0, 100);
+      }
+    }
+    s._lastSynergies = synergies;
+  }
+
+  _checkSynergies(decisions) {
+    return POLICY_SYNERGIES.filter(syn =>
+      syn.requires.every(cat => decisions[cat] > 0)
+    );
   }
 
   _recalcGrid() {
@@ -3907,6 +4143,11 @@ class GameEngine {
 
     if (s.netZeroAchieved) delta *= 0.45;
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
+
+    // Carbon budget depletion — based on remaining fossil share
+    const carbonBurn = Math.max(3, Math.round(gasShare * 30 + (1 - renewShare) * 8));
+    s.carbonBudget = Math.max(0, s.carbonBudget - carbonBurn);
+    if (s.netZeroAchieved) s.carbonBudget = Math.max(s.carbonBudget, 5);
   }
 
   _resolveEvent() {
@@ -3993,6 +4234,35 @@ class GameEngine {
 
     s.lastEventTurn = s.turn;
     return { ...selectedEvent, appliedEffects: applied };
+  }
+
+  _resolvePositiveEvent() {
+    const s = this.state;
+    const eligible = POSITIVE_EVENTS.filter(e => e.condition(s));
+    if (eligible.length === 0) return null;
+
+    // Low probability — positive events are rare rewards
+    if (Math.random() > 0.35) return null;
+
+    const evt = eligible[Math.floor(Math.random() * eligible.length)];
+    const applied = {};
+    for (const [key, val] of Object.entries(evt.effects)) {
+      applied[key] = val;
+      if (key === 'propertyValue') {
+        s.propertyValue = this._clamp(s.propertyValue + val, 0, 100);
+      } else if (s[key] !== undefined) {
+        s[key] = this._clamp(s[key] + val, 0, 100);
+      }
+    }
+    if (evt.bonusNZ) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + evt.bonusNZ, 0, 100);
+      applied.netZeroProgress = evt.bonusNZ;
+    }
+    if (evt.bonusSocialCapital) {
+      s.socialCapital = this._clamp(s.socialCapital + evt.bonusSocialCapital, 0, 60);
+      applied.socialCapital = evt.bonusSocialCapital;
+    }
+    return { ...evt, appliedEffects: applied, isPositive: true };
   }
 
   _describeDecisions(d) {
@@ -4671,6 +4941,20 @@ class UI {
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
     }
+
+    // Carbon budget
+    const cbVal = state.carbonBudget !== undefined ? state.carbonBudget : 100;
+    const cbSnap = state.lastSnapshot ? (state.lastSnapshot.carbonBudget !== undefined ? state.lastSnapshot.carbonBudget : 100) : null;
+    const cbEl = document.getElementById('val-cb');
+    if (cbEl) this._rollNumber(cbEl, cbSnap !== null ? Math.round(cbSnap) : Math.round(cbVal), Math.round(cbVal), 800, 0);
+    const cbBar = document.getElementById('bar-cb');
+    if (cbBar) {
+      cbBar.style.width = Math.max(0, cbVal) + '%';
+      const cbStatus = cbVal >= 60 ? 'good' : cbVal >= 30 ? 'warn' : 'danger';
+      cbBar.className = 'bar-fill ' + cbStatus;
+    }
+    const cbDelta = document.getElementById('delta-cb');
+    if (cbDelta) this._renderDelta(cbDelta, cbVal, cbSnap, false, 0);
   }
 
   _renderSparklines() {
@@ -4845,6 +5129,23 @@ class UI {
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
     }
     this._renderResearchCard();
+    this._renderSynergyBadges(state);
+  }
+
+  _renderSynergyBadges(state) {
+    const d = state.currentDecisions;
+    const active = this.engine._checkSynergies(d);
+    const activeIds = new Set(active.map(s => s.id));
+
+    for (const cat of this.categories) {
+      const row = document.getElementById(`synergy-${cat}`);
+      if (!row) continue;
+      const relevant = POLICY_SYNERGIES.filter(s => s.requires.includes(cat));
+      row.innerHTML = relevant.map(syn => {
+        const isActive = activeIds.has(syn.id);
+        return `<span class="effect-tag synergy" style="opacity:${isActive ? 1 : 0.35}" title="${syn.desc}">${syn.icon} ${syn.name}</span>`;
+      }).join('');
+    }
   }
 
   _renderResearchCard() {
@@ -4995,12 +5296,20 @@ class UI {
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
-    // Decisions
-    html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+    // Decisions — narrative prose
+    const narrative = this._buildTurnNarrative(entry.decisions);
+    html += `<div class="log-text">${narrative}</div>`;
+
+    // Synergy notice
+    if (entry.synergies && entry.synergies.length > 0) {
+      html += `<div class="log-text" style="color:#b388ff;margin-top:4px;">${entry.synergies.map(s => `${s.icon} ${s.name}`).join(' · ')}</div>`;
+    }
 
     // Event notice
     if (entry.event) {
-      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+      const evtColor = entry.eventPositive ? 'var(--status-good)' : 'var(--status-danger)';
+      const evtIcon = entry.eventPositive ? '✨' : '⚠';
+      html += `<div class="log-text" style="color:${evtColor};margin-top:4px;">${evtIcon} ${entry.event}</div>`;
     }
 
     // Metric chips
@@ -5037,6 +5346,8 @@ class UI {
     this.elEventDesc.textContent  = event.description;
     const storyEl = document.getElementById('event-story-display');
     if (storyEl) storyEl.textContent = event.story || '';
+
+    this.elEventModal.classList.toggle('positive', !!event.isPositive);
 
     // Flood visual effect
     if (event.type === 'FLOOD') {
