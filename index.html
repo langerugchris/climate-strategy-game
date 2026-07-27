@@ -150,6 +150,10 @@ body {
 
 .pip.done    { background: var(--status-good); }
 .pip.current { background: var(--accent-blue-lt); box-shadow: 0 0 6px var(--accent-blue-lt); }
+.pip[title*="Election"]:not(.done):not(.current) {
+  background: var(--border-strong);
+  border: 1.5px solid var(--status-warn);
+}
 
 /* ===== MAIN LAYOUT ===== */
 #game-main {
@@ -2142,6 +2146,212 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== APPROVAL RATING BADGE ===== */
+#approval-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  transition: background 0.3s, color 0.3s;
+}
+#approval-badge.high   { background: #0c2a1a; color: var(--status-good); }
+#approval-badge.medium { background: #2a2000; color: var(--status-warn); }
+#approval-badge.low    { background: #2a0e08; color: var(--status-danger); }
+#approval-badge .approval-label { text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ===== ELECTION OVERLAY ===== */
+#election-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4,8,15,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100;
+  padding: var(--gap-xl);
+  overflow-y: auto;
+  animation: fadeIn 0.4s ease;
+}
+#election-overlay.hidden { display: none; }
+#election-card {
+  max-width: 560px;
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  text-align: center;
+  animation: slideUp 0.5s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+#election-card .election-icon { font-size: 48px; margin-bottom: var(--gap-sm); }
+#election-card .election-heading {
+  font-size: clamp(18px, 3.5vw, 26px);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
+#election-card .election-year-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-lg);
+}
+.election-meter {
+  position: relative;
+  height: 36px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--gap-sm);
+  border: 1px solid var(--border-subtle);
+}
+.election-meter-fill {
+  height: 100%;
+  border-radius: var(--radius-md);
+  transition: width 1.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+.election-meter-fill.high   { background: linear-gradient(90deg, #00703c, #00c853); }
+.election-meter-fill.medium { background: linear-gradient(90deg, #b8860b, #ffd600); }
+.election-meter-fill.low    { background: linear-gradient(90deg, #b71c1c, #ff3d00); }
+.election-meter-threshold {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--text-muted);
+  opacity: 0.6;
+}
+.election-meter-threshold::after {
+  content: attr(data-label);
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.election-factors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px var(--gap-md);
+  text-align: left;
+  font-size: 12px;
+  margin: var(--gap-md) 0;
+  padding: var(--gap-sm) var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+.election-factor-label { color: var(--text-muted); }
+.election-factor-value { color: var(--text-primary); font-weight: 600; text-align: right; }
+.election-factor-value.pos { color: var(--status-good); }
+.election-factor-value.neg { color: var(--status-danger); }
+#election-result-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: var(--gap-md) 0 4px;
+}
+#election-result-title.win     { color: var(--status-good); }
+#election-result-title.narrow  { color: var(--status-warn); }
+#election-result-title.lose    { color: var(--status-danger); }
+#election-result-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-family: Georgia, serif;
+  margin-bottom: var(--gap-md);
+}
+#election-effects-list {
+  text-align: left;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: var(--gap-lg);
+}
+#election-effects-list .effect-positive { color: var(--status-good); font-weight: 600; }
+#election-effects-list .effect-negative { color: var(--status-danger); font-weight: 600; }
+#election-dismiss-btn {
+  padding: 12px 32px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#election-dismiss-btn:hover { background: var(--accent-blue-lt); }
+
+/* ===== NEWSPAPER HEADLINES ===== */
+.log-headline {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+  padding: var(--gap-sm) var(--gap-md);
+  margin: 4px 0;
+  border-top: 2px solid var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+.log-headline::before {
+  content: attr(data-paper);
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+  font-family: var(--font-system);
+}
+.log-headline .headline-subtitle {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* ===== INTERNATIONAL EVENT BADGE ===== */
+.mini-event-intl-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(83,144,217,0.15);
+  color: var(--accent-blue-lt);
+  margin-bottom: 6px;
+}
 </style>
 </head>
 <body>
@@ -2159,6 +2369,7 @@ body { transition: filter 2s ease; }
     </div>
   </div>
   <div id="header-center">
+    <span id="approval-badge" class="high"><span class="approval-label">Approval</span> <span id="approval-value">62</span>%</span>
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
@@ -3029,6 +3240,25 @@ body { transition: filter 2s ease; }
     </ul>
     <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
+  </div>
+</div>
+
+<!-- ELECTION OVERLAY -->
+<div id="election-overlay" class="hidden">
+  <div id="election-card">
+    <div class="election-icon" id="election-icon">🗳️</div>
+    <div class="election-heading" id="election-heading">General Election</div>
+    <div class="election-year-label" id="election-year-label">2035 · Mid-Term</div>
+    <div class="election-meter">
+      <div class="election-meter-fill high" id="election-meter-fill" style="width:0%"></div>
+      <div class="election-meter-threshold" style="left:35%" data-label="35%"></div>
+      <div class="election-meter-threshold" style="left:55%" data-label="55%"></div>
+    </div>
+    <div class="election-factors" id="election-factors"></div>
+    <div id="election-result-title"></div>
+    <div id="election-result-desc"></div>
+    <div id="election-effects-list"></div>
+    <button id="election-dismiss-btn">Continue →</button>
   </div>
 </div>
 
@@ -4618,6 +4848,7 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    updateApprovalBadge(state);
   }
 
   _renderHeader(state) {
@@ -4633,11 +4864,12 @@ class UI {
       this.elNextYear = document.getElementById('next-year-label');
     }
 
-    // Update turn pips
+    // Update turn pips (mark election turns)
     for (let i = 0; i < 5; i++) {
       const pip = document.getElementById(`pip-${i}`);
       if (!pip) continue;
       pip.className = 'pip' + (i < state.turn ? ' done' : i === state.turn ? ' current' : '');
+      pip.title = ELECTION_TURNS.includes(i) ? `Turn ${i + 1} — Election` : `Turn ${i + 1}`;
     }
   }
 
@@ -5014,6 +5246,14 @@ class UI {
 
     div.innerHTML = html;
     this.elLogScroll.appendChild(div);
+
+    // Inject newspaper headline
+    const headlineData = generateHeadline(entry, this.engine.state);
+    const headlineDiv = document.createElement('div');
+    headlineDiv.className = 'log-headline';
+    headlineDiv.setAttribute('data-paper', headlineData.paper);
+    headlineDiv.innerHTML = `${headlineData.headline}<span class="headline-subtitle">${headlineData.subtitle}</span>`;
+    this.elLogScroll.appendChild(headlineDiv);
 
     // Inject advisor briefing for next turn (based on post-turn state)
     this._injectAdvisorBriefing(this.engine.state);
@@ -5739,7 +5979,8 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
-  // Tick through years with possible mini-events
+  // Tick through years with possible mini-events (domestic + international)
+  const allMiniEvents = [...MINI_EVENTS_POOL, ...INTL_MINI_EVENTS];
   let minisFired = 0;
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
@@ -5747,7 +5988,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     await _delay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
-      const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
+      const eligible = allMiniEvents.filter(e => e.condition(engine.state));
       if (eligible.length > 0) {
         const evt = eligible[Math.floor(Math.random() * eligible.length)];
         fxMgr.haptic('medium');
@@ -5774,6 +6015,13 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
+
+  // Election check — at turns 2 and 4 (post-increment, so check turn-1)
+  const completedTurn = engine.state.turn - 1;
+  if (isElectionTurn(completedTurn) && !result.endgame) {
+    const electionResult = resolveElection(engine.state);
+    await showElectionOverlay(engine.state, electionResult, startYear + 5);
+  }
 
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
@@ -5855,6 +6103,7 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
     panel.innerHTML = `
       <div class="mini-event-icon">${evt.icon}</div>
       <div class="mini-event-year">${year}</div>
+      ${evt.intlBadge ? `<div class="mini-event-intl-badge">${evt.intlBadge}</div>` : ''}
       <div class="mini-event-title">${evt.title}</div>
       <div class="mini-event-prompt">${evt.prompt}</div>
       ${evt.explanation ? `<div class="mini-event-explain">${evt.explanation}</div>` : ''}
@@ -5885,6 +6134,399 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ============================================================
+   MODULE: PUBLIC APPROVAL
+============================================================ */
+
+function calculateApproval(state) {
+  const socialFactor = state.socialStability * 0.35;
+  const financialFactor = state.financialStability * 0.25;
+  const gridFactor = state.gridReliability * 0.15;
+  const nzFactor = (state.netZeroProgress / 100) * 10;
+  const tempPenalty = Math.max(0, (state.temperature - 1.5) * 12);
+  const eventPenalty = state.eventCount * 3;
+  const raw = socialFactor + financialFactor + gridFactor + nzFactor - tempPenalty - eventPenalty;
+  return Math.round(Math.max(0, Math.min(100, raw)));
+}
+
+function updateApprovalBadge(state) {
+  const approval = calculateApproval(state);
+  const badge = document.getElementById('approval-badge');
+  const valEl = document.getElementById('approval-value');
+  if (!badge || !valEl) return;
+  valEl.textContent = approval;
+  badge.className = approval >= 55 ? 'high' : approval >= 35 ? 'medium' : 'low';
+}
+
+/* ============================================================
+   MODULE: ELECTION SYSTEM
+============================================================ */
+
+const ELECTION_TURNS = [2, 4];
+
+function isElectionTurn(turn) {
+  return ELECTION_TURNS.includes(turn);
+}
+
+function resolveElection(state) {
+  const approval = calculateApproval(state);
+  const factors = {
+    social: Math.round(state.socialStability * 0.35),
+    financial: Math.round(state.financialStability * 0.25),
+    grid: Math.round(state.gridReliability * 0.15),
+    nzBonus: Math.round((state.netZeroProgress / 100) * 10),
+    tempPenalty: -Math.round(Math.max(0, (state.temperature - 1.5) * 12)),
+    eventPenalty: -(state.eventCount * 3),
+  };
+
+  let outcome;
+  if (approval >= 55) {
+    outcome = {
+      key: 'landslide',
+      icon: '🎉',
+      title: 'Landslide Victory',
+      titleClass: 'win',
+      desc: 'The electorate has endorsed your climate strategy with a commanding majority. Your mandate is strengthened, and international investors take notice. The transition programme accelerates with renewed political capital.',
+      effects: [
+        { label: 'Budget bonus next turn', value: '+£15bn', cls: 'effect-positive' },
+        { label: 'Social capital', value: '+5', cls: 'effect-positive' },
+      ],
+      apply(s) {
+        s.budget += 15;
+        s.socialCapital = Math.min(60, s.socialCapital + 5);
+      },
+    };
+  } else if (approval >= 45) {
+    outcome = {
+      key: 'narrow',
+      icon: '⚖️',
+      title: 'Narrow Victory',
+      titleClass: 'narrow',
+      desc: 'You hold on to power, but the margin is thin. Backbenchers are restless, and the opposition smells blood. Your mandate continues, but caution is advisable.',
+      effects: [
+        { label: 'No budget change', value: '—', cls: '' },
+        { label: 'Social capital', value: '+2', cls: 'effect-positive' },
+      ],
+      apply(s) {
+        s.socialCapital = Math.min(60, s.socialCapital + 2);
+      },
+    };
+  } else if (approval >= 35) {
+    outcome = {
+      key: 'coalition',
+      icon: '🤝',
+      title: 'Coalition Government',
+      titleClass: 'narrow',
+      desc: 'No party wins a majority. You are forced into coalition, conceding key positions and accepting policy compromises. Budget allocation is constrained as coalition partners demand spending on their priorities.',
+      effects: [
+        { label: 'Budget penalty next turn', value: '−£15bn', cls: 'effect-negative' },
+        { label: 'Social stability', value: '+3 (coalition stability)', cls: 'effect-positive' },
+      ],
+      apply(s) {
+        s.budget = Math.max(20, s.budget - 15);
+        s.socialStability = Math.min(100, s.socialStability + 3);
+      },
+    };
+  } else {
+    outcome = {
+      key: 'defeat',
+      icon: '📉',
+      title: 'Electoral Defeat',
+      titleClass: 'lose',
+      desc: 'The opposition wins decisively. Your successor inherits the climate programme but reverses key priorities. Transition momentum is lost as the new government pivots to short-term economic relief.',
+      effects: [
+        { label: 'Budget penalty next turn', value: '−£25bn', cls: 'effect-negative' },
+        { label: 'Net Zero progress', value: '−5%', cls: 'effect-negative' },
+        { label: 'Social stability', value: '+5 (fresh mandate)', cls: 'effect-positive' },
+      ],
+      apply(s) {
+        s.budget = Math.max(20, s.budget - 25);
+        s.netZeroProgress = Math.max(0, s.netZeroProgress - 5);
+        s.socialStability = Math.min(100, s.socialStability + 5);
+      },
+    };
+  }
+
+  return { approval, factors, outcome };
+}
+
+function showElectionOverlay(state, electionResult, turnYear) {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('election-overlay');
+    const heading = document.getElementById('election-heading');
+    const yearLabel = document.getElementById('election-year-label');
+    const meterFill = document.getElementById('election-meter-fill');
+    const factorsEl = document.getElementById('election-factors');
+    const resultTitle = document.getElementById('election-result-title');
+    const resultDesc = document.getElementById('election-result-desc');
+    const effectsList = document.getElementById('election-effects-list');
+    const iconEl = document.getElementById('election-icon');
+    const dismissBtn = document.getElementById('election-dismiss-btn');
+
+    const { approval, factors, outcome } = electionResult;
+    const isLate = turnYear >= 2045;
+
+    iconEl.textContent = '🗳️';
+    heading.textContent = 'General Election';
+    yearLabel.textContent = `${turnYear} · ${isLate ? 'Final Term' : 'Mid-Term Election'}`;
+
+    const factorLabels = {
+      social: 'Social stability',
+      financial: 'Financial stability',
+      grid: 'Grid reliability',
+      nzBonus: 'Net Zero progress',
+      tempPenalty: 'Temperature penalty',
+      eventPenalty: 'Crisis fatigue',
+    };
+    factorsEl.innerHTML = Object.entries(factors).map(([k, v]) => {
+      const cls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
+      const sign = v > 0 ? '+' : '';
+      return `<div class="election-factor-label">${factorLabels[k]}</div><div class="election-factor-value ${cls}">${sign}${v}</div>`;
+    }).join('');
+
+    const meterClass = approval >= 55 ? 'high' : approval >= 35 ? 'medium' : 'low';
+    meterFill.className = 'election-meter-fill ' + meterClass;
+    meterFill.style.width = '0%';
+
+    resultTitle.textContent = outcome.title;
+    resultTitle.className = outcome.titleClass;
+    resultDesc.textContent = outcome.desc;
+
+    effectsList.innerHTML = outcome.effects.map(e =>
+      `<div><span class="${e.cls}">${e.value}</span> ${e.label}</div>`
+    ).join('');
+
+    overlay.classList.remove('hidden');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        meterFill.style.width = Math.min(approval, 100) + '%';
+        meterFill.textContent = approval + '%';
+      });
+    });
+
+    setTimeout(() => {
+      iconEl.textContent = outcome.icon;
+    }, 1600);
+
+    const handler = () => {
+      dismissBtn.removeEventListener('click', handler);
+      outcome.apply(state);
+      overlay.classList.add('hidden');
+      resolve();
+    };
+    dismissBtn.addEventListener('click', handler);
+  });
+}
+
+/* ============================================================
+   MODULE: NEWSPAPER HEADLINES
+============================================================ */
+
+const NEWSPAPERS = [
+  'The Guardian', 'Financial Times', 'The Times', 'Daily Telegraph',
+  'The Independent', 'BBC News', 'The Observer', 'The Economist',
+];
+
+const HEADLINE_TEMPLATES = {
+  tempRising: [
+    { paper: 'The Guardian', headline: 'WARMING ACCELERATES: UK pathway breaches {temp}°C as tipping points loom', subtitle: 'Scientists warn of irreversible feedback loops' },
+    { paper: 'BBC News', headline: 'UK temperature pathway hits {temp}°C — highest in simulation history', subtitle: 'Met Office issues unprecedented long-range warning' },
+    { paper: 'Financial Times', headline: 'Climate risk repricing accelerates as UK warming passes {temp}°C', subtitle: 'Insurers withdraw from coastal markets' },
+  ],
+  nzNear: [
+    { paper: 'The Guardian', headline: 'NET ZERO WITHIN REACH: UK on track for historic climate milestone', subtitle: 'Renewable buildout exceeds all forecasts' },
+    { paper: 'The Times', headline: 'Britain leads G7 in Net Zero race as progress hits {nz}%', subtitle: 'Government hails "generational achievement"' },
+    { paper: 'The Economist', headline: 'The UK\'s green gamble pays off — Net Zero at {nz}% and climbing', subtitle: 'Lessons for the rest of the world' },
+  ],
+  nzAchieved: [
+    { paper: 'The Guardian', headline: 'NET ZERO ACHIEVED: UK becomes first major economy to hit landmark target', subtitle: 'A quarter-century of investment reaches its destination' },
+    { paper: 'BBC News', headline: 'Historic day as UK reaches Net Zero emissions', subtitle: 'Prime Minister calls it "the work of a generation"' },
+  ],
+  gridCrisis: [
+    { paper: 'Daily Telegraph', headline: 'BLACKOUT BRITAIN: Grid reliability crashes to {grid}% as renewables outpace storage', subtitle: 'Hospitals resort to emergency generators' },
+    { paper: 'BBC News', headline: 'National Grid warns of "systemic failure risk" as reliability drops to {grid}%', subtitle: 'Millions face rolling power cuts' },
+  ],
+  financialCrisis: [
+    { paper: 'Financial Times', headline: 'STRANDED ASSETS CRISIS: UK financial stability falls to {fin}%', subtitle: 'Pension funds call for emergency intervention' },
+    { paper: 'The Times', headline: 'City of London under pressure as climate transition costs bite', subtitle: 'Bank of England activates contingency framework' },
+  ],
+  socialUnrest: [
+    { paper: 'The Guardian', headline: '"WE CAN\'T AFFORD THIS": Social stability drops to {soc}% amid transition backlash', subtitle: 'Fuel poverty protests spread to 40 cities' },
+    { paper: 'Daily Telegraph', headline: 'Public turns against green agenda as living costs soar', subtitle: 'Social stability at {soc}% — lowest since records began' },
+  ],
+  stability: [
+    { paper: 'The Economist', headline: 'Steady as she goes: UK maintains stability through climate transition', subtitle: 'A model of managed change for other nations' },
+    { paper: 'Financial Times', headline: 'UK balances growth and green: all indicators holding above 60%', subtitle: 'Markets reward careful transition management' },
+    { paper: 'BBC News', headline: 'Government\'s "balanced approach" to Net Zero wins cautious praise', subtitle: 'Think tanks call strategy "difficult but credible"' },
+  ],
+  gasPhaseOut: [
+    { paper: 'The Guardian', headline: 'END OF AN ERA: UK phases out fossil gas from electricity grid', subtitle: 'Last gas-fired power station closes after decades of dominance' },
+    { paper: 'BBC News', headline: 'Gas-free Britain: renewables and storage now power the nation', subtitle: 'Energy system completes historic transformation' },
+  ],
+  eventHit: [
+    { paper: 'BBC News', headline: 'CLIMATE SHOCK: {event} strikes amid growing vulnerability', subtitle: 'Emergency services stretched across the country' },
+    { paper: 'The Times', headline: '{event} exposes gaps in UK climate resilience', subtitle: 'Government under pressure to accelerate adaptation spending' },
+  ],
+};
+
+function generateHeadline(logEntry, state) {
+  const snap = logEntry.snapshot;
+  const tempDelta = logEntry.afterTemp - snap.temperature;
+  const nzDelta = logEntry.afterNZ - snap.netZeroProgress;
+  const gridDelta = logEntry.afterGrid - snap.gridReliability;
+  const finDelta = logEntry.afterFin - snap.financialStability;
+  const socDelta = logEntry.afterSoc - snap.socialStability;
+
+  let category = 'stability';
+  let priority = 0;
+
+  if (state.netZeroProgress >= 100 && snap.netZeroProgress < 100) {
+    category = 'nzAchieved'; priority = 100;
+  }
+  if (logEntry.event && priority < 60) {
+    category = 'eventHit'; priority = 60;
+  }
+  if (logEntry.afterGrid < 40 && priority < 55) {
+    category = 'gridCrisis'; priority = 55;
+  }
+  if (logEntry.afterSoc < 45 && priority < 50) {
+    category = 'socialUnrest'; priority = 50;
+  }
+  if (logEntry.afterFin < 45 && priority < 48) {
+    category = 'financialCrisis'; priority = 48;
+  }
+  if (tempDelta > 0.25 && priority < 40) {
+    category = 'tempRising'; priority = 40;
+  }
+  if (state.energy.gas <= 2 && snap.energy.gas > 2 && priority < 45) {
+    category = 'gasPhaseOut'; priority = 45;
+  }
+  if (nzDelta > 15 && state.netZeroProgress >= 75 && priority < 35) {
+    category = 'nzNear'; priority = 35;
+  }
+
+  const templates = HEADLINE_TEMPLATES[category];
+  const template = templates[Math.floor(Math.random() * templates.length)];
+
+  const fill = (str) => str
+    .replace('{temp}', state.temperature.toFixed(1))
+    .replace('{nz}', Math.round(state.netZeroProgress))
+    .replace('{grid}', Math.round(state.gridReliability))
+    .replace('{fin}', Math.round(state.financialStability))
+    .replace('{soc}', Math.round(state.socialStability))
+    .replace('{event}', logEntry.event || 'Climate event');
+
+  return {
+    paper: template.paper,
+    headline: fill(template.headline),
+    subtitle: fill(template.subtitle),
+  };
+}
+
+/* ============================================================
+   MODULE: INTERNATIONAL MINI-EVENTS
+============================================================ */
+
+const INTL_MINI_EVENTS = [
+  {
+    id: 'mini_cop_summit',
+    icon: '🌍',
+    title: 'COP Climate Summit',
+    intlBadge: 'International',
+    prompt: 'The UN Climate Summit is demanding stronger national commitments. How does the UK respond?',
+    explanation: 'At each COP, nations face pressure to increase their Nationally Determined Contributions. Pledging aggressively boosts Net Zero but commits budget. A diplomatic stance preserves flexibility but draws international criticism and may affect trade.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🌱 Pledge accelerated timeline',
+      consequence: 'Costs £7bn next turn · +8% Net Zero progress · +3 Social Capital (international prestige)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialCapital = Math.min(60, s.socialCapital + 3); },
+    },
+    optB: {
+      label: '🤝 Diplomatic non-commitment',
+      consequence: 'No cost · −3 Social Capital (seen as obstructive) · +2% Net Zero (peer pressure effect)',
+      effect: (s) => { s.socialCapital = Math.max(0, s.socialCapital - 3); s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); },
+    },
+    condition: (s) => s.netZeroProgress < 90,
+  },
+  {
+    id: 'mini_carbon_border',
+    icon: '🏛️',
+    title: 'EU Carbon Border Tax',
+    intlBadge: 'Trade',
+    prompt: 'The EU is imposing a Carbon Border Adjustment Mechanism on UK exports. How do you respond?',
+    explanation: 'The EU\'s CBAM taxes carbon-intensive imports. If the UK\'s carbon pricing is lower, its exporters pay the difference at the border. Matching the EU\'s price is expensive domestically but opens trade. Retaliating risks a trade war but protects UK industry short-term.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '💱 Match EU carbon price',
+      consequence: 'Costs £5bn next turn · +6% Net Zero · −4 Financial short-term (industry adjustment)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    optB: {
+      label: '⚔️ Retaliatory tariffs',
+      consequence: 'No budget cost · −3% Net Zero · −6 Financial (trade disruption) · +3 Social (nationalist appeal)',
+      effect: (s) => { s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); s.financialStability = Math.max(0, s.financialStability - 6); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    condition: (s) => s.temperature > 1.3 && s.netZeroProgress < 85,
+  },
+  {
+    id: 'mini_tech_transfer',
+    icon: '🔬',
+    title: 'International Green Technology Pact',
+    intlBadge: 'Diplomacy',
+    prompt: 'Allied nations offer a technology-sharing agreement for next-generation batteries and carbon capture.',
+    explanation: 'International R&D cooperation accelerates innovation but requires sharing UK intellectual property. Going it alone protects commercial interests but slows the pace of technological advance.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Storage capacity: ${Math.round(s.energy.storage)}`,
+    }),
+    optA: {
+      label: '🤝 Join the technology pact',
+      consequence: 'Costs £4bn next turn · +8 Storage capacity · +4% Net Zero (shared R&D)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.energy.storage = Math.min(100, s.energy.storage + 8); s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); },
+    },
+    optB: {
+      label: '🏴 Protect UK IP — go alone',
+      consequence: 'No cost · +3 Storage (slower domestic R&D) · +2 Financial (IP protection)',
+      effect: (s) => { s.energy.storage = Math.min(100, s.energy.storage + 3); s.financialStability = Math.min(100, s.financialStability + 2); },
+    },
+    condition: (s) => s.energy.storage < 60,
+  },
+  {
+    id: 'mini_arctic_collapse',
+    icon: '🧊',
+    title: 'Arctic Ice Sheet Collapse',
+    intlBadge: 'Global Crisis',
+    prompt: 'Scientists report accelerating Arctic ice loss. The tipping point may have passed. How does the UK respond?',
+    explanation: 'Arctic ice loss accelerates global warming through albedo feedback (less ice means less sunlight reflected). Emergency international cooperation is expensive but could slow the cascade. Domestic focus protects the UK but ignores the global dimension.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: s.temperature > 1.8 ? '⚠ approaching tipping points' : 'manageable',
+    }),
+    optA: {
+      label: '🌐 Fund international climate emergency response',
+      consequence: 'Costs £12bn next turn · −0.05°C temperature (global cooperation) · +5 Social Capital',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.temperature = Math.max(1.1, s.temperature - 0.05); s.socialCapital = Math.min(60, s.socialCapital + 5); },
+    },
+    optB: {
+      label: '🏠 Focus on domestic adaptation',
+      consequence: 'No cost · +15 Adaptation infrastructure · −3 Social Capital (isolationism)',
+      effect: (s) => { s.infrastructure.adaptation += 15; s.socialCapital = Math.max(0, s.socialCapital - 3); },
+    },
+    condition: (s) => s.temperature > 1.6,
+  },
+];
 
 /* ============================================================
    MODULE: LEGACY SYSTEM
