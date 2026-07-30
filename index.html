@@ -611,6 +611,23 @@ body {
   color: var(--text-primary);
 }
 
+#reset-blocks-btn {
+  touch-action: manipulation;
+  padding: 8px 14px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+#reset-blocks-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
+#reset-blocks-btn:active { transform: scale(0.97); }
+#reset-blocks-btn:disabled { opacity: 0.3; cursor: default; }
+
 #end-turn-btn {
   touch-action: manipulation;
   padding: 10px 24px;
@@ -671,6 +688,15 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-secondary);
+  margin-bottom: 3px;
+}
+
+.log-narrative {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-family: var(--font-editorial);
+  font-style: italic;
   margin-bottom: 3px;
 }
 
@@ -1868,7 +1894,7 @@ body { transition: filter 2s ease; }
 }
 #scenario-screen.hidden { display: none; }
 #scenario-content {
-  max-width: 640px;
+  max-width: 900px;
   width: 100%;
   text-align: center;
 }
@@ -2278,6 +2304,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2296,6 +2323,10 @@ body { transition: filter 2s ease; }
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
+          </div>
         </div>
       </div>
 
@@ -2311,7 +2342,7 @@ body { transition: filter 2s ease; }
           <span id="budget-remaining-display">£100bn</span> remaining
         </div>
       </div>
-      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
+      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>R</kbd> to reset, <kbd>Enter</kbd> to advance.</div>
     </div>
 
     <div id="investment-cards">
@@ -2900,7 +2931,8 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
-      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      <button id="reset-blocks-btn" aria-label="Reset all allocations this turn">↩ Reset</button>
+      <button id="end-turn-btn" aria-label="Advance to next 5-year period">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
 
@@ -2963,6 +2995,28 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="energy_independence">
+        <span class="scenario-card-icon">⚛️</span>
+        <div class="scenario-card-name">Energy Independence</div>
+        <div class="scenario-card-desc">A nuclear-first strategy has given you a reliable grid, but aggressive gas phase-out has stranded fossil assets and rattled communities dependent on oil and gas jobs.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Grid: <span>80% (strong)</span></div>
+          <div class="scenario-stat">Stranded Assets: <span>25 (high)</span></div>
+          <div class="scenario-stat">Social: <span>60% (uneasy)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="late_start">
+        <span class="scenario-card-icon">⏰</span>
+        <div class="scenario-card-name">Late Start</div>
+        <div class="scenario-card-desc">Years of inaction have left the UK behind. Gas dominates, renewables are underdeveloped, and warming is already accelerating. You have more money — but less time.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temperature: <span>1.4°C (hot)</span></div>
+          <div class="scenario-stat">Net Zero: <span>15% (behind)</span></div>
+          <div class="scenario-stat">Budget: <span>£115bn/turn</span></div>
         </div>
       </div>
 
@@ -3221,6 +3275,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'balanced', icon: '🎯', name: 'Balanced Portfolio', desc: 'Invest in all 6 categories across a single game', check: (s) => { const inf = s.infrastructure; return inf.energyTransition > 0 && inf.gridAndStorage > 0 && inf.adaptation > 0 && inf.socialSupport > 0 && inf.financialResilience > 0 && s.log.some(e => e.decisions.some(d => d.includes('R&D'))); } },
+  { id: 'cool_head', icon: '❄️', name: 'Cool Head', desc: 'Finish with temperature below 1.3°C', check: (s) => s.temperature < 1.3 },
 ];
 
 class AchievementManager {
@@ -3370,6 +3426,34 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_independence: {
+    label: 'Energy Independence',
+    apply(state) {
+      state.energy.nuclear = 25;
+      state.energy.storage = 15;
+      state.energy.gas = 10;
+      state.energy.wind = 40;
+      state.gridReliability = 80;
+      state.netZeroProgress = 25;
+      state.strandedAssets = 25;
+      state.socialStability = 60;
+      state._budgetOverride = 90;
+    },
+  },
+  late_start: {
+    label: 'Late Start',
+    apply(state) {
+      state.temperature = 1.4;
+      state.netZeroProgress = 15;
+      state.energy.gas = 40;
+      state.energy.wind = 18;
+      state.energy.solar = 3;
+      state.socialStability = 65;
+      state.financialStability = 60;
+      state.strandedAssets = 8;
+      state._budgetOverride = 115;
     },
   },
 };
@@ -4018,6 +4102,9 @@ class GameEngine {
     this.state.budget = this.getEffectiveBudget();
     const bonuses = legacySystem.startingBonuses();
     if (bonuses.budgetBonus > 0) this.state.budget += bonuses.budgetBonus;
+    if (bonuses.nuclearUnlocked) {
+      this.state.energy.nuclear = this._clamp(this.state.energy.nuclear + 10, 0, 80);
+    }
   }
 }
 
@@ -4265,14 +4352,17 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
     this.elTotalSpend = document.getElementById('total-spend');
+    this.elResetBtn   = document.getElementById('reset-blocks-btn');
     this.elEndTurnBtn = document.getElementById('end-turn-btn');
 
     this.elLogScroll  = document.getElementById('log-scroll');
@@ -4317,7 +4407,22 @@ class UI {
       });
     });
 
-    // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
+    // Reset all blocks button
+    this.elResetBtn.addEventListener('click', () => {
+      if (this.engine.state.isResolvingTurn) return;
+      const s = this.engine.state;
+      for (const cat of this.categories) {
+        s.spentThisTurn -= s.currentDecisions[cat] * BLOCK_COSTS[cat];
+        s.currentDecisions[cat] = 0;
+      }
+      s.spentThisTurn = Math.max(0, s.spentThisTurn);
+      if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+      this._noSpendWarned = false;
+      effectsMgr.haptic('light');
+      this.render(this.engine.getState());
+    });
+
+    // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance, R to reset
     const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
@@ -4325,6 +4430,8 @@ class UI {
         if (e.shiftKey) this.engine.deallocateBlock(keyMap[e.key]);
         else this.engine.allocateBlock(keyMap[e.key]);
         this.render(this.engine.getState());
+      } else if (e.key === 'r' || e.key === 'R') {
+        this.elResetBtn.click();
       } else if (e.key === 'Enter' && !e.repeat) {
         this.elEndTurnBtn.click();
       }
@@ -4801,10 +4908,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4844,6 +4953,7 @@ class UI {
       card.classList.toggle('maxed',          count >= MAX_BLOCKS_PER_CAT);
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
     }
+    this.elResetBtn.disabled = state.spentThisTurn === 0;
     this._renderResearchCard();
   }
 
@@ -4994,6 +5104,10 @@ class UI {
     div.className = 'log-entry ' + (entry.event ? 'event' : overallGood ? 'good' : 'warn');
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
+
+    // Narrative summary
+    const narrative = this._buildTurnNarrative(entry);
+    html += `<div class="log-narrative">${narrative}</div>`;
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
@@ -5724,6 +5838,52 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_hydrogen',
+    icon: '💨',
+    title: 'Hydrogen Opportunity',
+    prompt: 'A major industrial hydrogen hub is proposed for Teesside. How do you respond?',
+    explanation: 'Green hydrogen could decarbonise heavy industry and provide grid storage — but the technology is expensive and unproven at scale. Government backing accelerates deployment but diverts funds from proven renewables. A cautious pilot approach gathers evidence but means slower progress.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Storage: ${Math.round(s.energy.storage)}`,
+    }),
+    optA: {
+      label: '🏗️ Full-scale hydrogen hub investment',
+      consequence: 'Costs £12bn next turn · +8% Net Zero · +5 Storage · risk: −3 Financial if tech fails',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.energy.storage = Math.min(100, s.energy.storage + 5); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '🔬 Small-scale pilot programme',
+      consequence: 'Costs £4bn next turn · +3% Net Zero · +2 Storage · builds evidence base (R&D bonus)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); s.energy.storage = Math.min(100, s.energy.storage + 2); s.infrastructure.adaptation += 5; },
+    },
+    condition: (s) => s.netZeroProgress > 30 && s.energy.storage < 40,
+  },
+  {
+    id: 'mini_summit',
+    icon: '🌍',
+    title: 'International Climate Summit',
+    prompt: 'The UK is asked to pledge deeper emission cuts at a global summit. What do you commit to?',
+    explanation: 'An ambitious pledge raises international credibility and unlocks green trade deals — but commits you to faster domestic action that may strain finances and public patience. A cautious pledge preserves domestic flexibility but diminishes UK climate leadership.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🎯 Pledge ambitious accelerated targets',
+      consequence: '+6% Net Zero progress · +4 Social Capital (leadership boost) · −5 Financial (costs of accelerating)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.socialCapital = Math.min(60, s.socialCapital + 4); s.financialStability = Math.max(0, s.financialStability - 5); },
+    },
+    optB: {
+      label: '🤝 Reaffirm existing commitments only',
+      consequence: 'No cost · +2 Financial (market certainty) · −3 Social Capital (seen as lagging)',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 2); s.socialCapital = Math.max(0, s.socialCapital - 3); },
+    },
+    condition: (s) => s.turn >= 1 && s.turn <= 3,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5968,6 +6128,9 @@ engine.state.budget = engine.getEffectiveBudget();
 const _bonuses = legacySystem.startingBonuses();
 if (_bonuses.budgetBonus > 0) {
   engine.state.budget += _bonuses.budgetBonus;
+}
+if (_bonuses.nuclearUnlocked) {
+  engine.state.energy.nuclear = Math.min(80, engine.state.energy.nuclear + 10);
 }
 
 // Set header subtitle
