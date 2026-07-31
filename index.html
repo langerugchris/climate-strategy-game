@@ -346,7 +346,7 @@ body {
 
 #energy-mix-legend {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 3px 8px;
 }
 
@@ -852,7 +852,7 @@ body {
 
 #endgame-metrics-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--gap-sm);
   margin-bottom: var(--gap-lg);
 }
@@ -2188,7 +2188,7 @@ body { transition: filter 2s ease; }
       <!-- Temperature -->
       <div class="metric-block">
         <div class="metric-label-row">
-          <span class="metric-name">🌡️ UK Warming Pathway</span>
+          <span class="metric-name" role="heading" aria-level="3">🌡️ UK Warming Pathway</span>
           <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span></span>
         </div>
         <div class="bar-track temp-track" style="position:relative">
@@ -2278,6 +2278,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2296,7 +2297,23 @@ body { transition: filter 2s ease; }
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
+          </div>
         </div>
+      </div>
+
+      <!-- International Reputation -->
+      <div class="metric-block" id="diplomacy-section">
+        <div class="metric-label-row">
+          <span class="metric-name">🌍 International Standing</span>
+          <span class="metric-value"><span id="val-rep">50</span> <span class="metric-delta" id="delta-rep"></span></span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill info" id="bar-rep" style="width:50%"></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">COP agreements: <span id="val-cop">0</span> · Budget bonus: £<span id="val-dip-bonus">0</span>bn</div>
       </div>
 
     </div>
@@ -2327,9 +2344,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition">−</button>
-              <span class="block-count" id="count-energyTransition">0</span>
-              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition">+</button>
+              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition" aria-label="Remove Energy Transition block">−</button>
+              <span class="block-count" id="count-energyTransition" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition" aria-label="Add Energy Transition block">+</button>
             </div>
           </div>
         </div>
@@ -2353,9 +2370,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£35bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage">−</button>
-              <span class="block-count" id="count-gridAndStorage">0</span>
-              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage">+</button>
+              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage" aria-label="Remove Grid & Storage block">−</button>
+              <span class="block-count" id="count-gridAndStorage" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage" aria-label="Add Grid & Storage block">+</button>
             </div>
           </div>
         </div>
@@ -2379,9 +2396,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£25bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-adaptation" data-cat="adaptation">−</button>
-              <span class="block-count" id="count-adaptation">0</span>
-              <button class="block-btn" id="plus-adaptation" data-cat="adaptation">+</button>
+              <button class="block-btn" id="minus-adaptation" data-cat="adaptation" aria-label="Remove Adaptation block">−</button>
+              <span class="block-count" id="count-adaptation" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-adaptation" data-cat="adaptation" aria-label="Add Adaptation block">+</button>
             </div>
           </div>
         </div>
@@ -2405,9 +2422,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£20bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport">−</button>
-              <span class="block-count" id="count-socialSupport">0</span>
-              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport">+</button>
+              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport" aria-label="Remove Social Support block">−</button>
+              <span class="block-count" id="count-socialSupport" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport" aria-label="Add Social Support block">+</button>
             </div>
           </div>
         </div>
@@ -2430,9 +2447,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience">−</button>
-              <span class="block-count" id="count-financialResilience">0</span>
-              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience">+</button>
+              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience" aria-label="Remove Financial Resilience block">−</button>
+              <span class="block-count" id="count-financialResilience" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience" aria-label="Add Financial Resilience block">+</button>
             </div>
           </div>
         </div>
@@ -2455,9 +2472,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£15bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-research" data-cat="research">−</button>
-              <span class="block-count" id="count-research">0</span>
-              <button class="block-btn" id="plus-research" data-cat="research">+</button>
+              <button class="block-btn" id="minus-research" data-cat="research" aria-label="Remove Research block">−</button>
+              <span class="block-count" id="count-research" aria-live="polite">0</span>
+              <button class="block-btn" id="plus-research" data-cat="research" aria-label="Add Research block">+</button>
             </div>
           </div>
         </div>
@@ -3026,8 +3043,9 @@ body { transition: filter 2s ease; }
       <li>🔋 <strong>Grid stability</strong> — every wind farm you build needs backup storage. Without it, blackouts follow and the public turns against the whole programme</li>
       <li>🤝 <strong>Public consent</strong> — the transition raises energy bills. Workers in oil &amp; gas face redundancy. Ignore the social cost and you lose the political mandate to continue</li>
       <li>🌡️ <strong>Delay is compounding</strong> — above 1.5°C, tipping points accelerate warming beyond your control. Early action is far cheaper than late action</li>
+      <li>🌍 <strong>International standing</strong> — your policy choices during COP negotiations and trade disputes affect Britain's diplomatic leverage. High reputation unlocks budget bonuses from green trade deals</li>
     </ul>
-    <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
+    <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. Between turns, policy dilemmas and international negotiations will test your strategic judgement. The trade-offs are real — you cannot do everything at once.</p>
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
   </div>
 </div>
@@ -3167,6 +3185,58 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '☀️',
+    title: 'Severe Summer Drought',
+    description: 'Three consecutive months without rain. Reservoir levels critically low across the South East. Hosepipe bans and crop losses.',
+    story: 'Kent farmer David Ashworth watched his wheat harvest fail for the second consecutive year. "The soil is dust," he said. "Insurance won\'t cover drought — they say it\'s an act of God."',
+    effects: { socialStability: -8, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'WILDFIRE', type: 'WILDFIRE', severity: 'MODERATE', icon: '🔥',
+    title: 'Moorland Wildfire Emergency',
+    description: 'Wildfires rage across the Peak District and Yorkshire Moors. Thousands evacuated. Air quality warnings issued across northern England.',
+    story: 'Firefighter Cara Williams and her crew fought the Bleaklow blaze for nine days. "We\'re not trained for this — we\'re used to house fires, not burning landscapes. This is Mediterranean-scale fire in England."',
+    effects: { socialStability: -7, propertyValue: -8 },
+    infraDamage: false, budgetPenaltyNext: 8,
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'SUPPLY_CHAIN', type: 'SUPPLY_CHAIN', severity: 'MODERATE', icon: '🚢',
+    title: 'Critical Minerals Supply Disruption',
+    description: 'Geopolitical tensions disrupt lithium and rare earth supply chains. Battery and solar panel costs spike 40%. Green transition timelines threatened.',
+    story: 'Three UK battery gigafactories paused production as lithium carbonate prices tripled. The Government\'s net zero delivery unit warned that 2030 EV targets were now "unachievable without intervention."',
+    effects: { financialStability: -8, netZeroProgress: -5 },
+    infraDamage: false, budgetPenaltyNext: 12,
+  },
+  {
+    id: 'PANDEMIC', type: 'PANDEMIC', severity: 'MODERATE', icon: '🦠',
+    title: 'Respiratory Virus Outbreak',
+    description: 'A novel respiratory virus strains the NHS. Economic activity disrupted. Climate policy sidelined as the government focuses on public health.',
+    story: 'The Government diverted £15bn from the green infrastructure programme to pandemic response. Climate Secretary Miriam Osei warned: "Every crisis that pulls resources from the transition makes Net Zero harder."',
+    effects: { socialStability: -10, financialStability: -8 },
+    infraDamage: false, budgetPenaltyNext: 15,
+  },
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'TECH', severity: 'POSITIVE', icon: '🧪',
+    title: 'Fusion Energy Breakthrough',
+    description: 'UK researchers at Culham achieve sustained fusion ignition. Commercial deployment remains a decade away, but investor confidence surges and nuclear sentiment shifts.',
+    story: 'Professor Amy Chen\'s team at JET achieved 90 seconds of sustained fusion power — a world first. The PM called it "Britain\'s Sputnik moment." Energy stocks rallied 12% in a single day.',
+    effects: { financialStability: 8, socialStability: 5, netZeroProgress: 3 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
+  {
+    id: 'INSURANCE_RETREAT', type: 'FINANCIAL', severity: 'MAJOR', icon: '🏚️',
+    title: 'Insurance Market Retreat',
+    description: 'Major insurers withdraw flood and storm coverage from 2.4 million UK properties. Mortgage lending freezes in affected areas.',
+    story: 'Aviva, the UK\'s largest insurer, announced it would no longer offer home insurance in 47 postcodes classified as "uninsurable flood risk." Property prices in those areas collapsed overnight.',
+    effects: { financialStability: -12, propertyValue: -15, socialStability: -8 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.6 && s.infrastructure.adaptation < 60,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3291,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'diplomat', icon: '🌍', name: 'Global Leader', desc: 'Reach International Reputation 80+', check: (s) => (s.internationalReputation || 50) >= 80 },
+  { id: 'cop_champion', icon: '🕊️', name: 'COP Champion', desc: 'Sign 3+ COP agreements', check: (s) => (s.copAgreements || 0) >= 3 },
 ];
 
 class AchievementManager {
@@ -3561,6 +3633,9 @@ class GameEngine {
       strandedAssets: 0,
       propertyValue: 100,
       socialCapital: 0,
+      diplomaticBonus: 0,
+      internationalReputation: 50,
+      copAgreements: 0,
       currentDecisions: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -3581,11 +3656,11 @@ class GameEngine {
   }
 
   getState() {
-    // Return a shallow copy sufficient for rendering
     return Object.assign({}, this.state, {
       energy: Object.assign({}, this.state.energy),
       infrastructure: Object.assign({}, this.state.infrastructure),
       currentDecisions: Object.assign({}, this.state.currentDecisions),
+      lastSnapshot: this.state.lastSnapshot ? Object.assign({}, this.state.lastSnapshot) : null,
     });
   }
 
@@ -3594,15 +3669,12 @@ class GameEngine {
   }
 
   getEffectiveBudget() {
-    let base = this.state._budgetOverride !== undefined
+    let base = (this.state._budgetOverride !== undefined && this.state.turn === 0)
       ? this.state._budgetOverride
       : difficultyMgr.preset.baseBudget;
     if (this.state.financialStability > 80) base += 20;
     base -= this.state.nextTurnBudgetPenalty;
-    // After turn 1, budget override only applies once (first turn), then uses normal base
-    if (this.state.turn > 0) {
-      delete this.state._budgetOverride;
-    }
+    if (this.state.diplomaticBonus) base += this.state.diplomaticBonus;
     return Math.max(base, 20);
   }
 
@@ -3712,6 +3784,7 @@ class GameEngine {
       gridReliability: s.gridReliability,
       financialStability: s.financialStability,
       socialStability: s.socialStability,
+      internationalReputation: s.internationalReputation,
       energy: Object.assign({}, s.energy),
     };
 
@@ -3729,6 +3802,9 @@ class GameEngine {
 
     // Phase 5: Social formula
     this._recalcSocial();
+
+    // Phase 5b: International reputation effects
+    this._recalcDiplomacy();
 
     // Phase 6: Temperature
     this._progressTemp();
@@ -3884,6 +3960,14 @@ class GameEngine {
     );
   }
 
+  _recalcDiplomacy() {
+    const s = this.state;
+    const nzBonus = s.netZeroProgress > 60 ? 3 : 0;
+    const tempPenalty = s.temperature > 2.0 ? -5 : 0;
+    s.internationalReputation = this._clamp(s.internationalReputation + nzBonus + tempPenalty, 0, 100);
+    s.diplomaticBonus = Math.floor(s.copAgreements * 3 + (s.internationalReputation > 70 ? 10 : 0));
+  }
+
   _progressTemp() {
     const s = this.state;
     const e = s.energy;
@@ -3919,33 +4003,46 @@ class GameEngine {
 
     if (Math.random() >= prob) return null;
 
-    // Build weighted pool based on temperature
+    // Build weighted pool based on temperature — index by id for stability
+    const eventById = Object.fromEntries(RANDOM_EVENTS.map(e => [e.id, e]));
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: eventById.FINANCIAL_SHOCK,  w: 25 },
+        { e: eventById.STORM,            w: 20 },
+        { e: eventById.FLOOD_MINOR,      w: 20 },
+        { e: eventById.HEATWAVE_MOD,     w: 10 },
+        { e: eventById.SOCIAL_UNREST,    w: 8 },
+        { e: eventById.SUPPLY_CHAIN,     w: 10 },
+        { e: eventById.PANDEMIC,         w: 5 },
+        { e: eventById.TECH_BREAKTHROUGH, w: 2 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: eventById.FLOOD_MINOR,      w: 15 },
+        { e: eventById.FLOOD_MAJOR,      w: 10 },
+        { e: eventById.HEATWAVE_MOD,     w: 15 },
+        { e: eventById.STORM,            w: 15 },
+        { e: eventById.SOCIAL_UNREST,    w: 10 },
+        { e: eventById.FINANCIAL_SHOCK,  w: 10 },
+        { e: eventById.DROUGHT,          w: 8 },
+        { e: eventById.WILDFIRE,         w: 7 },
+        { e: eventById.SUPPLY_CHAIN,     w: 5 },
+        { e: eventById.INSURANCE_RETREAT, w: 3 },
+        { e: eventById.TECH_BREAKTHROUGH, w: 2 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: eventById.FLOOD_MAJOR,      w: 15 },
+        { e: eventById.HEATWAVE_MAJOR,   w: 15 },
+        { e: eventById.STORM,            w: 12 },
+        { e: eventById.GRID_FAILURE,     w: 12 },
+        { e: eventById.SOCIAL_UNREST,    w: 10 },
+        { e: eventById.FINANCIAL_SHOCK,  w: 8 },
+        { e: eventById.DROUGHT,          w: 8 },
+        { e: eventById.WILDFIRE,         w: 8 },
+        { e: eventById.INSURANCE_RETREAT, w: 8 },
+        { e: eventById.PANDEMIC,         w: 4 },
       ];
     }
 
@@ -3965,10 +4062,11 @@ class GameEngine {
     // Mitigation factor from adaptation
     const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
 
-    // Apply effects
+    // Apply effects — mitigation only reduces negative impacts, not positive ones
     const applied = {};
     for (const [key, val] of Object.entries(selectedEvent.effects)) {
-      const mitigated = Math.round(val * (1 - mitigate));
+      const isNegative = (key === 'temperature' || key === 'strandedAssets') ? val > 0 : val < 0;
+      const mitigated = isNegative ? Math.round(val * (1 - mitigate)) : val;
       applied[key] = mitigated;
       if (key === 'temperature') {
         s.temperature = Math.round((s.temperature + mitigated) * 100) / 100;
@@ -4027,23 +4125,28 @@ class GameEngine {
 
 function calculateScore(state) {
   const s = state;
-  // Climate Score (0-30): based on how low temperature stayed
-  const tempScore = Math.round(Math.max(0, 30 - (s.temperature - 1.1) * 18));
+  // Climate Score (0-25): based on how low temperature stayed
+  const tempScore = Math.round(Math.max(0, 25 - (s.temperature - 1.1) * 15));
 
-  // Transition Score (0-30): Net Zero progress
-  const nzScore = Math.round((s.netZeroProgress / 100) * 30);
+  // Transition Score (0-25): Net Zero progress
+  const nzScore = Math.round((s.netZeroProgress / 100) * 25);
 
-  // Stability Score (0-30): financial + social average
+  // Stability Score (0-25): financial + social average
   const stabAvg = (s.financialStability + s.socialStability) / 2;
-  const stabScore = Math.round((stabAvg / 100) * 30);
+  const stabScore = Math.round((stabAvg / 100) * 25);
 
   // Resilience Score (0-10): adaptation built, events survived
   const adaptLevel = s.infrastructure.adaptation / 100;
   const eventPenalty = s.eventCount * 1.5;
   const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
 
-  const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
-  return { total, tempScore, nzScore, stabScore, resScore };
+  // Diplomacy Score (0-15): international reputation and COP agreements
+  const repScore = Math.round(((s.internationalReputation || 50) / 100) * 10);
+  const copScore = Math.min(5, (s.copAgreements || 0) * 2);
+  const dipScore = repScore + copScore;
+
+  const total = Math.min(100, tempScore + nzScore + stabScore + resScore + dipScore);
+  return { total, tempScore, nzScore, stabScore, resScore, dipScore };
 }
 
 /* ============================================================
@@ -4143,6 +4246,9 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
+  if ((s.internationalReputation || 50) >= 70) {
+    parts.push(`Britain's international climate leadership — backed by ${s.copAgreements || 0} COP agreement${(s.copAgreements || 0) !== 1 ? 's' : ''} — gave it diplomatic leverage to shape global carbon markets and secure favourable green trade terms.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4171,6 +4277,9 @@ function buildHotHouseNarrative(s) {
     parts.push(`Gas remained a dominant part of the energy mix throughout the period. Each year of inaction allowed fossil infrastructure to entrench further, making the eventual transition both more expensive and more disruptive.`);
   }
   parts.push(`Insurance markets are contracting as flood and heat risk becomes uninsurable across large areas of the UK. Property values in coastal and low-lying areas have collapsed. The NHS faces unprecedented pressure from heat-related illness and infectious disease spread.`);
+  if ((s.internationalReputation || 50) < 40) {
+    parts.push(`Britain's failure to meet its climate commitments has destroyed its international standing. Former allies now treat the UK as a pariah in climate negotiations, and carbon border tariffs are hammering exports.`);
+  }
 
   if (s.eventCount > 2) {
     parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, recovery time between shocks shrank until resilience collapsed entirely.`);
@@ -4224,7 +4333,7 @@ function buildShareText(state, result) {
     MANAGED: '🌤️ Managed Transition',
   };
   const label = scenarios[result.scenario] || result.title;
-  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
+  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}% | Diplomacy: ${Math.round(state.internationalReputation || 50)}\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
 }
 
 /* ============================================================
@@ -4265,10 +4374,18 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
+
+    this.elValRep     = document.getElementById('val-rep');
+    this.elBarRep     = document.getElementById('bar-rep');
+    this.elDeltaRep   = document.getElementById('delta-rep');
+    this.elValCop     = document.getElementById('val-cop');
+    this.elValDipBonus = document.getElementById('val-dip-bonus');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4613,6 +4730,7 @@ class UI {
     this._renderProjection(state);
     this._renderSparklines(state);
     this._renderEnergyMix(state);
+    this._renderDiplomacy(state);
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
@@ -4801,10 +4919,24 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
+  }
+
+  _renderDiplomacy(state) {
+    const rep = state.internationalReputation || 50;
+    const prevRep = state.lastSnapshot ? (state.lastSnapshot.internationalReputation || 50) : rep;
+    this.elValRep.textContent = Math.round(rep);
+    this.elBarRep.style.width = Math.max(0, rep) + '%';
+    const repStatus = rep >= 60 ? 'good' : rep >= 35 ? 'warn' : 'danger';
+    this.elBarRep.className = 'bar-fill ' + repStatus;
+    this._renderDelta(this.elDeltaRep, rep, prevRep !== rep ? prevRep : null, false, 0);
+    this.elValCop.textContent = state.copAgreements || 0;
+    this.elValDipBonus.textContent = state.diplomaticBonus || 0;
   }
 
   _renderBudget(state) {
@@ -5053,12 +5185,14 @@ class UI {
 
     let effectsHtml = '';
     const labelMap = {
-      propertyValue:       'Property Value',
-      socialStability:     'Social Stability',
-      financialStability:  'Financial Stability',
-      gridReliability:     'Grid Reliability',
-      temperature:         'Temperature',
-      strandedAssets:      'Stranded Assets',
+      propertyValue:           'Property Value',
+      socialStability:         'Social Stability',
+      financialStability:      'Financial Stability',
+      gridReliability:         'Grid Reliability',
+      temperature:             'Temperature',
+      strandedAssets:          'Stranded Assets',
+      netZeroProgress:         'Net Zero Progress',
+      internationalReputation: 'International Standing',
     };
     for (const [key, val] of Object.entries(event.appliedEffects)) {
       const label = labelMap[key] || key;
@@ -5104,6 +5238,8 @@ class UI {
     const finStatus   = s.financialStability >= 60 ? 'good' : s.financialStability >= 35 ? 'warn' : 'danger';
     const socStatus   = s.socialStability >= 60 ? 'good' : s.socialStability >= 35 ? 'warn' : 'danger';
 
+    const repStatus  = (s.internationalReputation || 50) >= 60 ? 'good' : (s.internationalReputation || 50) >= 35 ? 'warn' : 'danger';
+
     this.elEndgameMetrics.innerHTML = `
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Final Temperature</div>
@@ -5124,6 +5260,14 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Social Stability</div>
         <div class="endgame-metric-val ${socStatus}">${Math.round(s.socialStability)}%</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">International Standing</div>
+        <div class="endgame-metric-val ${repStatus}">${Math.round(s.internationalReputation || 50)}</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">COP Agreements</div>
+        <div class="endgame-metric-val ${(s.copAgreements || 0) >= 2 ? 'good' : (s.copAgreements || 0) >= 1 ? 'warn' : 'danger'}">${s.copAgreements || 0}</div>
       </div>
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
@@ -5156,10 +5300,11 @@ class UI {
         <div id="endgame-score-label">Your Climate Score</div>
         ${radarHtml}
         <div id="endgame-score-breakdown">
-          <div class="score-dim"><span class="score-dim-val">${score.tempScore}/30</span><span class="score-dim-name">Climate</span></div>
-          <div class="score-dim"><span class="score-dim-val">${score.nzScore}/30</span><span class="score-dim-name">Net Zero</span></div>
-          <div class="score-dim"><span class="score-dim-val">${score.stabScore}/30</span><span class="score-dim-name">Stability</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.tempScore}/25</span><span class="score-dim-name">Climate</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.nzScore}/25</span><span class="score-dim-name">Net Zero</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.stabScore}/25</span><span class="score-dim-name">Stability</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.dipScore}/15</span><span class="score-dim-name">Diplomacy</span></div>
         </div>
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
@@ -5184,10 +5329,11 @@ class UI {
 
   _buildRadarChart(score) {
     const dims = [
-      { label: 'Climate', val: score.tempScore, max: 30 },
-      { label: 'Net Zero', val: score.nzScore, max: 30 },
-      { label: 'Stability', val: score.stabScore, max: 30 },
+      { label: 'Climate', val: score.tempScore, max: 25 },
+      { label: 'Net Zero', val: score.nzScore, max: 25 },
+      { label: 'Stability', val: score.stabScore, max: 25 },
       { label: 'Resilience', val: score.resScore, max: 10 },
+      { label: 'Diplomacy', val: score.dipScore, max: 15 },
     ];
     const cx = 110, cy = 110, r = 80;
     const n = dims.length;
@@ -5354,6 +5500,12 @@ class UI {
 
     if (state.strandedAssets > 50) {
       msgs.push('Stranded fossil assets now exceed 50 — pension fund exposure is systemic. Financial Resilience investment or managed asset write-downs are required to stabilise the system.');
+    }
+
+    if ((state.internationalReputation || 50) < 35) {
+      msgs.push('Britain\'s international standing has declined sharply. Low reputation means higher trade barriers and weaker influence at COP negotiations. Policy choices in mini-events can rebuild diplomatic capital.');
+    } else if ((state.internationalReputation || 50) >= 70 && (state.copAgreements || 0) >= 2) {
+      msgs.push(`Strong international leadership (${state.copAgreements} COP agreements) is generating a £${state.diplomaticBonus || 0}bn diplomatic budget bonus. This gives you more room to invest.`);
     }
 
     if (msgs.length === 0) {
@@ -5723,6 +5875,121 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_cop_pledge',
+    icon: '🌍',
+    title: 'COP Climate Pledge',
+    prompt: 'The UK is asked to lead a new international climate pledge at COP. How do you respond?',
+    explanation: 'International leadership on climate builds diplomatic capital and can unlock green trade benefits. An ambitious pledge raises the UK\'s profile but commits to faster decarbonisation. A cautious pledge preserves flexibility but signals weakness to allies.',
+    contextFn: (s) => ({
+      label: 'International Reputation',
+      value: `${Math.round(s.internationalReputation)}`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🌱 Lead an ambitious pledge',
+      consequence: '+10 Reputation · +5% Net Zero target · costs £8bn next turn (accelerated commitments)',
+      effect: (s) => { s.internationalReputation = Math.min(100, s.internationalReputation + 10); s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.nextTurnBudgetPenalty += 8; s.copAgreements++; },
+    },
+    optB: {
+      label: '🤝 Cautious incremental pledge',
+      consequence: '+3 Reputation · no budget impact · −2 Social (seen as lacking ambition)',
+      effect: (s) => { s.internationalReputation = Math.min(100, s.internationalReputation + 3); s.socialStability = Math.max(0, s.socialStability - 2); },
+    },
+    condition: (s) => s.turn > 0,
+  },
+  {
+    id: 'mini_carbon_border',
+    icon: '🛃',
+    title: 'Carbon Border Adjustment',
+    prompt: 'The EU introduces carbon border taxes. UK exports face tariffs unless you match their standards.',
+    explanation: 'Carbon border adjustments penalise countries with weaker climate policy. Matching the EU standard accelerates your transition but costs money. Negotiating an exemption preserves short-term trade but stalls your own progress.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '✅ Match EU carbon pricing',
+      consequence: '+6% Net Zero · +5 Financial (trade maintained) · costs £7bn next turn',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.financialStability = Math.min(100, s.financialStability + 5); s.nextTurnBudgetPenalty += 7; s.internationalReputation = Math.min(100, s.internationalReputation + 5); },
+    },
+    optB: {
+      label: '🛡️ Negotiate transition exemption',
+      consequence: 'No cost · −5 Financial (trade penalties) · −3 Reputation',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 5); s.internationalReputation = Math.max(0, s.internationalReputation - 3); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_green_jobs',
+    icon: '🏭',
+    title: 'Green Industrial Strategy',
+    prompt: 'A major offshore wind manufacturer wants to build a UK gigafactory — but needs planning fast-track and subsidies.',
+    explanation: 'Green manufacturing creates high-quality jobs and reduces import dependency. Fast-tracking costs public money but locks in domestic capacity. Letting the market decide costs nothing but risks losing the factory to a competing country.',
+    contextFn: (s) => ({
+      label: 'Wind Capacity',
+      value: `${Math.round(s.energy.wind)}`,
+      note: `Social: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🏗️ Fast-track with subsidies',
+      consequence: 'Costs £10bn next turn · Wind +4 · +5 Social (jobs created) · +3 Reputation',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.energy.wind = Math.min(120, s.energy.wind + 4); s.socialStability = Math.min(100, s.socialStability + 5); s.internationalReputation = Math.min(100, s.internationalReputation + 3); },
+    },
+    optB: {
+      label: '📊 Let market forces decide',
+      consequence: 'No cost · −3 Social (missed opportunity) · factory likely goes to EU',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    condition: (s) => s.energy.wind > 20,
+  },
+  {
+    id: 'mini_water_crisis',
+    icon: '💧',
+    title: 'Water Infrastructure Crisis',
+    prompt: 'Ageing water infrastructure is failing under heat stress. Sewage overflows contaminate rivers and beaches.',
+    explanation: 'Climate change stresses water systems built for a cooler, wetter Britain. Emergency repairs are expensive but immediate. A long-term overhaul costs less per year but takes a full term to deliver and leaves the problem visible in the meantime.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Social: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🔧 Emergency repair programme',
+      consequence: 'Costs £12bn next turn · +4 Social · no long-term fix',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.socialStability = Math.min(100, s.socialStability + 4); },
+    },
+    optB: {
+      label: '🏗️ Long-term infrastructure overhaul',
+      consequence: 'Costs £5bn next turn · −3 Social now · +adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.socialStability = Math.max(0, s.socialStability - 3); s.infrastructure.adaptation += 18; },
+    },
+    condition: (s) => s.temperature > 1.3,
+  },
+  {
+    id: 'mini_climate_migration',
+    icon: '🏘️',
+    title: 'Climate Migration Pressure',
+    prompt: 'Southern European heat is driving migration northward. The UK faces a spike in climate asylum applications.',
+    explanation: 'Climate migration is a growing reality. Accepting and integrating migrants builds workforce capacity and international standing. Restricting entry avoids short-term social strain but damages the UK\'s international reputation.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Reputation: ${Math.round(s.internationalReputation)}`,
+    }),
+    optA: {
+      label: '🤝 Accept and integrate',
+      consequence: '+8 Reputation · −4 Social short-term · +2 Financial (workforce growth)',
+      effect: (s) => { s.internationalReputation = Math.min(100, s.internationalReputation + 8); s.socialStability = Math.max(0, s.socialStability - 4); s.financialStability = Math.min(100, s.financialStability + 2); },
+    },
+    optB: {
+      label: '🛑 Restrict entry',
+      consequence: '+3 Social short-term · −6 Reputation · −2 Financial (labour shortage)',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); s.internationalReputation = Math.max(0, s.internationalReputation - 6); s.financialStability = Math.max(0, s.financialStability - 2); },
+    },
+    condition: (s) => s.temperature > 1.5,
   },
 ];
 
