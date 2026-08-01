@@ -298,6 +298,46 @@ body {
   height: 14px;
 }
 
+/* Carbon budget bar */
+.bar-track.carbon-track {
+  background: linear-gradient(90deg, var(--status-danger) 0%, var(--status-warn) 40%, var(--status-good) 100%);
+  height: 10px;
+}
+
+/* Unlockable card styles */
+.investment-card.unlockable-card.locked {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.7);
+  position: relative;
+}
+.card-lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  border-radius: var(--radius-md);
+  z-index: 2;
+}
+.card-lock-overlay span {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--bg-primary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+.investment-card.unlockable-card.unlocked {
+  animation: unlockGlow 0.8s ease-out;
+}
+@keyframes unlockGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(76,175,129,0.5); }
+  50%  { box-shadow: 0 0 18px 4px rgba(76,175,129,0.4); }
+  100% { box-shadow: none; }
+}
+
 /* Threshold marker */
 .threshold-marker {
   position: absolute;
@@ -2270,6 +2310,19 @@ body { transition: filter 2s ease; }
         <div class="sparkline-container" id="spark-nz"></div>
       </div>
 
+      <!-- Carbon Budget -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🏭 Carbon Budget</span>
+          <span class="metric-value"><span id="val-carbon">5600</span> MtCO₂ <span class="metric-delta" id="delta-carbon"></span></span>
+        </div>
+        <div class="bar-track carbon-track" style="position:relative">
+          <div class="bar-fill good" id="bar-carbon" style="width:100%"></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">UK cumulative budget remaining (6th Carbon Budget)</div>
+        <div class="sparkline-container" id="spark-carbon"></div>
+      </div>
+
       <!-- Energy Mix -->
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
@@ -2467,6 +2520,60 @@ body { transition: filter 2s ease; }
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
         </div>
         <div class="card-citation">Based on UKRI Net Zero Innovation portfolio</div>
+      </div>
+
+      <!-- Hydrogen Economy (unlockable) -->
+      <div class="investment-card unlockable-card locked" id="card-hydrogenEconomy">
+        <div class="card-lock-overlay"><span>🔒 Unlocks: Turn 3+ &amp; Grid ≥ 60%</span></div>
+        <div class="card-top">
+          <div class="card-icon">💧</div>
+          <div class="card-info">
+            <div class="card-name">Hydrogen Economy</div>
+            <div class="card-sub">Green H₂ Production, Industrial Fuel Switching</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£25bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-hydrogenEconomy" data-cat="hydrogenEconomy">−</button>
+              <span class="block-count" id="count-hydrogenEconomy">0</span>
+              <button class="block-btn" id="plus-hydrogenEconomy" data-cat="hydrogenEconomy">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">Electrolysis-powered green hydrogen can decarbonise steel, cement, and heavy transport — sectors resistant to direct electrification. Requires surplus grid capacity and substantial capital but slashes industrial emissions and reduces gas dependency.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">Net Zero +7</span>
+          <span class="effect-tag pos">Gas dependency −5</span>
+          <span class="effect-tag pos">Storage +4</span>
+        </div>
+        <div class="card-citation">Based on UK Hydrogen Strategy 2021 &amp; CCC 6th Carbon Budget</div>
+      </div>
+
+      <!-- Nature & Land Use (unlockable) -->
+      <div class="investment-card unlockable-card locked" id="card-natureLandUse">
+        <div class="card-lock-overlay"><span>🔒 Unlocks: Turn 2+ &amp; NZ ≥ 25%</span></div>
+        <div class="card-top">
+          <div class="card-icon">🌳</div>
+          <div class="card-info">
+            <div class="card-name">Nature &amp; Land Use</div>
+            <div class="card-sub">Peatland Restoration, Reforestation, Soil Carbon</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£20bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-natureLandUse" data-cat="natureLandUse">−</button>
+              <span class="block-count" id="count-natureLandUse">0</span>
+              <button class="block-btn" id="plus-natureLandUse" data-cat="natureLandUse">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">The UK's degraded peatlands emit 23 MtCO₂/yr; restoring them creates a net carbon sink. Combined with 30,000 ha/yr woodland creation and regenerative agriculture, nature-based solutions sequester carbon while boosting biodiversity and rural employment.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">Temperature −0.03°C</span>
+          <span class="effect-tag pos">Social +4</span>
+          <span class="effect-tag pos">Net Zero +5</span>
+        </div>
+        <div class="card-citation">Based on CCC Land Use Report 2020 &amp; England Peat Action Plan</div>
       </div>
 
     </div>
@@ -3097,9 +3204,24 @@ const BLOCK_COSTS = {
   socialSupport:       20,
   financialResilience: 30,
   research:            15,
+  hydrogenEconomy:     25,
+  natureLandUse:       20,
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
+
+const CARBON_BUDGET_INITIAL = 5600; // MtCO2 remaining for 1.5°C (IPCC AR6)
+
+const UNLOCKABLE_CARDS = {
+  hydrogenEconomy: {
+    condition: (s) => s.infrastructure.gridAndStorage >= 35,
+    hint: 'Requires Grid & Storage investment (1+ block)',
+  },
+  natureLandUse: {
+    condition: (s) => s.temperature > 1.4,
+    hint: 'Unlocks when temperature exceeds 1.4°C',
+  },
+};
 
 const RANDOM_EVENTS = [
   {
@@ -3258,6 +3380,14 @@ const achievementMgr = new AchievementManager();
 ============================================================ */
 
 const METRIC_TOOLTIPS = {
+  carbon: {
+    title: '🏭 Carbon Budget',
+    desc: 'The total remaining CO₂ emissions the UK can produce while staying within the 1.5°C global warming limit. Based on IPCC AR6 remaining budget allocated proportionally to the UK.',
+    drivers: '↑ Preserved by: reducing gas share, accelerating renewables\n↓ Depleted by: high gas consumption, delayed transition',
+    threshold: 'When budget reaches 0 MtCO₂: warming accelerates 30% faster (overshoot penalty). Below 1000 MtCO₂: urgent action required.',
+    thresholdGood: false,
+    source: 'Based on IPCC AR6 WG1 — remaining carbon budget for 1.5°C (50% probability)',
+  },
   temperature: {
     title: '🌡️ UK Warming Pathway',
     desc: 'The cumulative warming above pre-industrial levels on a UK domestic emissions pathway. If all nations followed the same trajectory, this is what global temperature would reach.',
@@ -3457,7 +3587,7 @@ class AnalyticsTracker {
       completedRuns: 0,
       scenarioCounts: {},
       difficultyCounts: {},
-      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0 },
+      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0, hydrogenEconomy: 0, natureLandUse: 0 },
       scoreTotal: 0,
       eventTotal: 0,
     };
@@ -3517,6 +3647,7 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      carbonBudget: state.carbonBudget,
     });
   }
   reset() { this.data = []; }
@@ -3557,6 +3688,8 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        hydrogenEconomy: 0,
+        natureLandUse: 0,
       },
       strandedAssets: 0,
       propertyValue: 100,
@@ -3568,6 +3701,8 @@ class GameEngine {
         socialSupport: 0,
         financialResilience: 0,
         research: 0,
+        hydrogenEconomy: 0,
+        natureLandUse: 0,
       },
       spentThisTurn: 0,
       netZeroAchieved: false,
@@ -3577,6 +3712,7 @@ class GameEngine {
       lastEventTurn: -1,
       log: [],
       lastSnapshot: null,
+      carbonBudget: CARBON_BUDGET_INITIAL,
     };
   }
 
@@ -3609,6 +3745,9 @@ class GameEngine {
   allocateBlock(category) {
     const s = this.state;
     if (s.isResolvingTurn) return { success: false, reason: 'Turn in progress' };
+    if (UNLOCKABLE_CARDS[category] && !UNLOCKABLE_CARDS[category].condition(s)) {
+      return { success: false, reason: 'Not yet unlocked' };
+    }
     const cost = BLOCK_COSTS[category];
     const current = s.currentDecisions[category];
     if (current >= MAX_BLOCKS_PER_CAT) return { success: false, reason: 'Max 2 blocks per category' };
@@ -3676,6 +3815,19 @@ class GameEngine {
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
     }
+    const he = d.hydrogenEconomy;
+    if (he > 0) {
+      netZeroProgress = clamp(netZeroProgress + he * 7, 0, 100);
+      e.gas     = clamp(e.gas - he * 5, 0, 100);
+      e.storage = clamp(e.storage + he * 4, 0, 100);
+      infra.hydrogenEconomy += he * 25;
+    }
+    const nl = d.natureLandUse;
+    if (nl > 0) {
+      netZeroProgress = clamp(netZeroProgress + nl * 5, 0, 100);
+      socialStability = clamp(socialStability + nl * 4, 0, 100);
+      infra.natureLandUse += nl * 20;
+    }
 
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
@@ -3713,6 +3865,7 @@ class GameEngine {
       financialStability: s.financialStability,
       socialStability: s.socialStability,
       energy: Object.assign({}, s.energy),
+      carbonBudget: s.carbonBudget,
     };
 
     // Phase 1: Budget (already set at turn start; reset nextTurn penalty)
@@ -3769,6 +3922,7 @@ class GameEngine {
       afterGrid:     s.gridReliability,
       afterFin:      s.financialStability,
       afterSoc:      s.socialStability,
+      afterCarbon:   s.carbonBudget,
     };
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
@@ -3779,7 +3933,7 @@ class GameEngine {
     // Phase 12: Advance turn
     s.turn++;
     s.year += 5;
-    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0, hydrogenEconomy:0, natureLandUse:0 };
     s.spentThisTurn = 0;
 
     // Recalculate budget for next turn
@@ -3847,6 +4001,24 @@ class GameEngine {
     for (let i = 0; i < rs; i++) {
       techTree.purchase();
     }
+
+    // Hydrogen Economy
+    const he = d.hydrogenEconomy;
+    if (he > 0) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + he * 7, 0, 100);
+      s.energy.gas      = this._clamp(s.energy.gas - he * 5, 0, 100);
+      s.energy.storage  = this._clamp(s.energy.storage + he * 4, 0, 100);
+      s.infrastructure.hydrogenEconomy += he * 25;
+    }
+
+    // Nature & Land Use
+    const nl = d.natureLandUse;
+    if (nl > 0) {
+      s.temperature     = Math.round((s.temperature - nl * 0.03) * 100) / 100;
+      s.socialStability = this._clamp(s.socialStability + nl * 4, 0, 100);
+      s.netZeroProgress = this._clamp(s.netZeroProgress + nl * 5, 0, 100);
+      s.infrastructure.natureLandUse += nl * 20;
+    }
   }
 
   _recalcGrid() {
@@ -3897,12 +4069,21 @@ class GameEngine {
     const gasShare   = total > 0 ? e.gas / total : 0;
     const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
 
+    // Deplete carbon budget based on gas share
+    const emissionsThisTurn = Math.round(gasShare * total * 15);
+    s.carbonBudget = Math.max(0, s.carbonBudget - emissionsThisTurn);
+
     let delta = difficultyMgr.preset.warmingRate + (gasShare - renewShare) * 0.22;
     delta = Math.max(delta, 0.03); // residual warming even at Net Zero
 
     // Tipping point feedback: above 1.5°C warming compounds faster (permafrost methane, Arctic ice loss)
     if (s.temperature > 1.5) {
       delta *= 1 + (s.temperature - 1.5) * 1.2;
+    }
+
+    // Carbon budget overshoot: warming accelerates when budget exhausted
+    if (s.carbonBudget <= 0) {
+      delta *= 1.3;
     }
 
     if (s.netZeroAchieved) delta *= 0.45;
@@ -4003,6 +4184,8 @@ class GameEngine {
     if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
     if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
+    if (d.hydrogenEconomy > 0)     out.push(`Hydrogen Economy ×${d.hydrogenEconomy} (£${d.hydrogenEconomy * 25}bn)`);
+    if (d.natureLandUse > 0)       out.push(`Nature & Land Use ×${d.natureLandUse} (£${d.natureLandUse * 20}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
   }
@@ -4318,7 +4501,7 @@ class UI {
     });
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
-    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
+    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research', '7':'hydrogenEconomy', '8':'natureLandUse' };
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
@@ -4588,7 +4771,7 @@ class UI {
     // Most invested category
     const invTotals = d.investmentTotals;
     const topCat = Object.entries(invTotals).sort((a, b) => b[1] - a[1])[0];
-    const catLabels = { energyTransition: 'Energy Transition', gridAndStorage: 'Grid & Storage', adaptation: 'Adaptation', socialSupport: 'Social Support', financialResilience: 'Financial Resilience', research: 'R&D' };
+    const catLabels = { energyTransition: 'Energy Transition', gridAndStorage: 'Grid & Storage', adaptation: 'Adaptation', socialSupport: 'Social Support', financialResilience: 'Financial Resilience', research: 'R&D', hydrogenEconomy: 'Hydrogen Economy', natureLandUse: 'Nature & Land Use' };
     const topCatLabel = topCat ? catLabels[topCat[0]] || topCat[0] : '—';
 
     // Most common scenario
@@ -4649,6 +4832,20 @@ class UI {
     this.elBarTemp.style.left   = Math.max(1, Math.min(99, tempPct)) + '%';
     this._renderDelta(this.elDeltaTemp, state.temperature, state.lastSnapshot ? state.lastSnapshot.temperature : null, true, 2);
 
+    // Carbon Budget
+    const carbonPct = Math.max(0, (state.carbonBudget / CARBON_BUDGET_INITIAL) * 100);
+    const prevCarbon = state.lastSnapshot ? (state.lastSnapshot.carbonBudget || CARBON_BUDGET_INITIAL) : state.carbonBudget;
+    const elValCarbon = document.getElementById('val-carbon');
+    const elBarCarbon = document.getElementById('bar-carbon');
+    const elDeltaCarbon = document.getElementById('delta-carbon');
+    if (elValCarbon) this._rollNumber(elValCarbon, Math.round(prevCarbon), Math.round(state.carbonBudget), 800, 0);
+    if (elBarCarbon) {
+      elBarCarbon.style.width = carbonPct + '%';
+      const carbonStatus = carbonPct > 50 ? 'info' : carbonPct > 20 ? 'warn' : 'danger';
+      elBarCarbon.className = 'bar-fill ' + carbonStatus;
+    }
+    if (elDeltaCarbon) this._renderDelta(elDeltaCarbon, state.carbonBudget, prevCarbon, false, 0);
+
     // Other metrics
     const metricMap = {
       grid: { val: state.gridReliability, snap: state.lastSnapshot ? state.lastSnapshot.gridReliability : null },
@@ -4680,6 +4877,7 @@ class UI {
       { containerId: 'spark-fin',  key: 'financialStability', color: '#5390d9', invert: false, min: 0, max: 100 },
       { containerId: 'spark-soc',  key: 'socialStability', color: '#ffd600', invert: false, min: 0, max: 100 },
       { containerId: 'spark-nz',   key: 'netZeroProgress', color: '#448aff', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-carbon', key: 'carbonBudget', color: '#ff7043', invert: true, min: 0, max: CARBON_BUDGET_INITIAL },
     ];
 
     for (const s of series) {
@@ -4829,6 +5027,7 @@ class UI {
 
   _renderCards(state) {
     for (const cat of this.categories) {
+      if (UNLOCKABLE_CARDS[cat]) continue;
       const count   = state.currentDecisions[cat];
       const cost    = BLOCK_COSTS[cat];
       const rem     = state.budget - state.spentThisTurn;
@@ -4845,6 +5044,34 @@ class UI {
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
     }
     this._renderResearchCard();
+    this._renderUnlockableCards(state);
+  }
+
+  _renderUnlockableCards(state) {
+    for (const [cat, def] of Object.entries(UNLOCKABLE_CARDS)) {
+      const card = document.getElementById(`card-${cat}`);
+      if (!card) continue;
+      const isUnlocked = def.condition(state);
+      const wasLocked = card.classList.contains('locked');
+      card.classList.toggle('locked', !isUnlocked);
+      if (isUnlocked && wasLocked) {
+        card.classList.add('just-unlocked');
+        setTimeout(() => card.classList.remove('just-unlocked'), 2000);
+      }
+      if (isUnlocked) {
+        const count = state.currentDecisions[cat];
+        const cost = BLOCK_COSTS[cat];
+        const rem = state.budget - state.spentThisTurn;
+        const canAdd = count < MAX_BLOCKS_PER_CAT && rem >= cost;
+        const canRem = count > 0;
+        document.getElementById(`count-${cat}`).textContent = count;
+        document.getElementById(`plus-${cat}`).disabled = !canAdd;
+        document.getElementById(`minus-${cat}`).disabled = !canRem;
+        card.classList.toggle('allocated', count > 0 && count < MAX_BLOCKS_PER_CAT);
+        card.classList.toggle('maxed', count >= MAX_BLOCKS_PER_CAT);
+        card.classList.toggle('unaffordable', count === 0 && !canAdd);
+      }
+    }
   }
 
   _renderResearchCard() {
@@ -4958,7 +5185,8 @@ class UI {
   _buildTurnNarrative(entry) {
     const d = {
       energyTransition: 0, gridAndStorage: 0, adaptation: 0,
-      socialSupport: 0, financialResilience: 0, research: 0
+      socialSupport: 0, financialResilience: 0, research: 0,
+      hydrogenEconomy: 0, natureLandUse: 0
     };
     // Parse decisions back from description strings
     entry.decisions.forEach(dec => {
@@ -4968,6 +5196,8 @@ class UI {
       if (dec.includes('Social')) d.socialSupport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('Financial')) d.financialResilience = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('R&D')) d.research = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Hydrogen')) d.hydrogenEconomy = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Nature')) d.natureLandUse = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
     });
 
     const parts = [];
@@ -4977,6 +5207,8 @@ class UI {
     if (d.socialSupport > 0) parts.push(`funded the just transition for affected communities`);
     if (d.financialResilience > 0) parts.push(`reinforced financial sector stability`);
     if (d.research > 0) parts.push(`commissioned strategic research`);
+    if (d.hydrogenEconomy > 0) parts.push(`launched green hydrogen production`);
+    if (d.natureLandUse > 0) parts.push(`invested in peatland restoration and reforestation`);
 
     if (parts.length === 0) return 'No investment was made this term.';
     if (parts.length === 1) return `This term, government ${parts[0]}.`;
@@ -5010,6 +5242,7 @@ class UI {
     html += this._chip('Fin',  Math.round(entry.snapshot.financialStability), Math.round(entry.afterFin), false, '%');
     html += this._chip('Soc',  Math.round(entry.snapshot.socialStability), Math.round(entry.afterSoc), false, '%');
     html += this._chip('NZ',   Math.round(entry.snapshot.netZeroProgress), Math.round(entry.afterNZ), false, '%');
+    html += this._chip('CO₂',  Math.round(entry.snapshot.carbonBudget), Math.round(entry.afterCarbon), false, 'Mt');
     html += '</div>';
 
     div.innerHTML = html;
@@ -5124,6 +5357,10 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Social Stability</div>
         <div class="endgame-metric-val ${socStatus}">${Math.round(s.socialStability)}%</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Carbon Budget</div>
+        <div class="endgame-metric-val ${s.carbonBudget > 2000 ? 'good' : s.carbonBudget > 0 ? 'warn' : 'danger'}">${Math.round(s.carbonBudget)} Mt</div>
       </div>
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
@@ -5273,6 +5510,7 @@ class UI {
       'val-fin':  'fin',
       'val-soc':  'soc',
       'val-nz':   'nz',
+      'val-carbon': 'carbon',
     };
     // Also attach to metric-name spans
     const nameMap = {
@@ -5281,6 +5519,7 @@ class UI {
       '🏦 Financial Stability':'fin',
       '🏘️ Social Stability':   'soc',
       '🌱 Net Zero Progress':  'nz',
+      '🏭 Carbon Budget':      'carbon',
     };
 
     document.querySelectorAll('.metric-name').forEach(el => {
@@ -5354,6 +5593,12 @@ class UI {
 
     if (state.strandedAssets > 50) {
       msgs.push('Stranded fossil assets now exceed 50 — pension fund exposure is systemic. Financial Resilience investment or managed asset write-downs are required to stabilise the system.');
+    }
+
+    if (state.carbonBudget <= 0) {
+      msgs.push('The UK carbon budget is exhausted. Warming is now accelerating beyond policy control — every remaining turn applies an overshoot penalty of 1.3× to temperature rise.');
+    } else if (state.carbonBudget < 1500) {
+      msgs.push(`Only ${Math.round(state.carbonBudget)} MtCO₂ of carbon budget remains. Without rapid gas phase-out, overshoot is imminent — prioritise renewables and hydrogen.`);
     }
 
     if (msgs.length === 0) {
@@ -5441,7 +5686,7 @@ class EffectsManager {
   }
 
   pulseAll() {
-    const ids = ['bar-temp', 'bar-budget', 'bar-grid', 'bar-fin', 'bar-soc', 'bar-nz'];
+    const ids = ['bar-temp', 'bar-budget', 'bar-carbon', 'bar-grid', 'bar-fin', 'bar-soc', 'bar-nz'];
     ids.forEach((id, i) => setTimeout(() => this.pulse(id), i * 90));
   }
 
