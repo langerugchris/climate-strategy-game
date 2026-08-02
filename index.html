@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -2162,6 +2162,130 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== ENDGAME HISTORY CHART ===== */
+#endgame-history {
+  margin: var(--gap-lg) 0;
+}
+#endgame-history-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+  text-align: center;
+}
+#endgame-history svg {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  display: block;
+}
+.history-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-md);
+  margin-top: var(--gap-sm);
+  flex-wrap: wrap;
+}
+.history-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.history-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 420px;
+  width: calc(100% - 32px);
+  margin-bottom: var(--gap-xl);
+  pointer-events: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: tutorial-slide-up 0.4s ease-out;
+}
+@keyframes tutorial-slide-up {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+#tutorial-step-indicator {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-md);
+}
+#tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#tutorial-skip {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+#tutorial-skip:hover { color: var(--text-secondary); }
+#tutorial-next {
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#tutorial-next:hover { background: var(--accent-blue-lt); }
+.tutorial-highlight {
+  position: relative;
+  z-index: 2001;
+  box-shadow: 0 0 0 4px rgba(83, 144, 217, 0.5), 0 0 20px rgba(83, 144, 217, 0.3);
+  border-radius: var(--radius-md);
+}
+#tutorial-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1999;
+}
+#tutorial-backdrop.hidden { display: none; }
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -3199,6 +3323,20 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- ACHIEVEMENT TOAST -->
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-backdrop" class="hidden"></div>
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-card">
+    <div id="tutorial-step-indicator">Step 1 of 4</div>
+    <div id="tutorial-title"></div>
+    <div id="tutorial-body"></div>
+    <div id="tutorial-actions">
+      <button id="tutorial-skip">Skip tutorial</button>
+      <button id="tutorial-next">Next</button>
+    </div>
+  </div>
+</div>
+
 <div id="achievement-toast" aria-live="polite" aria-atomic="true">
   <span class="toast-icon"></span>
   <div class="toast-info">
@@ -3291,6 +3429,59 @@ const RANDOM_EVENTS = [
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
+  },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '🏜️',
+    title: 'Severe Drought — South-East England',
+    description: 'Six months without significant rainfall. Reservoir levels at 30%. Hosepipe bans extended nationwide. Agriculture yields collapse.',
+    story: 'Tom Reeves, a third-generation arable farmer near Canterbury, watched his wheat crop fail for the second consecutive year. "The soil is dust," he said. "Insurance won\'t cover climate risk any more."',
+    effects: { socialStability: -8, financialStability: -6, propertyValue: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'CYBER_GRID', type: 'CYBER', severity: 'MAJOR', icon: '🔒',
+    title: 'Cyber Attack on Energy Grid',
+    description: 'A sophisticated cyber attack disrupts the smart grid management system. Automated load-balancing fails across three regions.',
+    story: 'National Grid\'s control room in Wokingham went dark at 3am on a Tuesday. By dawn, 4.2 million homes in the Midlands and North-West had no power. The National Cyber Security Centre confirmed a state-sponsored attack.',
+    effects: { gridReliability: -15, socialStability: -8, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 15,
+    condition: (s) => s.energy.storage > 20 || s.infrastructure.gridAndStorage > 40,
+  },
+  {
+    id: 'TRADE_DISRUPTION', type: 'TRADE', severity: 'MODERATE', icon: '🚢',
+    title: 'Global Supply Chain Crisis',
+    description: 'Critical mineral shortages disrupt solar panel and battery manufacturing worldwide. UK renewable deployment slows sharply.',
+    story: 'The UK\'s largest battery gigafactory in Sunderland halted production for seven weeks after lithium carbonate prices tripled. 2,800 workers were furloughed while management scrambled for alternative suppliers.',
+    effects: { financialStability: -8, socialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'POSITIVE', severity: 'POSITIVE', icon: '🔬',
+    title: 'Fusion Energy Breakthrough',
+    description: 'UK scientists achieve sustained net-positive fusion at the Culham Centre for Fusion Energy. Global investment floods in.',
+    story: 'Dr. Amara Singh-Williams stood before the plasma chamber at Culham and announced what fifty years of physicists had chased: "We have sustained ignition." The implications for clean baseload power are transformational.',
+    effects: { financialStability: 8, socialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.energyTransition > 30 || s.turn >= 2,
+  },
+  {
+    id: 'INTL_AGREEMENT', type: 'POSITIVE', severity: 'POSITIVE', icon: '🌍',
+    title: 'International Climate Accord',
+    description: 'A landmark international agreement delivers £8bn in climate finance to the UK green transition. Diplomatic triumph for British leadership.',
+    story: 'At the G7 summit in Edinburgh, the Prime Minister secured unanimous backing for an accelerated finance mechanism. "This is the Marshall Plan for the climate," said the UN Secretary-General.',
+    effects: { financialStability: 6, socialStability: 8 },
+    infraDamage: false, budgetPenaltyNext: -8,
+    condition: (s) => s.netZeroProgress >= 50,
+  },
+  {
+    id: 'PUBLIC_MANDATE', type: 'POSITIVE', severity: 'POSITIVE', icon: '📣',
+    title: 'Public Climate Mandate',
+    description: 'A youth-led climate movement sweeps the country. Record public support for green investment. Government approval surges.',
+    story: 'Over 2 million people marched in cities across the UK on a single Saturday in April. Polling showed 78% public support for accelerated climate action — the highest figure ever recorded. Even previously hostile tabloids softened their stance.',
+    effects: { socialStability: 12 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.socialStability >= 55 && s.netZeroProgress >= 40,
   },
 ];
 
@@ -3913,6 +4104,7 @@ class GameEngine {
       decisions,
       event: event ? event.title : null,
       eventChained: event ? (event.isChained || false) : false,
+      eventPositive: event ? (event.severity === 'POSITIVE') : false,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -4072,50 +4264,66 @@ class GameEngine {
     if (Math.random() >= prob) return null;
 
     // Build weighted pool based on temperature
+    const byId = (id) => RANDOM_EVENTS.find(e => e.id === id);
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: byId('FINANCIAL_SHOCK'), w: 25 },
+        { e: byId('STORM'), w: 22 },
+        { e: byId('FLOOD_MINOR'), w: 22 },
+        { e: byId('HEATWAVE_MOD'), w: 8 },
+        { e: byId('SOCIAL_UNREST'), w: 8 },
+        { e: byId('TRADE_DISRUPTION'), w: 12 },
+        { e: byId('TECH_BREAKTHROUGH'), w: 8 },
+        { e: byId('PUBLIC_MANDATE'), w: 6 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: byId('FLOOD_MINOR'), w: 16 },
+        { e: byId('FLOOD_MAJOR'), w: 10 },
+        { e: byId('HEATWAVE_MOD'), w: 16 },
+        { e: byId('STORM'), w: 16 },
+        { e: byId('SOCIAL_UNREST'), w: 12 },
+        { e: byId('FINANCIAL_SHOCK'), w: 12 },
+        { e: byId('DROUGHT'), w: 10 },
+        { e: byId('CYBER_GRID'), w: 8 },
+        { e: byId('INTL_AGREEMENT'), w: 6 },
+        { e: byId('TECH_BREAKTHROUGH'), w: 5 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: byId('FLOOD_MAJOR'), w: 18 },
+        { e: byId('HEATWAVE_MAJOR'), w: 18 },
+        { e: byId('STORM'), w: 14 },
+        { e: byId('GRID_FAILURE'), w: 12 },
+        { e: byId('SOCIAL_UNREST'), w: 12 },
+        { e: byId('FINANCIAL_SHOCK'), w: 10 },
+        { e: byId('DROUGHT'), w: 12 },
+        { e: byId('CYBER_GRID'), w: 8 },
+        { e: byId('TRADE_DISRUPTION'), w: 6 },
       ];
     }
 
     // Event chain system: boost weights for events that cascade from previous ones
     const recentTypes = s.eventMemory.slice(-3).map(m => m.type);
     for (const item of pool) {
+      if (!item.e) continue;
       const eid = item.e.id;
       if (recentTypes.includes('FLOOD') && (eid === 'SOCIAL_UNREST' || eid === 'FINANCIAL_SHOCK')) item.w *= 1.5;
       if (recentTypes.includes('HEATWAVE') && (eid === 'GRID_FAILURE' || eid === 'SOCIAL_UNREST')) item.w *= 1.4;
+      if (recentTypes.includes('HEATWAVE') && eid === 'DROUGHT') item.w *= 1.5;
       if (recentTypes.includes('GRID') && eid === 'SOCIAL_UNREST') item.w *= 1.6;
+      if (recentTypes.includes('GRID') && eid === 'CYBER_GRID') item.w *= 1.3;
       if (recentTypes.includes('FINANCIAL') && eid === 'SOCIAL_UNREST') item.w *= 1.3;
       if (recentTypes.includes('SOCIAL') && eid === 'FINANCIAL_SHOCK') item.w *= 1.3;
       if (recentTypes.includes('FLOOD') && eid === 'FLOOD_MAJOR') item.w *= 1.4;
       if (recentTypes.includes('HEATWAVE') && eid === 'HEATWAVE_MAJOR') item.w *= 1.3;
+      if (recentTypes.includes('TRADE') && eid === 'FINANCIAL_SHOCK') item.w *= 1.4;
+      if (recentTypes.includes('DROUGHT') && eid === 'SOCIAL_UNREST') item.w *= 1.5;
     }
 
-    // Filter conditional events
-    pool = pool.filter(item => !item.e.condition || item.e.condition(s));
+    // Filter null lookups and conditional events
+    pool = pool.filter(item => item.e && (!item.e.condition || item.e.condition(s)));
     if (pool.length === 0) return null;
 
     // Weighted random selection
@@ -4131,23 +4339,26 @@ class GameEngine {
     let isChained = false;
     if (recentTypes.length > 0) {
       const chainMap = {
-        SOCIAL_UNREST: ['FLOOD', 'HEATWAVE', 'GRID', 'FINANCIAL'],
-        FINANCIAL_SHOCK: ['FLOOD', 'SOCIAL'],
-        GRID_FAILURE: ['HEATWAVE'],
+        SOCIAL_UNREST: ['FLOOD', 'HEATWAVE', 'GRID', 'FINANCIAL', 'DROUGHT'],
+        FINANCIAL_SHOCK: ['FLOOD', 'SOCIAL', 'TRADE'],
+        GRID_FAILURE: ['HEATWAVE', 'CYBER'],
         FLOOD_MAJOR: ['FLOOD'],
         HEATWAVE_MAJOR: ['HEATWAVE'],
+        DROUGHT: ['HEATWAVE'],
+        CYBER_GRID: ['GRID'],
       };
       const triggers = chainMap[selectedEvent.id] || [];
       isChained = triggers.some(t => recentTypes.includes(t));
     }
 
-    // Mitigation factor from adaptation
-    const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+    // Mitigation factor from adaptation (only applies to negative events)
+    const isPositive = selectedEvent.severity === 'POSITIVE';
+    const mitigate = isPositive ? 0 : Math.min(s.infrastructure.adaptation / 200, 0.5);
 
     // Apply effects
     const applied = {};
     for (const [key, val] of Object.entries(selectedEvent.effects)) {
-      const mitigated = Math.round(val * (1 - mitigate));
+      const mitigated = isPositive ? val : Math.round(val * (1 - mitigate));
       applied[key] = mitigated;
       if (key === 'temperature') {
         s.temperature = Math.round((s.temperature + mitigated) * 100) / 100;
@@ -4158,10 +4369,14 @@ class GameEngine {
       }
     }
 
-    // Budget penalty next turn
-    if (selectedEvent.budgetPenaltyNext > 0) {
-      const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
-      s.nextTurnBudgetPenalty += penaltyMitigated;
+    // Budget penalty (or bonus) next turn
+    if (selectedEvent.budgetPenaltyNext && selectedEvent.budgetPenaltyNext !== 0) {
+      if (selectedEvent.budgetPenaltyNext > 0) {
+        const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
+        s.nextTurnBudgetPenalty += penaltyMitigated;
+      } else {
+        s.nextTurnBudgetPenalty += selectedEvent.budgetPenaltyNext;
+      }
     }
 
     // Infrastructure stickiness damage
@@ -4571,11 +4786,12 @@ class UI {
       });
     }
 
-    // Advisor overlay dismiss
+    // Advisor overlay dismiss — then start tutorial for first-time players
     const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        this._startTutorial();
       });
     }
 
@@ -4724,6 +4940,7 @@ class UI {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
       document.getElementById('endgame-timeline')?.remove();
+      document.getElementById('endgame-history')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
       // Reset scenario card selection to default
@@ -5190,7 +5407,10 @@ class UI {
 
     // Event notice
     if (entry.event) {
-      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}${entry.eventChained ? ' <span class="event-chain-tag">cascading</span>' : ''}</div>`;
+      const isPositive = entry.eventPositive;
+      const evtColor = isPositive ? 'var(--status-good)' : 'var(--status-danger)';
+      const evtIcon = isPositive ? '✦' : '⚠';
+      html += `<div class="log-text" style="color:${evtColor};margin-top:4px;">${evtIcon} ${entry.event}${entry.eventChained ? ' <span class="event-chain-tag">cascading</span>' : ''}</div>`;
     }
 
     // Metric chips
@@ -5273,11 +5493,12 @@ class UI {
           <span class="event-effect-val ${cls}">${sign}${val}${suffix}</span>
         </div>`;
     }
-    if (event.budgetPenaltyNext > 0) {
+    if (event.budgetPenaltyNext && event.budgetPenaltyNext !== 0) {
+      const isBonus = event.budgetPenaltyNext < 0;
       effectsHtml += `
         <div class="event-effect-row">
           <span class="event-effect-label">Next Turn Budget</span>
-          <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
+          <span class="event-effect-val ${isBonus ? 'pos' : 'neg'}">${isBonus ? '+' : '−'}£${Math.abs(event.budgetPenaltyNext)}bn</span>
         </div>`;
     }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
@@ -5344,8 +5565,9 @@ class UI {
     // Build radar chart SVG
     const radarHtml = this._buildRadarChart(score);
 
-    // Build policy timeline
+    // Build policy timeline and history chart
     const timelineHtml = this._buildPolicyTimeline(s);
+    const historyHtml = this._buildHistoryChart();
 
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
@@ -5366,7 +5588,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', historyHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5465,6 +5687,84 @@ class UI {
     return html;
   }
 
+  // ===== ENDGAME HISTORY CHART =====
+  _buildHistoryChart() {
+    const data = turnHistory.data;
+    if (data.length < 2) return '';
+
+    const series = [
+      { key: 'gridReliability',    label: 'Grid',    color: '#4caf81' },
+      { key: 'financialStability', label: 'Finance', color: '#5390d9' },
+      { key: 'socialStability',    label: 'Social',  color: '#ffd600' },
+      { key: 'netZeroProgress',    label: 'Net Zero', color: '#448aff' },
+    ];
+    const tempSeries = { key: 'temperature', label: 'Temp', color: '#ff7043' };
+
+    const w = 480, h = 180, padL = 36, padR = 12, padT = 16, padB = 28;
+    const chartW = w - padL - padR;
+    const chartH = h - padT - padB;
+    const n = data.length;
+
+    const xPos = (i) => padL + (i / Math.max(n - 1, 1)) * chartW;
+
+    // Grid lines at 0, 25, 50, 75, 100
+    let gridSvg = '';
+    for (const val of [0, 25, 50, 75, 100]) {
+      const y = padT + (1 - val / 100) * chartH;
+      gridSvg += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w - padR}" y2="${y.toFixed(1)}" stroke="var(--border-subtle)" stroke-width="0.5"/>`;
+      gridSvg += `<text x="${padL - 4}" y="${(y + 3).toFixed(1)}" text-anchor="end" fill="var(--text-muted)" font-size="8" font-family="var(--font-system)">${val}%</text>`;
+    }
+
+    // Year labels
+    let yearSvg = '';
+    data.forEach((d, i) => {
+      const x = xPos(i);
+      yearSvg += `<text x="${x.toFixed(1)}" y="${h - 4}" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-family="var(--font-system)">${d.year}</text>`;
+    });
+
+    // Percentage series lines
+    let linesSvg = '';
+    for (const s of series) {
+      const points = data.map((d, i) => {
+        const x = xPos(i);
+        const y = padT + (1 - d[s.key] / 100) * chartH;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+      linesSvg += `<polyline points="${points.join(' ')}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+      data.forEach((d, i) => {
+        const x = xPos(i);
+        const y = padT + (1 - d[s.key] / 100) * chartH;
+        linesSvg += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${s.color}"><title>${s.label}: ${Math.round(d[s.key])}%</title></circle>`;
+      });
+    }
+
+    // Temperature as a separate dashed line (mapped to secondary scale 1.0-3.0)
+    const tempMin = 1.0, tempMax = 3.0;
+    const tempPoints = data.map((d, i) => {
+      const x = xPos(i);
+      const y = padT + (1 - (d.temperature - tempMin) / (tempMax - tempMin)) * chartH;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    });
+    linesSvg += `<polyline points="${tempPoints.join(' ')}" fill="none" stroke="${tempSeries.color}" stroke-width="2" stroke-dasharray="6 3" stroke-linecap="round" stroke-linejoin="round"/>`;
+    data.forEach((d, i) => {
+      const x = xPos(i);
+      const y = padT + (1 - (d.temperature - tempMin) / (tempMax - tempMin)) * chartH;
+      linesSvg += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${tempSeries.color}"><title>Temp: ${d.temperature.toFixed(1)}°C</title></circle>`;
+    });
+
+    const legendItems = [...series, tempSeries].map(s =>
+      `<div class="history-legend-item"><span class="history-legend-dot" style="background:${s.color}"></span>${s.label}</div>`
+    ).join('');
+
+    return `<div id="endgame-history">
+      <div id="endgame-history-title">Metrics Over Time</div>
+      <svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+        ${gridSvg}${yearSvg}${linesSvg}
+      </svg>
+      <div class="history-legend">${legendItems}</div>
+    </div>`;
+  }
+
   // ===== ACHIEVEMENT TOAST =====
   _showAchievementToast(achievement) {
     const toast = document.getElementById('achievement-toast');
@@ -5500,6 +5800,78 @@ class UI {
       return;
     }
     el.innerHTML = `<span class="legacy-rank">${title}</span><span class="legacy-xp">(Lvl ${lvl} · ${xp} XP)</span>`;
+  }
+
+  // ===== TUTORIAL SYSTEM =====
+  _startTutorial() {
+    const KEY = 'uk_climate_tutorial_done_v1';
+    try { if (localStorage.getItem(KEY)) return; } catch {}
+
+    const steps = [
+      {
+        title: 'Welcome, Minister',
+        body: 'You have 5 terms to guide UK climate policy. Each term, you allocate budget across investment categories. The trade-offs are real — you cannot fund everything at once.',
+        highlight: null,
+      },
+      {
+        title: 'Investment Cards',
+        body: 'Use the + and − buttons to allocate investment blocks. Each category costs a different amount. Press a number key (1-6) as a shortcut. You can allocate up to 2 blocks per category.',
+        highlight: 'decisions-panel',
+      },
+      {
+        title: 'Watch Your Metrics',
+        body: 'Five national indicators track your progress. Keep Grid Reliability, Financial Stability, and Social Stability above critical thresholds — if any hits zero, the simulation ends in breakdown.',
+        highlight: 'metrics-panel',
+      },
+      {
+        title: 'End Your Turn',
+        body: 'When you are satisfied with your allocations, click the Advance button. A 5-year simulation will run, and you may face a policy dilemma or climate event. Good luck!',
+        highlight: 'end-turn-btn',
+      },
+    ];
+
+    let step = 0;
+    const overlay = document.getElementById('tutorial-overlay');
+    const backdrop = document.getElementById('tutorial-backdrop');
+    const stepInd = document.getElementById('tutorial-step-indicator');
+    const title = document.getElementById('tutorial-title');
+    const body = document.getElementById('tutorial-body');
+    const nextBtn = document.getElementById('tutorial-next');
+    const skipBtn = document.getElementById('tutorial-skip');
+
+    if (!overlay || !backdrop) return;
+
+    const showStep = () => {
+      const s = steps[step];
+      stepInd.textContent = `Step ${step + 1} of ${steps.length}`;
+      title.textContent = s.title;
+      body.textContent = s.body;
+      nextBtn.textContent = step === steps.length - 1 ? 'Start playing' : 'Next';
+
+      document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+      if (s.highlight) {
+        const el = document.getElementById(s.highlight);
+        if (el) el.classList.add('tutorial-highlight');
+      }
+    };
+
+    const dismiss = () => {
+      overlay.classList.add('hidden');
+      backdrop.classList.add('hidden');
+      document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+      try { localStorage.setItem(KEY, '1'); } catch {}
+    };
+
+    nextBtn.addEventListener('click', () => {
+      step++;
+      if (step >= steps.length) { dismiss(); return; }
+      showStep();
+    });
+    skipBtn.addEventListener('click', dismiss);
+
+    overlay.classList.remove('hidden');
+    backdrop.classList.remove('hidden');
+    showStep();
   }
 
   // ===== METRIC TOOLTIP =====
@@ -6021,16 +6393,16 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
     if (result.event) {
-      fxMgr.haptic('heavy');
-      fxMgr.shake();
+      if (result.event.severity !== 'POSITIVE') { fxMgr.haptic('heavy'); fxMgr.shake(); }
+      else { fxMgr.haptic('light'); }
       ui._pendingEndgame = result.endgame;
       ui.showEventModal(result.event);
     } else {
       ui.showEndgame(result.endgame);
     }
   } else if (result.event) {
-    fxMgr.haptic('heavy');
-    fxMgr.shake();
+    if (result.event.severity !== 'POSITIVE') { fxMgr.haptic('heavy'); fxMgr.shake(); }
+    else { fxMgr.haptic('light'); }
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)

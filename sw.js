@@ -1,4 +1,4 @@
-const CACHE = 'climate-game-v3';
+const CACHE = 'climate-game-v4';
 const ASSETS = [
   './index.html',
   './manifest.json',
