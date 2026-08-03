@@ -590,6 +590,28 @@ body {
 
 #no-spend-warning.hidden { display: none; }
 
+/* ===== RESET TURN BUTTON ===== */
+#reset-turn-btn {
+  touch-action: manipulation;
+  padding: 10px 18px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+#reset-turn-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--accent-blue-lt);
+}
+#reset-turn-btn:active { transform: scale(0.96) !important; }
+#reset-turn-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
 /* ===== ACTION BAR ===== */
 #action-bar {
   padding: var(--gap-sm) var(--gap-md);
@@ -2142,12 +2164,46 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== FOCUS VISIBLE ===== */
+:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+button:focus:not(:focus-visible) { outline: none; }
+
+/* ===== NARRATIVE IN LOG ===== */
+.log-narrative {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  font-family: var(--font-editorial);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* ===== EMISSIONS METRIC ===== */
+.metric-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
 </style>
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
-<header id="game-header">
+<header id="game-header" role="banner">
   <div id="header-left">
     <svg id="gov-crown" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="30" cy="30" r="29" fill="#1d70b8" opacity="0.15" stroke="#1d70b8" stroke-width="1.5"/>
@@ -2162,7 +2218,7 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="settings-btn" title="Settings" aria-label="Open settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2178,10 +2234,10 @@ body { transition: filter 2s ease; }
 </header>
 
 <!-- ===== MAIN LAYOUT ===== -->
-<main id="game-main">
+<main id="game-main" role="main">
 
   <!-- LEFT: METRICS PANEL -->
-  <aside class="panel" id="metrics-panel">
+  <aside class="panel" id="metrics-panel" aria-label="National indicators">
     <div class="panel-title">National Indicators</div>
     <div id="metrics-inner">
 
@@ -2278,6 +2334,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2296,6 +2353,10 @@ body { transition: filter 2s ease; }
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
+          </div>
         </div>
       </div>
 
@@ -2311,7 +2372,7 @@ body { transition: filter 2s ease; }
           <span id="budget-remaining-display">£100bn</span> remaining
         </div>
       </div>
-      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
+      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>8</kbd> to add, <kbd>Shift+1</kbd>–<kbd>8</kbd> to remove, <kbd>Enter</kbd> to advance, <kbd>R</kbd> to reset.</div>
     </div>
 
     <div id="investment-cards">
@@ -2467,6 +2528,58 @@ body { transition: filter 2s ease; }
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
         </div>
         <div class="card-citation">Based on UKRI Net Zero Innovation portfolio</div>
+      </div>
+
+      <!-- Transport & EVs -->
+      <div class="investment-card" id="card-transport">
+        <div class="card-top">
+          <div class="card-icon">🚗</div>
+          <div class="card-info">
+            <div class="card-name">Transport &amp; EVs</div>
+            <div class="card-sub">EV Infrastructure, Rail, Public Transport</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£25bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-transport" data-cat="transport" aria-label="Remove Transport block">−</button>
+              <span class="block-count" id="count-transport">0</span>
+              <button class="block-btn" id="plus-transport" data-cat="transport" aria-label="Add Transport block">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">Transport is the UK's largest emitting sector. EV charging networks, rail electrification, and public transport expansion cut emissions while improving air quality. Each block raises Net Zero progress and Social Stability — but increases grid demand.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">NZ +8, Social +3</span>
+          <span class="effect-tag neg">Grid demand +5</span>
+          <span class="effect-tag warn">Needs grid capacity</span>
+        </div>
+        <div class="card-citation">Based on CCC Sixth Carbon Budget transport pathway</div>
+      </div>
+
+      <!-- Carbon Capture -->
+      <div class="investment-card" id="card-carbonCapture">
+        <div class="card-top">
+          <div class="card-icon">🏭</div>
+          <div class="card-info">
+            <div class="card-name">Carbon Capture</div>
+            <div class="card-sub">CCS, Direct Air Capture, Blue Hydrogen</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£35bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-carbonCapture" data-cat="carbonCapture" aria-label="Remove Carbon Capture block">−</button>
+              <span class="block-count" id="count-carbonCapture">0</span>
+              <button class="block-btn" id="plus-carbonCapture" data-cat="carbonCapture" aria-label="Add Carbon Capture block">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">Carbon capture and storage removes CO₂ from industrial processes and the atmosphere. Expensive and unproven at scale — but every credible Net Zero pathway requires it for hard-to-abate sectors (steel, cement, aviation). Reduces stranded asset risk by giving fossil infrastructure a transition role.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">NZ +6, Stranded −6</span>
+          <span class="effect-tag pos">Temp slowdown</span>
+          <span class="effect-tag warn">High cost, uncertain</span>
+        </div>
+        <div class="card-citation">Based on CCC net-negative emissions pathway</div>
       </div>
 
     </div>
@@ -2889,6 +3002,40 @@ body { transition: filter 2s ease; }
           <rect x="617" y="154" width="12" height="8" fill="#050d1a"/>
         </g>
 
+        <!-- EV CHARGING STATIONS -->
+        <g id="ev-station-1" visibility="hidden">
+          <rect x="385" y="150" width="22" height="12" fill="#0a1824" rx="2"/>
+          <rect x="389" y="152" width="14" height="3" fill="#4caf81" opacity="0.9"/>
+          <rect x="389" y="156" width="8" height="3" fill="#4caf81" opacity="0.5"/>
+          <line x1="396" y1="147" x2="396" y2="150" stroke="#4caf81" stroke-width="1.5"/>
+          <circle cx="396" cy="146" r="2" fill="#4caf81" opacity="0.8"/>
+        </g>
+        <g id="ev-station-2" visibility="hidden">
+          <rect x="415" y="150" width="22" height="12" fill="#0a1824" rx="2"/>
+          <rect x="419" y="152" width="14" height="3" fill="#4caf81" opacity="0.9"/>
+          <rect x="419" y="156" width="8" height="3" fill="#4caf81" opacity="0.5"/>
+          <line x1="426" y1="147" x2="426" y2="150" stroke="#4caf81" stroke-width="1.5"/>
+          <circle cx="426" cy="146" r="2" fill="#4caf81" opacity="0.8"/>
+        </g>
+
+        <!-- CCS FACILITIES -->
+        <g id="ccs-facility-1" visibility="hidden">
+          <rect x="450" y="130" width="30" height="32" fill="#0d1a2a" rx="2"/>
+          <rect x="453" y="133" width="24" height="4" fill="#b39ddb" opacity="0.6"/>
+          <rect x="453" y="140" width="24" height="4" fill="#b39ddb" opacity="0.4"/>
+          <rect x="453" y="147" width="24" height="4" fill="#b39ddb" opacity="0.25"/>
+          <line x1="465" y1="120" x2="465" y2="130" stroke="#b39ddb" stroke-width="2"/>
+          <circle cx="465" cy="118" r="3" fill="#b39ddb" opacity="0.6"/>
+          <text x="465" y="120" text-anchor="middle" font-size="5" fill="#b39ddb" opacity="0.8">CO₂</text>
+        </g>
+        <g id="ccs-facility-2" visibility="hidden">
+          <rect x="488" y="135" width="26" height="27" fill="#0d1a2a" rx="2"/>
+          <rect x="491" y="138" width="20" height="4" fill="#b39ddb" opacity="0.6"/>
+          <rect x="491" y="145" width="20" height="4" fill="#b39ddb" opacity="0.4"/>
+          <line x1="501" y1="126" x2="501" y2="135" stroke="#b39ddb" stroke-width="2"/>
+          <circle cx="501" cy="124" r="3" fill="#b39ddb" opacity="0.6"/>
+        </g>
+
         <!-- FLOOD WATER OVERLAY — shown when adaptation fails -->
         <rect id="flood-water" x="0" y="200" width="800" height="80" fill="#1565c0" opacity="0.55" rx="0">
           <animate id="flood-anim" attributeName="y" from="200" to="148" dur="2s" fill="freeze" begin="indefinite"/>
@@ -2900,12 +3047,13 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="reset-turn-btn" disabled aria-label="Reset all allocations this turn">Reset</button>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
 
   <!-- RIGHT: LOG PANEL -->
-  <aside class="panel" id="log-panel">
+  <aside class="panel" id="log-panel" aria-label="Policy record">
     <div class="panel-title">Policy Record</div>
     <div id="log-scroll">
       <div class="log-entry welcome">
@@ -2990,7 +3138,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- EVENT MODAL -->
-<div id="event-modal" class="hidden">
+<div id="event-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="event-title-display">
   <div id="event-card">
     <div id="event-icon-display">⚠️</div>
     <h2 id="event-title-display">Climate Event</h2>
@@ -3002,7 +3150,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- END GAME OVERLAY -->
-<div id="endgame-overlay" class="hidden">
+<div id="endgame-overlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="endgame-title-display">
   <div id="endgame-card">
     <div id="endgame-icon-display"></div>
     <h1 id="endgame-title-display"></h1>
@@ -3016,7 +3164,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- ADVISOR OVERLAY -->
-<div id="advisor-overlay" class="hidden">
+<div id="advisor-overlay" class="hidden" role="dialog" aria-modal="true" aria-label="Chancellor's briefing">
   <div id="advisor-card">
     <div class="advisor-icon">📋</div>
     <h2>Chancellor's Briefing</h2>
@@ -3097,6 +3245,8 @@ const BLOCK_COSTS = {
   socialSupport:       20,
   financialResilience: 30,
   research:            15,
+  transport:           25,
+  carbonCapture:       35,
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
@@ -3221,6 +3371,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'full_portfolio', icon: '📋', name: 'Full Portfolio', desc: 'Invest in all 8 categories in a single game', check: (s) => s.infrastructure.energyTransition > 0 && s.infrastructure.gridAndStorage > 0 && s.infrastructure.adaptation > 0 && s.infrastructure.socialSupport > 0 && s.infrastructure.financialResilience > 0 && s.infrastructure.transport > 0 && s.infrastructure.carbonCapture > 0 },
+  { id: 'ev_revolution', icon: '🚗', name: 'EV Revolution', desc: 'Invest 4+ blocks in Transport & EVs total', check: (s) => s.infrastructure.transport >= 100 },
 ];
 
 class AchievementManager {
@@ -3292,8 +3444,8 @@ const METRIC_TOOLTIPS = {
   },
   nz: {
     title: '🌱 Net Zero Progress',
-    desc: 'Cumulative progress toward the UK\'s legal Net Zero 2050 commitment. Represents the combined effect of renewable buildout, fossil fuel phase-out, and carbon removal.',
-    drivers: '↑ Raised by: Energy Transition investment (especially with R&D upgrades)\n↓ Lowered by: gas rebound when no energy investment is made; emergency gas commissioning',
+    desc: 'Cumulative progress toward the UK\'s legal Net Zero 2050 commitment. Represents the combined effect of renewable buildout, fossil fuel phase-out, transport electrification, and carbon removal.',
+    drivers: '↑ Raised by: Energy Transition, Transport & EVs, Carbon Capture investment\n↓ Lowered by: gas rebound when no energy investment is made; emergency gas commissioning',
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
@@ -3557,6 +3709,8 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        transport: 0,
+        carbonCapture: 0,
       },
       strandedAssets: 0,
       propertyValue: 100,
@@ -3568,6 +3722,8 @@ class GameEngine {
         socialSupport: 0,
         financialResilience: 0,
         research: 0,
+        transport: 0,
+        carbonCapture: 0,
       },
       spentThisTurn: 0,
       netZeroAchieved: false,
@@ -3676,6 +3832,19 @@ class GameEngine {
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
     }
+    const tr = d.transport;
+    if (tr > 0) {
+      netZeroProgress  = clamp(netZeroProgress + tr * 8, 0, 100);
+      socialStability  = clamp(socialStability  + tr * 3, 0, 100);
+      infra.transport += tr * 25;
+      e.storage = clamp(e.storage - tr * 5, 0, 100);
+    }
+    const cc = d.carbonCapture;
+    if (cc > 0) {
+      netZeroProgress = clamp(netZeroProgress + cc * 6, 0, 100);
+      strandedAssets  = clamp(strandedAssets  - cc * 6, 0, 100);
+      infra.carbonCapture += cc * 30;
+    }
 
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
@@ -3779,7 +3948,7 @@ class GameEngine {
     // Phase 12: Advance turn
     s.turn++;
     s.year += 5;
-    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0, transport:0, carbonCapture:0 };
     s.spentThisTurn = 0;
 
     // Recalculate budget for next turn
@@ -3840,6 +4009,24 @@ class GameEngine {
       s.strandedAssets     = this._clamp(s.strandedAssets     - fr * 8,  0, 100);
       s.propertyValue      = this._clamp(s.propertyValue      + fr * 5,  0, 100);
       s.infrastructure.financialResilience += fr * 30;
+    }
+
+    // Transport & EVs
+    const tr = d.transport;
+    if (tr > 0) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + tr * 8, 0, 100);
+      s.socialStability = this._clamp(s.socialStability + tr * 3, 0, 100);
+      s.infrastructure.transport += tr * 25;
+      // EV charging increases grid demand
+      s.energy.storage = this._clamp(s.energy.storage - tr * 5, 0, 100);
+    }
+
+    // Carbon Capture
+    const cc = d.carbonCapture;
+    if (cc > 0) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + cc * 6, 0, 100);
+      s.strandedAssets  = this._clamp(s.strandedAssets  - cc * 6, 0, 100);
+      s.infrastructure.carbonCapture += cc * 30;
     }
 
     // Research — purchases next TechTree upgrade per block allocated
@@ -3903,6 +4090,11 @@ class GameEngine {
     // Tipping point feedback: above 1.5°C warming compounds faster (permafrost methane, Arctic ice loss)
     if (s.temperature > 1.5) {
       delta *= 1 + (s.temperature - 1.5) * 1.2;
+    }
+
+    // Carbon capture slows warming
+    if (s.infrastructure.carbonCapture > 0) {
+      delta *= Math.max(0.5, 1 - s.infrastructure.carbonCapture / 200);
     }
 
     if (s.netZeroAchieved) delta *= 0.45;
@@ -4003,6 +4195,8 @@ class GameEngine {
     if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
     if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
+    if (d.transport > 0)            out.push(`Transport & EVs ×${d.transport} (£${d.transport * 25}bn)`);
+    if (d.carbonCapture > 0)        out.push(`Carbon Capture ×${d.carbonCapture} (£${d.carbonCapture * 35}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
   }
@@ -4143,6 +4337,12 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
+  if (s.infrastructure.transport > 40) {
+    parts.push(`The transport revolution — EV charging networks across every region, electrified rail, and expanded public transit — eliminated the UK's largest source of emissions while improving urban air quality.`);
+  }
+  if (s.infrastructure.carbonCapture > 40) {
+    parts.push(`Carbon capture and storage proved essential for the UK's hard-to-abate industrial sectors, removing millions of tonnes of CO₂ from cement, steel, and chemical production.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4269,11 +4469,14 @@ class UI {
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
+    this.elLegStorage = document.getElementById('leg-storage');
 
-    this.elBudStatus  = document.getElementById('budget-status');
-    this.elBudDisplay = document.getElementById('budget-remaining-display');
-    this.elTotalSpend = document.getElementById('total-spend');
-    this.elEndTurnBtn = document.getElementById('end-turn-btn');
+    this.elBudStatus   = document.getElementById('budget-status');
+    this.elBudDisplay  = document.getElementById('budget-remaining-display');
+    this.elTotalSpend  = document.getElementById('total-spend');
+    this.elEndTurnBtn  = document.getElementById('end-turn-btn');
+    this.elResetBtn    = document.getElementById('reset-turn-btn');
 
     this.elLogScroll  = document.getElementById('log-scroll');
 
@@ -4318,7 +4521,7 @@ class UI {
     });
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
-    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
+    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research', '7':'transport', '8':'carbonCapture' };
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
@@ -4327,6 +4530,8 @@ class UI {
         this.render(this.engine.getState());
       } else if (e.key === 'Enter' && !e.repeat) {
         this.elEndTurnBtn.click();
+      } else if ((e.key === 'r' || e.key === 'R') && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+        this._resetTurnAllocations();
       }
     });
 
@@ -4395,6 +4600,11 @@ class UI {
     // No-spend warning element
     this._noSpendWarned = false;
     this.elNoSpendWarning = document.getElementById('no-spend-warning');
+
+    // Reset turn
+    if (this.elResetBtn) {
+      this.elResetBtn.addEventListener('click', () => this._resetTurnAllocations());
+    }
 
     // End turn
     this.elEndTurnBtn.addEventListener('click', async () => {
@@ -4607,6 +4817,19 @@ class UI {
     </div>`;
   }
 
+  _resetTurnAllocations() {
+    if (this.engine.state.isResolvingTurn || this.engine.state.gameOver) return;
+    const s = this.engine.state;
+    for (const cat of Object.keys(s.currentDecisions)) {
+      s.currentDecisions[cat] = 0;
+    }
+    s.spentThisTurn = 0;
+    if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+    this._noSpendWarned = false;
+    effectsMgr.haptic('light');
+    this.render(this.engine.getState());
+  }
+
   render(state) {
     this._renderHeader(state);
     this._renderMetrics(state);
@@ -4618,6 +4841,9 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    if (this.elResetBtn) {
+      this.elResetBtn.disabled = state.spentThisTurn === 0;
+    }
   }
 
   _renderHeader(state) {
@@ -4801,10 +5027,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    if (this.elSegStorage) this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    if (this.elLegStorage) this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4879,6 +5107,8 @@ class UI {
       adapt:   Math.floor(infra.adaptation          / 25),
       social:  Math.floor(infra.socialSupport       / 20),
       finance: Math.floor(infra.financialResilience / 30),
+      transport: Math.floor(infra.transport         / 25),
+      ccs:     Math.floor(infra.carbonCapture       / 30),
     };
     const lvl = {
       energy:  res.energy  + dec.energyTransition,
@@ -4886,6 +5116,8 @@ class UI {
       adapt:   res.adapt   + dec.adaptation,
       social:  res.social  + dec.socialSupport,
       finance: res.finance + dec.financialResilience,
+      transport: res.transport + dec.transport,
+      ccs:     res.ccs     + dec.carbonCapture,
     };
 
     // Hide hint once anything has been built or allocated
@@ -4946,6 +5178,14 @@ class UI {
       show(`fin-${idx}`, lvl.finance >= threshold, preview(res.finance, lvl.finance, threshold));
     });
 
+    // EV CHARGING — transport blocks 1, 2
+    show('ev-station-1', lvl.transport >= 1, preview(res.transport, lvl.transport, 1));
+    show('ev-station-2', lvl.transport >= 2, preview(res.transport, lvl.transport, 2));
+
+    // CCS FACILITY — carbon capture blocks 1, 2
+    show('ccs-facility-1', lvl.ccs >= 1, preview(res.ccs, lvl.ccs, 1));
+    show('ccs-facility-2', lvl.ccs >= 3, preview(res.ccs, lvl.ccs, 3));
+
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
@@ -4958,9 +5198,9 @@ class UI {
   _buildTurnNarrative(entry) {
     const d = {
       energyTransition: 0, gridAndStorage: 0, adaptation: 0,
-      socialSupport: 0, financialResilience: 0, research: 0
+      socialSupport: 0, financialResilience: 0, research: 0,
+      transport: 0, carbonCapture: 0
     };
-    // Parse decisions back from description strings
     entry.decisions.forEach(dec => {
       if (dec.includes('Energy Transition')) d.energyTransition = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('Grid')) d.gridAndStorage = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
@@ -4968,6 +5208,8 @@ class UI {
       if (dec.includes('Social')) d.socialSupport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('Financial')) d.financialResilience = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('R&D')) d.research = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Transport')) d.transport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Carbon Capture')) d.carbonCapture = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
     });
 
     const parts = [];
@@ -4977,6 +5219,8 @@ class UI {
     if (d.socialSupport > 0) parts.push(`funded the just transition for affected communities`);
     if (d.financialResilience > 0) parts.push(`reinforced financial sector stability`);
     if (d.research > 0) parts.push(`commissioned strategic research`);
+    if (d.transport > 0) parts.push(`accelerated the shift to electric transport`);
+    if (d.carbonCapture > 0) parts.push(`deployed carbon capture infrastructure`);
 
     if (parts.length === 0) return 'No investment was made this term.';
     if (parts.length === 1) return `This term, government ${parts[0]}.`;
@@ -4994,6 +5238,10 @@ class UI {
     div.className = 'log-entry ' + (entry.event ? 'event' : overallGood ? 'good' : 'warn');
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
+
+    // Narrative summary
+    const narrative = this._buildTurnNarrative(entry);
+    html += `<div class="log-narrative">${narrative}</div>`;
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
@@ -5723,6 +5971,29 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_ev_shortage',
+    icon: '🔌',
+    title: 'EV Charging Crisis',
+    prompt: 'EV adoption is outpacing charging infrastructure. How do you respond?',
+    explanation: 'As petrol and diesel bans approach, millions of drivers are switching to EVs — but rural and suburban charging deserts are causing public backlash. You can subsidise rapid charger rollout or push back the combustion ban date.',
+    contextFn: (s) => ({
+      label: 'Transport Infrastructure',
+      value: `${Math.round(s.infrastructure.transport)}`,
+      note: s.infrastructure.transport < 30 ? '⚠ underdeveloped' : 'expanding',
+    }),
+    optA: {
+      label: '⚡ Subsidise national rapid charger rollout',
+      consequence: 'Costs £7bn next turn · +transport infrastructure · +3 Social',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.infrastructure.transport += 15; s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optB: {
+      label: '🛢️ Delay combustion vehicle ban by 5 years',
+      consequence: 'No cost · +5 Social (popular) · −4% Net Zero progress · Gas +3',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 5); s.netZeroProgress = Math.max(0, s.netZeroProgress - 4); s.energy.gas = Math.min(100, s.energy.gas + 3); },
+    },
+    condition: (s) => s.infrastructure.transport < 50 && s.netZeroProgress > 30,
   },
 ];
 
