@@ -1,0 +1,13 @@
+{
+  "name": "climate-finance-newsroom",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Multi-agent pipeline: scout, writer, fact-checker, sub-editor, final editor for a net-zero/responsible-investment newsletter.",
+  "scripts": {
+    "run": "node pipeline.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}
