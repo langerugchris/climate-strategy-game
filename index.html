@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -633,6 +633,81 @@ body {
   transform: scale(0.98);
 }
 
+#reset-all-btn {
+  touch-action: manipulation;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+#reset-all-btn:hover { color: var(--text-primary); border-color: var(--border-strong); }
+#reset-all-btn:disabled { opacity: 0.3; cursor: default; }
+
+#gas-rebound-warning {
+  display: none;
+  padding: 6px var(--gap-md);
+  font-size: 11px;
+  color: var(--status-warn);
+  background: rgba(255, 214, 0, 0.06);
+  border-top: 1px solid rgba(255, 214, 0, 0.15);
+}
+#gas-rebound-warning.visible { display: block; }
+
+#budget-bonus-tag {
+  display: none;
+  font-size: 10px;
+  color: var(--accent-green-lt);
+  margin-left: 4px;
+}
+#budget-bonus-tag.visible { display: inline; }
+
+#hidden-metrics-bar {
+  display: flex;
+  gap: var(--gap-md);
+  padding: 6px var(--gap-md);
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-subtle);
+  font-size: 11px;
+}
+
+.hidden-metric {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+
+.hidden-metric-val {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+#legacy-display {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 0 var(--gap-sm);
+}
+#legacy-display .legacy-title {
+  color: var(--accent-blue-lt);
+  font-weight: 600;
+}
+#legacy-display .legacy-xp {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
 /* ===== LOG PANEL (RIGHT) ===== */
 #log-panel {
   display: flex;
@@ -1249,6 +1324,28 @@ body { transition: filter 2s ease; }
 .opt-a:hover { background: rgba(29,112,184,0.30); }
 .opt-b:hover { background: rgba(255,214,0,0.20); }
 
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .scene-preview { animation: none; opacity: 0.6; }
+  .endgame-metric-tile { opacity: 1; transform: none; }
+  #endgame-narrative-display, #endgame-ngfs-label { opacity: 1; }
+}
+
+/* ===== FOCUS VISIBLE ===== */
+:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+button:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   /* Release the viewport-lock so the whole page scrolls naturally */
@@ -1350,6 +1447,10 @@ body { transition: filter 2s ease; }
     font-size: 22px;
     min-width: 28px;
   }
+
+  #hidden-metrics-bar { font-size: 10px; gap: var(--gap-sm); padding: 4px var(--gap-sm); }
+  #legacy-display { display: none; }
+  #gas-rebound-warning { font-size: 10px; padding: 4px var(--gap-sm); }
 
   /* Taller action bar for thumb reach */
   #action-bar {
@@ -2162,6 +2263,10 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
+    <div id="legacy-display">
+      <span class="legacy-title" id="legacy-title-display"></span>
+      <span class="legacy-xp" id="legacy-xp-display"></span>
+    </div>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2181,7 +2286,7 @@ body { transition: filter 2s ease; }
 <main id="game-main">
 
   <!-- LEFT: METRICS PANEL -->
-  <aside class="panel" id="metrics-panel">
+  <aside class="panel" id="metrics-panel" role="region" aria-label="National Indicators">
     <div class="panel-title">National Indicators</div>
     <div id="metrics-inner">
 
@@ -2212,7 +2317,7 @@ body { transition: filter 2s ease; }
         <div class="bar-track budget-track">
           <div class="bar-fill good" id="bar-budget" style="width:100%"></div>
         </div>
-        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">Budget: £<span id="val-budget-total">100</span>bn this turn</div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">Budget: £<span id="val-budget-total">100</span>bn this turn<span id="budget-bonus-tag">(+£20bn stability bonus)</span></div>
       </div>
 
       <!-- Grid Reliability -->
@@ -2278,6 +2383,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage"  style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2296,6 +2402,19 @@ body { transition: filter 2s ease; }
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="hidden-metrics-bar">
+        <div class="hidden-metric" title="Fossil fuel assets that lose value during decarbonisation — drags on financial stability">
+          📉 Stranded Assets: <span class="hidden-metric-val" id="val-stranded">0</span>
+        </div>
+        <div class="hidden-metric" title="Average property values — affected by climate events and financial resilience">
+          🏠 Property Value: <span class="hidden-metric-val" id="val-property">100</span>
         </div>
       </div>
 
@@ -2303,7 +2422,7 @@ body { transition: filter 2s ease; }
   </aside>
 
   <!-- CENTRE: DECISIONS PANEL -->
-  <section class="panel" id="decisions-panel">
+  <section class="panel" id="decisions-panel" role="region" aria-label="Investment Decisions">
     <div id="decision-header">
       <div id="decision-header-top">
         <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
@@ -2311,7 +2430,7 @@ body { transition: filter 2s ease; }
           <span id="budget-remaining-display">£100bn</span> remaining
         </div>
       </div>
-      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
+      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>R</kbd> to reset all, <kbd>Enter</kbd> to advance.</div>
     </div>
 
     <div id="investment-cards">
@@ -2327,9 +2446,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition">−</button>
+              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition" aria-label="Remove Energy Transition block">−</button>
               <span class="block-count" id="count-energyTransition">0</span>
-              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition">+</button>
+              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition" aria-label="Add Energy Transition block">+</button>
             </div>
           </div>
         </div>
@@ -2353,9 +2472,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£35bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage">−</button>
+              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage" aria-label="Remove Grid and Storage block">−</button>
               <span class="block-count" id="count-gridAndStorage">0</span>
-              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage">+</button>
+              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage" aria-label="Add Grid and Storage block">+</button>
             </div>
           </div>
         </div>
@@ -2379,9 +2498,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£25bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-adaptation" data-cat="adaptation">−</button>
+              <button class="block-btn" id="minus-adaptation" data-cat="adaptation" aria-label="Remove Adaptation block">−</button>
               <span class="block-count" id="count-adaptation">0</span>
-              <button class="block-btn" id="plus-adaptation" data-cat="adaptation">+</button>
+              <button class="block-btn" id="plus-adaptation" data-cat="adaptation" aria-label="Add Adaptation block">+</button>
             </div>
           </div>
         </div>
@@ -2405,9 +2524,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£20bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport">−</button>
+              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport" aria-label="Remove Social Support block">−</button>
               <span class="block-count" id="count-socialSupport">0</span>
-              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport">+</button>
+              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport" aria-label="Add Social Support block">+</button>
             </div>
           </div>
         </div>
@@ -2430,9 +2549,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience">−</button>
+              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience" aria-label="Remove Financial Resilience block">−</button>
               <span class="block-count" id="count-financialResilience">0</span>
-              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience">+</button>
+              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience" aria-label="Add Financial Resilience block">+</button>
             </div>
           </div>
         </div>
@@ -2455,9 +2574,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£15bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-research" data-cat="research">−</button>
+              <button class="block-btn" id="minus-research" data-cat="research" aria-label="Remove Research block">−</button>
               <span class="block-count" id="count-research">0</span>
-              <button class="block-btn" id="plus-research" data-cat="research">+</button>
+              <button class="block-btn" id="plus-research" data-cat="research" aria-label="Add Research block">+</button>
             </div>
           </div>
         </div>
@@ -2897,15 +3016,17 @@ body { transition: filter 2s ease; }
       </svg>
     </div>
 
+    <div id="gas-rebound-warning">⛽ No energy investment — gas demand will rebound +6 this turn (existing fossil infrastructure keeps running).</div>
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
-      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      <button id="reset-all-btn" disabled>Reset All</button>
+      <button id="end-turn-btn" aria-label="Advance to next period">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
 
   <!-- RIGHT: LOG PANEL -->
-  <aside class="panel" id="log-panel">
+  <aside class="panel" id="log-panel" role="region" aria-label="Policy Record">
     <div class="panel-title">Policy Record</div>
     <div id="log-scroll">
       <div class="log-entry welcome">
@@ -2990,7 +3111,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- EVENT MODAL -->
-<div id="event-modal" class="hidden">
+<div id="event-modal" class="hidden" role="dialog" aria-label="Climate Event">
   <div id="event-card">
     <div id="event-icon-display">⚠️</div>
     <h2 id="event-title-display">Climate Event</h2>
@@ -3002,7 +3123,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- END GAME OVERLAY -->
-<div id="endgame-overlay" class="hidden">
+<div id="endgame-overlay" class="hidden" role="dialog" aria-label="Game Results">
   <div id="endgame-card">
     <div id="endgame-icon-display"></div>
     <h1 id="endgame-title-display"></h1>
@@ -3016,7 +3137,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- ADVISOR OVERLAY -->
-<div id="advisor-overlay" class="hidden">
+<div id="advisor-overlay" class="hidden" role="dialog" aria-label="Chancellor's Briefing">
   <div id="advisor-card">
     <div class="advisor-icon">📋</div>
     <h2>Chancellor's Briefing</h2>
@@ -3033,7 +3154,7 @@ body { transition: filter 2s ease; }
 </div>
 
 <!-- SETTINGS MODAL -->
-<div id="settings-modal" class="hidden">
+<div id="settings-modal" class="hidden" role="dialog" aria-label="Settings">
   <div id="settings-card">
     <h2>⚙ Settings</h2>
     <div class="settings-section">
@@ -3373,10 +3494,6 @@ const STARTER_SCENARIOS = {
     },
   },
 };
-
-/* ============================================================
-   TURN HISTORY TRACKER
-============================================================ */
 
 /* ============================================================
    SAVE / LOAD SYSTEM
@@ -4265,10 +4382,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4325,6 +4444,9 @@ class UI {
         if (e.shiftKey) this.engine.deallocateBlock(keyMap[e.key]);
         else this.engine.allocateBlock(keyMap[e.key]);
         this.render(this.engine.getState());
+      } else if ((e.key === 'r' || e.key === 'R') && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+        const rb = document.getElementById('reset-all-btn');
+        if (rb && !rb.disabled) rb.click();
       } else if (e.key === 'Enter' && !e.repeat) {
         this.elEndTurnBtn.click();
       }
@@ -4415,6 +4537,24 @@ class UI {
       await runSimulationPhase(this.engine, this, effectsMgr);
       this.elEndTurnBtn.disabled = false;
     });
+
+    // Reset all allocations
+    const resetBtn = document.getElementById('reset-all-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        const s = this.engine.state;
+        if (s.isResolvingTurn || s.gameOver) return;
+        for (const cat of Object.keys(s.currentDecisions)) {
+          while (s.currentDecisions[cat] > 0) {
+            this.engine.deallocateBlock(cat);
+          }
+        }
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
+      });
+    }
 
     // Event dismiss
     this.elEventDismiss.addEventListener('click', () => {
@@ -4616,6 +4756,10 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderHiddenMetrics(state);
+    this._renderGasWarning(state);
+    this._renderResetBtn(state);
+    this._renderLegacy();
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
   }
@@ -4801,10 +4945,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4825,6 +4971,39 @@ class UI {
 
     // Budget status class
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+
+    // Budget bonus indicator
+    const bonusTag = document.getElementById('budget-bonus-tag');
+    if (bonusTag) {
+      bonusTag.classList.toggle('visible', state.financialStability > 80);
+    }
+  }
+
+  _renderHiddenMetrics(state) {
+    const strandedEl = document.getElementById('val-stranded');
+    const propertyEl = document.getElementById('val-property');
+    if (strandedEl) strandedEl.textContent = Math.round(state.strandedAssets);
+    if (propertyEl) propertyEl.textContent = Math.round(state.propertyValue);
+  }
+
+  _renderGasWarning(state) {
+    const el = document.getElementById('gas-rebound-warning');
+    if (!el) return;
+    el.classList.toggle('visible', state.currentDecisions.energyTransition === 0 && !state.gameOver && state.energy.gas > 0);
+  }
+
+  _renderResetBtn(state) {
+    const btn = document.getElementById('reset-all-btn');
+    if (!btn) return;
+    btn.disabled = state.spentThisTurn === 0;
+  }
+
+  _renderLegacy() {
+    const titleEl = document.getElementById('legacy-title-display');
+    const xpEl = document.getElementById('legacy-xp-display');
+    if (!titleEl || !xpEl) return;
+    titleEl.textContent = legacySystem.title();
+    xpEl.textContent = `${legacySystem.data.xp} XP · Lvl ${legacySystem.level()}`;
   }
 
   _renderCards(state) {
