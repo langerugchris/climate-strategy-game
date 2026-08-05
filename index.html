@@ -2165,6 +2165,33 @@ button:focus-visible {
 .intl-row.highlight .intl-score { color: var(--accent-blue-lt); font-weight: 700; }
 #intl-footnote { font-size: 10px; color: var(--text-muted); margin-top: var(--gap-sm); }
 
+/* ===== LESSONS LEARNED ===== */
+#lessons-section {
+  margin: var(--gap-lg) 0;
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+#lessons-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+}
+.lesson-item {
+  display: flex;
+  gap: var(--gap-sm);
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.lesson-item:last-child { border-bottom: none; }
+.lesson-icon { font-size: 14px; flex-shrink: 0; width: 20px; text-align: center; padding-top: 1px; }
+.lesson-text strong { color: var(--text-primary); }
+
 /* ===== ENDGAME POLICY TIMELINE ===== */
 #endgame-timeline {
   margin: var(--gap-lg) 0;
@@ -4744,6 +4771,7 @@ class UI {
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
       document.getElementById('intl-comparison')?.remove();
+      document.getElementById('lessons-section')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -5484,9 +5512,10 @@ class UI {
       </div>`;
 
     const comparisonHtml = this._buildInternationalComparison(s, score);
+    const lessonsHtml = this._buildLessonsLearned(s, result, score);
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', comparisonHtml + timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', comparisonHtml + lessonsHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5625,6 +5654,71 @@ class UI {
       ${rows}
       <div id="intl-footnote">#${rank} of ${all.length} — ${context} Peer scores are illustrative estimates based on 2024 Climate Action Tracker data.</div>
     </div>`;
+  }
+
+  _buildLessonsLearned(state, result, score) {
+    const s = state;
+    const lessons = [];
+
+    const totalEnergyInvest = s.log.reduce((sum, e) => {
+      const match = e.decisions.find(d => d.startsWith('Energy Transition'));
+      return sum + (match ? parseInt(match.match(/×(\d)/)?.[1] || 0) : 0);
+    }, 0);
+    const totalSocialInvest = s.log.reduce((sum, e) => {
+      const match = e.decisions.find(d => d.startsWith('Social Support'));
+      return sum + (match ? parseInt(match.match(/×(\d)/)?.[1] || 0) : 0);
+    }, 0);
+    const totalResearchInvest = s.log.reduce((sum, e) => {
+      const match = e.decisions.find(d => d.startsWith('R&D'));
+      return sum + (match ? parseInt(match.match(/×(\d)/)?.[1] || 0) : 0);
+    }, 0);
+
+    if (s.netZeroProgress >= 100 && s.socialStability >= 70 && s.financialStability >= 70) {
+      lessons.push({ icon: '🌟', text: '<strong>Balanced transition:</strong> You achieved Net Zero while maintaining social and financial stability — the hardest outcome and the one real policymakers strive for.' });
+    }
+
+    if (totalResearchInvest === 0) {
+      lessons.push({ icon: '🔬', text: '<strong>Missed R&D opportunity:</strong> Research blocks (£15bn) are the cheapest investment and provide permanent multipliers that compound across all remaining terms. Early R&D dramatically amplifies later spending.' });
+    } else if (totalResearchInvest >= 3) {
+      lessons.push({ icon: '🔬', text: '<strong>Smart R&D strategy:</strong> Investing in research early created multiplier effects that amplified your later investments — a pattern seen in real-world climate leaders like Denmark and Germany.' });
+    }
+
+    if (s.strandedAssets > 40 && s.financialStability < 50) {
+      lessons.push({ icon: '📉', text: '<strong>Stranded asset trap:</strong> Rapid decarbonisation without financial resilience investment left pension funds exposed to fossil asset write-downs. In the real world, the Bank of England stress-tests banks for exactly this scenario.' });
+    }
+
+    if (totalEnergyInvest > 4 && totalSocialInvest < 2) {
+      lessons.push({ icon: '⚖️', text: '<strong>Energy burden:</strong> Heavy energy investment without matching social support raised energy bills and eroded public consent. The "Just Transition" principle — central to UK climate policy — requires cushioning the costs for those least able to bear them.' });
+    }
+
+    if (s.infrastructure.adaptation < 25 && s.eventCount >= 3) {
+      lessons.push({ icon: '🌊', text: '<strong>Adaptation gap:</strong> Low adaptation investment left the UK vulnerable to climate events. Physical climate risk is already locked in — even if emissions stop today, floods and heatwaves will intensify for decades. Adaptation is insurance, not optional.' });
+    }
+
+    if (s.gridReliability < 50 && s.energy.wind + s.energy.solar > 60) {
+      lessons.push({ icon: '🔋', text: '<strong>Grid reliability:</strong> High renewable capacity without matching storage and backup led to grid instability. Real-world grid operators need "firm" capacity (batteries, nuclear, or demand response) to balance intermittent wind and solar.' });
+    }
+
+    if (s.temperature > 2.0) {
+      lessons.push({ icon: '🌡️', text: `<strong>Tipping points:</strong> Above 1.5°C, warming compounds via feedback loops (permafrost methane, Arctic ice loss). Your final temperature of ${s.temperature.toFixed(1)}°C crossed the Paris threshold — a trajectory that, globally replicated, risks irreversible change.` });
+    } else if (s.temperature < 1.5) {
+      lessons.push({ icon: '🌍', text: `<strong>Paris-compliant:</strong> Keeping temperature below 1.5°C is the gold standard of climate policy. You achieved what the Paris Agreement asks of every nation — limiting warming to avoid the worst tipping points.` });
+    }
+
+    if (s.energy.gas <= 0) {
+      lessons.push({ icon: '♻️', text: '<strong>Fossil-free grid:</strong> Eliminating gas from the energy mix is a landmark achievement. In reality, the UK aims to fully decarbonise electricity by 2035 — you demonstrated it is possible with sufficient storage and nuclear backup.' });
+    }
+
+    if (lessons.length === 0) {
+      lessons.push({ icon: '📋', text: '<strong>Moderate approach:</strong> You took a balanced path without extreme trade-offs. While this avoided crises, bolder early action often yields better long-term outcomes in climate strategy.' });
+    }
+
+    let html = `<div id="lessons-section"><div id="lessons-title">Lessons Learned</div>`;
+    for (const l of lessons) {
+      html += `<div class="lesson-item"><span class="lesson-icon">${l.icon}</span><span class="lesson-text">${l.text}</span></div>`;
+    }
+    html += `</div>`;
+    return html;
   }
 
   // ===== METRIC TOOLTIP =====
