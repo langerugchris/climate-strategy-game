@@ -2119,6 +2119,52 @@ button:focus-visible {
 }
 .achievement-card.earned .achievement-name { color: var(--accent-blue-lt); }
 
+/* ===== INTERNATIONAL COMPARISON ===== */
+#intl-comparison {
+  margin: var(--gap-lg) 0;
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+#intl-comparison-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+}
+.intl-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+}
+.intl-row:last-child { border-bottom: none; }
+.intl-flag { font-size: 16px; flex-shrink: 0; width: 24px; text-align: center; }
+.intl-name { width: 80px; color: var(--text-secondary); flex-shrink: 0; }
+.intl-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.intl-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+.intl-bar-fill.player { background: var(--accent-blue-lt); }
+.intl-bar-fill.peer { background: var(--text-muted); opacity: 0.6; }
+.intl-score { width: 40px; text-align: right; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
+.intl-row.highlight { background: rgba(83, 144, 217, 0.08); border-radius: var(--radius-sm); }
+.intl-row.highlight .intl-name { color: var(--accent-blue-lt); font-weight: 700; }
+.intl-row.highlight .intl-score { color: var(--accent-blue-lt); font-weight: 700; }
+#intl-footnote { font-size: 10px; color: var(--text-muted); margin-top: var(--gap-sm); }
+
 /* ===== ENDGAME POLICY TIMELINE ===== */
 #endgame-timeline {
   margin: var(--gap-lg) 0;
@@ -4697,6 +4743,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('intl-comparison')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -5436,8 +5483,10 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    const comparisonHtml = this._buildInternationalComparison(s, score);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', comparisonHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5534,6 +5583,48 @@ class UI {
     }
     html += `</div></div>`;
     return html;
+  }
+
+  _buildInternationalComparison(state, score) {
+    const peers = [
+      { flag: '🇩🇰', name: 'Denmark', score: 82, note: 'early wind investment, strong social safety net' },
+      { flag: '🇩🇪', name: 'Germany', score: 68, note: 'rapid coal exit, grid stability challenges' },
+      { flag: '🇫🇷', name: 'France',  score: 74, note: 'nuclear baseload, lower renewable share' },
+      { flag: '🇳🇱', name: 'Netherlands', score: 65, note: 'high gas dependency, flood adaptation leader' },
+      { flag: '🇺🇸', name: 'USA',     score: 52, note: 'policy inconsistency, strong private sector' },
+      { flag: '🇨🇳', name: 'China',   score: 58, note: 'massive renewables build, high coal baseline' },
+      { flag: '🇯🇵', name: 'Japan',   score: 60, note: 'post-Fukushima nuclear debate, LNG dependent' },
+    ];
+
+    const all = [...peers, { flag: '🇬🇧', name: 'Your UK', score: score.total, isPlayer: true }]
+      .sort((a, b) => b.score - a.score);
+
+    const maxScore = Math.max(...all.map(c => c.score), 1);
+
+    let rows = '';
+    for (const c of all) {
+      const pct = Math.round((c.score / maxScore) * 100);
+      const cls = c.isPlayer ? 'intl-row highlight' : 'intl-row';
+      const barCls = c.isPlayer ? 'intl-bar-fill player' : 'intl-bar-fill peer';
+      rows += `<div class="${cls}">
+        <span class="intl-flag">${c.flag}</span>
+        <span class="intl-name">${c.name}</span>
+        <div class="intl-bar-track"><div class="${barCls}" style="width:${pct}%"></div></div>
+        <span class="intl-score">${c.score}</span>
+      </div>`;
+    }
+
+    const rank = all.findIndex(c => c.isPlayer) + 1;
+    const context = rank <= 2 ? 'World-leading climate performance.'
+      : rank <= 4 ? 'Competitive with major European economies.'
+      : rank <= 6 ? 'Middle of the pack — room for improvement.'
+      : 'Below global peers — climate leadership requires bolder action.';
+
+    return `<div id="intl-comparison">
+      <div id="intl-comparison-title">International Comparison (illustrative benchmarks)</div>
+      ${rows}
+      <div id="intl-footnote">#${rank} of ${all.length} — ${context} Peer scores are illustrative estimates based on 2024 Climate Action Tracker data.</div>
+    </div>`;
   }
 
   // ===== METRIC TOOLTIP =====
