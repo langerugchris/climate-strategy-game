@@ -578,6 +578,24 @@ body {
   color: var(--text-secondary);
 }
 
+/* ===== STRATEGY HINT ===== */
+#strategy-hint {
+  padding: 8px var(--gap-md);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  background: rgba(68, 138, 255, 0.06);
+  border-top: 1px solid rgba(68, 138, 255, 0.12);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+#strategy-hint.hidden { display: none; }
+#strategy-hint .hint-icon { font-size: 12px; flex-shrink: 0; }
+#strategy-hint strong { color: var(--text-primary); font-weight: 600; }
+#strategy-hint .hint-priority { color: var(--status-warn); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+#strategy-hint .hint-ok { color: var(--status-good); }
+
 /* ===== NO-SPEND WARNING ===== */
 #no-spend-warning {
   padding: 6px var(--gap-md);
@@ -2431,6 +2449,7 @@ button:focus-visible {
         </div>
       </div>
       <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>R</kbd> to reset all, <kbd>Enter</kbd> to advance.</div>
+      <div id="strategy-hint" class="hidden" role="status" aria-live="polite"></div>
     </div>
 
     <div id="investment-cards">
@@ -4760,6 +4779,7 @@ class UI {
     this._renderGasWarning(state);
     this._renderResetBtn(state);
     this._renderLegacy();
+    this._renderStrategyHint(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
   }
@@ -5004,6 +5024,79 @@ class UI {
     if (!titleEl || !xpEl) return;
     titleEl.textContent = legacySystem.title();
     xpEl.textContent = `${legacySystem.data.xp} XP · Lvl ${legacySystem.level()}`;
+  }
+
+  _renderStrategyHint(state) {
+    const el = document.getElementById('strategy-hint');
+    if (!el) return;
+    const hint = this._buildStrategyHint(state);
+    if (hint) {
+      el.innerHTML = hint;
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  }
+
+  _buildStrategyHint(state) {
+    const s = state;
+    const turnsLeft = 5 - s.turn;
+    const d = s.currentDecisions;
+
+    if (s.gameOver) return null;
+
+    const total = s.energy.wind + s.energy.solar + s.energy.nuclear + s.energy.gas + s.energy.storage;
+    const gasShare = total > 0 ? s.energy.gas / total : 0;
+    const energyBurden = Math.max(0, s.infrastructure.energyTransition - s.infrastructure.socialSupport);
+
+    if (s.turn === 0) {
+      return `<span class="hint-icon">📋</span> <strong>Term 1:</strong> R&D is cheapest at £15bn and unlocks permanent multipliers. Early research compounds across all remaining terms.`;
+    }
+
+    if (s.gridReliability < 40 && d.gridAndStorage === 0) {
+      return `<span class="hint-icon">⚠️</span> <span class="hint-priority">critical</span> Grid at ${Math.round(s.gridReliability)}% — below 40%, cascading failures drag social stability down. Grid & Storage investment is urgent.`;
+    }
+
+    if (s.financialStability < 40 && d.financialResilience === 0) {
+      return `<span class="hint-icon">⚠️</span> <span class="hint-priority">critical</span> Financial stability at ${Math.round(s.financialStability)}% — stranded assets (${Math.round(s.strandedAssets)}) are dragging the system down. Financial Resilience can reverse this.`;
+    }
+
+    if (s.socialStability < 45 && d.socialSupport === 0) {
+      return `<span class="hint-icon">⚠️</span> <span class="hint-priority">warning</span> Social stability at ${Math.round(s.socialStability)}%. Energy transition without social support creates an energy burden that erodes public consent.`;
+    }
+
+    if (energyBurden > 30 && d.socialSupport === 0) {
+      return `<span class="hint-icon">💡</span> <strong>Energy burden rising:</strong> energy infrastructure (${s.infrastructure.energyTransition}) far outpaces social support (${s.infrastructure.socialSupport}). Rising bills without cushioning will erode social stability.`;
+    }
+
+    if (s.netZeroProgress < 50 && turnsLeft <= 2 && d.energyTransition === 0) {
+      return `<span class="hint-icon">⏰</span> <span class="hint-priority">urgent</span> Net Zero at ${Math.round(s.netZeroProgress)}% with ${turnsLeft} term${turnsLeft === 1 ? '' : 's'} left. Heavy energy investment is needed now to meet 2050 targets.`;
+    }
+
+    if (gasShare > 0.35 && d.energyTransition === 0) {
+      return `<span class="hint-icon">💡</span> Gas is ${Math.round(gasShare * 100)}% of the energy mix. High fossil dependence accelerates warming and creates stranded asset risk. Energy Transition phases out gas.`;
+    }
+
+    if (s.temperature > 1.5 && s.infrastructure.adaptation < 30 && d.adaptation === 0) {
+      return `<span class="hint-icon">💡</span> Above 1.5°C, climate events intensify. Adaptation infrastructure (currently ${s.infrastructure.adaptation}) mitigates damage by up to 50% — consider investing before the next storm.`;
+    }
+
+    if (!techTree.isComplete() && d.research === 0 && turnsLeft >= 2) {
+      const next = techTree.nextUpgrade();
+      if (next) {
+        return `<span class="hint-icon">🔬</span> Next R&D upgrade: <strong>${next.name}</strong> — ${next.desc}. At £15bn it is the cheapest investment and compounds over remaining terms.`;
+      }
+    }
+
+    if (s.netZeroProgress >= 90 && !s.netZeroAchieved) {
+      return `<span class="hint-icon">🌱</span> <span class="hint-ok">Net Zero within reach!</span> One more Energy Transition block could complete the UK's decarbonisation pathway.`;
+    }
+
+    if (s.gridReliability >= 75 && s.financialStability >= 70 && s.socialStability >= 70 && s.netZeroProgress >= 60) {
+      return `<span class="hint-icon">✅</span> <span class="hint-ok">Strong position.</span> All indicators healthy — maintain balanced investment to secure an orderly transition outcome.`;
+    }
+
+    return null;
   }
 
   _renderCards(state) {
@@ -5902,6 +5995,75 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_pension_panic',
+    icon: '📉',
+    title: 'Pension Fund Panic',
+    prompt: 'Major pension funds are dumping fossil assets. How do you respond to market instability?',
+    explanation: 'As climate policy tightens globally, fossil assets are being reclassified as high-risk. Pension funds holding North Sea oil and gas stakes are selling at fire-sale prices, creating contagion risk across the financial system. You can stabilise markets now (expensive) or let them adjust (cheaper, but pensioners take the hit).',
+    contextFn: (s) => ({
+      label: 'Stranded Assets',
+      value: `${Math.round(s.strandedAssets)}`,
+      note: s.strandedAssets > 40 ? '⚠ systemic risk' : 'manageable',
+    }),
+    optA: {
+      label: '🏛️ Government-backed asset guarantee',
+      consequence: 'Costs £10bn next turn · Stranded assets −6 · Financial +4 · moral hazard risk',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.strandedAssets = Math.max(0, s.strandedAssets - 6); s.financialStability = Math.min(100, s.financialStability + 4); },
+    },
+    optB: {
+      label: '📊 Orderly wind-down framework',
+      consequence: 'Costs £4bn · Stranded −3 · −4 Social (pensioners lose money now) · builds financial resilience',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.strandedAssets = Math.max(0, s.strandedAssets - 3); s.socialStability = Math.max(0, s.socialStability - 4); s.infrastructure.financialResilience += 10; },
+    },
+    condition: (s) => s.strandedAssets > 25,
+  },
+  {
+    id: 'mini_drought',
+    icon: '🌾',
+    title: 'Agricultural Drought',
+    prompt: 'A prolonged dry spell is devastating UK agriculture. Food prices are rising rapidly.',
+    explanation: 'Climate change is shifting rainfall patterns. Three months without significant rain have left arable land in eastern England parched. Farmers are demanding emergency water subsidies. You can fund immediate irrigation infrastructure (expensive, addresses the symptom) or invest in drought-resistant crop programmes (slower payoff but addresses root cause).',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: s.temperature > 1.5 ? '⚠ drought risk elevated' : 'within historical range',
+    }),
+    optA: {
+      label: '💧 Emergency irrigation subsidies',
+      consequence: 'Costs £5bn next turn · +3 Social (food prices stabilised) · no lasting benefit',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optB: {
+      label: '🧬 Fund drought-resistant crop research',
+      consequence: 'Costs £3bn · −2 Social now (short-term pain) · +8 adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.socialStability = Math.max(0, s.socialStability - 2); s.infrastructure.adaptation += 8; },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'mini_tech_breakthrough',
+    icon: '🔬',
+    title: 'Breakthrough Battery Technology',
+    prompt: 'UK researchers have developed a solid-state battery with 3x current energy density. How do you capitalise?',
+    explanation: 'A University of Oxford team has published groundbreaking results in solid-state battery chemistry. If commercialised, it could dramatically improve grid storage economics. But lab results take years to reach production scale — and other countries are racing to acquire the IP.',
+    contextFn: (s) => ({
+      label: 'Storage Capacity',
+      value: `${Math.round(s.energy.storage)}`,
+      note: s.energy.storage < 20 ? '⚠ storage capacity low' : 'growing',
+    }),
+    optA: {
+      label: '🏭 Fast-track to manufacturing (public investment)',
+      consequence: 'Costs £8bn next turn · Storage +8 · Grid Reliability boost · UK retains IP',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.energy.storage = Math.min(100, s.energy.storage + 8); s.infrastructure.gridAndStorage += 10; },
+    },
+    optB: {
+      label: '🤝 License to private sector (market-led)',
+      consequence: 'No direct cost · Storage +3 · Financial +3 · slower rollout',
+      effect: (s) => { s.energy.storage = Math.min(100, s.energy.storage + 3); s.financialStability = Math.min(100, s.financialStability + 3); },
+    },
+    condition: (s) => s.turn >= 1 && !techTree.isComplete(),
   },
 ];
 
