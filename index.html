@@ -293,6 +293,22 @@ body {
   transform: translateX(-50%);
 }
 
+.temp-ghost {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 3px;
+  border-radius: 2px;
+  pointer-events: none;
+  transition: left 0.25s ease, background 0.25s ease;
+  transform: translateX(-50%);
+  display: none;
+  opacity: 0.8;
+}
+.temp-ghost.proj-up   { background: var(--status-danger); box-shadow: 0 0 5px var(--status-danger); }
+.temp-ghost.proj-down { background: var(--status-good); box-shadow: 0 0 5px var(--status-good); }
+.temp-ghost.proj-same { background: var(--text-muted); }
+
 /* Budget bar */
 .bar-track.budget-track {
   height: 14px;
@@ -1138,6 +1154,140 @@ body { transition: filter 2s ease; }
 #event-dismiss-btn:active   { transform: scale(0.96) !important; }
 #advisor-dismiss-btn:active { transform: scale(0.96) !important; }
 .mini-btn:active            { transform: scale(0.95) !important; }
+
+/* ===== CCS LOCKED STATE ===== */
+.investment-card.ccs-locked {
+  opacity: 0.45;
+  pointer-events: none;
+  position: relative;
+}
+.investment-card.ccs-locked::after {
+  content: '🔒 Available from Turn 3';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: rgba(11,13,23,0.6);
+  border-radius: var(--radius-md);
+}
+.investment-card.ccs-unlocked {
+  opacity: 1;
+  pointer-events: auto;
+  border-color: var(--accent-green);
+  animation: ccsUnlock 0.6s ease;
+}
+@keyframes ccsUnlock {
+  0%   { transform: scale(1); box-shadow: none; }
+  50%  { transform: scale(1.02); box-shadow: 0 0 20px var(--accent-green); }
+  100% { transform: scale(1); box-shadow: none; }
+}
+
+/* ===== RESET BUTTON ===== */
+#action-buttons {
+  display: flex;
+  gap: var(--gap-sm);
+  align-items: center;
+}
+.action-btn-secondary {
+  padding: 8px 14px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.action-btn-secondary:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.action-btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ===== CONFIRMATION DIALOG ===== */
+#confirm-dialog {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+  animation: fadeIn 0.2s ease;
+}
+#confirm-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  width: 340px;
+  max-width: 90vw;
+  text-align: center;
+}
+#confirm-card h3 {
+  font-size: 16px;
+  margin-bottom: var(--gap-sm);
+  color: var(--text-primary);
+}
+#confirm-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-lg);
+}
+.confirm-actions {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: center;
+}
+.confirm-actions button {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.confirm-cancel {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+}
+.confirm-cancel:hover { background: var(--bg-tertiary); }
+.confirm-proceed {
+  background: var(--status-danger);
+  color: white;
+  border: none;
+}
+.confirm-proceed:hover { background: #ff5722; }
+
+/* ===== SCREEN TRANSITIONS ===== */
+.screen-fade-in {
+  animation: screenFadeIn 0.4s ease both;
+}
+.screen-fade-out {
+  animation: screenFadeOut 0.3s ease both;
+}
+@keyframes screenFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes screenFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ===== MINI-EVENT LOG ENTRIES ===== */
+.log-mini-event {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  padding: 4px 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--accent-blue-lt);
+}
 
 /* ===== SIMULATION OVERLAY ===== */
 #sim-overlay {
@@ -2189,10 +2339,11 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🌡️ UK Warming Pathway</span>
-          <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span></span>
+          <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span><span class="proj-label" id="proj-temp"></span></span>
         </div>
         <div class="bar-track temp-track" style="position:relative">
           <div class="temp-needle" id="bar-temp" style="left:5%"></div>
+          <div class="temp-ghost" id="ghost-temp" style="display:none"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:2px;">
           <span style="font-size:10px;color:var(--text-secondary)">1.1°C</span>
@@ -2277,6 +2428,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:29"></div>
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
         </div>
         <div id="energy-mix-legend">
@@ -2291,6 +2443,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-nuclear)"></div>
             <span>Nuclear</span><span class="legend-val" id="leg-nuclear">13</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
@@ -2311,7 +2467,7 @@ body { transition: filter 2s ease; }
           <span id="budget-remaining-display">£100bn</span> remaining
         </div>
       </div>
-      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
+      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>7</kbd> to add, <kbd>Shift+1</kbd>–<kbd>7</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
     </div>
 
     <div id="investment-cards">
@@ -2467,6 +2623,32 @@ body { transition: filter 2s ease; }
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
         </div>
         <div class="card-citation">Based on UKRI Net Zero Innovation portfolio</div>
+      </div>
+
+      <!-- Carbon Capture & Storage (unlocks turn 3+) -->
+      <div class="investment-card ccs-locked" id="card-carbonCapture">
+        <div class="card-top">
+          <div class="card-icon">🏭</div>
+          <div class="card-info">
+            <div class="card-name">Carbon Capture &amp; Storage</div>
+            <div class="card-sub" id="ccs-sub">Unlocks Turn 3 (2035)</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£40bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-carbonCapture" data-cat="carbonCapture">−</button>
+              <span class="block-count" id="count-carbonCapture">0</span>
+              <button class="block-btn" id="plus-carbonCapture" data-cat="carbonCapture">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">Direct air capture and geological storage can actively remove CO2 from the atmosphere — the only way to reverse temperature rise. Expensive and energy-intensive, but essential if tipping points are breached. Infrastructure accumulates and compounds across turns.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">Temperature reduction over time</span>
+          <span class="effect-tag pos">NZ +6/block</span>
+          <span class="effect-tag warn">£40bn — most expensive category</span>
+        </div>
+        <div class="card-citation">Based on IPCC AR6 negative emissions pathways</div>
       </div>
 
     </div>
@@ -2889,6 +3071,36 @@ body { transition: filter 2s ease; }
           <rect x="617" y="154" width="12" height="8" fill="#050d1a"/>
         </g>
 
+        <!-- ===== CCS ZONE (between grid and community) ===== -->
+        <!-- CCS Facility 1: small capture unit -->
+        <g id="ccs-1" visibility="hidden">
+          <rect x="420" y="138" width="26" height="24" rx="2" fill="#1a2744" stroke="#4db6ac" stroke-width="1"/>
+          <rect x="424" y="141" width="6" height="4" fill="#4db6ac" opacity="0.5"/>
+          <rect x="432" y="141" width="6" height="4" fill="#4db6ac" opacity="0.5"/>
+          <rect x="440" y="141" width="4" height="4" fill="#4db6ac" opacity="0.3"/>
+          <rect x="431" y="128" width="4" height="10" rx="1" fill="#37474f"/>
+          <circle cx="433" cy="127" r="3" fill="none" stroke="#4db6ac" stroke-width="0.8" opacity="0.6">
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <text x="433" y="155" text-anchor="middle" fill="#4db6ac" font-size="5" opacity="0.7">CCS</text>
+        </g>
+
+        <!-- CCS Facility 2: larger capture facility -->
+        <g id="ccs-2" visibility="hidden">
+          <rect x="448" y="130" width="32" height="32" rx="2" fill="#1a2744" stroke="#4db6ac" stroke-width="1.2"/>
+          <rect x="452" y="133" width="7" height="5" fill="#4db6ac" opacity="0.4"/>
+          <rect x="461" y="133" width="7" height="5" fill="#4db6ac" opacity="0.4"/>
+          <rect x="470" y="133" width="7" height="5" fill="#4db6ac" opacity="0.3"/>
+          <rect x="452" y="140" width="7" height="5" fill="#4db6ac" opacity="0.3"/>
+          <rect x="461" y="140" width="7" height="5" fill="#4db6ac" opacity="0.5"/>
+          <rect x="462" y="118" width="5" height="12" rx="1" fill="#37474f"/>
+          <circle cx="464.5" cy="117" r="4" fill="none" stroke="#4db6ac" stroke-width="1" opacity="0.5">
+            <animate attributeName="r" values="3;5;3" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.3;0.7;0.3" dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <line x1="446" y1="146" x2="420" y2="150" stroke="#4db6ac" stroke-width="0.6" opacity="0.4" stroke-dasharray="2 2"/>
+        </g>
+
         <!-- FLOOD WATER OVERLAY — shown when adaptation fails -->
         <rect id="flood-water" x="0" y="200" width="800" height="80" fill="#1565c0" opacity="0.55" rx="0">
           <animate id="flood-anim" attributeName="y" from="200" to="148" dur="2s" fill="freeze" begin="indefinite"/>
@@ -2900,7 +3112,10 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
-      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      <div id="action-buttons">
+        <button id="reset-turn-btn" class="action-btn-secondary" title="Reset all allocations this turn">↺ Reset</button>
+        <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      </div>
     </div>
   </section>
 
@@ -3097,6 +3312,7 @@ const BLOCK_COSTS = {
   socialSupport:       20,
   financialResilience: 30,
   research:            15,
+  carbonCapture:       40,
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
@@ -3221,6 +3437,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'carbon_negative', icon: '🌿', name: 'Carbon Negative', desc: 'Reduce temperature below starting level (1.1°C)', check: (s) => s.temperature < 1.1 },
+  { id: 'ccs_pioneer', icon: '🏭', name: 'CCS Pioneer', desc: 'Invest in Carbon Capture at least 3 times', check: (s) => s.infrastructure.carbonCapture >= 105 },
 ];
 
 class AchievementManager {
@@ -3261,7 +3479,7 @@ const METRIC_TOOLTIPS = {
   temperature: {
     title: '🌡️ UK Warming Pathway',
     desc: 'The cumulative warming above pre-industrial levels on a UK domestic emissions pathway. If all nations followed the same trajectory, this is what global temperature would reach.',
-    drivers: '↑ Raised by: gas dominance, delayed action, tipping points above 1.5°C\n↓ Lowered by: sustained Net Zero investment, rapid fossil phase-out',
+    drivers: '↑ Raised by: gas dominance, delayed action, tipping points above 1.5°C\n↓ Lowered by: sustained Net Zero investment, rapid fossil phase-out, Carbon Capture infrastructure',
     threshold: '2.0°C = Paris Agreement danger threshold. Above 1.5°C, tipping points (permafrost methane, Arctic ice loss) begin self-reinforcing feedback loops.',
     thresholdGood: false,
     source: 'Based on NGFS climate pathway modelling',
@@ -3457,7 +3675,7 @@ class AnalyticsTracker {
       completedRuns: 0,
       scenarioCounts: {},
       difficultyCounts: {},
-      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0 },
+      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0, carbonCapture: 0 },
       scoreTotal: 0,
       eventTotal: 0,
     };
@@ -3557,6 +3775,7 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        carbonCapture: 0,
       },
       strandedAssets: 0,
       propertyValue: 100,
@@ -3568,6 +3787,7 @@ class GameEngine {
         socialSupport: 0,
         financialResilience: 0,
         research: 0,
+        carbonCapture: 0,
       },
       spentThisTurn: 0,
       netZeroAchieved: false,
@@ -3609,6 +3829,7 @@ class GameEngine {
   allocateBlock(category) {
     const s = this.state;
     if (s.isResolvingTurn) return { success: false, reason: 'Turn in progress' };
+    if (category === 'carbonCapture' && s.turn < 2) return { success: false, reason: 'CCS unlocks in Turn 3' };
     const cost = BLOCK_COSTS[category];
     const current = s.currentDecisions[category];
     if (current >= MAX_BLOCKS_PER_CAT) return { success: false, reason: 'Max 2 blocks per category' };
@@ -3676,6 +3897,11 @@ class GameEngine {
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
     }
+    const cc = d.carbonCapture;
+    if (cc > 0) {
+      infra.carbonCapture += cc * 35;
+      netZeroProgress = clamp(netZeroProgress + cc * 6, 0, 100);
+    }
 
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
@@ -3698,7 +3924,20 @@ class GameEngine {
     const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
     socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
 
-    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
+    // Mirror _progressTemp
+    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
+    const gasShare = total > 0 ? e.gas / total : 0;
+    const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
+    const baseRate = difficultyMgr.preset.warmingRate;
+    let tempDelta = baseRate + (gasShare * 0.22) - (renewShare * 0.08);
+    if (netZeroProgress >= 100) tempDelta *= 0.45;
+    if (d.energyTransition === 0) tempDelta += 0.02;
+    // CCS reduction
+    const ccReduction = infra.carbonCapture * 0.003;
+    tempDelta -= ccReduction;
+    const projTemp = clamp(+(s.temperature + tempDelta).toFixed(2), 0.5, 4.0);
+
+    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress), temperature: projTemp };
   }
 
   resolveTurn() {
@@ -3779,7 +4018,7 @@ class GameEngine {
     // Phase 12: Advance turn
     s.turn++;
     s.year += 5;
-    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0, carbonCapture:0 };
     s.spentThisTurn = 0;
 
     // Recalculate budget for next turn
@@ -3840,6 +4079,13 @@ class GameEngine {
       s.strandedAssets     = this._clamp(s.strandedAssets     - fr * 8,  0, 100);
       s.propertyValue      = this._clamp(s.propertyValue      + fr * 5,  0, 100);
       s.infrastructure.financialResilience += fr * 30;
+    }
+
+    // Carbon Capture & Storage
+    const cc = d.carbonCapture;
+    if (cc > 0) {
+      s.infrastructure.carbonCapture += cc * 35;
+      s.netZeroProgress = this._clamp(s.netZeroProgress + cc * 6, 0, 100);
     }
 
     // Research — purchases next TechTree upgrade per block allocated
@@ -3906,7 +4152,13 @@ class GameEngine {
     }
 
     if (s.netZeroAchieved) delta *= 0.45;
+
+    // Carbon capture actively removes CO2 — can make delta negative at high investment
+    const ccReduction = s.infrastructure.carbonCapture * 0.003;
+    delta -= ccReduction;
+
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
+    s.temperature = Math.max(s.temperature, 0.5);
   }
 
   _resolveEvent() {
@@ -4003,6 +4255,7 @@ class GameEngine {
     if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
     if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
+    if (d.carbonCapture > 0)       out.push(`Carbon Capture ×${d.carbonCapture} (£${d.carbonCapture * 40}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
   }
@@ -4264,10 +4517,12 @@ class UI {
     this.elSegWind    = document.getElementById('seg-wind');
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elSegGas     = document.getElementById('seg-gas');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
+    this.elLegStorage = document.getElementById('leg-storage');
     this.elLegGas     = document.getElementById('leg-gas');
 
     this.elBudStatus  = document.getElementById('budget-status');
@@ -4318,7 +4573,7 @@ class UI {
     });
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
-    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
+    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research', '7':'carbonCapture' };
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
@@ -4371,15 +4626,34 @@ class UI {
     const hookBtn = document.getElementById('hook-btn');
     if (hookBtn) {
       hookBtn.addEventListener('click', () => {
-        document.getElementById('hook-screen').classList.add('hidden');
-        // Show scenario selection before advisor briefing
-        const scenarioScreen = document.getElementById('scenario-screen');
-        if (scenarioScreen) {
-          const sdl = document.getElementById('scenario-diff-label');
-          if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
-          scenarioScreen.classList.remove('hidden');
+        const proceed = () => {
+          const hookScreen = document.getElementById('hook-screen');
+          hookScreen.classList.add('screen-fade-out');
+          setTimeout(() => {
+            hookScreen.classList.add('hidden');
+            hookScreen.classList.remove('screen-fade-out');
+            const scenarioScreen = document.getElementById('scenario-screen');
+            if (scenarioScreen) {
+              const sdl = document.getElementById('scenario-diff-label');
+              if (sdl) sdl.textContent = difficultyMgr.selectedPreset.label;
+              scenarioScreen.classList.remove('hidden');
+              scenarioScreen.classList.add('screen-fade-in');
+              setTimeout(() => scenarioScreen.classList.remove('screen-fade-in'), 400);
+            } else {
+              document.getElementById('advisor-overlay').classList.remove('hidden');
+            }
+          }, 300);
+        };
+
+        if (saveMgr.hasSave()) {
+          this._showConfirmDialog(
+            'Start New Game?',
+            'Your saved progress will be lost. This cannot be undone.',
+            'New Game',
+            proceed
+          );
         } else {
-          document.getElementById('advisor-overlay').classList.remove('hidden');
+          proceed();
         }
       });
     }
@@ -4388,13 +4662,36 @@ class UI {
     const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
-        document.getElementById('advisor-overlay').classList.add('hidden');
+        const advisorOverlay = document.getElementById('advisor-overlay');
+        advisorOverlay.classList.add('screen-fade-out');
+        setTimeout(() => {
+          advisorOverlay.classList.add('hidden');
+          advisorOverlay.classList.remove('screen-fade-out');
+        }, 300);
       });
     }
 
     // No-spend warning element
     this._noSpendWarned = false;
     this.elNoSpendWarning = document.getElementById('no-spend-warning');
+
+    // Reset turn button
+    const resetBtn = document.getElementById('reset-turn-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (this.engine.state.isResolvingTurn) return;
+        const s = this.engine.state;
+        for (const cat of this.categories) {
+          while (s.currentDecisions[cat] > 0) {
+            this.engine.deallocateBlock(cat);
+          }
+        }
+        this._noSpendWarned = false;
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
+      });
+    }
 
     // End turn
     this.elEndTurnBtn.addEventListener('click', async () => {
@@ -4497,8 +4794,16 @@ class UI {
     const scenarioStartBtn = document.getElementById('scenario-start-btn');
     if (scenarioStartBtn) {
       scenarioStartBtn.addEventListener('click', () => {
-        document.getElementById('scenario-screen').classList.add('hidden');
-        document.getElementById('advisor-overlay').classList.remove('hidden');
+        const scenarioScreen = document.getElementById('scenario-screen');
+        scenarioScreen.classList.add('screen-fade-out');
+        setTimeout(() => {
+          scenarioScreen.classList.add('hidden');
+          scenarioScreen.classList.remove('screen-fade-out');
+          const advisorOverlay = document.getElementById('advisor-overlay');
+          advisorOverlay.classList.remove('hidden');
+          advisorOverlay.classList.add('screen-fade-in');
+          setTimeout(() => advisorOverlay.classList.remove('screen-fade-in'), 400);
+        }, 300);
         // Clear any existing save and start fresh
         saveMgr.clear();
         analyticsMgr.recordStart();
@@ -4724,6 +5029,9 @@ class UI {
       { ghostId: 'ghost-nz',   projId: 'proj-nz',   current: state.netZeroProgress,    projKey: 'netZeroProgress' },
     ];
 
+    const tempGhost = document.getElementById('ghost-temp');
+    const tempLabel = document.getElementById('proj-temp');
+
     if (state.spentThisTurn === 0) {
       ghosts.forEach(g => {
         const ghost = document.getElementById(g.ghostId);
@@ -4731,6 +5039,8 @@ class UI {
         if (ghost) ghost.style.display = 'none';
         if (label) { label.textContent = ''; label.className = 'proj-label'; }
       });
+      if (tempGhost) tempGhost.style.display = 'none';
+      if (tempLabel) { tempLabel.textContent = ''; tempLabel.className = 'proj-label'; }
       return;
     }
 
@@ -4756,6 +5066,25 @@ class UI {
         }
       }
     });
+
+    // Temperature projection (inverted — higher is bad)
+    if (tempGhost && proj.temperature !== undefined) {
+      const projTempPct = Math.round(((proj.temperature - 1.1) / 1.9) * 100);
+      const tempDiff = proj.temperature - state.temperature;
+      tempGhost.style.display = 'block';
+      tempGhost.style.left = Math.max(1, Math.min(99, projTempPct)) + '%';
+      tempGhost.className = 'temp-ghost ' + (tempDiff > 0.02 ? 'proj-up' : tempDiff < -0.02 ? 'proj-down' : 'proj-same');
+    }
+    if (tempLabel && proj.temperature !== undefined) {
+      const tempDiff = proj.temperature - state.temperature;
+      if (Math.abs(tempDiff) < 0.03) {
+        tempLabel.textContent = '';
+        tempLabel.className = 'proj-label';
+      } else {
+        tempLabel.textContent = (tempDiff > 0 ? '→ +' : '→ ') + tempDiff.toFixed(1) + '°C';
+        tempLabel.className = 'proj-label visible ' + (tempDiff > 0 ? 'proj-down' : 'proj-up');
+      }
+    }
   }
 
   _renderDelta(el, current, previous, invertBad, decimals) {
@@ -4800,10 +5129,12 @@ class UI {
     this.elSegWind.style.flexGrow    = e.wind;
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elSegGas.style.flexGrow     = e.gas;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
+    this.elLegStorage.textContent = Math.round(e.storage);
     this.elLegGas.textContent     = Math.round(e.gas);
   }
 
@@ -4845,6 +5176,21 @@ class UI {
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
     }
     this._renderResearchCard();
+    this._renderCCSCard(state);
+  }
+
+  _renderCCSCard(state) {
+    const card = document.getElementById('card-carbonCapture');
+    if (!card) return;
+    const unlocked = state.turn >= 2;
+    card.classList.toggle('ccs-locked', !unlocked);
+    card.classList.toggle('ccs-unlocked', unlocked);
+    const sub = document.getElementById('ccs-sub');
+    if (sub) sub.textContent = unlocked ? 'Direct Air Capture, Geological Storage' : 'Unlocks Turn 3 (2035)';
+    if (!unlocked) {
+      document.getElementById('plus-carbonCapture').disabled = true;
+      document.getElementById('minus-carbonCapture').disabled = true;
+    }
   }
 
   _renderResearchCard() {
@@ -4946,6 +5292,12 @@ class UI {
       show(`fin-${idx}`, lvl.finance >= threshold, preview(res.finance, lvl.finance, threshold));
     });
 
+    // CCS — blocks 1, 2
+    const ccResolved = Math.floor(infra.carbonCapture / 35);
+    const ccTotal = ccResolved + dec.carbonCapture;
+    show('ccs-1', ccTotal >= 1, ccTotal >= 1 && ccResolved < 1);
+    show('ccs-2', ccTotal >= 2, ccTotal >= 2 && ccResolved < 2);
+
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
@@ -4958,7 +5310,7 @@ class UI {
   _buildTurnNarrative(entry) {
     const d = {
       energyTransition: 0, gridAndStorage: 0, adaptation: 0,
-      socialSupport: 0, financialResilience: 0, research: 0
+      socialSupport: 0, financialResilience: 0, research: 0, carbonCapture: 0
     };
     // Parse decisions back from description strings
     entry.decisions.forEach(dec => {
@@ -4967,6 +5319,7 @@ class UI {
       if (dec.includes('Adaptation')) d.adaptation = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('Social')) d.socialSupport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('Financial')) d.financialResilience = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Carbon Capture')) d.carbonCapture = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('R&D')) d.research = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
     });
 
@@ -4977,6 +5330,7 @@ class UI {
     if (d.socialSupport > 0) parts.push(`funded the just transition for affected communities`);
     if (d.financialResilience > 0) parts.push(`reinforced financial sector stability`);
     if (d.research > 0) parts.push(`commissioned strategic research`);
+    if (d.carbonCapture > 0) parts.push(`deployed carbon capture infrastructure`);
 
     if (parts.length === 0) return 'No investment was made this term.';
     if (parts.length === 1) return `This term, government ${parts[0]}.`;
@@ -4997,6 +5351,13 @@ class UI {
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+
+    // Mini-event decisions
+    if (entry.miniEvents && entry.miniEvents.length > 0) {
+      for (const me of entry.miniEvents) {
+        html += `<div class="log-mini-event">${me.icon} ${me.title} (${me.year}): ${me.choice}</div>`;
+      }
+    }
 
     // Event notice
     if (entry.event) {
@@ -5087,6 +5448,23 @@ class UI {
 
   hideEventModal() {
     this.elEventModal.classList.add('hidden');
+  }
+
+  _showConfirmDialog(title, message, proceedText, onProceed) {
+    const d = document.createElement('div');
+    d.id = 'confirm-dialog';
+    d.innerHTML = `
+      <div id="confirm-card">
+        <h3>${title}</h3>
+        <p>${message}</p>
+        <div class="confirm-actions">
+          <button class="confirm-cancel">Cancel</button>
+          <button class="confirm-proceed">${proceedText}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(d);
+    d.querySelector('.confirm-cancel').addEventListener('click', () => d.remove(), { once: true });
+    d.querySelector('.confirm-proceed').addEventListener('click', () => { d.remove(); onProceed(); }, { once: true });
   }
 
   showEndgame(result) {
@@ -5724,6 +6102,75 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_cbam',
+    icon: '🌐',
+    title: 'EU Carbon Border Tax',
+    prompt: 'The EU has imposed a carbon border adjustment mechanism. UK exporters face tariffs unless you match their carbon pricing.',
+    explanation: 'The EU CBAM taxes imports based on embedded carbon. UK manufacturers either pay the tariff (raising costs and hurting competitiveness) or the UK matches EU carbon pricing (accelerating transition but raising domestic energy costs).',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🤝 Match EU carbon pricing',
+      consequence: 'Costs £5bn next turn · +8% Net Zero progress · −3 Social (higher bills)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    optB: {
+      label: '🛡️ Absorb tariffs with subsidies',
+      consequence: 'Costs £10bn next turn · preserves Social · −5 Financial Stability',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.financialStability = Math.max(0, s.financialStability - 5); },
+    },
+    condition: (s) => s.turn >= 1 && s.netZeroProgress < 80,
+  },
+  {
+    id: 'mini_global_tech',
+    icon: '🔬',
+    title: 'Global Clean Tech Breakthrough',
+    prompt: 'A major international consortium has achieved a breakthrough in green hydrogen production. Do you invest to adopt it?',
+    explanation: 'Green hydrogen could decarbonise steel, shipping, and heavy industry — sectors where electrification alone fails. Early adoption gives competitive advantage but requires significant infrastructure investment. Waiting is cheaper but risks falling behind.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Budget: £${Math.round(s.budget)}bn`,
+    }),
+    optA: {
+      label: '🚀 Early adoption programme',
+      consequence: 'Costs £12bn next turn · +10% Net Zero · +5 Grid Reliability',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.netZeroProgress = Math.min(100, s.netZeroProgress + 10); s.gridReliability = Math.min(100, s.gridReliability + 5); },
+    },
+    optB: {
+      label: '⏳ Wait and license later',
+      consequence: 'No immediate cost · +4% Net Zero next turn · competitor advantage lost',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_climate_refugee',
+    icon: '🏚️',
+    title: 'Climate Migration Surge',
+    prompt: 'Extreme weather elsewhere is driving a surge in climate-related migration to the UK. How do you respond?',
+    explanation: 'Climate migration is accelerating globally. Integration investment builds social cohesion and addresses labour shortages in the green economy. Restricting numbers reduces immediate social pressure but damages international climate cooperation.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: s.temperature > 1.6 ? '⚠ high warming driving displacement' : '',
+    }),
+    optA: {
+      label: '🏗️ Integration investment programme',
+      consequence: 'Costs £7bn next turn · +4 Social Capital · −2 Social short-term',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.socialCapital = Math.min(60, s.socialCapital + 4); s.socialStability = Math.max(0, s.socialStability - 2); },
+    },
+    optB: {
+      label: '🚧 Restrict numbers',
+      consequence: 'No cost · +3 Social short-term · −3 Social Capital (isolationism)',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); s.socialCapital = Math.max(0, s.socialCapital - 3); },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5739,6 +6186,9 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
+  // Track mini-event choices for the log
+  const miniEventLog = [];
+
   // Tick through years with possible mini-events
   let minisFired = 0;
   for (const offset of [1, 2, 3, 4]) {
@@ -5751,7 +6201,8 @@ async function runSimulationPhase(engine, ui, fxMgr) {
       if (eligible.length > 0) {
         const evt = eligible[Math.floor(Math.random() * eligible.length)];
         fxMgr.haptic('medium');
-        await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
+        const choice = await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
+        miniEventLog.push({ year: startYear + offset, title: evt.title, icon: evt.icon, choice });
         minisFired++;
       }
     }
@@ -5774,6 +6225,9 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
+
+  // Attach mini-event log to the result for display
+  result.logEntry.miniEvents = miniEventLog;
 
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
@@ -5872,15 +6326,15 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 
     overlay.querySelector('#sim-card').appendChild(panel);
 
-    const cleanup = (handler) => {
+    const cleanup = (handler, choiceLabel) => {
       handler(engine.state);
       fxMgr.haptic('light');
       panel.classList.add('sim-fade-out');
-      setTimeout(() => { panel.remove(); resolve(); }, 300);
+      setTimeout(() => { panel.remove(); resolve(choiceLabel); }, 300);
     };
 
-    panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
-    panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
+    panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect, evt.optA.label), { once: true });
+    panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect, evt.optB.label), { once: true });
   });
 }
 
