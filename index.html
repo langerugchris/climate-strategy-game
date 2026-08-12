@@ -346,7 +346,7 @@ body {
 
 #energy-mix-legend {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 3px 8px;
 }
 
@@ -1717,6 +1717,126 @@ body { transition: filter 2s ease; }
   letter-spacing: 0.08em;
 }
 
+/* ===== SIMULATION SPEED ===== */
+.speed-options {
+  display: flex;
+  gap: var(--gap-sm);
+}
+.speed-option {
+  flex: 1;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.speed-option:hover { border-color: var(--border-strong); }
+.speed-option.selected { border-color: var(--accent-blue-lt); background: #192038; }
+.speed-option-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.speed-option-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ===== INVESTMENT WARNINGS ===== */
+#investment-warnings {
+  padding: 0 var(--gap-md);
+  flex-shrink: 0;
+}
+#investment-warnings.hidden { display: none; }
+.invest-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  padding: 6px var(--gap-sm);
+  margin-bottom: 4px;
+  background: rgba(255, 61, 0, 0.08);
+  border: 1px solid rgba(255, 61, 0, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--status-warn);
+}
+.invest-warning.danger {
+  background: rgba(255, 61, 0, 0.12);
+  border-color: rgba(255, 61, 0, 0.4);
+  color: var(--status-danger);
+}
+.invest-warning-icon {
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+/* ===== CONFIRM DIALOG ===== */
+#confirm-dialog {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1600;
+  padding: var(--gap-lg);
+}
+#confirm-dialog.hidden { display: none; }
+#confirm-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 400px;
+  width: 100%;
+}
+#confirm-card h3 {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-md);
+}
+#confirm-summary {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-lg);
+}
+#confirm-summary .confirm-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+#confirm-summary .confirm-item:last-child { border-bottom: none; }
+#confirm-warnings {
+  margin-bottom: var(--gap-md);
+}
+.confirm-btns {
+  display: flex;
+  gap: var(--gap-sm);
+}
+.confirm-btns button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+#confirm-cancel {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong) !important;
+}
+#confirm-cancel:hover { background: var(--bg-elevated); }
+#confirm-proceed {
+  background: var(--accent-blue);
+  color: white;
+}
+#confirm-proceed:hover { background: var(--accent-blue-lt); }
+
 /* ===== SPARKLINE CHARTS ===== */
 .sparkline-container {
   height: 24px;
@@ -2278,6 +2398,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2416,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2897,6 +3022,7 @@ body { transition: filter 2s ease; }
       </svg>
     </div>
 
+    <div id="investment-warnings" class="hidden"></div>
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
@@ -3058,6 +3184,23 @@ body { transition: filter 2s ease; }
       </div>
     </div>
     <div class="settings-section">
+      <div class="settings-section-label">Simulation Speed</div>
+      <div class="speed-options">
+        <div class="speed-option" data-speed="fast">
+          <div class="speed-option-label">Fast</div>
+          <div class="speed-option-desc">1s per year</div>
+        </div>
+        <div class="speed-option selected" data-speed="normal">
+          <div class="speed-option-label">Normal</div>
+          <div class="speed-option-desc">4s per year</div>
+        </div>
+        <div class="speed-option" data-speed="slow">
+          <div class="speed-option-label">Slow</div>
+          <div class="speed-option-desc">7s per year</div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
       <div class="settings-section-label">Current Run</div>
       <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">
         Difficulty changes take effect on <strong>New Game</strong>. Your current run continues with the settings it started with.
@@ -3065,6 +3208,19 @@ body { transition: filter 2s ease; }
     </div>
     <!-- High scores injected here by JS -->
     <button id="settings-close-btn">Done</button>
+  </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div id="confirm-dialog" class="hidden">
+  <div id="confirm-card">
+    <h3>Confirm Allocation</h3>
+    <div id="confirm-summary"></div>
+    <div id="confirm-warnings"></div>
+    <div class="confirm-btns">
+      <button id="confirm-cancel">Go Back</button>
+      <button id="confirm-proceed">Confirm &amp; Advance →</button>
+    </div>
   </div>
 </div>
 
@@ -3168,6 +3324,95 @@ const RANDOM_EVENTS = [
     condition: (s) => s.gridReliability < 50,
   },
 ];
+
+/* ============================================================
+   INTERNATIONAL EVENTS
+============================================================ */
+
+const INTERNATIONAL_EVENTS = [
+  {
+    id: 'INT_CARBON_PRICE', icon: '🌍', year_range: [2030, 2050],
+    title: 'Global Carbon Price Agreement',
+    description: 'The G20 agrees a minimum carbon price of $120/tonne. UK fossil assets face accelerated write-downs, but green exports become more competitive.',
+    effects: { strandedAssets: 15, netZeroProgress: 8 },
+    story: 'The agreement, signed at the Riyadh summit, sends shockwaves through commodity markets. UK chancellor calls it "the most significant climate agreement since Paris."',
+  },
+  {
+    id: 'INT_CHINA_PLEDGE', icon: '🇨🇳', year_range: [2030, 2045],
+    title: 'China Accelerates Coal Phase-out',
+    description: 'China announces complete coal phase-out by 2040. Global emissions trajectory improves. Rare earth supply chains tighten.',
+    effects: { temperature: -0.03, financialStability: -4 },
+    story: 'Supply chain disruptions hit UK solar panel imports as Chinese manufacturers pivot to domestic demand. But the temperature outlook improves significantly.',
+  },
+  {
+    id: 'INT_US_RETREAT', icon: '🇺🇸', year_range: [2025, 2040],
+    title: 'US Withdraws from Climate Accord',
+    description: 'A new US administration pulls out of international climate commitments. Global cooperation falters. Investment uncertainty rises.',
+    effects: { financialStability: -6, socialStability: -3 },
+    story: 'Markets tumble as the world\'s second-largest emitter walks away from the table. UK climate activists stage protests outside the US embassy demanding the government hold firm.',
+  },
+  {
+    id: 'INT_GREEN_TECH', icon: '🔬', year_range: [2030, 2050],
+    title: 'Breakthrough in Green Hydrogen',
+    description: 'A German-Japanese consortium achieves commercial-scale green hydrogen at £1.50/kg. UK industrial decarbonisation accelerates.',
+    effects: { netZeroProgress: 12, gridReliability: 5 },
+    story: 'The breakthrough makes hydrogen-powered steel and cement production viable for the first time. Teesside hydrogen hub announces £2bn expansion within 48 hours of the announcement.',
+  },
+  {
+    id: 'INT_CLIMATE_REFUGEES', icon: '🏚️', year_range: [2035, 2050],
+    title: 'Climate Migration Crisis',
+    description: 'Extreme heat displaces millions across South Asia and North Africa. European nations face unprecedented migration pressure.',
+    effects: { socialStability: -8, financialStability: -5 },
+    story: 'The UN estimates 23 million climate-displaced people are seeking refuge in temperate nations. UK government faces pressure to increase resettlement quota while housing stock is already strained.',
+    condition: (s) => s.temperature > 1.6,
+  },
+  {
+    id: 'INT_EU_CBAM', icon: '🇪🇺', year_range: [2025, 2040],
+    title: 'EU Carbon Border Tax Expands',
+    description: 'The EU extends its Carbon Border Adjustment Mechanism to cover all manufactured goods. UK exporters face new compliance costs.',
+    effects: { financialStability: -5, netZeroProgress: 6 },
+    story: 'UK manufacturers scramble to meet new carbon accounting requirements. The CBI warns of £3bn in compliance costs, but clean producers gain a competitive edge in European markets.',
+  },
+  {
+    id: 'INT_ARCTIC_TIPPING', icon: '🧊', year_range: [2035, 2050],
+    title: 'Arctic Ice Sheet Collapse Accelerates',
+    description: 'Satellite data confirms irreversible Arctic ice loss ahead of worst-case projections. Sea level rise forecasts revised upward.',
+    effects: { temperature: 0.08, propertyValue: -12, socialStability: -5 },
+    story: 'The British Antarctic Survey confirms the Thwaites Glacier has passed its tipping point. Coastal property markets from Cornwall to the Humber enter freefall as insurers withdraw cover.',
+    condition: (s) => s.temperature > 1.8,
+  },
+  {
+    id: 'INT_SOLAR_GLUT', icon: '☀️', year_range: [2028, 2045],
+    title: 'Global Solar Panel Oversupply',
+    description: 'Massive Chinese and Indian manufacturing expansion crashes solar panel prices to record lows. UK solar deployment costs plummet.',
+    effects: { netZeroProgress: 6 },
+    story: 'Solar panel prices fall below £80/kW for the first time. Community solar cooperatives spring up across the UK as rooftop installation becomes cheaper than a new kitchen.',
+  },
+];
+
+/* ============================================================
+   SIMULATION SPEED
+============================================================ */
+
+const SIM_SPEEDS = {
+  fast:   { yearDelay: 1000, label: 'Fast' },
+  normal: { yearDelay: 4250, label: 'Normal' },
+  slow:   { yearDelay: 7000, label: 'Slow' },
+};
+
+let simSpeed = (() => {
+  try { return localStorage.getItem('uk_climate_sim_speed') || 'normal'; } catch { return 'normal'; }
+})();
+
+function setSimSpeed(speed) {
+  if (SIM_SPEEDS[speed]) {
+    simSpeed = speed;
+    try { localStorage.setItem('uk_climate_sim_speed', speed); } catch {}
+    document.querySelectorAll('.speed-option').forEach(el => {
+      el.classList.toggle('selected', el.dataset.speed === speed);
+    });
+  }
+}
 
 /* ============================================================
    DIFFICULTY SYSTEM
@@ -3738,7 +3983,14 @@ class GameEngine {
     s.currentRandomEvent = event;
     if (event) {
       s.eventCount++;
-      // Recalc formulas again after event damage
+      this._recalcGrid();
+      this._recalcFinancial();
+      this._recalcSocial();
+    }
+
+    // Phase 7b: International event
+    const intEvent = this._resolveInternationalEvent();
+    if (intEvent) {
       this._recalcGrid();
       this._recalcFinancial();
       this._recalcSocial();
@@ -3763,6 +4015,7 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      intEvent: intEvent ? intEvent.title : null,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -3791,7 +4044,7 @@ class GameEngine {
       endgame = evaluateEndgame(s);
     }
 
-    return { logEntry, event, endgame };
+    return { logEntry, event, intEvent, endgame };
   }
 
   _applyInvestments() {
@@ -3993,6 +4246,41 @@ class GameEngine {
 
     s.lastEventTurn = s.turn;
     return { ...selectedEvent, appliedEffects: applied };
+  }
+
+  _resolveInternationalEvent() {
+    const s = this.state;
+    if (Math.random() > 0.40) return null;
+
+    const eligible = INTERNATIONAL_EVENTS.filter(ie => {
+      if (ie.condition && !ie.condition(s)) return false;
+      if (s.year < ie.year_range[0] || s.year > ie.year_range[1]) return false;
+      if (s._firedIntEvents && s._firedIntEvents.has(ie.id)) return false;
+      return true;
+    });
+    if (eligible.length === 0) return null;
+
+    const evt = eligible[Math.floor(Math.random() * eligible.length)];
+    if (!s._firedIntEvents) s._firedIntEvents = new Set();
+    s._firedIntEvents.add(evt.id);
+
+    const applied = {};
+    for (const [key, val] of Object.entries(evt.effects)) {
+      applied[key] = val;
+      if (key === 'temperature') {
+        s.temperature = Math.round((s.temperature + val) * 100) / 100;
+      } else if (key === 'strandedAssets') {
+        s.strandedAssets = this._clamp(s.strandedAssets + val, 0, 100);
+      } else if (key === 'propertyValue') {
+        s.propertyValue = this._clamp(s.propertyValue + val, 0, 100);
+      } else if (key === 'netZeroProgress') {
+        s.netZeroProgress = this._clamp(s.netZeroProgress + val, 0, 100);
+      } else if (s[key] !== undefined) {
+        s[key] = this._clamp(s[key] + val, 0, 100);
+      }
+    }
+
+    return { ...evt, appliedEffects: applied, isInternational: true };
   }
 
   _describeDecisions(d) {
@@ -4265,10 +4553,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4402,7 +4692,6 @@ class UI {
       const s = this.engine.getState();
       if (s.gameOver) return;
 
-      // Warn on zero spend (soft gate — second click proceeds)
       if (s.spentThisTurn === 0 && !this._noSpendWarned) {
         this._noSpendWarned = true;
         this.elNoSpendWarning.classList.remove('hidden');
@@ -4410,6 +4699,11 @@ class UI {
       }
       this._noSpendWarned = false;
       this.elNoSpendWarning.classList.add('hidden');
+
+      if (s.spentThisTurn > 0) {
+        this._showConfirmDialog(s);
+        return;
+      }
 
       this.elEndTurnBtn.disabled = true;
       await runSimulationPhase(this.engine, this, effectsMgr);
@@ -4479,6 +4773,30 @@ class UI {
     if (currentDiffOpt) {
       document.querySelectorAll('.diff-option').forEach(o => o.classList.remove('selected'));
       currentDiffOpt.classList.add('selected');
+    }
+
+    // Speed options
+    document.querySelectorAll('.speed-option').forEach(opt => {
+      opt.addEventListener('click', () => setSimSpeed(opt.dataset.speed));
+    });
+    const currentSpeedOpt = document.querySelector(`.speed-option[data-speed="${simSpeed}"]`);
+    if (currentSpeedOpt) {
+      document.querySelectorAll('.speed-option').forEach(o => o.classList.remove('selected'));
+      currentSpeedOpt.classList.add('selected');
+    }
+
+    // Confirm dialog
+    const confirmDialog = document.getElementById('confirm-dialog');
+    const confirmCancel = document.getElementById('confirm-cancel');
+    const confirmProceed = document.getElementById('confirm-proceed');
+    if (confirmCancel) confirmCancel.addEventListener('click', () => confirmDialog.classList.add('hidden'));
+    if (confirmProceed) {
+      confirmProceed.addEventListener('click', async () => {
+        confirmDialog.classList.add('hidden');
+        this.elEndTurnBtn.disabled = true;
+        await runSimulationPhase(this.engine, this, effectsMgr);
+        this.elEndTurnBtn.disabled = false;
+      });
     }
 
     // Scenario selection screen
@@ -4616,6 +4934,7 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderWarnings(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
   }
@@ -4657,6 +4976,7 @@ class UI {
       nz:   { val: state.netZeroProgress, snap: state.lastSnapshot ? state.lastSnapshot.netZeroProgress : null },
     };
 
+    const metricLabels = { grid: 'Grid Reliability', fin: 'Financial Stability', soc: 'Social Stability', nz: 'Net Zero Progress' };
     for (const m of this.metrics) {
       const { val, snap } = metricMap[m.key];
       const el = document.getElementById(m.valId);
@@ -4664,7 +4984,11 @@ class UI {
       this._rollNumber(el, startVal, Math.round(val), 800, 0);
       const bar = document.getElementById(m.barId);
       bar.style.width = Math.max(0, val) + '%';
-      // Status colour
+      bar.setAttribute('role', 'meter');
+      bar.setAttribute('aria-valuenow', Math.round(val));
+      bar.setAttribute('aria-valuemin', '0');
+      bar.setAttribute('aria-valuemax', '100');
+      bar.setAttribute('aria-label', metricLabels[m.key] || m.key);
       const status = m.key === 'nz'
         ? (val >= 100 ? 'good' : val >= 60 ? 'info' : val >= 30 ? 'warn' : 'danger')
         : (val >= 60 ? 'good' : val >= 35 ? 'warn' : 'danger');
@@ -4801,10 +5125,69 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
+  }
+
+  _showConfirmDialog(state) {
+    const d = state.currentDecisions;
+    const catLabels = { energyTransition: 'Energy Transition', gridAndStorage: 'Grid & Storage', adaptation: 'Adaptation', socialSupport: 'Social Support', financialResilience: 'Financial Resilience', research: 'R&D' };
+    const items = Object.entries(d).filter(([, v]) => v > 0);
+    let summaryHTML = '';
+    for (const [cat, count] of items) {
+      const cost = count * BLOCK_COSTS[cat];
+      summaryHTML += `<div class="confirm-item"><span>${catLabels[cat]} x${count}</span><span style="color:var(--text-primary);font-weight:600">&pound;${cost}bn</span></div>`;
+    }
+    summaryHTML += `<div class="confirm-item" style="border-top:1px solid var(--border-strong);padding-top:6px;margin-top:4px"><span style="font-weight:700;color:var(--text-primary)">Total</span><span style="font-weight:700;color:var(--accent-blue-lt)">&pound;${state.spentThisTurn}bn / &pound;${state.budget}bn</span></div>`;
+
+    document.getElementById('confirm-summary').innerHTML = summaryHTML;
+
+    const proj = this.engine.getProjection();
+    const warnEl = document.getElementById('confirm-warnings');
+    const warningLines = [];
+    if (proj.gridReliability < 40) warningLines.push(`<div class="invest-warning danger"><span class="invest-warning-icon">⚡</span><span>Grid Reliability will drop to ~${proj.gridReliability}%</span></div>`);
+    if (proj.socialStability < 40) warningLines.push(`<div class="invest-warning danger"><span class="invest-warning-icon">✊</span><span>Social Stability will drop to ~${proj.socialStability}%</span></div>`);
+    if (proj.financialStability < 40) warningLines.push(`<div class="invest-warning"><span class="invest-warning-icon">📉</span><span>Financial Stability projected at ~${proj.financialStability}%</span></div>`);
+    warnEl.innerHTML = warningLines.join('');
+
+    document.getElementById('confirm-dialog').classList.remove('hidden');
+  }
+
+  _renderWarnings(state) {
+    const el = document.getElementById('investment-warnings');
+    if (!el) return;
+    const d = state.currentDecisions;
+    const totalBlocks = Object.values(d).reduce((a, b) => a + b, 0);
+    if (totalBlocks === 0) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+
+    const proj = this.engine.getProjection();
+    const warnings = [];
+
+    if (d.energyTransition > 0 && d.gridAndStorage === 0 && proj.gridReliability < 45) {
+      warnings.push({ icon: '⚡', text: `Renewables without grid storage will drop Grid Reliability to ~${proj.gridReliability}%`, danger: proj.gridReliability < 35 });
+    }
+    if (d.energyTransition > 0 && d.socialSupport === 0 && proj.socialStability < 55) {
+      warnings.push({ icon: '✊', text: `Energy transition without social support risks Social Stability (~${proj.socialStability}%)`, danger: proj.socialStability < 40 });
+    }
+    if (proj.financialStability < 40 && d.financialResilience === 0) {
+      warnings.push({ icon: '📉', text: `Financial Stability projected at ~${proj.financialStability}% — consider Financial Resilience investment`, danger: proj.financialStability < 25 });
+    }
+    if (proj.gridReliability < 35) {
+      warnings.push({ icon: '🔌', text: `Grid Reliability critically low (~${proj.gridReliability}%) — blackout cascade risk`, danger: true });
+    }
+    if (proj.socialStability < 30) {
+      warnings.push({ icon: '💀', text: `Social Stability critically low (~${proj.socialStability}%) — breakdown risk`, danger: true });
+    }
+
+    if (warnings.length === 0) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+    el.classList.remove('hidden');
+    el.innerHTML = warnings.map(w =>
+      `<div class="invest-warning${w.danger ? ' danger' : ''}"><span class="invest-warning-icon">${w.icon}</span><span>${w.text}</span></div>`
+    ).join('');
   }
 
   _renderBudget(state) {
@@ -4998,9 +5381,11 @@ class UI {
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
 
-    // Event notice
     if (entry.event) {
       html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+    }
+    if (entry.intEvent) {
+      html += `<div class="log-text" style="color:var(--accent-blue-lt);margin-top:4px;">🌍 ${entry.intEvent}</div>`;
     }
 
     // Metric chips
@@ -5236,6 +5621,7 @@ class UI {
         <div class="timeline-year">${entry.year}–${entry.year + 5}</div>
         <div class="timeline-decisions">${entry.decisions.map(d => `<span class="tl-invest">${d}</span>`).join('<br>')}</div>
         ${entry.event ? `<div class="timeline-event">⚠ ${entry.event}</div>` : ''}
+        ${entry.intEvent ? `<div class="timeline-event" style="color:var(--accent-blue-lt)">🌍 ${entry.intEvent}</div>` : ''}
         <div class="timeline-metrics">
           <span class="tl-chip ${chipStatus(entry.afterGrid)}">Grid ${Math.round(entry.afterGrid)}%</span>
           <span class="tl-chip ${chipStatus(entry.afterFin)}">Fin ${Math.round(entry.afterFin)}%</span>
@@ -5728,23 +6114,19 @@ const MINI_EVENTS_POOL = [
 
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
+  const speed = SIM_SPEEDS[simSpeed] || SIM_SPEEDS.normal;
 
-  // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
-
-  // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
 
-  // Build and mount overlay
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
-  // Tick through years with possible mini-events
   let minisFired = 0;
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
-    await _delay(4250);
+    await _delay(speed.yearDelay);
 
     if (minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
@@ -5757,29 +6139,26 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     }
   }
 
-  // Complete progress bar
+  if (result.intEvent) {
+    _setSimStatus(overlay, '');
+    await _showIntlEvent(overlay, result.intEvent);
+  }
+
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
-  await _delay(1500);
+  await _delay(Math.max(speed.yearDelay * 0.35, 500));
 
-  // Dismiss overlay
   overlay.classList.add('sim-fade-out');
   await _delay(500);
   overlay.remove();
 
-  // Recalculate next-turn budget to include any mini-event penalties
-  // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
   engine.state.budget = engine.getEffectiveBudget();
-
-  // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
 
-  // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
   if (result.endgame) {
-    // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
     if (result.event) {
@@ -5795,11 +6174,9 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     fxMgr.shake();
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
   } else {
-    // Auto-save mid-game progress
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
@@ -5881,6 +6258,43 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 
     panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
     panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
+  });
+}
+
+function _showIntlEvent(overlay, evt) {
+  return new Promise(resolve => {
+    const panel = document.createElement('div');
+    panel.id = 'mini-event-panel';
+
+    const effectLines = Object.entries(evt.appliedEffects).map(([k, v]) => {
+      const labels = { temperature: 'Temperature', gridReliability: 'Grid', financialStability: 'Financial', socialStability: 'Social', netZeroProgress: 'Net Zero', strandedAssets: 'Stranded Assets', propertyValue: 'Property Value' };
+      const label = labels[k] || k;
+      const sign = v > 0 ? '+' : '';
+      const suffix = k === 'temperature' ? '°C' : '';
+      return `${label}: ${sign}${v}${suffix}`;
+    }).join(' · ');
+
+    panel.innerHTML = `
+      <div class="mini-event-icon">${evt.icon}</div>
+      <div class="mini-event-year" style="color:var(--accent-blue-lt)">INTERNATIONAL</div>
+      <div class="mini-event-title">${evt.title}</div>
+      <div class="mini-event-prompt">${evt.description}</div>
+      ${evt.story ? `<div class="mini-event-explain" style="font-style:italic">${evt.story}</div>` : ''}
+      <div class="mini-event-context">
+        <span class="mini-event-context-label">Effects:</span>
+        <span class="mini-event-context-value">${effectLines}</span>
+      </div>
+      <div class="mini-event-actions">
+        <button class="mini-btn opt-a" style="flex:1">
+          <span class="mini-btn-label">Acknowledge</span>
+        </button>
+      </div>`;
+
+    overlay.querySelector('#sim-card').appendChild(panel);
+    panel.querySelector('.opt-a').addEventListener('click', () => {
+      panel.classList.add('sim-fade-out');
+      setTimeout(() => { panel.remove(); resolve(); }, 300);
+    }, { once: true });
   });
 }
 
