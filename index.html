@@ -2064,6 +2064,47 @@ body { transition: filter 2s ease; }
 .tl-chip.warn { background: #2a2000; color: var(--status-warn); }
 .tl-chip.danger { background: #2a0e08; color: var(--status-danger); }
 
+/* ===== EVENT CHRONICLE ===== */
+#endgame-chronicle {
+  margin: var(--gap-lg) 0;
+}
+#endgame-chronicle-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.chronicle-entry {
+  display: flex;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm) var(--gap-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--status-danger);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--gap-sm);
+}
+.chronicle-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.chronicle-header {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.chronicle-story {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-style: italic;
+}
+
 /* ===== ENDGAME RADAR CHART ===== */
 #endgame-radar {
   display: flex;
@@ -2278,6 +2319,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2337,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2966,6 +3012,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_crisis">
+        <span class="scenario-card-icon">🔥</span>
+        <div class="scenario-card-name">Energy Crisis</div>
+        <div class="scenario-card-desc">A global energy shock has left the UK dependent on gas. Renewables are underdeveloped, the grid is fragile, and public anger is rising — but the crisis unlocked emergency funding.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Gas dependence: <span>45 (very high)</span></div>
+          <div class="scenario-stat">Grid: <span>45% (fragile)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="island_nation">
+        <span class="scenario-card-icon">🏝️</span>
+        <div class="scenario-card-name">Island Nation</div>
+        <div class="scenario-card-desc">Strong offshore wind but minimal storage and weak flood defences. Coastal exposure is extreme — adaptation is non-negotiable.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
+          <div class="scenario-stat">Wind: <span>40 (strong head start)</span></div>
+          <div class="scenario-stat">Adaptation: <span>0 (none built)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3166,6 +3234,24 @@ const RANDOM_EVENTS = [
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
+  },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '☀️',
+    title: 'Prolonged Drought — South England',
+    description: 'Six consecutive months without significant rainfall. Reservoir levels at record lows. Water rationing imposed across south-east England.',
+    story: 'Thames Water imposed stage 4 restrictions across London and the Home Counties. Allotment grower Margaret Chen in Croydon watched her community garden wither: "We\'ve been growing here 30 years. The soil just turns to dust now."',
+    effects: { socialStability: -8, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'CYBER_ATTACK', type: 'GRID', severity: 'MODERATE', icon: '🖥️',
+    title: 'Cyber Attack on Grid Infrastructure',
+    description: 'A state-sponsored cyber attack targets the smart grid control systems. Automated grid balancing fails for 48 hours.',
+    story: 'The National Cyber Security Centre traced the attack to a vulnerability in third-party grid management software. Engineers at National Grid ESO switched to manual frequency balancing — a procedure last practised in 2019.',
+    effects: { gridReliability: -12, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 8,
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
   },
 ];
 
@@ -3370,6 +3456,32 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_crisis: {
+    label: 'Energy Crisis',
+    apply(state) {
+      state.energy.gas = 45;
+      state.energy.wind = 15;
+      state.energy.solar = 3;
+      state.gridReliability = 45;
+      state.socialStability = 60;
+      state.temperature = 1.2;
+      state._budgetOverride = 110;
+    },
+  },
+  island_nation: {
+    label: 'Island Nation',
+    apply(state) {
+      state.energy.wind = 40;
+      state.energy.solar = 10;
+      state.energy.nuclear = 8;
+      state.energy.gas = 15;
+      state.energy.storage = 2;
+      state.netZeroProgress = 45;
+      state.infrastructure.adaptation = 0;
+      state.temperature = 1.3;
+      state._budgetOverride = 90;
     },
   },
 };
@@ -3763,6 +3875,8 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      eventIcon: event ? event.icon : null,
+      eventStory: event ? event.story : null,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -3931,21 +4045,25 @@ class GameEngine {
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
+        { e: RANDOM_EVENTS[0], w: 18 },  // FLOOD_MINOR
         { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[2], w: 18 },  // HEATWAVE_MOD
+        { e: RANDOM_EVENTS[4], w: 16 },  // STORM
+        { e: RANDOM_EVENTS[6], w: 12 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 8 },   // DROUGHT
+        { e: RANDOM_EVENTS[9], w: 6 },   // CYBER_ATTACK
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[1], w: 17 },  // FLOOD_MAJOR
+        { e: RANDOM_EVENTS[3], w: 17 },  // HEATWAVE_MAJOR
+        { e: RANDOM_EVENTS[4], w: 14 },  // STORM
+        { e: RANDOM_EVENTS[7], w: 13 },  // GRID_FAILURE
+        { e: RANDOM_EVENTS[6], w: 12 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[5], w: 10 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 10 },  // DROUGHT
+        { e: RANDOM_EVENTS[9], w: 7 },   // CYBER_ATTACK
       ];
     }
 
@@ -3997,12 +4115,17 @@ class GameEngine {
 
   _describeDecisions(d) {
     const out = [];
-    if (d.energyTransition > 0)   out.push(`Energy Transition ×${d.energyTransition} (£${d.energyTransition * 30}bn)`);
-    if (d.gridAndStorage > 0)     out.push(`Grid & Storage ×${d.gridAndStorage} (£${d.gridAndStorage * 35}bn)`);
-    if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)`);
-    if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
-    if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
-    if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
+    const labels = {
+      energyTransition: 'Energy Transition',
+      gridAndStorage: 'Grid & Storage',
+      adaptation: 'Adaptation',
+      socialSupport: 'Social Support',
+      financialResilience: 'Financial Resilience',
+      research: 'R&D',
+    };
+    for (const [cat, label] of Object.entries(labels)) {
+      if (d[cat] > 0) out.push(`${label} ×${d[cat]} (£${d[cat] * BLOCK_COSTS[cat]}bn)`);
+    }
     if (out.length === 0) out.push('No investment this turn');
     return out;
   }
@@ -4265,10 +4388,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4801,10 +4926,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -5074,10 +5201,12 @@ class UI {
         </div>`;
     }
     if (event.budgetPenaltyNext > 0) {
+      const mitigateFactor = Math.min(this.engine.state.infrastructure.adaptation / 200, 0.5);
+      const actualPenalty = Math.round(event.budgetPenaltyNext * (1 - mitigateFactor));
       effectsHtml += `
         <div class="event-effect-row">
           <span class="event-effect-label">Next Turn Budget</span>
-          <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
+          <span class="event-effect-val neg">−£${actualPenalty}bn</span>
         </div>`;
     }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
@@ -5146,6 +5275,9 @@ class UI {
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
 
+    // Build event chronicle
+    const chronicleHtml = this._buildEventChronicle(s);
+
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
@@ -5165,7 +5297,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + chronicleHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5244,6 +5376,23 @@ class UI {
       </div>`;
     }
     html += `</div></div>`;
+    return html;
+  }
+
+  _buildEventChronicle(state) {
+    const events = state.log.filter(e => e.event);
+    if (events.length === 0) return '';
+    let html = `<div id="endgame-chronicle"><div id="endgame-chronicle-title">Event Chronicle</div>`;
+    for (const entry of events) {
+      html += `<div class="chronicle-entry">
+        <span class="chronicle-icon">${entry.eventIcon || '⚠'}</span>
+        <div class="chronicle-body">
+          <div class="chronicle-header">${entry.year} — ${entry.event}</div>
+          ${entry.eventStory ? `<div class="chronicle-story">${entry.eventStory}</div>` : ''}
+        </div>
+      </div>`;
+    }
+    html += `</div>`;
     return html;
   }
 
@@ -5741,12 +5890,13 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Tick through years with possible mini-events
   let minisFired = 0;
+  const tickDelay = () => overlay._skipRequested ? 200 : 4250;
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
-    await _delay(4250);
+    await _delay(tickDelay());
 
-    if (minisFired < 2 && Math.random() < 0.50) {
+    if (!overlay._skipRequested && minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
       if (eligible.length > 0) {
         const evt = eligible[Math.floor(Math.random() * eligible.length)];
@@ -5761,7 +5911,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
-  await _delay(1500);
+  await _delay(overlay._skipRequested ? 300 : 1500);
 
   // Dismiss overlay
   overlay.classList.add('sim-fade-out');
@@ -5819,7 +5969,11 @@ function _buildSimOverlay(startYear) {
         <div id="sim-progress-fill" style="width:0%"></div>
       </div>
       <div id="sim-status">Running 5-year policy simulation\u2026</div>
+      <button id="sim-skip-btn" style="margin-top:var(--gap-md);width:100%;padding:8px;background:none;border:1px solid var(--border-subtle);color:var(--text-muted);border-radius:var(--radius-md);font-size:11px;cursor:pointer;transition:color 0.15s,border-color 0.15s;">Skip animation \u25b8\u25b8</button>
     </div>`;
+  d._skipRequested = false;
+  const skipBtn = d.querySelector('#sim-skip-btn');
+  skipBtn.addEventListener('click', () => { d._skipRequested = true; skipBtn.textContent = 'Skipping\u2026'; skipBtn.disabled = true; });
   return d;
 }
 
@@ -5970,9 +6124,12 @@ if (_bonuses.budgetBonus > 0) {
   engine.state.budget += _bonuses.budgetBonus;
 }
 
-// Set header subtitle
+// Set header subtitle with legacy title
 const _titleEl = document.querySelector('#game-title p');
-if (_titleEl) _titleEl.textContent = 'HM Government \u00B7 Climate Risk Simulation';
+if (_titleEl) {
+  const _legTitle = legacySystem.title();
+  _titleEl.textContent = _legTitle + ' \u00B7 HM Government \u00B7 Climate Risk Simulation';
+}
 
 // Move scene section to full-width strip below game-main
 const sceneSection = document.getElementById('scene-section');
