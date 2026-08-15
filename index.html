@@ -372,6 +372,131 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* ===== SUB-METRICS (STRATEGIC INDICATORS) ===== */
+#sub-metrics-section {
+  margin-top: var(--gap-sm);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--gap-xs);
+}
+
+#sub-metrics-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 0;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-system);
+  transition: color 0.15s;
+}
+
+#sub-metrics-toggle:hover {
+  color: var(--text-secondary);
+}
+
+#sub-metrics-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 300px;
+  opacity: 1;
+}
+
+#sub-metrics-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.sub-metric-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  font-size: 11px;
+}
+
+.sub-metric-label {
+  color: var(--text-secondary);
+  min-width: 110px;
+  flex-shrink: 0;
+}
+
+.sub-metric-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.sub-metric-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+  background: var(--accent-green-lt);
+}
+
+.sub-metric-bar.danger {
+  background: var(--status-danger);
+}
+
+.sub-metric-bar.info {
+  background: var(--status-info);
+}
+
+.sub-metric-bar.adapt {
+  background: var(--energy-nuclear);
+}
+
+.sub-metric-val {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ===== TECH TREE CHOICE UI ===== */
+.tech-choice-container {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.tech-choice-btn {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: var(--font-system);
+  line-height: 1.3;
+}
+
+.tech-choice-btn:hover {
+  border-color: var(--accent-blue-lt);
+  background: var(--bg-elevated);
+}
+
+.tech-choice-btn.selected {
+  border-color: var(--accent-blue);
+  background: rgba(29,112,184,0.15);
+  color: var(--text-primary);
+}
+
+.tech-choice-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 2px;
+}
+
 /* ===== DECISIONS PANEL (CENTRE) ===== */
 #decisions-panel {
   display: flex;
@@ -2278,6 +2403,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2421,37 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strategic Indicators (hidden mechanics surfaced) -->
+      <div id="sub-metrics-section">
+        <button id="sub-metrics-toggle">Strategic Indicators ▾</button>
+        <div id="sub-metrics-content" class="collapsed">
+          <div class="sub-metric-row">
+            <span class="sub-metric-label">🏠 Property Values</span>
+            <div class="sub-metric-bar-track"><div class="sub-metric-bar" id="subbar-property" style="width:100%"></div></div>
+            <span class="sub-metric-val" id="subval-property">100</span>
+          </div>
+          <div class="sub-metric-row">
+            <span class="sub-metric-label">🛢️ Stranded Assets</span>
+            <div class="sub-metric-bar-track"><div class="sub-metric-bar danger" id="subbar-stranded" style="width:0%"></div></div>
+            <span class="sub-metric-val" id="subval-stranded">0</span>
+          </div>
+          <div class="sub-metric-row">
+            <span class="sub-metric-label">🤝 Social Capital</span>
+            <div class="sub-metric-bar-track"><div class="sub-metric-bar info" id="subbar-socialcap" style="width:0%"></div></div>
+            <span class="sub-metric-val" id="subval-socialcap">0</span>
+          </div>
+          <div class="sub-metric-row">
+            <span class="sub-metric-label">🛡️ Adaptation Level</span>
+            <div class="sub-metric-bar-track"><div class="sub-metric-bar adapt" id="subbar-adapt" style="width:0%"></div></div>
+            <span class="sub-metric-val" id="subval-adapt">0%</span>
           </div>
         </div>
       </div>
@@ -2966,6 +3123,39 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="late_start">
+        <span class="scenario-card-icon">⏰</span>
+        <div class="scenario-card-name">Late Start</div>
+        <div class="scenario-card-desc">A decade of policy paralysis has wasted precious time. You inherit a hotter climate, ageing infrastructure, and a public demanding action — but you have 4 turns, not 5.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temperature: <span>1.4°C (higher)</span></div>
+          <div class="scenario-stat">Turns: <span>4 (start at 2030)</span></div>
+          <div class="scenario-stat">Grid: <span>50% (degraded)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="tech_breakthrough">
+        <span class="scenario-card-icon">🔬</span>
+        <div class="scenario-card-name">Tech Breakthrough</div>
+        <div class="scenario-card-desc">A UK research breakthrough has made green hydrogen commercially viable. You start with a free tech upgrade and strong R&D foundations — but the financial system is fragile from the investment boom.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Free upgrade: <span>Tier 1 unlocked</span></div>
+          <div class="scenario-stat">Storage: <span>+15 head start</span></div>
+          <div class="scenario-stat">Financial: <span>55% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="trade_disruption">
+        <span class="scenario-card-icon">🚢</span>
+        <div class="scenario-card-name">Trade Disruption</div>
+        <div class="scenario-card-desc">International supply chain collapse has spiked energy and material costs. Domestic manufacturing is strong but expensive. Every investment costs more — and the world is watching the UK's response.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£80bn/turn</span></div>
+          <div class="scenario-stat">Gas price: <span>+10 (demand surge)</span></div>
+          <div class="scenario-stat">Social: <span>60% (anxious)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3166,6 +3356,33 @@ const RANDOM_EVENTS = [
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
+  },
+  {
+    id: 'FLOOD_REPEAT', type: 'FLOOD', severity: 'MAJOR', icon: '🌊',
+    title: 'Repeated Flooding — Public Fury',
+    description: 'The same communities flood again. Rebuilding programmes are seen as futile. Calls grow for mass relocation from flood-risk areas.',
+    story: 'In Carlisle, residents who rebuilt after last year\'s flood stood knee-deep in water for a second time. "We were told the defences would hold," said Maria Gonzalez, clutching her daughter. "They lied."',
+    effects: { propertyValue: -15, socialStability: -18, financialStability: -8 },
+    infraDamage: true, budgetPenaltyNext: 20,
+    chainFrom: ['FLOOD_MINOR', 'FLOOD_MAJOR'],
+  },
+  {
+    id: 'HEATWAVE_INFRASTRUCTURE', type: 'HEATWAVE', severity: 'MAJOR', icon: '🔥',
+    title: 'Heat Buckles Rail Network',
+    description: 'Record temperatures cause rail buckling and road surface melting across England. Transport infrastructure designed for a cooler climate fails.',
+    story: 'The East Coast Main Line buckled at three points between York and Edinburgh. 340,000 commuters were stranded. Network Rail\'s chief engineer said the infrastructure "was never designed for this climate."',
+    effects: { socialStability: -12, financialStability: -8, gridReliability: -5 },
+    infraDamage: false, budgetPenaltyNext: 15,
+    chainFrom: ['HEATWAVE_MOD', 'HEATWAVE_MAJOR'],
+  },
+  {
+    id: 'FINANCIAL_CASCADE', type: 'FINANCIAL', severity: 'MAJOR', icon: '📉',
+    title: 'Climate Financial Contagion',
+    description: 'Following earlier fossil asset shocks, a cascade of pension fund failures triggers a systemic financial crisis. The Treasury intervenes.',
+    story: 'The FTSE 250 fell 14% in a single session as three mid-tier pension funds disclosed insolvency. The Chancellor announced emergency measures at 2am, drawing comparisons to 2008.',
+    effects: { financialStability: -22, socialStability: -10, strandedAssets: 20 },
+    infraDamage: false, budgetPenaltyNext: 25,
+    chainFrom: ['FINANCIAL_SHOCK'],
   },
 ];
 
@@ -3372,6 +3589,37 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  late_start: {
+    label: 'Late Start',
+    apply(state) {
+      state.turn = 1;
+      state.year = 2030;
+      state.temperature = 1.4;
+      state.gridReliability = 50;
+      state.energy.gas = 32;
+      state.energy.wind = 25;
+      state.strandedAssets = 8;
+      state.netZeroProgress = 30;
+    },
+  },
+  tech_breakthrough: {
+    label: 'Tech Breakthrough',
+    apply(state) {
+      state.energy.storage = 20;
+      state.financialStability = 55;
+      state.strandedAssets = 15;
+      state._freeTechUpgrade = true;
+    },
+  },
+  trade_disruption: {
+    label: 'Trade Disruption',
+    apply(state) {
+      state.energy.gas = 38;
+      state.socialStability = 60;
+      state.propertyValue = 85;
+      state._budgetOverride = 80;
+    },
+  },
 };
 
 /* ============================================================
@@ -3387,7 +3635,7 @@ class SaveManager {
     this._KEY = 'uk_climate_save_v2';
   }
 
-  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
+  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty, techSelectedChoice) {
     try {
       const payload = {
         version: 2,
@@ -3397,6 +3645,7 @@ class SaveManager {
         techPurchased: [...techPurchased],
         activeScenario,
         activeDifficulty,
+        techSelectedChoice: techSelectedChoice || null,
       };
       localStorage.setItem(this._KEY, JSON.stringify(payload));
     } catch (e) { /* storage full or unavailable */ }
@@ -3407,7 +3656,7 @@ class SaveManager {
       const raw = localStorage.getItem(this._KEY);
       if (!raw) return false;
       const d = JSON.parse(raw);
-      return d.version === 2 && d.engineState && d.engineState.turn > 0 && d.engineState.turn < 5 && !d.engineState.gameOver;
+      return d.version === 2 && d.engineState && d.engineState.turn > 0 && d.engineState.turn < (d.engineState.totalTurns || 5) && !d.engineState.gameOver;
     } catch { return false; }
   }
 
@@ -3540,6 +3789,7 @@ class GameEngine {
     this.state = {
       turn: 0,
       year: 2025,
+      totalTurns: 5,
       gameOver: false,
       gameOverReason: null,
       isResolvingTurn: false,
@@ -3575,6 +3825,7 @@ class GameEngine {
       currentRandomEvent: null,
       eventCount: 0,
       lastEventTurn: -1,
+      eventHistory: [],
       log: [],
       lastSnapshot: null,
     };
@@ -3646,7 +3897,7 @@ class GameEngine {
     if (et > 0) {
       e.wind    = clamp(e.wind    + et * 8,  0, 120);
       e.solar   = clamp(e.solar   + et * 6,  0, 100);
-      e.gas     = clamp(e.gas     - et * 7,  0, 100);
+      e.gas     = clamp(e.gas     - et * Math.round(7 * techTree.multipliers.gasPhaseOut),  0, 100);
       netZeroProgress = clamp(netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
       strandedAssets  = clamp(strandedAssets  + et * 12, 0, 100);
       infra.energyTransition += et * 30;
@@ -3668,17 +3919,20 @@ class GameEngine {
       financialStability = clamp(financialStability + ss * 3, 0, 100);
       infra.socialSupport += ss * 20;
       socialCapital = clamp(socialCapital + ss * 4, 0, 60);
+      if (techTree.multipliers.socialNZBonus > 0) {
+        netZeroProgress = clamp(netZeroProgress + ss * techTree.multipliers.socialNZBonus, 0, 100);
+      }
     }
     const fr = d.financialResilience;
     if (fr > 0) {
       financialStability = clamp(financialStability + fr * 10 * techTree.multipliers.finGain, 0, 100);
-      strandedAssets     = clamp(strandedAssets     - fr * 8,  0, 100);
+      strandedAssets     = clamp(strandedAssets     - fr * Math.round(8 * techTree.multipliers.strandedReduction),  0, 100);
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
     }
 
     // Mirror _recalcGrid
-    const gridFactor      = 1 + (infra.gridAndStorage / 300);
+    const gridFactor      = (1 + (infra.gridAndStorage / 300)) * techTree.multipliers.gridInfraBonus;
     const backup          = e.nuclear + e.storage + (e.gas * 0.5);
     const renew           = Math.max(e.wind + e.solar, 1);
     const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
@@ -3695,7 +3949,7 @@ class GameEngine {
     const capBonus     = socialCapital * 0.35;
     const supBonus     = infra.socialSupport * 0.15;
     const energyBurden = Math.max(0, (infra.energyTransition - infra.socialSupport) * 0.07);
-    const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
+    const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8) * techTree.multipliers.heatResist;
     socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
 
     return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
@@ -3785,9 +4039,8 @@ class GameEngine {
     // Recalculate budget for next turn
     s.budget = this.getEffectiveBudget();
 
-    // Check end game — 5 turns total (2025→2030→2035→2040→2045→2050)
     let endgame = null;
-    if (s.gameOver || s.turn >= 5) {
+    if (s.gameOver || s.turn >= (s.totalTurns || 5)) {
       endgame = evaluateEndgame(s);
     }
 
@@ -3803,7 +4056,7 @@ class GameEngine {
     if (et > 0) {
       s.energy.wind    = this._clamp(s.energy.wind    + et * 8,  0, 120);
       s.energy.solar   = this._clamp(s.energy.solar   + et * 6,  0, 100);
-      s.energy.gas     = this._clamp(s.energy.gas     - et * 7,  0, 100);
+      s.energy.gas     = this._clamp(s.energy.gas     - et * Math.round(7 * techTree.multipliers.gasPhaseOut),  0, 100);
       s.netZeroProgress = this._clamp(s.netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
       s.strandedAssets  = this._clamp(s.strandedAssets  + et * 12, 0, 100);
       s.infrastructure.energyTransition += et * 30;
@@ -3830,14 +4083,17 @@ class GameEngine {
       s.socialStability    = this._clamp(s.socialStability    + ss * 8 * techTree.multipliers.socialGain, 0, 100);
       s.financialStability = this._clamp(s.financialStability + ss * 3, 0, 100);
       s.infrastructure.socialSupport += ss * 20;
-      s.socialCapital = this._clamp(s.socialCapital + ss * 4, 0, 60); // accumulates across turns
+      s.socialCapital = this._clamp(s.socialCapital + ss * 4, 0, 60);
+      if (techTree.multipliers.socialNZBonus > 0) {
+        s.netZeroProgress = this._clamp(s.netZeroProgress + ss * techTree.multipliers.socialNZBonus, 0, 100);
+      }
     }
 
     // Financial Resilience
     const fr = d.financialResilience;
     if (fr > 0) {
       s.financialStability = this._clamp(s.financialStability + fr * 10 * techTree.multipliers.finGain, 0, 100);
-      s.strandedAssets     = this._clamp(s.strandedAssets     - fr * 8,  0, 100);
+      s.strandedAssets     = this._clamp(s.strandedAssets     - fr * Math.round(8 * techTree.multipliers.strandedReduction),  0, 100);
       s.propertyValue      = this._clamp(s.propertyValue      + fr * 5,  0, 100);
       s.infrastructure.financialResilience += fr * 30;
     }
@@ -3852,7 +4108,7 @@ class GameEngine {
   _recalcGrid() {
     const s = this.state;
     const e = s.energy;
-    const gridFactor = 1 + (s.infrastructure.gridAndStorage / 300);
+    const gridFactor = (1 + (s.infrastructure.gridAndStorage / 300)) * techTree.multipliers.gridInfraBonus;
     const backup  = e.nuclear + e.storage + (e.gas * 0.5);
     const renew   = Math.max(e.wind + e.solar, 1);
     const raw     = (backup / renew) * gridFactor * 50;
@@ -3873,12 +4129,10 @@ class GameEngine {
     const s = this.state;
     const gridPenalty = s.gridReliability < 50 ? (50 - s.gridReliability) * 0.6 : 0;
     const finPenalty  = s.financialStability < 45 ? (45 - s.financialStability) * 0.5 : 0;
-    const capBonus    = s.socialCapital * 0.35; // persistent trust built over time
-    const supBonus    = s.infrastructure.socialSupport * 0.15; // reduced since capital accumulates
-    // Energy burden: rapid decarbonisation raises bills — if not cushioned by social support, public anger grows
+    const capBonus    = s.socialCapital * 0.35;
+    const supBonus    = s.infrastructure.socialSupport * 0.15;
     const energyBurden = Math.max(0, (s.infrastructure.energyTransition - s.infrastructure.socialSupport) * 0.07);
-    // Temperature drag: sustained high temperatures directly damage wellbeing and housing
-    const tempDrag = Math.max(0, (s.temperature - 1.3) * 8);
+    const tempDrag = Math.max(0, (s.temperature - 1.3) * 8) * techTree.multipliers.heatResist;
     s.socialStability = this._clamp(
       Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100
     );
@@ -3911,7 +4165,6 @@ class GameEngine {
 
   _resolveEvent() {
     const s = this.state;
-    // Cooldown: no event if one fired last turn
     if (s.turn > 0 && s.turn - 1 === s.lastEventTurn) return null;
 
     const excess = Math.max(s.temperature - 1.1, 0);
@@ -3919,38 +4172,52 @@ class GameEngine {
 
     if (Math.random() >= prob) return null;
 
+    const findEvent = (id) => RANDOM_EVENTS.find(e => e.id === id);
+
+    // Check for chain events first — events triggered by prior history
+    const chainCandidates = RANDOM_EVENTS.filter(e => {
+      if (!e.chainFrom) return false;
+      return e.chainFrom.some(prevId => s.eventHistory.includes(prevId));
+    });
+    if (chainCandidates.length > 0 && Math.random() < 0.4) {
+      const chainEvent = chainCandidates[Math.floor(Math.random() * chainCandidates.length)];
+      if (!chainEvent.condition || chainEvent.condition(s)) {
+        return this._applyEvent(chainEvent);
+      }
+    }
+
     // Build weighted pool based on temperature
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: findEvent('FINANCIAL_SHOCK'), w: 30 },
+        { e: findEvent('STORM'), w: 25 },
+        { e: findEvent('FLOOD_MINOR'), w: 25 },
+        { e: findEvent('HEATWAVE_MOD'), w: 10 },
+        { e: findEvent('SOCIAL_UNREST'), w: 10 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: findEvent('FLOOD_MINOR'), w: 20 },
+        { e: findEvent('FLOOD_MAJOR'), w: 10 },
+        { e: findEvent('HEATWAVE_MOD'), w: 20 },
+        { e: findEvent('STORM'), w: 20 },
+        { e: findEvent('SOCIAL_UNREST'), w: 15 },
+        { e: findEvent('FINANCIAL_SHOCK'), w: 15 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: findEvent('FLOOD_MAJOR'), w: 20 },
+        { e: findEvent('HEATWAVE_MAJOR'), w: 20 },
+        { e: findEvent('STORM'), w: 18 },
+        { e: findEvent('GRID_FAILURE'), w: 15 },
+        { e: findEvent('SOCIAL_UNREST'), w: 15 },
+        { e: findEvent('FINANCIAL_SHOCK'), w: 12 },
       ];
     }
 
-    // Filter conditional events
-    pool = pool.filter(item => !item.e.condition || item.e.condition(s));
+    // Filter conditional and chain-only events from the base pool
+    pool = pool.filter(item => item.e && !item.e.chainFrom && (!item.e.condition || item.e.condition(s)));
     if (pool.length === 0) return null;
 
     // Weighted random selection
@@ -3962,10 +4229,13 @@ class GameEngine {
       if (roll <= 0) { selectedEvent = item.e; break; }
     }
 
-    // Mitigation factor from adaptation
+    return this._applyEvent(selectedEvent);
+  }
+
+  _applyEvent(selectedEvent) {
+    const s = this.state;
     const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
 
-    // Apply effects
     const applied = {};
     for (const [key, val] of Object.entries(selectedEvent.effects)) {
       const mitigated = Math.round(val * (1 - mitigate));
@@ -3979,19 +4249,18 @@ class GameEngine {
       }
     }
 
-    // Budget penalty next turn
     if (selectedEvent.budgetPenaltyNext > 0) {
       const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
       s.nextTurnBudgetPenalty += penaltyMitigated;
     }
 
-    // Infrastructure stickiness damage
     if (selectedEvent.infraDamage && s.infrastructure.adaptation < 40) {
       s.energy.wind  = this._clamp(s.energy.wind  - 10, 0, 120);
       s.energy.solar = this._clamp(s.energy.solar - 10, 0, 100);
     }
 
     s.lastEventTurn = s.turn;
+    s.eventHistory.push(selectedEvent.id);
     return { ...selectedEvent, appliedEffects: applied };
   }
 
@@ -4011,9 +4280,12 @@ class GameEngine {
     difficultyMgr.activateForNewGame();
     turnHistory.reset();
     this._initState();
-    // Apply starter scenario mutations
     const scenario = STARTER_SCENARIOS[scenarioKey] || STARTER_SCENARIOS.standard;
     scenario.apply(this.state);
+    if (this.state._freeTechUpgrade) {
+      delete this.state._freeTechUpgrade;
+      techTree.purchase();
+    }
     turnHistory.record(this.state);
     this.state.budget = this.getEffectiveBudget();
     const bonuses = legacySystem.startingBonuses();
@@ -4265,10 +4537,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4349,6 +4623,7 @@ class UI {
           const upgrade = RESEARCH_UPGRADES.find(u => u.id === id);
           if (upgrade) { upgrade.apply(techTree.multipliers); techTree._purchased.add(id); }
         }
+        if (payload.techSelectedChoice) techTree.selectChoice(payload.techSelectedChoice);
         // Restore history
         turnHistory.data = payload.historyData || [];
         this._activeScenario = payload.activeScenario || 'standard';
@@ -4444,6 +4719,16 @@ class UI {
             alert(text);
           });
         }
+      });
+    }
+
+    // Sub-metrics toggle
+    const subToggle = document.getElementById('sub-metrics-toggle');
+    if (subToggle) {
+      subToggle.addEventListener('click', () => {
+        const content = document.getElementById('sub-metrics-content');
+        content.classList.toggle('collapsed');
+        subToggle.textContent = content.classList.contains('collapsed') ? 'Strategic Indicators ▾' : 'Strategic Indicators ▴';
       });
     }
 
@@ -4613,6 +4898,7 @@ class UI {
     this._renderProjection(state);
     this._renderSparklines(state);
     this._renderEnergyMix(state);
+    this._renderSubMetrics(state);
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
@@ -4622,12 +4908,13 @@ class UI {
 
   _renderHeader(state) {
     this.elYear.textContent      = state.year;
-    this.elTurnCount.textContent = `Turn ${state.turn + 1} of 5`;
+    this.elTurnCount.textContent = `Turn ${state.turn + 1} of ${state.totalTurns || 5}`;
     const nextYr = state.year + 5;
     this.elPeriod.textContent    = `${state.year}–${nextYr}`;
     this.elNextYear.textContent  = nextYr;
-    if (state.turn >= 4) {
-      this.elEndTurnBtn.innerHTML = `Complete 2045–2050 &rarr;`;
+    const maxTurns = state.totalTurns || 5;
+    if (state.turn >= maxTurns - 1) {
+      this.elEndTurnBtn.innerHTML = `Complete ${state.year}–${state.year + 5} &rarr;`;
     } else {
       this.elEndTurnBtn.innerHTML = `Advance to <span id="next-year-label">${nextYr}</span> &rarr;`;
       this.elNextYear = document.getElementById('next-year-label');
@@ -4801,10 +5088,36 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
+  }
+
+  _renderSubMetrics(state) {
+    const propBar = document.getElementById('subbar-property');
+    const propVal = document.getElementById('subval-property');
+    if (propBar) propBar.style.width = Math.max(0, state.propertyValue) + '%';
+    if (propVal) propVal.textContent = Math.round(state.propertyValue);
+
+    const strandBar = document.getElementById('subbar-stranded');
+    const strandVal = document.getElementById('subval-stranded');
+    if (strandBar) strandBar.style.width = Math.max(0, state.strandedAssets) + '%';
+    if (strandVal) strandVal.textContent = Math.round(state.strandedAssets);
+
+    const socCapBar = document.getElementById('subbar-socialcap');
+    const socCapVal = document.getElementById('subval-socialcap');
+    const socCapPct = Math.round((state.socialCapital / 60) * 100);
+    if (socCapBar) socCapBar.style.width = socCapPct + '%';
+    if (socCapVal) socCapVal.textContent = Math.round(state.socialCapital);
+
+    const adaptBar = document.getElementById('subbar-adapt');
+    const adaptVal = document.getElementById('subval-adapt');
+    const adaptPct = Math.round((state.infrastructure.adaptation / 200) * 100);
+    if (adaptBar) adaptBar.style.width = Math.min(100, adaptPct) + '%';
+    if (adaptVal) adaptVal.textContent = adaptPct + '%';
   }
 
   _renderBudget(state) {
@@ -4848,24 +5161,63 @@ class UI {
   }
 
   _renderResearchCard() {
-    const nextUpgrade = techTree.nextUpgrade();
+    const tier = techTree.currentTier();
     const plusBtn = document.getElementById('plus-research');
-    if (!nextUpgrade || techTree.isComplete()) {
-      const nameEl = document.getElementById('research-upgrade-name');
+    const nameEl = document.getElementById('research-upgrade-name');
+    const tagEl = document.getElementById('research-effect-tag');
+    const doneEl = document.getElementById('research-all-done');
+
+    if (!tier || techTree.isComplete()) {
       if (nameEl) nameEl.textContent = 'All upgrades purchased';
-      const tagEl = document.getElementById('research-effect-tag');
       if (tagEl) tagEl.style.display = 'none';
-      const doneEl = document.getElementById('research-all-done');
       if (doneEl) doneEl.style.display = '';
       if (plusBtn) plusBtn.disabled = true;
-    } else {
-      const nameEl = document.getElementById('research-upgrade-name');
-      if (nameEl) nameEl.textContent = nextUpgrade.name;
-      const tagEl = document.getElementById('research-effect-tag');
-      if (tagEl) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
-      const doneEl = document.getElementById('research-all-done');
-      if (doneEl) doneEl.style.display = 'none';
+      this._removeTechChoiceUI();
+      return;
     }
+
+    const selected = techTree.getSelectedChoice();
+    const activeOption = selected === tier.optionB.id ? tier.optionB : tier.optionA;
+    if (nameEl) nameEl.textContent = `Tier ${tier.tier}: ${activeOption.name}`;
+    if (tagEl) { tagEl.textContent = activeOption.desc; tagEl.style.display = ''; }
+    if (doneEl) doneEl.style.display = 'none';
+
+    this._renderTechChoiceUI(tier, selected);
+  }
+
+  _renderTechChoiceUI(tier, selectedId) {
+    const card = document.getElementById('card-research');
+    if (!card) return;
+    let container = card.querySelector('.tech-choice-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'tech-choice-container';
+      const citation = card.querySelector('.card-citation');
+      card.insertBefore(container, citation);
+    }
+
+    const makeBtn = (option, isSelected) => {
+      const btn = document.createElement('button');
+      btn.className = 'tech-choice-btn' + (isSelected ? ' selected' : '');
+      btn.innerHTML = `<span class="tech-choice-name">${option.name}</span>${option.desc}`;
+      btn.addEventListener('click', () => {
+        techTree.selectChoice(option.id);
+        this._renderResearchCard();
+      });
+      return btn;
+    };
+
+    container.innerHTML = '';
+    const selA = !selectedId || selectedId === tier.optionA.id;
+    container.appendChild(makeBtn(tier.optionA, selA));
+    container.appendChild(makeBtn(tier.optionB, !selA));
+  }
+
+  _removeTechChoiceUI() {
+    const card = document.getElementById('card-research');
+    if (!card) return;
+    const container = card.querySelector('.tech-choice-container');
+    if (container) container.remove();
   }
 
   _renderScene(state) {
@@ -5491,53 +5843,116 @@ class EffectsManager {
    MODULE: TECH TREE MANAGER
 ============================================================ */
 
-const RESEARCH_UPGRADES = [
+const RESEARCH_TIERS = [
   {
-    id:   'solar_supply_chain',
-    name: 'Solar Supply Chain',
-    desc: 'Energy blocks give 1.5× Net Zero progress',
-    apply(m) { m.energyNZ = 1.5; },
+    tier: 1,
+    optionA: {
+      id: 'solar_supply_chain', name: 'Solar Supply Chain',
+      desc: 'Energy blocks give 1.5× Net Zero progress',
+      apply(m) { m.energyNZ = 1.5; },
+    },
+    optionB: {
+      id: 'hydrogen_electrolysis', name: 'Green Hydrogen',
+      desc: 'Gas phase-out accelerated: Energy blocks remove 50% more gas',
+      apply(m) { m.gasPhaseOut = 1.5; },
+    },
   },
   {
-    id:   'battery_density',
-    name: 'Battery Energy Density',
-    desc: 'Grid blocks give 1.4× Storage per block',
-    apply(m) { m.gridStorage = 1.4; },
+    tier: 2,
+    optionA: {
+      id: 'battery_density', name: 'Battery Energy Density',
+      desc: 'Grid blocks give 1.4× Storage per block',
+      apply(m) { m.gridStorage = 1.4; },
+    },
+    optionB: {
+      id: 'smart_grid_ai', name: 'Smart Grid AI',
+      desc: 'Grid Reliability formula boosted by 15% infrastructure bonus',
+      apply(m) { m.gridInfraBonus = 1.15; },
+    },
   },
   {
-    id:   'community_networks',
-    name: 'Community Resilience Hubs',
-    desc: 'Social Support blocks give 1.5× Social Stability',
-    apply(m) { m.socialGain = 1.5; },
+    tier: 3,
+    optionA: {
+      id: 'community_networks', name: 'Community Resilience Hubs',
+      desc: 'Social Support blocks give 1.5× Social Stability',
+      apply(m) { m.socialGain = 1.5; },
+    },
+    optionB: {
+      id: 'decentralised_energy', name: 'Decentralised Energy',
+      desc: 'Social blocks also grant +3 Net Zero progress per block',
+      apply(m) { m.socialNZBonus = 3; },
+    },
   },
   {
-    id:   'green_finance_regs',
-    name: 'Green Finance Regulations',
-    desc: 'Financial Resilience blocks give 1.5× Stability gain',
-    apply(m) { m.finGain = 1.5; },
+    tier: 4,
+    optionA: {
+      id: 'green_finance_regs', name: 'Green Finance Regulations',
+      desc: 'Financial Resilience blocks give 1.5× Stability gain',
+      apply(m) { m.finGain = 1.5; },
+    },
+    optionB: {
+      id: 'carbon_market', name: 'Carbon Market Innovation',
+      desc: 'Financial blocks also reduce Stranded Assets by 50% more',
+      apply(m) { m.strandedReduction = 1.5; },
+    },
   },
   {
-    id:   'ai_flood_prediction',
-    name: 'AI Flood Prediction',
-    desc: 'Adaptation blocks give 1.6× event damage mitigation',
-    apply(m) { m.adaptMitigate = 1.6; },
+    tier: 5,
+    optionA: {
+      id: 'ai_flood_prediction', name: 'AI Flood Prediction',
+      desc: 'Adaptation blocks give 1.6× event damage mitigation',
+      apply(m) { m.adaptMitigate = 1.6; },
+    },
+    optionB: {
+      id: 'heat_resistant_infra', name: 'Heat-Resistant Infrastructure',
+      desc: 'Temperature drag on Social Stability reduced by 40%',
+      apply(m) { m.heatResist = 0.6; },
+    },
   },
 ];
+
+const RESEARCH_UPGRADES = RESEARCH_TIERS.flatMap(t => [t.optionA, t.optionB]);
 
 class TechTreeManager {
   constructor() {
     this.multipliers = {
-      energyNZ:      1.0,
-      gridStorage:   1.0,
-      socialGain:    1.0,
-      finGain:       1.0,
-      adaptMitigate: 1.0,
+      energyNZ:         1.0,
+      gridStorage:      1.0,
+      socialGain:       1.0,
+      finGain:          1.0,
+      adaptMitigate:    1.0,
+      gasPhaseOut:      1.0,
+      gridInfraBonus:   1.0,
+      socialNZBonus:    0,
+      strandedReduction:1.0,
+      heatResist:       1.0,
     };
     this._purchased = new Set();
+    this._selectedChoice = null;
+  }
+
+  currentTier() {
+    for (const tier of RESEARCH_TIERS) {
+      if (!this._purchased.has(tier.optionA.id) && !this._purchased.has(tier.optionB.id)) {
+        return tier;
+      }
+    }
+    return null;
+  }
+
+  selectChoice(optionId) {
+    this._selectedChoice = optionId;
+  }
+
+  getSelectedChoice() {
+    return this._selectedChoice;
   }
 
   nextUpgrade() {
-    return RESEARCH_UPGRADES.find(u => !this._purchased.has(u.id)) || null;
+    const tier = this.currentTier();
+    if (!tier) return null;
+    if (this._selectedChoice === tier.optionB.id) return tier.optionB;
+    return tier.optionA;
   }
 
   purchase() {
@@ -5545,16 +5960,21 @@ class TechTreeManager {
     if (!upgrade) return null;
     upgrade.apply(this.multipliers);
     this._purchased.add(upgrade.id);
+    this._selectedChoice = null;
     return upgrade;
   }
 
   isComplete() {
-    return this._purchased.size >= RESEARCH_UPGRADES.length;
+    return this.currentTier() === null;
   }
 
   reset() {
-    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this.multipliers = {
+      energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0,
+      gasPhaseOut:1.0, gridInfraBonus:1.0, socialNZBonus:0, strandedReduction:1.0, heatResist:1.0,
+    };
     this._purchased.clear();
+    this._selectedChoice = null;
   }
 }
 
@@ -5796,11 +6216,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, techTree.getSelectedChoice());
     ui.render(engine.getState());
   } else {
     // Auto-save mid-game progress
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, techTree.getSelectedChoice());
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
