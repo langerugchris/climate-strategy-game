@@ -1386,6 +1386,210 @@ body { transition: filter 2s ease; }
   #event-card { padding: var(--gap-lg); }
 }
 
+/* ===== LEGACY / XP DISPLAY ===== */
+#legacy-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: default;
+}
+#legacy-badge .legacy-title {
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+}
+#legacy-badge .legacy-level {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+#hook-legacy {
+  margin-bottom: var(--gap-lg);
+  padding: var(--gap-md);
+  background: rgba(29,112,184,0.08);
+  border: 1px solid rgba(29,112,184,0.25);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+#hook-legacy .legacy-rank {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: 4px;
+}
+#hook-legacy .legacy-stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-lg);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+#hook-legacy .legacy-stats strong {
+  color: var(--text-primary);
+}
+#hook-legacy.hidden { display: none; }
+
+#endgame-legacy {
+  text-align: center;
+  margin-bottom: var(--gap-md);
+  padding: var(--gap-md);
+  background: rgba(29,112,184,0.08);
+  border: 1px solid rgba(29,112,184,0.25);
+  border-radius: var(--radius-md);
+}
+#endgame-legacy .legacy-up {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--status-good);
+  margin-bottom: 4px;
+}
+#endgame-legacy .legacy-progress {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+#endgame-legacy .xp-bar-track {
+  height: 8px;
+  background: var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px auto 4px;
+  max-width: 300px;
+}
+#endgame-legacy .xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-lt));
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  animation: fadeIn 0.3s ease;
+}
+#tutorial-overlay.hidden { display: none; }
+
+#tutorial-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 500px;
+  width: 92vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+#tutorial-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  text-align: center;
+  margin-bottom: var(--gap-md);
+}
+.tutorial-step {
+  display: none;
+}
+.tutorial-step.active {
+  display: block;
+}
+.tutorial-step-icon {
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: var(--gap-sm);
+}
+.tutorial-step-title {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--gap-sm);
+  color: var(--text-primary);
+}
+.tutorial-step-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-family: var(--font-editorial);
+  margin-bottom: var(--gap-md);
+}
+.tutorial-step-body strong {
+  color: var(--text-primary);
+}
+.tutorial-highlight {
+  background: rgba(29,112,184,0.12);
+  border-left: 3px solid var(--accent-blue);
+  padding: 8px 12px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: var(--gap-sm) 0;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+.tutorial-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-md);
+  margin-top: var(--gap-md);
+}
+.tutorial-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+.tutorial-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background 0.2s;
+}
+.tutorial-dot.active {
+  background: var(--accent-blue-lt);
+}
+#tutorial-prev-btn,
+#tutorial-next-btn {
+  padding: 10px 20px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+#tutorial-prev-btn:hover,
+#tutorial-next-btn:hover { background: var(--border-strong); }
+#tutorial-next-btn.primary {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: white;
+}
+#tutorial-next-btn.primary:hover { background: var(--accent-blue-lt); }
+#tutorial-skip-btn {
+  display: block;
+  margin: var(--gap-md) auto 0;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 /* ===== HOOK SCREEN ===== */
 #hook-screen {
   position: fixed;
@@ -2162,6 +2366,7 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
+    <div id="legacy-badge" class="hidden"><span class="legacy-title"></span><span class="legacy-level"></span></div>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2453,7 +2658,7 @@ body { transition: filter 2s ease; }
             <div class="card-sub" id="research-upgrade-name">Solar Supply Chain</div>
           </div>
           <div class="card-cost-controls">
-            <div class="card-cost">£15bn/block</div>
+            <div class="card-cost">£25bn/block</div>
             <div class="block-controls">
               <button class="block-btn" id="minus-research" data-cat="research">−</button>
               <span class="block-count" id="count-research">0</span>
@@ -2461,7 +2666,7 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
-        <div class="card-rationale">R&amp;D investment unlocks permanent technology multipliers applied to all future spending in that area. Cheap — £15bn per block — but the payoff compounds over remaining turns. Prioritise the upgrade that amplifies your weakest investment area.</div>
+        <div class="card-rationale">R&amp;D investment unlocks permanent technology multipliers applied to all future spending. £25bn per block, limited to 1 per turn — but the payoff compounds over remaining turns. Prioritise the upgrade that amplifies your weakest investment area.</div>
         <div class="card-effects">
           <span class="effect-tag pos" id="research-effect-tag">Solar blocks give 1.5× Net Zero progress</span>
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
@@ -2983,9 +3188,95 @@ body { transition: filter 2s ease; }
       <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
       <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
     </div>
+    <div id="hook-legacy" class="hidden">
+      <div class="legacy-rank"></div>
+      <div class="legacy-stats">
+        <span>Runs: <strong class="legacy-runs">0</strong></span>
+        <span>Best: <strong class="legacy-best">0</strong>/100</span>
+        <span>XP: <strong class="legacy-xp">0</strong></span>
+      </div>
+    </div>
     <button id="hook-btn">New Game →</button>
     <button id="hook-continue-btn" class="hidden" style="display:none;margin-top:10px;width:100%;padding:12px 24px;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;">↺ Continue saved game — <span id="hook-continue-label"></span></button>
     <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
+  </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-card">
+    <h2>How to Play</h2>
+
+    <div class="tutorial-step active" data-step="0">
+      <div class="tutorial-step-icon">🏛️</div>
+      <div class="tutorial-step-title">You Run the UK's Climate Policy</div>
+      <div class="tutorial-step-body">
+        You have <strong>5 five-year terms</strong> (2025–2050) to guide the UK to Net Zero while keeping the economy and society stable.<br><br>
+        Each turn, you allocate a limited budget across investment areas. Every choice has trade-offs — there are no free wins.
+      </div>
+    </div>
+
+    <div class="tutorial-step" data-step="1">
+      <div class="tutorial-step-icon">💰</div>
+      <div class="tutorial-step-title">Allocate Your Budget</div>
+      <div class="tutorial-step-body">
+        Each turn you receive a budget (default £100bn). Spend it by adding <strong>blocks</strong> to investment categories:
+        <div class="tutorial-highlight">
+          <strong>⚡ Energy Transition</strong> — builds wind &amp; solar, phases out gas<br>
+          <strong>🔋 Grid &amp; Storage</strong> — batteries, nuclear, grid reliability<br>
+          <strong>🏗️ Adaptation</strong> — flood defences, resilient infrastructure<br>
+          <strong>🏘️ Social Support</strong> — protects communities from transition costs<br>
+          <strong>💼 Financial Resilience</strong> — manages stranded assets, property value<br>
+          <strong>🔬 R&amp;D</strong> — unlocks permanent multipliers (1 per turn)
+        </div>
+      </div>
+    </div>
+
+    <div class="tutorial-step" data-step="2">
+      <div class="tutorial-step-icon">⚖️</div>
+      <div class="tutorial-step-title">Watch the Trade-offs</div>
+      <div class="tutorial-step-body">
+        The left panel tracks five key metrics. If <strong>any metric hits zero</strong>, it triggers a systemic breakdown and the game ends early.
+        <div class="tutorial-highlight">
+          <strong>🌡️ Temperature</strong> — rises each turn; energy transition slows it<br>
+          <strong>⚡ Grid Reliability</strong> — renewables need storage backup<br>
+          <strong>💷 Financial Stability</strong> — stranded fossil assets drag it down<br>
+          <strong>🏘️ Social Stability</strong> — affected by grid failures, bills, temperature<br>
+          <strong>🌱 Net Zero Progress</strong> — your path to the 2050 target
+        </div>
+      </div>
+    </div>
+
+    <div class="tutorial-step" data-step="3">
+      <div class="tutorial-step-icon">🌪️</div>
+      <div class="tutorial-step-title">Events &amp; Crises</div>
+      <div class="tutorial-step-body">
+        Between turns, <strong>climate events</strong> can strike — floods, heatwaves, financial crises. Adaptation investment reduces their impact.<br><br>
+        You'll also face <strong>mini-events</strong>: quick two-choice dilemmas during the simulation phase. Both options have costs — pick the one that fits your strategy.
+      </div>
+    </div>
+
+    <div class="tutorial-step" data-step="4">
+      <div class="tutorial-step-icon">🏆</div>
+      <div class="tutorial-step-title">Score &amp; Progression</div>
+      <div class="tutorial-step-body">
+        At the end you're scored out of 100 across four dimensions: <strong>Climate, Net Zero, Stability, and Resilience</strong>. A score of 72+ meets the UN 1.5°C pathway.<br><br>
+        Each run earns XP toward your <strong>career rank</strong> — from Shadow Minister to Prime Minister. Higher ranks unlock starting bonuses for future games.
+      </div>
+    </div>
+
+    <div class="tutorial-nav">
+      <button id="tutorial-prev-btn">← Back</button>
+      <div class="tutorial-dots">
+        <div class="tutorial-dot active"></div>
+        <div class="tutorial-dot"></div>
+        <div class="tutorial-dot"></div>
+        <div class="tutorial-dot"></div>
+        <div class="tutorial-dot"></div>
+      </div>
+      <button id="tutorial-next-btn" class="primary">Next →</button>
+    </div>
+    <button id="tutorial-skip-btn">Skip tutorial</button>
   </div>
 </div>
 
@@ -3096,7 +3387,7 @@ const BLOCK_COSTS = {
   adaptation:          25,
   socialSupport:       20,
   financialResilience: 30,
-  research:            15,
+  research:            25,
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
@@ -3209,18 +3500,18 @@ const difficultyMgr = new DifficultyManager();
 ============================================================ */
 
 const ACHIEVEMENTS = [
-  { id: 'net_zero_pioneer', icon: '🌱', name: 'Net Zero Pioneer', desc: 'Achieve Net Zero in 3 turns or fewer', check: (s) => s.netZeroProgress >= 100 && s.turn <= 3 },
-  { id: 'steady_hand', icon: '⚖️', name: 'Steady Hand', desc: 'Finish with no metric below 50%', check: (s) => s.gridReliability >= 50 && s.financialStability >= 50 && s.socialStability >= 50 },
-  { id: 'weatherproof', icon: '🛡️', name: 'Weatherproof', desc: 'Survive the game with zero climate events', check: (s) => s.eventCount === 0 },
-  { id: 'paris_compliant', icon: '🌍', name: 'Paris Compliant', desc: 'Keep temperature below 1.5°C', check: (s) => s.temperature < 1.5 },
-  { id: 'peoples_champion', icon: '🤝', name: "People's Champion", desc: 'Finish with Social Stability above 85%', check: (s) => s.socialStability >= 85 },
-  { id: 'fiscal_hawk', icon: '🏦', name: 'Fiscal Hawk', desc: 'Finish with Financial Stability above 85%', check: (s) => s.financialStability >= 85 },
-  { id: 'grid_master', icon: '⚡', name: 'Grid Master', desc: 'Finish with Grid Reliability above 90%', check: (s) => s.gridReliability >= 90 },
-  { id: 'researcher', icon: '🔬', name: 'Chief Scientist', desc: 'Purchase all tech tree upgrades', check: (s, tt) => tt.isComplete() },
-  { id: 'perfect_score', icon: '💯', name: 'Perfect Score', desc: 'Score 90 or above', check: (s) => calculateScore(s).total >= 90 },
-  { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
-  { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
-  { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'net_zero_pioneer', icon: '🌱', name: 'Net Zero Pioneer', desc: 'Achieve Net Zero in 3 turns or fewer', hint: 'Speed matters', check: (s) => s.netZeroProgress >= 100 && s.turn <= 3 },
+  { id: 'steady_hand', icon: '⚖️', name: 'Steady Hand', desc: 'Finish with no metric below 50%', hint: 'Balance all pillars', check: (s) => s.gridReliability >= 50 && s.financialStability >= 50 && s.socialStability >= 50 },
+  { id: 'weatherproof', icon: '🛡️', name: 'Weatherproof', desc: 'Survive the game with zero climate events', hint: 'Keep warming low', check: (s) => s.eventCount === 0 },
+  { id: 'paris_compliant', icon: '🌍', name: 'Paris Compliant', desc: 'Keep temperature below 1.5°C', hint: 'Stay well under 2°C', check: (s) => s.temperature < 1.5 },
+  { id: 'peoples_champion', icon: '🤝', name: "People's Champion", desc: 'Finish with Social Stability above 85%', hint: 'People first', check: (s) => s.socialStability >= 85 },
+  { id: 'fiscal_hawk', icon: '🏦', name: 'Fiscal Hawk', desc: 'Finish with Financial Stability above 85%', hint: 'Protect the economy', check: (s) => s.financialStability >= 85 },
+  { id: 'grid_master', icon: '⚡', name: 'Grid Master', desc: 'Finish with Grid Reliability above 90%', hint: 'Keep the lights on', check: (s) => s.gridReliability >= 90 },
+  { id: 'researcher', icon: '🔬', name: 'Chief Scientist', desc: 'Purchase all tech tree upgrades', hint: 'Invest in the future', check: (s, tt) => tt.isComplete() },
+  { id: 'perfect_score', icon: '💯', name: 'Perfect Score', desc: 'Score 90 or above', hint: 'Master every dimension', check: (s) => calculateScore(s).total >= 90 },
+  { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', hint: 'Endure the storm', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
+  { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', hint: 'Phase out fossil fuels completely', check: (s) => s.energy.gas <= 0 },
+  { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', hint: 'Raise the stakes', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
 ];
 
 class AchievementManager {
@@ -3611,7 +3902,8 @@ class GameEngine {
     if (s.isResolvingTurn) return { success: false, reason: 'Turn in progress' };
     const cost = BLOCK_COSTS[category];
     const current = s.currentDecisions[category];
-    if (current >= MAX_BLOCKS_PER_CAT) return { success: false, reason: 'Max 2 blocks per category' };
+    const maxForCat = category === 'research' ? 1 : MAX_BLOCKS_PER_CAT;
+    if (current >= maxForCat) return { success: false, reason: category === 'research' ? 'Max 1 R&D block per turn' : 'Max 2 blocks per category' };
     if (s.spentThisTurn + cost > s.budget) return { success: false, reason: 'Insufficient budget' };
     s.currentDecisions[category]++;
     s.spentThisTurn += cost;
@@ -4002,7 +4294,7 @@ class GameEngine {
     if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)`);
     if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
     if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
-    if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
+    if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 25}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
   }
@@ -4535,6 +4827,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-legacy')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -4832,7 +5125,8 @@ class UI {
       const count   = state.currentDecisions[cat];
       const cost    = BLOCK_COSTS[cat];
       const rem     = state.budget - state.spentThisTurn;
-      const canAdd  = count < MAX_BLOCKS_PER_CAT && rem >= cost;
+      const maxForCat = cat === 'research' ? 1 : MAX_BLOCKS_PER_CAT;
+      const canAdd  = count < maxForCat && rem >= cost;
       const canRem  = count > 0;
 
       document.getElementById(`count-${cat}`).textContent = count;
@@ -4840,8 +5134,8 @@ class UI {
       document.getElementById(`minus-${cat}`).disabled    = !canRem;
 
       const card = document.getElementById(`card-${cat}`);
-      card.classList.toggle('allocated',      count > 0 && count < MAX_BLOCKS_PER_CAT);
-      card.classList.toggle('maxed',          count >= MAX_BLOCKS_PER_CAT);
+      card.classList.toggle('allocated',      count > 0 && count < maxForCat);
+      card.classList.toggle('maxed',          count >= maxForCat);
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
     }
     this._renderResearchCard();
@@ -5134,7 +5428,9 @@ class UI {
     this.elEndgameNgfs.textContent = result.ngfsLabel;
 
     // Record run in LegacySystem (XP + scoring)
-    legacySystem.recordRun(s);
+    const prevLevel = legacySystem.level();
+    const prevTitle = legacySystem.title();
+    const legacyResult = legacySystem.recordRun(s);
     highScoreMgr.record(s, result, difficultyMgr.active);
 
     // Calculate and display score
@@ -5165,9 +5461,27 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+
+    const xpThresholds = [0, 150, 350, 600, 900];
+    const currentXp = legacySystem.data.xp;
+    const currentLvl = legacySystem.level();
+    const nextThreshold = xpThresholds.find(t => t > currentXp) || xpThresholds[xpThresholds.length - 1];
+    const prevThreshold = [...xpThresholds].reverse().find(t => t <= currentXp) || 0;
+    const xpProgress = nextThreshold > prevThreshold ? ((currentXp - prevThreshold) / (nextThreshold - prevThreshold)) * 100 : 100;
+    const leveledUp = currentLvl > prevLevel;
+
+    const legacyHtml = `
+      <div id="endgame-legacy">
+        <div class="legacy-up">${leveledUp ? '🎖️ Promoted! ' : ''}${legacyResult.title} · Level ${currentLvl}</div>
+        <div class="legacy-progress">+${legacyResult.score} XP earned · ${legacySystem.data.runs} total runs · Best: ${legacySystem.data.bestScore}/100</div>
+        <div class="xp-bar-track"><div class="xp-bar-fill" style="width:${Math.round(xpProgress)}%"></div></div>
+        <div class="legacy-progress" style="font-size:10px;color:var(--text-muted)">${currentXp} / ${nextThreshold} XP to next rank</div>
+      </div>`;
+
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', legacyHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
+    this._updateLegacyBadge();
 
     // Staggered reveal of metric tiles
     const tiles = this.elEndgameMetrics.querySelectorAll('.endgame-metric-tile');
@@ -5256,7 +5570,7 @@ class UI {
         <div class="achievement-icon">${earned ? ach.icon : '🔒'}</div>
         <div class="achievement-info">
           <div class="achievement-name">${ach.name}</div>
-          <div class="achievement-desc">${earned ? ach.desc : '???'}</div>
+          <div class="achievement-desc">${earned ? ach.desc : (ach.hint || '???')}</div>
         </div>
       </div>`;
     }
@@ -5400,6 +5714,88 @@ class UI {
     });
     html += `</tbody></table>`;
     return html;
+  }
+
+  _updateLegacyBadge() {
+    const badge = document.getElementById('legacy-badge');
+    if (!badge) return;
+    if (legacySystem.data.runs === 0) { badge.classList.add('hidden'); return; }
+    badge.classList.remove('hidden');
+    badge.querySelector('.legacy-title').textContent = legacySystem.title();
+    badge.querySelector('.legacy-level').textContent = `Lv.${legacySystem.level()}`;
+  }
+}
+
+/* ============================================================
+   MODULE: TUTORIAL MANAGER
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'climate_tutorial_seen';
+    this._step = 0;
+    this._totalSteps = 5;
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return true; }
+  }
+
+  markSeen() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  show() {
+    const overlay = document.getElementById('tutorial-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('hidden');
+    this._step = 0;
+    this._render();
+
+    document.getElementById('tutorial-next-btn').addEventListener('click', () => {
+      if (this._step < this._totalSteps - 1) {
+        this._step++;
+        this._render();
+      } else {
+        this._dismiss();
+      }
+    });
+
+    document.getElementById('tutorial-prev-btn').addEventListener('click', () => {
+      if (this._step > 0) {
+        this._step--;
+        this._render();
+      }
+    });
+
+    document.getElementById('tutorial-skip-btn').addEventListener('click', () => {
+      this._dismiss();
+    });
+  }
+
+  _render() {
+    const steps = document.querySelectorAll('.tutorial-step');
+    steps.forEach((s, i) => s.classList.toggle('active', i === this._step));
+
+    const dots = document.querySelectorAll('.tutorial-dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === this._step));
+
+    const prevBtn = document.getElementById('tutorial-prev-btn');
+    prevBtn.style.visibility = this._step === 0 ? 'hidden' : 'visible';
+
+    const nextBtn = document.getElementById('tutorial-next-btn');
+    if (this._step === this._totalSteps - 1) {
+      nextBtn.textContent = 'Start Playing →';
+      nextBtn.classList.add('primary');
+    } else {
+      nextBtn.textContent = 'Next →';
+      nextBtn.classList.add('primary');
+    }
+  }
+
+  _dismiss() {
+    this.markSeen();
+    document.getElementById('tutorial-overlay').classList.add('hidden');
   }
 }
 
@@ -5744,7 +6140,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
-    await _delay(4250);
+    await _delay(2500);
 
     if (minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
@@ -5979,8 +6375,35 @@ const sceneSection = document.getElementById('scene-section');
 const gameMain     = document.getElementById('game-main');
 if (sceneSection && gameMain) gameMain.after(sceneSection);
 
+const tutorialMgr  = new TutorialManager();
+
 const ui = new UI(engine);
 ui.render(engine.getState());
+ui._updateLegacyBadge();
+
+// Populate legacy info on hook screen
+(function initHookLegacy() {
+  const ld = legacySystem.data;
+  const hookLegacy = document.getElementById('hook-legacy');
+  if (hookLegacy && ld.runs > 0) {
+    hookLegacy.classList.remove('hidden');
+    hookLegacy.querySelector('.legacy-rank').textContent = `${legacySystem.title()} · Level ${legacySystem.level()}`;
+    hookLegacy.querySelector('.legacy-runs').textContent = ld.runs;
+    hookLegacy.querySelector('.legacy-best').textContent = ld.bestScore;
+    hookLegacy.querySelector('.legacy-xp').textContent = ld.xp;
+  }
+})();
+
+// Show tutorial for first-time players (after advisor briefing is dismissed)
+(function initTutorial() {
+  const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
+  if (!advisorDismissBtn) return;
+  advisorDismissBtn.addEventListener('click', () => {
+    if (tutorialMgr.shouldShow()) {
+      setTimeout(() => tutorialMgr.show(), 200);
+    }
+  });
+})();
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
