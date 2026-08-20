@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -633,6 +633,45 @@ body {
   transform: scale(0.98);
 }
 
+.action-secondary-btn {
+  touch-action: manipulation;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.action-secondary-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.action-secondary-btn.hidden { display: none; }
+
+#skip-sim-btn {
+  margin-top: 12px;
+  padding: 8px 20px;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+#skip-sim-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: var(--text-primary);
+}
+
 /* ===== LOG PANEL (RIGHT) ===== */
 #log-panel {
   display: flex;
@@ -1013,6 +1052,84 @@ body {
 }
 
 #advisor-dismiss-btn:hover { background: var(--accent-blue-lt); }
+
+/* ===== RESEARCH BRANCH CHOICE ===== */
+#branch-choice-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 950;
+  animation: fadeIn 0.4s ease;
+}
+
+#branch-choice-modal.hidden { display: none; }
+
+#branch-choice-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--energy-nuclear);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 520px;
+  width: 92vw;
+  animation: slideUp 0.4s ease;
+}
+
+.branch-choice-icon {
+  font-size: 44px;
+  text-align: center;
+  margin-bottom: var(--gap-md);
+}
+
+#branch-choice-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--energy-nuclear);
+  margin-bottom: var(--gap-xs);
+  text-align: center;
+}
+
+#branch-choice-card p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-lg);
+  text-align: center;
+}
+
+#branch-choice-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+}
+
+.branch-option {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.branch-option:hover {
+  border-color: var(--energy-nuclear);
+  background: var(--bg-elevated);
+}
+
+.branch-option-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.branch-option-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
 
 /* ===== SCROLLBARS ===== */
 ::-webkit-scrollbar { width: 6px; }
@@ -2278,6 +2395,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2413,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2899,6 +3021,7 @@ body { transition: filter 2s ease; }
 
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
+      <button id="reset-turn-btn" class="action-secondary-btn hidden">Reset Turn</button>
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
@@ -3012,6 +3135,16 @@ body { transition: filter 2s ease; }
     <div id="endgame-ngfs-label"></div>
     <button id="share-btn">📤 Share your result</button>
     <button id="restart-btn">↺ Play Again</button>
+  </div>
+</div>
+
+<!-- RESEARCH BRANCH CHOICE MODAL -->
+<div id="branch-choice-modal" class="hidden">
+  <div id="branch-choice-card">
+    <div class="branch-choice-icon">🔬</div>
+    <h2 id="branch-choice-title">Choose Research Specialisation</h2>
+    <p id="branch-choice-desc">Your base research programme is complete. Choose a specialisation path — this choice is permanent.</p>
+    <div id="branch-choice-options"></div>
   </div>
 </div>
 
@@ -3166,6 +3299,48 @@ const RANDOM_EVENTS = [
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
+  },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '☀️',
+    title: 'Severe Summer Drought',
+    description: 'Record low rainfall dries reservoirs across southern England. Hosepipe bans escalate to emergency rationing.',
+    story: 'In Surrey, farmer David Carrick watched his wheat crop wither for the second year running. Water rationing hit 8 million households. Thames Water admitted its leak repair programme was three years behind schedule.',
+    effects: { socialStability: -8, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'PANDEMIC_DISRUPTION', type: 'SOCIAL', severity: 'MODERATE', icon: '🦠',
+    title: 'Pandemic Supply Disruption',
+    description: 'A new respiratory illness disrupts global supply chains. Wind turbine and solar panel imports delayed by months.',
+    story: 'The Port of Felixstowe reported a 40% drop in container throughput. Three offshore wind farm construction projects paused indefinitely. Component prices doubled within weeks.',
+    effects: { financialStability: -8, gridReliability: -6 },
+    infraDamage: false, budgetPenaltyNext: 15,
+  },
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'POSITIVE', severity: 'MINOR', icon: '🔬',
+    title: 'Hydrogen Storage Breakthrough',
+    description: 'UK researchers achieve a breakthrough in solid-state hydrogen storage, dramatically cutting costs.',
+    story: 'Professor Amara Osei at Imperial College announced a room-temperature hydrogen storage medium that halves the cost of long-duration grid storage. "This changes the economics of the entire transition," she said.',
+    effects: { netZeroProgress: 5, gridReliability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
+  {
+    id: 'COASTAL_EROSION', type: 'FLOOD', severity: 'MODERATE', icon: '🏖️',
+    title: 'Accelerated Coastal Erosion',
+    description: 'Rising sea levels and stronger storms destroy coastal communities faster than predicted. Entire villages face relocation.',
+    story: 'In Happisburgh, Norfolk, the Easton family\'s home — 200 metres from the cliff edge five years ago — fell into the sea on a Tuesday morning. The cliff had retreated 30 metres in a single winter.',
+    effects: { propertyValue: -15, socialStability: -6 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'INTERNATIONAL_TRADE_WAR', type: 'FINANCIAL', severity: 'MAJOR', icon: '🌐',
+    title: 'Green Trade War',
+    description: 'Major trading partners impose carbon border tariffs. UK exports face new barriers. Import costs for solar panels and batteries spike.',
+    story: 'The EU\'s Carbon Border Adjustment Mechanism expanded to cover steel, aluminium, and cement. The UK Treasury estimated a £4.2bn annual cost to exporters. The Business Secretary called an emergency COBRA meeting.',
+    effects: { financialStability: -12, netZeroProgress: -3 },
+    infraDamage: false, budgetPenaltyNext: 15,
   },
 ];
 
@@ -3373,10 +3548,6 @@ const STARTER_SCENARIOS = {
     },
   },
 };
-
-/* ============================================================
-   TURN HISTORY TRACKER
-============================================================ */
 
 /* ============================================================
    SAVE / LOAD SYSTEM
@@ -3654,13 +3825,20 @@ class GameEngine {
     const gs = d.gridAndStorage;
     if (gs > 0) {
       e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
+      const nuclearGain = techTree.multipliers.nuclearBoost > 0 ? techTree.multipliers.nuclearBoost : 5;
+      e.nuclear = clamp(e.nuclear + gs * nuclearGain, 0, 80);
       infra.gridAndStorage += gs * 35;
+    }
+    if (et > 0 && techTree.multipliers.hydrogenStorage > 0) {
+      e.storage = clamp(e.storage + et * techTree.multipliers.hydrogenStorage, 0, 100);
     }
     const ad = d.adaptation;
     if (ad > 0) {
       socialStability = clamp(socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
       infra.adaptation += ad * 25;
+      if (techTree.multipliers.natureNZ > 0) {
+        netZeroProgress = clamp(netZeroProgress + ad * techTree.multipliers.natureNZ, 0, 100);
+      }
     }
     const ss = d.socialSupport;
     if (ss > 0) {
@@ -3813,8 +3991,14 @@ class GameEngine {
     const gs = d.gridAndStorage;
     if (gs > 0) {
       s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
+      const nuclearGain = techTree.multipliers.nuclearBoost > 0 ? techTree.multipliers.nuclearBoost : 5;
+      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * nuclearGain, 0, 80);
       s.infrastructure.gridAndStorage += gs * 35;
+    }
+
+    // Energy Transition — hydrogen storage bonus
+    if (et > 0 && techTree.multipliers.hydrogenStorage > 0) {
+      s.energy.storage = this._clamp(s.energy.storage + et * techTree.multipliers.hydrogenStorage, 0, 100);
     }
 
     // Adaptation
@@ -3822,6 +4006,9 @@ class GameEngine {
     if (ad > 0) {
       s.socialStability = this._clamp(s.socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
       s.infrastructure.adaptation += ad * 25;
+      if (techTree.multipliers.natureNZ > 0) {
+        s.netZeroProgress = this._clamp(s.netZeroProgress + ad * techTree.multipliers.natureNZ, 0, 100);
+      }
     }
 
     // Social Support
@@ -3845,6 +4032,7 @@ class GameEngine {
     // Research — purchases next TechTree upgrade per block allocated
     const rs = d.research;
     for (let i = 0; i < rs; i++) {
+      if (techTree.hasPendingChoice()) break;
       techTree.purchase();
     }
   }
@@ -3898,7 +4086,10 @@ class GameEngine {
     const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
 
     let delta = difficultyMgr.preset.warmingRate + (gasShare - renewShare) * 0.22;
-    delta = Math.max(delta, 0.03); // residual warming even at Net Zero
+    if (techTree.multipliers.carbonCapture > 0) {
+      delta -= gasShare * techTree.multipliers.carbonCapture * 0.15;
+    }
+    delta = Math.max(delta, 0.03);
 
     // Tipping point feedback: above 1.5°C warming compounds faster (permafrost methane, Arctic ice loss)
     if (s.temperature > 1.5) {
@@ -3920,32 +4111,46 @@ class GameEngine {
     if (Math.random() >= prob) return null;
 
     // Build weighted pool based on temperature
+    const _evt = (id) => RANDOM_EVENTS.find(e => e.id === id);
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: _evt('FINANCIAL_SHOCK'),         w: 22 },
+        { e: _evt('STORM'),                   w: 20 },
+        { e: _evt('FLOOD_MINOR'),             w: 20 },
+        { e: _evt('HEATWAVE_MOD'),            w: 8 },
+        { e: _evt('SOCIAL_UNREST'),           w: 8 },
+        { e: _evt('DROUGHT'),                 w: 8 },
+        { e: _evt('PANDEMIC_DISRUPTION'),     w: 7 },
+        { e: _evt('TECH_BREAKTHROUGH'),       w: 5 },
+        { e: _evt('INTERNATIONAL_TRADE_WAR'), w: 2 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: _evt('FLOOD_MINOR'),             w: 15 },
+        { e: _evt('FLOOD_MAJOR'),             w: 8 },
+        { e: _evt('HEATWAVE_MOD'),            w: 15 },
+        { e: _evt('STORM'),                   w: 15 },
+        { e: _evt('SOCIAL_UNREST'),           w: 12 },
+        { e: _evt('FINANCIAL_SHOCK'),         w: 10 },
+        { e: _evt('DROUGHT'),                 w: 8 },
+        { e: _evt('COASTAL_EROSION'),         w: 6 },
+        { e: _evt('PANDEMIC_DISRUPTION'),     w: 5 },
+        { e: _evt('INTERNATIONAL_TRADE_WAR'), w: 4 },
+        { e: _evt('TECH_BREAKTHROUGH'),       w: 2 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: _evt('FLOOD_MAJOR'),             w: 16 },
+        { e: _evt('HEATWAVE_MAJOR'),          w: 16 },
+        { e: _evt('STORM'),                   w: 14 },
+        { e: _evt('GRID_FAILURE'),            w: 12 },
+        { e: _evt('SOCIAL_UNREST'),           w: 10 },
+        { e: _evt('FINANCIAL_SHOCK'),         w: 8 },
+        { e: _evt('COASTAL_EROSION'),         w: 8 },
+        { e: _evt('DROUGHT'),                 w: 6 },
+        { e: _evt('INTERNATIONAL_TRADE_WAR'), w: 6 },
+        { e: _evt('PANDEMIC_DISRUPTION'),     w: 4 },
       ];
     }
 
@@ -3962,8 +4167,9 @@ class GameEngine {
       if (roll <= 0) { selectedEvent = item.e; break; }
     }
 
-    // Mitigation factor from adaptation
-    const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+    // Mitigation factor from adaptation (only applies to negative events)
+    const isPositive = selectedEvent.type === 'POSITIVE';
+    const mitigate = isPositive ? 0 : Math.min(s.infrastructure.adaptation / 200, 0.5);
 
     // Apply effects
     const applied = {};
@@ -4265,10 +4471,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4346,7 +4554,13 @@ class UI {
         // Restore tech tree
         techTree.reset();
         for (const id of payload.techPurchased) {
-          const upgrade = RESEARCH_UPGRADES.find(u => u.id === id);
+          let upgrade = RESEARCH_UPGRADES.find(u => u.id === id);
+          if (!upgrade) {
+            for (const tier of Object.values(RESEARCH_BRANCHES)) {
+              upgrade = tier.find(u => u.id === id);
+              if (upgrade) break;
+            }
+          }
           if (upgrade) { upgrade.apply(techTree.multipliers); techTree._purchased.add(id); }
         }
         // Restore history
@@ -4395,6 +4609,20 @@ class UI {
     // No-spend warning element
     this._noSpendWarned = false;
     this.elNoSpendWarning = document.getElementById('no-spend-warning');
+
+    // Reset turn button
+    this.elResetTurnBtn = document.getElementById('reset-turn-btn');
+    this.elResetTurnBtn.addEventListener('click', () => {
+      if (this.engine.state.isResolvingTurn) return;
+      const s = this.engine.state;
+      for (const cat of this.categories) {
+        s.currentDecisions[cat] = 0;
+      }
+      s.spentThisTurn = 0;
+      this._noSpendWarned = false;
+      if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+      this.render(this.engine.getState());
+    });
 
     // End turn
     this.elEndTurnBtn.addEventListener('click', async () => {
@@ -4801,10 +5029,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4825,6 +5055,9 @@ class UI {
 
     // Budget status class
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+
+    // Show/hide reset turn button
+    this.elResetTurnBtn.classList.toggle('hidden', spent === 0);
   }
 
   _renderCards(state) {
@@ -4850,21 +5083,28 @@ class UI {
   _renderResearchCard() {
     const nextUpgrade = techTree.nextUpgrade();
     const plusBtn = document.getElementById('plus-research');
-    if (!nextUpgrade || techTree.isComplete()) {
-      const nameEl = document.getElementById('research-upgrade-name');
+    const nameEl = document.getElementById('research-upgrade-name');
+    const tagEl = document.getElementById('research-effect-tag');
+    const doneEl = document.getElementById('research-all-done');
+
+    if (techTree.isComplete()) {
       if (nameEl) nameEl.textContent = 'All upgrades purchased';
-      const tagEl = document.getElementById('research-effect-tag');
       if (tagEl) tagEl.style.display = 'none';
-      const doneEl = document.getElementById('research-all-done');
       if (doneEl) doneEl.style.display = '';
       if (plusBtn) plusBtn.disabled = true;
-    } else {
-      const nameEl = document.getElementById('research-upgrade-name');
-      if (nameEl) nameEl.textContent = nextUpgrade.name;
-      const tagEl = document.getElementById('research-effect-tag');
-      if (tagEl) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
-      const doneEl = document.getElementById('research-all-done');
+    } else if (techTree.hasPendingChoice()) {
+      if (nameEl) nameEl.textContent = 'Choose Research Path';
+      if (tagEl) { tagEl.textContent = 'Allocate a block to choose between two specialisations'; tagEl.style.display = ''; }
       if (doneEl) doneEl.style.display = 'none';
+    } else if (nextUpgrade) {
+      if (nameEl) nameEl.textContent = nextUpgrade.name;
+      if (tagEl) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
+      if (doneEl) doneEl.style.display = 'none';
+    } else {
+      if (nameEl) nameEl.textContent = 'All upgrades purchased';
+      if (tagEl) tagEl.style.display = 'none';
+      if (doneEl) doneEl.style.display = '';
+      if (plusBtn) plusBtn.disabled = true;
     }
   }
 
@@ -5524,20 +5764,104 @@ const RESEARCH_UPGRADES = [
   },
 ];
 
+const RESEARCH_BRANCHES = {
+  tier2: [
+    {
+      id:   'advanced_nuclear',
+      name: 'Small Modular Reactors',
+      desc: 'Grid blocks give +8 Nuclear (up from +5)',
+      branch: 'energy',
+      apply(m) { m.nuclearBoost = 8; },
+    },
+    {
+      id:   'green_hydrogen',
+      name: 'Green Hydrogen Economy',
+      desc: 'Energy blocks give +5 Storage alongside renewables',
+      branch: 'energy',
+      apply(m) { m.hydrogenStorage = 5; },
+    },
+  ],
+  tier3: [
+    {
+      id:   'carbon_capture',
+      name: 'Carbon Capture & Storage',
+      desc: 'Gas plants emit 40% less — warming rate reduced',
+      branch: 'resilience',
+      apply(m) { m.carbonCapture = 0.4; },
+    },
+    {
+      id:   'nature_restoration',
+      name: 'Nature-Based Solutions',
+      desc: 'Adaptation blocks also boost Net Zero +4 per block',
+      branch: 'resilience',
+      apply(m) { m.natureNZ = 4; },
+    },
+  ],
+};
+
 class TechTreeManager {
   constructor() {
     this.multipliers = {
-      energyNZ:      1.0,
-      gridStorage:   1.0,
-      socialGain:    1.0,
-      finGain:       1.0,
-      adaptMitigate: 1.0,
+      energyNZ:       1.0,
+      gridStorage:    1.0,
+      socialGain:     1.0,
+      finGain:        1.0,
+      adaptMitigate:  1.0,
+      nuclearBoost:   0,
+      hydrogenStorage: 0,
+      carbonCapture:  0,
+      natureNZ:       0,
     };
     this._purchased = new Set();
+    this._pendingChoice = null;
   }
 
   nextUpgrade() {
-    return RESEARCH_UPGRADES.find(u => !this._purchased.has(u.id)) || null;
+    if (this._pendingChoice) return null;
+    const linearNext = RESEARCH_UPGRADES.find(u => !this._purchased.has(u.id));
+    if (linearNext) return linearNext;
+    if (this._purchased.size === RESEARCH_UPGRADES.length && !this._hasBranch('tier2')) {
+      this._pendingChoice = 'tier2';
+      return null;
+    }
+    if (this._hasBranch('tier2') && !this._hasBranch('tier3')) {
+      this._pendingChoice = 'tier3';
+      return null;
+    }
+    return null;
+  }
+
+  _hasBranch(tier) {
+    return RESEARCH_BRANCHES[tier].some(u => this._purchased.has(u.id));
+  }
+
+  hasPendingChoice() {
+    if (this._pendingChoice) return true;
+    if (this._purchased.size === RESEARCH_UPGRADES.length && !this._hasBranch('tier2')) {
+      this._pendingChoice = 'tier2';
+      return true;
+    }
+    if (this._hasBranch('tier2') && !this._hasBranch('tier3') && this._purchased.size >= RESEARCH_UPGRADES.length) {
+      this._pendingChoice = 'tier3';
+      return true;
+    }
+    return false;
+  }
+
+  getPendingChoices() {
+    if (!this._pendingChoice) return null;
+    return RESEARCH_BRANCHES[this._pendingChoice];
+  }
+
+  chooseBranch(upgradeId) {
+    if (!this._pendingChoice) return null;
+    const tier = this._pendingChoice;
+    const upgrade = RESEARCH_BRANCHES[tier].find(u => u.id === upgradeId);
+    if (!upgrade) return null;
+    upgrade.apply(this.multipliers);
+    this._purchased.add(upgrade.id);
+    this._pendingChoice = null;
+    return upgrade;
   }
 
   purchase() {
@@ -5549,12 +5873,13 @@ class TechTreeManager {
   }
 
   isComplete() {
-    return this._purchased.size >= RESEARCH_UPGRADES.length;
+    return this._purchased.size >= RESEARCH_UPGRADES.length && this._hasBranch('tier2') && this._hasBranch('tier3');
   }
 
   reset() {
-    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0, nuclearBoost:0, hydrogenStorage:0, carbonCapture:0, natureNZ:0 };
     this._purchased.clear();
+    this._pendingChoice = null;
   }
 }
 
@@ -5724,6 +6049,121 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_trade_deal',
+    icon: '🌍',
+    title: 'International Climate Summit',
+    prompt: 'The UK is invited to co-lead a global green trade pact. How do you respond?',
+    explanation: 'International cooperation accelerates the transition by sharing technology and costs — but committing to binding targets means accepting external oversight and potentially costly obligations. A bilateral approach is cheaper but yields less diplomatic influence.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🤝 Sign binding multilateral pact',
+      consequence: '+8 Net Zero · +3 Financial (trade benefits) · Costs £7bn next turn (compliance)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.financialStability = Math.min(100, s.financialStability + 3); s.nextTurnBudgetPenalty += 7; },
+    },
+    optB: {
+      label: '🇬🇧 Pursue bilateral deals only',
+      consequence: '+3 Net Zero · no cost · no trade benefits',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    },
+    condition: (s) => s.netZeroProgress > 40,
+  },
+  {
+    id: 'mini_water_crisis',
+    icon: '💧',
+    title: 'Water Infrastructure Crisis',
+    prompt: 'Ageing water infrastructure is failing under climate stress. What\'s your priority?',
+    explanation: 'Climate change increases both drought severity and flood intensity. Privatised water companies have underinvested for decades. A full nationalisation programme fixes the root cause but is enormously expensive. Emergency repairs keep things running but don\'t solve the structural problem.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🏗️ Major infrastructure overhaul',
+      consequence: 'Costs £12bn next turn · +6 Social · +adaptation infrastructure · −3 Financial',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.socialStability = Math.min(100, s.socialStability + 6); s.infrastructure.adaptation += 15; s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '🔧 Emergency repairs only',
+      consequence: 'Costs £4bn next turn · +2 Social · problem returns',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    condition: (s) => s.temperature > 1.3,
+  },
+  {
+    id: 'mini_ev_transition',
+    icon: '🚗',
+    title: 'EV Transition Crunch',
+    prompt: 'The 2030 petrol car ban deadline is approaching. The charging network isn\'t ready.',
+    explanation: 'Electric vehicles are essential for transport decarbonisation, but the charging network is concentrated in cities. Rural areas and motorways have major gaps. Delaying the ban relieves pressure but sends a signal that the government isn\'t serious about Net Zero.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Grid Reliability: ${Math.round(s.gridReliability)}%`,
+    }),
+    optA: {
+      label: '⚡ Crash charging network build',
+      consequence: 'Costs £9bn next turn · +5 Net Zero · −4 Grid Reliability (demand surge)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 9; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.gridReliability = Math.max(0, s.gridReliability - 4); },
+    },
+    optB: {
+      label: '📅 Delay ban by 5 years',
+      consequence: 'No cost · +3 Social · −4 Net Zero (signals retreat)',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 4); },
+    },
+    condition: (s) => s.turn >= 1 && s.netZeroProgress < 80,
+  },
+  {
+    id: 'mini_migration',
+    icon: '🏘️',
+    title: 'Climate Migration Pressure',
+    prompt: 'Southern European droughts are driving increased migration to the UK. Public opinion is divided.',
+    explanation: 'Climate-driven migration is an emerging pressure across Europe. The UK can choose to invest in integration — building housing and training — which costs money but builds social capital and labour supply. Or it can restrict entry, which is politically popular but damages international relationships and slows the green workforce pipeline.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Social Capital: ${Math.round(s.socialCapital)}`,
+    }),
+    optA: {
+      label: '🏠 Invest in integration & housing',
+      consequence: 'Costs £6bn next turn · −3 Social short-term · +5 Social Capital (long-term trust)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 6; s.socialStability = Math.max(0, s.socialStability - 3); s.socialCapital = Math.min(60, s.socialCapital + 5); },
+    },
+    optB: {
+      label: '🚫 Restrict entry',
+      consequence: 'No cost · +4 Social short-term · −3 Social Capital · −2 Net Zero (fewer green workers)',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 4); s.socialCapital = Math.max(0, s.socialCapital - 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 2); },
+    },
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'mini_food_security',
+    icon: '🌾',
+    title: 'Food Supply Shock',
+    prompt: 'Climate disruption has hit global grain harvests. UK food prices are surging.',
+    explanation: 'The UK imports roughly 40% of its food. Global climate disruption — droughts, floods, and heatwaves hitting multiple breadbaskets simultaneously — has spiked world grain prices. Domestic farming subsidies protect UK consumers but distort markets. Investing in climate-resilient agriculture is slower but builds lasting food security.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Social Stability: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🌽 Emergency farming subsidies',
+      consequence: 'Costs £8bn next turn · +4 Social · no lasting benefit',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.socialStability = Math.min(100, s.socialStability + 4); },
+    },
+    optB: {
+      label: '🧬 Invest in climate-resilient agriculture',
+      consequence: 'Costs £5bn next turn · −2 Social this crisis · +adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.socialStability = Math.max(0, s.socialStability - 2); s.infrastructure.adaptation += 12; },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5739,14 +6179,22 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
+  // Skip support
+  let skipped = false;
+  const skipBtn = overlay.querySelector('#skip-sim-btn');
+  const skipPromise = new Promise(resolve => {
+    skipBtn.addEventListener('click', () => { skipped = true; resolve(); }, { once: true });
+  });
+  const delayOrSkip = (ms) => skipped ? Promise.resolve() : Promise.race([_delay(ms), skipPromise]);
+
   // Tick through years with possible mini-events
   let minisFired = 0;
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
-    await _delay(4250);
+    await delayOrSkip(4250);
 
-    if (minisFired < 2 && Math.random() < 0.50) {
+    if (!skipped && minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
       if (eligible.length > 0) {
         const evt = eligible[Math.floor(Math.random() * eligible.length)];
@@ -5761,12 +6209,17 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
-  await _delay(1500);
+  await delayOrSkip(skipped ? 300 : 1500);
 
   // Dismiss overlay
   overlay.classList.add('sim-fade-out');
-  await _delay(500);
+  await _delay(skipped ? 150 : 500);
   overlay.remove();
+
+  // Show branch choice if research triggered one
+  if (techTree.hasPendingChoice()) {
+    await _showBranchChoice(techTree);
+  }
 
   // Recalculate next-turn budget to include any mini-event penalties
   // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
@@ -5819,6 +6272,7 @@ function _buildSimOverlay(startYear) {
         <div id="sim-progress-fill" style="width:0%"></div>
       </div>
       <div id="sim-status">Running 5-year policy simulation\u2026</div>
+      <button id="skip-sim-btn">Skip Animation</button>
     </div>`;
   return d;
 }
@@ -5881,6 +6335,29 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 
     panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
     panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
+  });
+}
+
+function _showBranchChoice(tree) {
+  return new Promise(resolve => {
+    const modal = document.getElementById('branch-choice-modal');
+    const optionsDiv = document.getElementById('branch-choice-options');
+    const choices = tree.getPendingChoices();
+    if (!choices) { resolve(); return; }
+
+    optionsDiv.innerHTML = '';
+    for (const upgrade of choices) {
+      const btn = document.createElement('div');
+      btn.className = 'branch-option';
+      btn.innerHTML = `<div class="branch-option-name">${upgrade.name}</div><div class="branch-option-desc">${upgrade.desc}</div>`;
+      btn.addEventListener('click', () => {
+        tree.chooseBranch(upgrade.id);
+        modal.classList.add('hidden');
+        resolve();
+      }, { once: true });
+      optionsDiv.appendChild(btn);
+    }
+    modal.classList.remove('hidden');
   });
 }
 
