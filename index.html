@@ -1386,6 +1386,137 @@ body { transition: filter 2s ease; }
   #event-card { padding: var(--gap-lg); }
 }
 
+/* ===== UNDO BUTTON ===== */
+#undo-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+#undo-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); color: var(--text-secondary); }
+#undo-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1800;
+  animation: fadeIn 0.3s ease;
+  padding: var(--gap-lg);
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+#tutorial-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.tutorial-step {
+  display: none;
+}
+.tutorial-step.active {
+  display: block;
+}
+.tutorial-step-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+.tutorial-step-title .step-icon {
+  font-size: 24px;
+}
+.tutorial-step-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: var(--gap-md);
+  font-family: var(--font-editorial);
+}
+.tutorial-step-body strong { color: var(--text-primary); }
+.tutorial-tip {
+  font-size: 12px;
+  padding: var(--gap-sm) var(--gap-md);
+  background: rgba(29,112,184,0.08);
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  line-height: 1.55;
+}
+.tutorial-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-md);
+}
+.tutorial-dots {
+  display: flex;
+  gap: 6px;
+}
+.tutorial-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background 0.2s;
+}
+.tutorial-dot.active { background: var(--accent-blue-lt); }
+.tutorial-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+.tutorial-btn-next {
+  background: var(--accent-blue);
+  color: white;
+}
+.tutorial-btn-next:hover { background: var(--accent-blue-lt); }
+.tutorial-btn-skip {
+  background: none;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+.tutorial-btn-skip:hover { background: var(--bg-elevated); color: var(--text-secondary); }
+
+/* ===== THREE-OPTION MINI-EVENT ===== */
+.opt-c {
+  background: rgba(0,200,83,0.10);
+  color: var(--text-primary);
+  border-color: rgba(0,200,83,0.4);
+}
+.opt-c:hover { background: rgba(0,200,83,0.20); }
+
 /* ===== HOOK SCREEN ===== */
 #hook-screen {
   position: fixed;
@@ -2900,6 +3031,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="undo-btn" disabled>↩ Undo All</button>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -2963,6 +3095,39 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="energy_island">
+        <span class="scenario-card-icon">⚛️</span>
+        <div class="scenario-card-name">Energy Island</div>
+        <div class="scenario-card-desc">A previous government doubled down on nuclear. Grid reliability is excellent — but renewables lag behind and stranded fossil assets are piling up.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Nuclear: <span>40 (high)</span></div>
+          <div class="scenario-stat">Grid Reliability: <span>80%</span></div>
+          <div class="scenario-stat">Stranded Assets: <span>25 (exposed)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="late_starter">
+        <span class="scenario-card-icon">🕐</span>
+        <div class="scenario-card-name">Late Starter</div>
+        <div class="scenario-card-desc">Years of political gridlock wasted precious time. Temperature is already elevated and Net Zero progress is minimal. The clock is against you.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temperature: <span>1.4°C (elevated)</span></div>
+          <div class="scenario-stat">Net Zero: <span>20% (behind)</span></div>
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="post_pandemic">
+        <span class="scenario-card-icon">🏥</span>
+        <div class="scenario-card-name">Post-Pandemic</div>
+        <div class="scenario-card-desc">A pandemic has drained public coffers and social cohesion. The NHS is overwhelmed and infrastructure is neglected — but a green recovery mandate gives political cover.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Social Stability: <span>58% (fragile)</span></div>
+          <div class="scenario-stat">Social Capital: <span>+15 solidarity</span></div>
+          <div class="scenario-stat">Net Zero: <span>45% (recovery push)</span></div>
         </div>
       </div>
 
@@ -3065,6 +3230,64 @@ body { transition: filter 2s ease; }
     </div>
     <!-- High scores injected here by JS -->
     <button id="settings-close-btn">Done</button>
+  </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-card">
+    <h2>How to Play</h2>
+    <div class="tutorial-step active" data-step="0">
+      <div class="tutorial-step-title"><span class="step-icon">🎯</span> Your Mission</div>
+      <div class="tutorial-step-body">
+        You are the UK's climate minister. Your goal: reach <strong>Net Zero emissions by 2050</strong> while keeping society, the economy, and the power grid stable.<br><br>
+        You have <strong>5 five-year terms</strong> and a limited budget each turn. Every decision has trade-offs — there are no easy answers.
+      </div>
+      <div class="tutorial-tip">The game is based on real climate economics from the NGFS framework and UK Climate Change Committee data.</div>
+    </div>
+    <div class="tutorial-step" data-step="1">
+      <div class="tutorial-step-title"><span class="step-icon">💡</span> Investment Blocks</div>
+      <div class="tutorial-step-body">
+        Each turn, allocate <strong>investment blocks</strong> across six categories using the + and - buttons. Each block costs a fixed amount from your budget (max 2 per category).<br><br>
+        <strong>Energy Transition</strong> builds renewables but creates stranded assets. <strong>Grid & Storage</strong> prevents blackouts. <strong>Social Support</strong> maintains public consent. Balance is key.
+      </div>
+      <div class="tutorial-tip">Keyboard shortcuts: press 1-6 to add blocks, Shift+1-6 to remove, Enter to advance.</div>
+    </div>
+    <div class="tutorial-step" data-step="2">
+      <div class="tutorial-step-title"><span class="step-icon">⚠️</span> Watch the Metrics</div>
+      <div class="tutorial-step-body">
+        Five metrics determine your fate. <strong>Click any metric name</strong> for detailed info.<br><br>
+        <strong>Grid below 40%</strong> triggers blackouts. <strong>Financial below 40%</strong> causes bank runs. <strong>Social below 40%</strong> collapses political mandate. If any hits zero, the game ends immediately.
+      </div>
+      <div class="tutorial-tip">Ghost markers on the bars preview where metrics will land before you commit. Use them to plan.</div>
+    </div>
+    <div class="tutorial-step" data-step="3">
+      <div class="tutorial-step-title"><span class="step-icon">🌡️</span> The Temperature Clock</div>
+      <div class="tutorial-step-body">
+        Temperature rises each turn based on your energy mix. Above <strong>1.5°C</strong>, tipping points kick in and warming accelerates beyond your control.<br><br>
+        Reaching <strong>Net Zero</strong> halves the warming rate. Climate events become more frequent and severe as temperature rises.
+      </div>
+      <div class="tutorial-tip">During the simulation phase, you'll face mini-events — quick decisions with real consequences. Choose wisely.</div>
+    </div>
+    <div class="tutorial-step" data-step="4">
+      <div class="tutorial-step-title"><span class="step-icon">🔬</span> Research & Strategy</div>
+      <div class="tutorial-step-body">
+        Investing in <strong>R&D</strong> unlocks permanent tech upgrades that multiply the effectiveness of other investments. Early research pays compound dividends.<br><br>
+        There's no single winning strategy. Some games reward aggressive early decarbonisation; others demand careful balance across all fronts.
+      </div>
+      <div class="tutorial-tip">Your final score (0-100) reflects climate outcome, transition progress, stability, and resilience. Aim for 72+ to match the UN 1.5°C pathway.</div>
+    </div>
+    <div class="tutorial-nav">
+      <button class="tutorial-btn tutorial-btn-skip" id="tutorial-skip">Skip Tutorial</button>
+      <div class="tutorial-dots">
+        <div class="tutorial-dot active"></div>
+        <div class="tutorial-dot"></div>
+        <div class="tutorial-dot"></div>
+        <div class="tutorial-dot"></div>
+        <div class="tutorial-dot"></div>
+      </div>
+      <button class="tutorial-btn tutorial-btn-next" id="tutorial-next">Next →</button>
+    </div>
   </div>
 </div>
 
@@ -3370,6 +3593,37 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_island: {
+    label: 'Energy Island',
+    apply(state) {
+      state.energy.nuclear = 40;
+      state.energy.wind = 18;
+      state.energy.solar = 4;
+      state.energy.gas = 20;
+      state.strandedAssets = 25;
+      state.gridReliability = 80;
+    },
+  },
+  late_starter: {
+    label: 'Late Starter',
+    apply(state) {
+      state.temperature = 1.4;
+      state.netZeroProgress = 20;
+      state.energy.gas = 35;
+      state._budgetOverride = 110;
+    },
+  },
+  post_pandemic: {
+    label: 'Post-Pandemic',
+    apply(state) {
+      state.socialStability = 58;
+      state.socialCapital = 15;
+      state.netZeroProgress = 45;
+      state.financialStability = 60;
+      state.infrastructure.adaptation = -10;
+      state._budgetOverride = 90;
     },
   },
 };
@@ -3744,6 +3998,33 @@ class GameEngine {
       this._recalcSocial();
     }
 
+    // Phase 7b: Event chain — a follow-up event may trigger from the primary event
+    let chainEvent = null;
+    if (event) {
+      chainEvent = checkEventChain(event.id, s);
+      if (chainEvent) {
+        const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+        for (const [key, val] of Object.entries(chainEvent.effects)) {
+          const mitigated = Math.round(val * (1 - mitigate));
+          if (key === 'temperature') {
+            s.temperature = Math.round((s.temperature + mitigated) * 100) / 100;
+          } else if (key === 'strandedAssets') {
+            s.strandedAssets = this._clamp(s.strandedAssets + mitigated, 0, 100);
+          } else if (s[key] !== undefined) {
+            s[key] = this._clamp(s[key] + mitigated, 0, 100);
+          }
+        }
+        if (chainEvent.budgetPenaltyNext > 0) {
+          s.nextTurnBudgetPenalty += Math.round(chainEvent.budgetPenaltyNext * (1 - mitigate));
+        }
+        s.eventCount++;
+        this._recalcGrid();
+        this._recalcFinancial();
+        this._recalcSocial();
+      }
+    }
+    s._chainEvent = chainEvent;
+
     // Phase 8: Breakdown check
     if (s.gridReliability <= 0 || s.financialStability <= 0 || s.socialStability <= 0) {
       s.gameOver = true;
@@ -3763,6 +4044,7 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      chainEvent: chainEvent ? chainEvent.title : null,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -3791,7 +4073,7 @@ class GameEngine {
       endgame = evaluateEndgame(s);
     }
 
-    return { logEntry, event, endgame };
+    return { logEntry, event, chainEvent, endgame };
   }
 
   _applyInvestments() {
@@ -4317,6 +4599,23 @@ class UI {
       });
     });
 
+    // Undo all allocations button
+    const undoBtn = document.getElementById('undo-btn');
+    if (undoBtn) {
+      undoBtn.addEventListener('click', () => {
+        if (this.engine.state.isResolvingTurn) return;
+        const s = this.engine.state;
+        for (const cat of Object.keys(s.currentDecisions)) {
+          s.currentDecisions[cat] = 0;
+        }
+        s.spentThisTurn = 0;
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
+      });
+    }
+
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
     const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
     document.addEventListener('keydown', (e) => {
@@ -4384,11 +4683,14 @@ class UI {
       });
     }
 
-    // Advisor overlay dismiss
+    // Advisor overlay dismiss — show tutorial on first play
     const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (!tutorialMgr.hasSeenTutorial()) {
+          tutorialMgr.show();
+        }
       });
     }
 
@@ -4417,9 +4719,13 @@ class UI {
     });
 
     // Event dismiss
+    this._eventQueue = [];
     this.elEventDismiss.addEventListener('click', () => {
       this.hideEventModal();
-      if (this._pendingEndgame) {
+      if (this._eventQueue && this._eventQueue.length > 0) {
+        const next = this._eventQueue.shift();
+        setTimeout(() => this.showEventModal(next), 300);
+      } else if (this._pendingEndgame) {
         this.showEndgame(this._pendingEndgame);
         this._pendingEndgame = null;
       } else {
@@ -4825,6 +5131,10 @@ class UI {
 
     // Budget status class
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+
+    // Undo button state
+    const undoBtn = document.getElementById('undo-btn');
+    if (undoBtn) undoBtn.disabled = state.spentThisTurn === 0;
   }
 
   _renderCards(state) {
@@ -5001,6 +5311,9 @@ class UI {
     // Event notice
     if (entry.event) {
       html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+    }
+    if (entry.chainEvent) {
+      html += `<div class="log-text" style="color:var(--status-warn);margin-top:2px;">↳ ${entry.chainEvent}</div>`;
     }
 
     // Metric chips
@@ -5724,6 +6037,141 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_trade_dispute',
+    icon: '🌐',
+    title: 'Carbon Border Dispute',
+    prompt: 'The EU threatens tariffs on UK exports unless carbon pricing aligns. How do you respond?',
+    explanation: 'The EU\'s Carbon Border Adjustment Mechanism penalises imports from countries with weaker carbon pricing. Matching their carbon tax boosts Net Zero credibility and avoids tariffs — but raises costs for UK manufacturers. A trade deal exemption protects industry but undermines climate commitments.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Financial: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '💰 Match EU carbon pricing',
+      consequence: '−5 Financial (higher costs) · +8% Net Zero progress · international credibility',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 5); s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); },
+    },
+    optB: {
+      label: '🤝 Negotiate trade exemption',
+      consequence: '+3 Financial (protects industry) · −3% Net Zero progress · damages climate diplomacy',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); },
+    },
+    optC: {
+      label: '♻️ Impose UK-specific green levy',
+      consequence: 'Costs £4bn next turn · +4% Net Zero · +2 Financial (revenue neutral)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); s.financialStability = Math.min(100, s.financialStability + 2); },
+    },
+    condition: (s) => s.netZeroProgress > 40 && s.netZeroProgress < 85,
+  },
+  {
+    id: 'mini_transport_crisis',
+    icon: '🚗',
+    title: 'Transport Decarbonisation Debate',
+    prompt: 'EV uptake is stalling due to charging infrastructure gaps. What\'s your priority?',
+    explanation: 'Transport is the UK\'s largest emitting sector. Banning petrol car sales accelerates the transition but causes rural backlash. Subsidising EV charging is popular but expensive. Investing in public transport is the greenest option but takes time.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `NZ: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🚫 Bring forward petrol car ban',
+      consequence: '+6% Net Zero · −6 Social (rural anger) · −3 Financial',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.socialStability = Math.max(0, s.socialStability - 6); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '⚡ Subsidise EV charging network',
+      consequence: 'Costs £7bn next turn · +3% Net Zero · +3 Social',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optC: {
+      label: '🚌 Invest in public transport',
+      consequence: 'Costs £5bn next turn · +5% Net Zero · +2 Social Capital',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialCapital = Math.min(60, s.socialCapital + 2); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_drought',
+    icon: '🏜️',
+    title: 'Agricultural Drought',
+    prompt: 'Prolonged dry weather is devastating UK crops. Farmers demand government action.',
+    explanation: 'Changing rainfall patterns are hitting British agriculture hard. Direct compensation is fast but doesn\'t address the root problem. Investing in drought-resistant farming costs more but builds long-term resilience.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Adaptation: ${Math.round(s.infrastructure.adaptation)}`,
+    }),
+    optA: {
+      label: '💷 Emergency crop compensation',
+      consequence: 'Costs £8bn next turn · +4 Social · no lasting benefit',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.socialStability = Math.min(100, s.socialStability + 4); },
+    },
+    optB: {
+      label: '🌾 Fund climate-resilient agriculture',
+      consequence: 'Costs £5bn next turn · −2 Social now · +adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.socialStability = Math.max(0, s.socialStability - 2); s.infrastructure.adaptation += 18; },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'mini_housing_crisis',
+    icon: '🏠',
+    title: 'Housing Retrofit Debate',
+    prompt: 'UK housing stock is the least energy-efficient in Europe. Ministers are split on the response.',
+    explanation: 'Heating draughty homes accounts for a huge share of UK emissions and energy bills. Mandatory retrofitting is effective but hugely expensive and unpopular with homeowners. A voluntary grant scheme is cheaper but take-up is slow. A landlord-only mandate targets the worst offenders without angering owner-occupiers.',
+    contextFn: (s) => ({
+      label: 'Net Zero',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Social: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🔨 Mandatory retrofit programme',
+      consequence: 'Costs £12bn next turn · +7% Net Zero · −8 Social (homeowner backlash)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.netZeroProgress = Math.min(100, s.netZeroProgress + 7); s.socialStability = Math.max(0, s.socialStability - 8); },
+    },
+    optB: {
+      label: '💰 Voluntary insulation grants',
+      consequence: 'Costs £4bn next turn · +2% Net Zero · +2 Social',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    optC: {
+      label: '🏘️ Landlord-only EPC mandate',
+      consequence: 'Costs £3bn next turn · +4% Net Zero · −2 Financial (property costs) · +3 Social',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); s.financialStability = Math.max(0, s.financialStability - 2); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    condition: (s) => s.netZeroProgress < 80,
+  },
+  {
+    id: 'mini_hydrogen',
+    icon: '⚗️',
+    title: 'Hydrogen Strategy Decision',
+    prompt: 'The hydrogen industry is demanding a national strategy. Which pathway do you support?',
+    explanation: 'Green hydrogen (from renewable electricity) is clean but expensive. Blue hydrogen (from gas with carbon capture) is cheaper but keeps fossil infrastructure alive. Delaying costs nothing now but risks falling behind international competitors.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Gas share: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '🟢 Back green hydrogen',
+      consequence: 'Costs £6bn next turn · +5% Net Zero · −4 Grid (diverts renewable electricity)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 6; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.gridReliability = Math.max(0, s.gridReliability - 4); },
+    },
+    optB: {
+      label: '🔵 Back blue hydrogen',
+      consequence: 'Costs £4bn next turn · +2% Net Zero · +5 Stranded Assets (fossil lock-in)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); s.strandedAssets = Math.min(100, s.strandedAssets + 5); },
+    },
+    optC: {
+      label: '⏸️ Delay and monitor',
+      consequence: 'No cost · −2% Net Zero (competitors advance) · +2 Financial (saves money)',
+      effect: (s) => { s.netZeroProgress = Math.max(0, s.netZeroProgress - 2); s.financialStability = Math.min(100, s.financialStability + 2); },
+    },
+    condition: (s) => s.turn >= 1 && s.energy.gas > 10,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5778,28 +6226,32 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
+  // Queue chain event to show after primary event
+  const showEvents = [];
+  if (result.event) showEvents.push(result.event);
+  if (result.chainEvent) showEvents.push(result.chainEvent);
+
   if (result.endgame) {
-    // Game over — clear save, record analytics
     saveMgr.clear();
     analyticsMgr.recordEnd(engine.state, result.endgame, difficultyMgr.active);
-    if (result.event) {
+    if (showEvents.length > 0) {
       fxMgr.haptic('heavy');
       fxMgr.shake();
       ui._pendingEndgame = result.endgame;
-      ui.showEventModal(result.event);
+      ui._eventQueue = showEvents.slice(1);
+      ui.showEventModal(showEvents[0]);
     } else {
       ui.showEndgame(result.endgame);
     }
-  } else if (result.event) {
+  } else if (showEvents.length > 0) {
     fxMgr.haptic('heavy');
     fxMgr.shake();
     ui._pendingEndgame = null;
-    ui.showEventModal(result.event);
-    // Auto-save after event shown (state is post-event)
+    ui._eventQueue = showEvents.slice(1);
+    ui.showEventModal(showEvents[0]);
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
   } else {
-    // Auto-save mid-game progress
     saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
     ui.render(engine.getState());
     fxMgr.pulseAll();
@@ -5852,6 +6304,12 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
       </div>`;
     })() : '';
 
+    const optCHTML = evt.optC ? `
+        <button class="mini-btn opt-c">
+          <span class="mini-btn-label">${evt.optC.label}</span>
+          <span class="mini-btn-consequence">${evt.optC.consequence}</span>
+        </button>` : '';
+
     panel.innerHTML = `
       <div class="mini-event-icon">${evt.icon}</div>
       <div class="mini-event-year">${year}</div>
@@ -5868,6 +6326,7 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
           <span class="mini-btn-label">${evt.optB.label}</span>
           <span class="mini-btn-consequence">${evt.optB.consequence}</span>
         </button>
+        ${optCHTML}
       </div>`;
 
     overlay.querySelector('#sim-card').appendChild(panel);
@@ -5881,6 +6340,8 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 
     panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
     panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
+    const optCBtn = panel.querySelector('.opt-c');
+    if (optCBtn) optCBtn.addEventListener('click', () => cleanup(evt.optC.effect), { once: true });
   });
 }
 
@@ -5945,6 +6406,136 @@ class LegacySystem {
       title:           this.title(),
     };
   }
+}
+
+/* ============================================================
+   MODULE: TUTORIAL SYSTEM
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_seen';
+    this._step = 0;
+    this._totalSteps = 5;
+  }
+
+  hasSeenTutorial() {
+    try { return localStorage.getItem(this._KEY) === '1'; } catch { return false; }
+  }
+
+  markSeen() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  show() {
+    const overlay = document.getElementById('tutorial-overlay');
+    if (!overlay) return;
+    this._step = 0;
+    this._updateDisplay();
+    overlay.classList.remove('hidden');
+
+    const nextBtn = document.getElementById('tutorial-next');
+    const skipBtn = document.getElementById('tutorial-skip');
+
+    const handleNext = () => {
+      this._step++;
+      if (this._step >= this._totalSteps) {
+        this.dismiss();
+      } else {
+        this._updateDisplay();
+        nextBtn.textContent = this._step === this._totalSteps - 1 ? 'Start Playing →' : 'Next →';
+      }
+    };
+
+    const handleSkip = () => { this.dismiss(); };
+
+    nextBtn.replaceWith(nextBtn.cloneNode(true));
+    skipBtn.replaceWith(skipBtn.cloneNode(true));
+    document.getElementById('tutorial-next').addEventListener('click', handleNext);
+    document.getElementById('tutorial-skip').addEventListener('click', handleSkip);
+  }
+
+  dismiss() {
+    this.markSeen();
+    document.getElementById('tutorial-overlay')?.classList.add('hidden');
+  }
+
+  _updateDisplay() {
+    document.querySelectorAll('.tutorial-step').forEach((el, i) => {
+      el.classList.toggle('active', i === this._step);
+    });
+    document.querySelectorAll('.tutorial-dot').forEach((el, i) => {
+      el.classList.toggle('active', i === this._step);
+    });
+  }
+}
+
+const tutorialMgr = new TutorialManager();
+
+/* ============================================================
+   MODULE: EVENT CHAIN SYSTEM
+============================================================ */
+
+const EVENT_CHAINS = [
+  {
+    trigger: 'FLOOD_MINOR',
+    followUp: {
+      id: 'FLOOD_CHAIN_INFRASTRUCTURE', type: 'FLOOD', severity: 'MODERATE', icon: '🏗️',
+      title: 'Flood Infrastructure Under Review',
+      description: 'Following recent flooding, engineers discover that sea defences along the entire eastern coast are deteriorating faster than projected. A major reinforcement programme is needed.',
+      story: 'A structural survey of the Humber estuary barriers revealed corrosion rates 40% above design assumptions. "We built these for a climate that no longer exists," the chief engineer told the inquiry.',
+      effects: { propertyValue: -5, financialStability: -4 },
+      infraDamage: false, budgetPenaltyNext: 10,
+    },
+    probability: 0.40,
+    minTurnGap: 0,
+  },
+  {
+    trigger: 'HEATWAVE_MOD',
+    followUp: {
+      id: 'HEATWAVE_CHAIN_WATER', type: 'HEATWAVE', severity: 'MODERATE', icon: '💧',
+      title: 'National Water Shortage',
+      description: 'The recent heatwave has depleted reservoir levels to critical lows. Hosepipe bans are in force nationally and water rationing is being considered.',
+      story: 'Farmers in the Fens watched irrigation quotas drop to 30% of normal. "You can\'t grow food without water," said Tom Henshaw, a third-generation arable farmer. "The supermarkets don\'t understand that yet."',
+      effects: { socialStability: -6, financialStability: -4 },
+      infraDamage: false, budgetPenaltyNext: 5,
+    },
+    probability: 0.35,
+    minTurnGap: 0,
+  },
+  {
+    trigger: 'FINANCIAL_SHOCK',
+    followUp: {
+      id: 'FINANCIAL_CHAIN_CREDIT', type: 'FINANCIAL', severity: 'MODERATE', icon: '🏦',
+      title: 'Credit Rating Downgrade',
+      description: 'International agencies downgrade UK sovereign debt citing unmanaged fossil asset exposure. Borrowing costs rise across the economy.',
+      story: 'The downgrade triggered a sell-off in gilts that added £8bn to annual debt servicing costs. The Chancellor cancelled a planned announcement on green infrastructure bonds.',
+      effects: { financialStability: -8 },
+      infraDamage: false, budgetPenaltyNext: 15,
+    },
+    probability: 0.30,
+    minTurnGap: 1,
+  },
+  {
+    trigger: 'SOCIAL_UNREST',
+    followUp: {
+      id: 'SOCIAL_CHAIN_ELECTION', type: 'SOCIAL', severity: 'MODERATE', icon: '🗳️',
+      title: 'Emergency By-Election Loss',
+      description: 'Anti-transition candidates sweep by-elections in former industrial constituencies. The government\'s climate mandate is severely weakened.',
+      story: 'In Redcar, the newly elected MP ran on a single pledge: "Cheap energy first, green energy never." The result sent shockwaves through Westminster and delayed two planned renewables bills.',
+      effects: { socialStability: -8, netZeroProgress: -3 },
+      infraDamage: false, budgetPenaltyNext: 0,
+    },
+    probability: 0.35,
+    minTurnGap: 1,
+  },
+];
+
+function checkEventChain(triggeredEventId, state) {
+  const chain = EVENT_CHAINS.find(c => c.trigger === triggeredEventId);
+  if (!chain) return null;
+  if (Math.random() >= chain.probability) return null;
+  return chain.followUp;
 }
 
 /* ============================================================
