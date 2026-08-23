@@ -2000,6 +2000,217 @@ body { transition: filter 2s ease; }
 }
 .achievement-card.earned .achievement-name { color: var(--accent-blue-lt); }
 
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  pointer-events: none;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  pointer-events: auto;
+}
+#tutorial-spotlight {
+  position: absolute;
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.65), 0 0 20px var(--accent-blue-lt);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+#tutorial-card {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 360px;
+  width: 90vw;
+  pointer-events: auto;
+  animation: slideUp 0.3s ease;
+  z-index: 1801;
+}
+#tutorial-step-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-md);
+}
+#tutorial-actions {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: flex-end;
+}
+.tutorial-btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+.tutorial-btn-primary {
+  background: var(--accent-blue);
+  color: white;
+}
+.tutorial-btn-primary:hover { background: var(--accent-blue-lt); }
+.tutorial-btn-skip {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+.tutorial-btn-skip:hover { background: var(--bg-elevated); }
+#tutorial-progress {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: var(--gap-md);
+}
+.tutorial-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background 0.3s;
+}
+.tutorial-pip.active { background: var(--accent-blue-lt); }
+.tutorial-pip.done { background: var(--status-good); }
+
+/* ===== CARBON BUDGET METER ===== */
+#carbon-budget-section {
+  margin-top: var(--gap-md);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+#carbon-budget-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+#carbon-budget-bar {
+  height: 16px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+#carbon-budget-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+  background: linear-gradient(90deg, var(--status-good) 0%, var(--status-warn) 60%, var(--status-danger) 100%);
+}
+#carbon-budget-marker {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: white;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 2;
+}
+#carbon-budget-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+#carbon-budget-value {
+  font-size: 12px;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ===== UNDO BUTTON ===== */
+#undo-btn {
+  padding: 8px 14px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+#undo-btn:hover { background: var(--border-subtle); border-color: var(--border-strong); }
+#undo-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ===== INTERNATIONAL BENCHMARKS ===== */
+#endgame-benchmarks {
+  margin: var(--gap-lg) 0;
+}
+#endgame-benchmarks-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.benchmark-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--gap-sm);
+}
+.benchmark-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  text-align: center;
+}
+.benchmark-card.player {
+  border-color: var(--accent-blue-lt);
+  background: #192038;
+}
+.benchmark-flag {
+  font-size: 24px;
+  margin-bottom: 2px;
+}
+.benchmark-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.benchmark-temp {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.benchmark-nz {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
 /* ===== ENDGAME POLICY TIMELINE ===== */
 #endgame-timeline {
   margin: var(--gap-lg) 0;
@@ -2268,6 +2479,20 @@ body { transition: filter 2s ease; }
           <div class="bar-ghost" id="ghost-nz"></div>
         </div>
         <div class="sparkline-container" id="spark-nz"></div>
+      </div>
+
+      <!-- Carbon Budget -->
+      <div id="carbon-budget-section">
+        <div id="carbon-budget-title">UK Carbon Budget Remaining</div>
+        <div id="carbon-budget-bar">
+          <div id="carbon-budget-fill" style="width:15%"></div>
+          <div id="carbon-budget-marker" style="left:100%"></div>
+        </div>
+        <div id="carbon-budget-labels">
+          <span>0 GtCO₂ emitted</span>
+          <span>11.7 Gt budget</span>
+        </div>
+        <div id="carbon-budget-value">10.0 Gt remaining</div>
       </div>
 
       <!-- Energy Mix -->
@@ -2899,6 +3124,7 @@ body { transition: filter 2s ease; }
 
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
+      <button id="undo-btn" disabled title="Reset all allocations this turn">↺ Reset</button>
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
@@ -2916,6 +3142,22 @@ body { transition: filter 2s ease; }
   </aside>
 
 </main>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-backdrop"></div>
+  <div id="tutorial-spotlight"></div>
+  <div id="tutorial-card">
+    <div id="tutorial-step-label">Step 1 of 6</div>
+    <div id="tutorial-title"></div>
+    <div id="tutorial-text"></div>
+    <div id="tutorial-actions">
+      <button class="tutorial-btn tutorial-btn-skip" id="tutorial-skip">Skip tutorial</button>
+      <button class="tutorial-btn tutorial-btn-primary" id="tutorial-next">Next</button>
+    </div>
+    <div id="tutorial-progress"></div>
+  </div>
+</div>
 
 <!-- METRIC TOOLTIP -->
 <div id="metric-tooltip">
@@ -3387,7 +3629,7 @@ class SaveManager {
     this._KEY = 'uk_climate_save_v2';
   }
 
-  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
+  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty, carbonBudgetUsed) {
     try {
       const payload = {
         version: 2,
@@ -3397,6 +3639,7 @@ class SaveManager {
         techPurchased: [...techPurchased],
         activeScenario,
         activeDifficulty,
+        carbonBudgetUsed,
       };
       localStorage.setItem(this._KEY, JSON.stringify(payload));
     } catch (e) { /* storage full or unavailable */ }
@@ -3773,10 +4016,13 @@ class GameEngine {
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
 
-    // Phase 11: Record turn history
+    // Phase 11: Update carbon budget
+    carbonBudget.update(s);
+
+    // Phase 12: Record turn history
     turnHistory.record(s);
 
-    // Phase 12: Advance turn
+    // Phase 13: Advance turn
     s.turn++;
     s.year += 5;
     s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
@@ -4353,6 +4599,7 @@ class UI {
         turnHistory.data = payload.historyData || [];
         this._activeScenario = payload.activeScenario || 'standard';
         if (payload.activeDifficulty) difficultyMgr.active = payload.activeDifficulty;
+        if (payload.carbonBudgetUsed != null) carbonBudget.used = payload.carbonBudgetUsed;
         // Restore log entries
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4384,11 +4631,34 @@ class UI {
       });
     }
 
-    // Advisor overlay dismiss
+    // Instantiate tutorial system
+    this._tutorialSystem = new TutorialSystem();
+
+    // Advisor overlay dismiss → launch tutorial for new players
     const advisorDismissBtn = document.getElementById('advisor-dismiss-btn');
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (this._tutorialSystem && this._tutorialSystem.shouldShow()) {
+          setTimeout(() => this._tutorialSystem.start(), 400);
+        }
+      });
+    }
+
+    // Undo / Reset all allocations
+    const undoBtn = document.getElementById('undo-btn');
+    if (undoBtn) {
+      undoBtn.addEventListener('click', () => {
+        const s = this.engine.state;
+        if (s.isResolvingTurn || s.spentThisTurn === 0) return;
+        for (const cat of Object.keys(s.currentDecisions)) {
+          s.currentDecisions[cat] = 0;
+        }
+        s.spentThisTurn = 0;
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
       });
     }
 
@@ -4505,6 +4775,7 @@ class UI {
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
+        carbonBudget.reset();
         this._lastLogLength = 0;
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
@@ -4616,8 +4887,15 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderUndoBtn(state);
+    carbonBudget.render();
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+  }
+
+  _renderUndoBtn(state) {
+    const btn = document.getElementById('undo-btn');
+    if (btn) btn.disabled = state.spentThisTurn === 0;
   }
 
   _renderHeader(state) {
@@ -5164,8 +5442,10 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    const benchmarkHtml = buildBenchmarkHTML(s);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', benchmarkHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5796,11 +6076,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, carbonBudget.used);
     ui.render(engine.getState());
   } else {
     // Auto-save mid-game progress
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, carbonBudget.used);
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
@@ -5948,6 +6228,231 @@ class LegacySystem {
 }
 
 /* ============================================================
+   MODULE: TUTORIAL SYSTEM
+============================================================ */
+
+const TUTORIAL_STEPS = [
+  {
+    target: '#metrics-panel',
+    title: 'National Indicators',
+    text: 'These metrics track the UK\'s vital signs: temperature, grid reliability, financial stability, social stability, and Net Zero progress. Keep all above 40% to avoid a crisis spiral.',
+  },
+  {
+    target: '#investment-cards',
+    title: 'Investment Decisions',
+    text: 'Each turn, allocate investment blocks across six areas. Tap + to add a block, − to remove it. Each area costs a different amount and has different effects — read the descriptions carefully.',
+  },
+  {
+    target: '#carbon-budget-section',
+    title: 'Carbon Budget',
+    text: 'The UK has a finite carbon budget — the total CO₂ it can emit while staying under 2°C. Every turn with gas in the energy mix burns through it. Once it\'s gone, temperature rise accelerates sharply.',
+  },
+  {
+    target: '#energy-mix-section',
+    title: 'Energy Mix',
+    text: 'This shows the current mix of wind, solar, nuclear, and gas. Investing in Energy Transition grows renewables and shrinks gas — but without Grid & Storage investment, reliability drops.',
+  },
+  {
+    target: '#action-bar',
+    title: 'Advance Time',
+    text: 'When you\'re happy with your allocations, click Advance to simulate 5 years. You\'ll face mini-events during the simulation that require tough choices. Use Reset to undo all allocations.',
+  },
+  {
+    target: '#log-panel',
+    title: 'Policy Record',
+    text: 'The log records every decision you make and its consequences. Advisor briefings appear here with warnings about emerging risks. Use this to learn from your strategy over time.',
+  },
+];
+
+class TutorialSystem {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done_v1';
+    this._step = 0;
+    this._active = false;
+    this.overlay = document.getElementById('tutorial-overlay');
+    this.spotlight = document.getElementById('tutorial-spotlight');
+    this.card = document.getElementById('tutorial-card');
+    this.stepLabel = document.getElementById('tutorial-step-label');
+    this.titleEl = document.getElementById('tutorial-title');
+    this.textEl = document.getElementById('tutorial-text');
+    this.progressEl = document.getElementById('tutorial-progress');
+
+    document.getElementById('tutorial-next')?.addEventListener('click', () => this.next());
+    document.getElementById('tutorial-skip')?.addEventListener('click', () => this.end());
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return true; }
+  }
+
+  start() {
+    if (!this.shouldShow()) return;
+    this._step = 0;
+    this._active = true;
+    this.overlay.classList.remove('hidden');
+    this._renderStep();
+  }
+
+  next() {
+    this._step++;
+    if (this._step >= TUTORIAL_STEPS.length) {
+      this.end();
+      return;
+    }
+    this._renderStep();
+  }
+
+  end() {
+    this._active = false;
+    this.overlay.classList.add('hidden');
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  _renderStep() {
+    const step = TUTORIAL_STEPS[this._step];
+    this.stepLabel.textContent = `Step ${this._step + 1} of ${TUTORIAL_STEPS.length}`;
+    this.titleEl.textContent = step.title;
+    this.textEl.textContent = step.text;
+
+    const nextBtn = document.getElementById('tutorial-next');
+    if (nextBtn) {
+      nextBtn.textContent = this._step === TUTORIAL_STEPS.length - 1 ? 'Start playing' : 'Next';
+    }
+
+    let pips = '';
+    for (let i = 0; i < TUTORIAL_STEPS.length; i++) {
+      const cls = i < this._step ? 'done' : i === this._step ? 'active' : '';
+      pips += `<div class="tutorial-pip ${cls}"></div>`;
+    }
+    this.progressEl.innerHTML = pips;
+
+    const target = document.querySelector(step.target);
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      const pad = 8;
+      this.spotlight.style.left = (rect.left - pad) + 'px';
+      this.spotlight.style.top = (rect.top - pad) + 'px';
+      this.spotlight.style.width = (rect.width + pad * 2) + 'px';
+      this.spotlight.style.height = (rect.height + pad * 2) + 'px';
+      this.spotlight.style.display = 'block';
+
+      const cardW = 360;
+      let cardLeft = rect.right + 16;
+      let cardTop = rect.top;
+      if (cardLeft + cardW > window.innerWidth - 16) {
+        cardLeft = Math.max(16, rect.left - cardW - 16);
+      }
+      if (cardLeft < 16) {
+        cardLeft = Math.max(16, (window.innerWidth - cardW) / 2);
+        cardTop = rect.bottom + 16;
+      }
+      if (cardTop + 250 > window.innerHeight) {
+        cardTop = Math.max(16, window.innerHeight - 280);
+      }
+      this.card.style.left = cardLeft + 'px';
+      this.card.style.top = cardTop + 'px';
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: CARBON BUDGET TRACKER
+============================================================ */
+
+class CarbonBudgetTracker {
+  constructor() {
+    this.totalBudget = 11.7;
+    this.used = 1.7;
+  }
+
+  update(state) {
+    const e = state.energy;
+    const total = Math.max(1, e.wind + e.solar + e.nuclear + e.gas + e.storage);
+    const gasShare = e.gas / total;
+    const emissionsThisTurn = gasShare * 2.0;
+    this.used = Math.min(this.totalBudget, this.used + emissionsThisTurn);
+  }
+
+  remaining() {
+    return Math.max(0, this.totalBudget - this.used);
+  }
+
+  fraction() {
+    return this.used / this.totalBudget;
+  }
+
+  reset() {
+    this.used = 1.7;
+  }
+
+  render() {
+    const fill = document.getElementById('carbon-budget-fill');
+    const value = document.getElementById('carbon-budget-value');
+    if (!fill || !value) return;
+
+    const pct = Math.round(this.fraction() * 100);
+    fill.style.width = pct + '%';
+
+    const rem = this.remaining();
+    value.textContent = rem > 0
+      ? `${rem.toFixed(1)} Gt remaining`
+      : 'Carbon budget exhausted';
+
+    if (rem <= 0) {
+      value.style.color = 'var(--status-danger)';
+    } else if (rem < 4) {
+      value.style.color = 'var(--status-warn)';
+    } else {
+      value.style.color = 'var(--text-primary)';
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: INTERNATIONAL BENCHMARKS
+============================================================ */
+
+const INTERNATIONAL_BENCHMARKS = [
+  { flag: '🇩🇰', name: 'Denmark', tempRange: [1.3, 1.6], nzRange: [90, 100] },
+  { flag: '🇩🇪', name: 'Germany', tempRange: [1.5, 2.0], nzRange: [60, 85] },
+  { flag: '🇫🇷', name: 'France',  tempRange: [1.4, 1.8], nzRange: [70, 95] },
+  { flag: '🇺🇸', name: 'USA',     tempRange: [1.8, 2.5], nzRange: [30, 65] },
+  { flag: '🇨🇳', name: 'China',   tempRange: [1.9, 2.8], nzRange: [20, 55] },
+  { flag: '🇮🇳', name: 'India',   tempRange: [2.0, 3.0], nzRange: [10, 45] },
+];
+
+function buildBenchmarkHTML(playerState) {
+  const cards = INTERNATIONAL_BENCHMARKS.map(b => {
+    const tempSpread = b.tempRange[1] - b.tempRange[0];
+    const nzSpread = b.nzRange[1] - b.nzRange[0];
+    const variance = (Math.random() - 0.5) * 0.6;
+    const temp = Math.round((b.tempRange[0] + tempSpread * (0.5 + variance * 0.5)) * 10) / 10;
+    const nz = Math.round(b.nzRange[0] + nzSpread * (0.5 + variance * 0.5));
+    const tempCls = temp < 1.8 ? 'good' : temp < 2.2 ? 'warn' : 'danger';
+    return `<div class="benchmark-card">
+      <div class="benchmark-flag">${b.flag}</div>
+      <div class="benchmark-name">${b.name}</div>
+      <div class="benchmark-temp ${tempCls}">${temp.toFixed(1)}°C</div>
+      <div class="benchmark-nz">NZ: ${nz}%</div>
+    </div>`;
+  });
+
+  const playerTempCls = playerState.temperature < 1.8 ? 'good' : playerState.temperature < 2.2 ? 'warn' : 'danger';
+  const playerCard = `<div class="benchmark-card player">
+    <div class="benchmark-flag">🇬🇧</div>
+    <div class="benchmark-name">Your UK</div>
+    <div class="benchmark-temp ${playerTempCls}">${playerState.temperature.toFixed(1)}°C</div>
+    <div class="benchmark-nz">NZ: ${Math.round(playerState.netZeroProgress)}%</div>
+  </div>`;
+
+  return `<div id="endgame-benchmarks">
+    <div id="endgame-benchmarks-title">How does your UK compare?</div>
+    <div class="benchmark-grid">${playerCard}${cards.join('')}</div>
+    <div style="font-size:10px;color:var(--text-muted);text-align:center;margin-top:var(--gap-sm);font-style:italic;">Illustrative international comparison based on NGFS pathway modelling</div>
+  </div>`;
+}
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -5955,6 +6460,7 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const carbonBudget = new CarbonBudgetTracker();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
