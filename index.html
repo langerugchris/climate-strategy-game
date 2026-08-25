@@ -2075,6 +2075,51 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== NEWS HEADLINES ===== */
+.log-news {
+  margin: 6px 0;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #1a1e30, #1e2340);
+  border-left: 3px solid var(--accent-blue-lt);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.news-masthead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.news-masthead-name {
+  font-family: var(--font-editorial);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.news-headline {
+  font-family: var(--font-editorial);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin-bottom: 3px;
+}
+.news-standfirst {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.log-news.positive { border-left-color: var(--status-good); }
+.log-news.negative { border-left-color: var(--status-danger); }
+.log-news.warning  { border-left-color: var(--status-warn); }
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2189,10 +2234,11 @@ body { transition: filter 2s ease; }
       <div class="metric-block">
         <div class="metric-label-row">
           <span class="metric-name">🌡️ UK Warming Pathway</span>
-          <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span></span>
+          <span class="metric-value"><span id="val-temp">1.1</span>°C <span class="metric-delta" id="delta-temp"></span><span class="proj-label" id="proj-temp"></span></span>
         </div>
         <div class="bar-track temp-track" style="position:relative">
           <div class="temp-needle" id="bar-temp" style="left:5%"></div>
+          <div class="bar-ghost" id="ghost-temp"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:2px;">
           <span style="font-size:10px;color:var(--text-secondary)">1.1°C</span>
@@ -2277,6 +2323,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:29"></div>
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
         </div>
         <div id="energy-mix-legend">
@@ -2291,6 +2338,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-nuclear)"></div>
             <span>Nuclear</span><span class="legend-val" id="leg-nuclear">13</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
@@ -3698,7 +3749,25 @@ class GameEngine {
     const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
     socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
 
-    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
+    // Mirror _progressTemp for temperature projection
+    let projTemp = s.temperature;
+    const projE = { ...e };
+    if (d.energyTransition === 0) {
+      projE.gas = clamp(projE.gas + 6, 0, 100);
+    }
+    const projTotal = projE.wind + projE.solar + projE.nuclear + projE.gas + projE.storage;
+    const projGasShare   = projTotal > 0 ? projE.gas / projTotal : 0;
+    const projRenewShare = projTotal > 0 ? (projE.wind + projE.solar) / projTotal : 0;
+    let projDelta = difficultyMgr.preset.warmingRate + (projGasShare - projRenewShare) * 0.22;
+    projDelta = Math.max(projDelta, 0.03);
+    if (projTemp > 1.5) {
+      projDelta *= 1 + (projTemp - 1.5) * 1.2;
+    }
+    const projNZAchieved = netZeroProgress >= 100 || s.netZeroAchieved;
+    if (projNZAchieved) projDelta *= 0.45;
+    projTemp = Math.round((projTemp + projDelta) * 100) / 100;
+
+    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress), temperature: projTemp };
   }
 
   resolveTurn() {
@@ -4018,6 +4087,7 @@ class GameEngine {
     this.state.budget = this.getEffectiveBudget();
     const bonuses = legacySystem.startingBonuses();
     if (bonuses.budgetBonus > 0) this.state.budget += bonuses.budgetBonus;
+    if (bonuses.nuclearUnlocked) this.state.energy.nuclear = Math.min(80, this.state.energy.nuclear + 10);
   }
 }
 
@@ -4264,10 +4334,12 @@ class UI {
     this.elSegWind    = document.getElementById('seg-wind');
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elSegGas     = document.getElementById('seg-gas');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
+    this.elLegStorage = document.getElementById('leg-storage');
     this.elLegGas     = document.getElementById('leg-gas');
 
     this.elBudStatus  = document.getElementById('budget-status');
@@ -4502,6 +4574,7 @@ class UI {
         // Clear any existing save and start fresh
         saveMgr.clear();
         analyticsMgr.recordStart();
+        newsMgr.reset();
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
@@ -4724,6 +4797,9 @@ class UI {
       { ghostId: 'ghost-nz',   projId: 'proj-nz',   current: state.netZeroProgress,    projKey: 'netZeroProgress' },
     ];
 
+    const tempGhost = document.getElementById('ghost-temp');
+    const tempLabel = document.getElementById('proj-temp');
+
     if (state.spentThisTurn === 0) {
       ghosts.forEach(g => {
         const ghost = document.getElementById(g.ghostId);
@@ -4731,6 +4807,8 @@ class UI {
         if (ghost) ghost.style.display = 'none';
         if (label) { label.textContent = ''; label.className = 'proj-label'; }
       });
+      if (tempGhost) tempGhost.style.display = 'none';
+      if (tempLabel) { tempLabel.textContent = ''; tempLabel.className = 'proj-label'; }
       return;
     }
 
@@ -4756,6 +4834,24 @@ class UI {
         }
       }
     });
+
+    // Temperature projection — mapped to 1.1–3.0 range
+    const tempDiff = proj.temperature - state.temperature;
+    const tempProjPct = Math.round(((proj.temperature - 1.1) / 1.9) * 100);
+    if (tempGhost) {
+      tempGhost.style.display = 'block';
+      tempGhost.style.left = Math.max(1, Math.min(99, tempProjPct)) + '%';
+      tempGhost.className = 'bar-ghost ' + (tempDiff > 0.05 ? 'proj-down' : tempDiff < -0.05 ? 'proj-up' : 'proj-same');
+    }
+    if (tempLabel) {
+      if (Math.abs(tempDiff) < 0.05) {
+        tempLabel.textContent = '';
+        tempLabel.className = 'proj-label';
+      } else {
+        tempLabel.textContent = (tempDiff > 0 ? '→ +' : '→ ') + tempDiff.toFixed(2) + '°C';
+        tempLabel.className = 'proj-label visible ' + (tempDiff > 0 ? 'proj-down' : 'proj-up');
+      }
+    }
   }
 
   _renderDelta(el, current, previous, invertBad, decimals) {
@@ -4800,10 +4896,12 @@ class UI {
     this.elSegWind.style.flexGrow    = e.wind;
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elSegGas.style.flexGrow     = e.gas;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
+    this.elLegStorage.textContent = Math.round(e.storage);
     this.elLegGas.textContent     = Math.round(e.gas);
   }
 
@@ -5014,6 +5112,18 @@ class UI {
 
     div.innerHTML = html;
     this.elLogScroll.appendChild(div);
+
+    // Inject news headline based on turn outcome
+    const headline = newsMgr.generate(
+      this.engine.state,
+      entry.snapshot,
+      this.engine.state.currentRandomEvent
+    );
+    if (headline) {
+      const newsDiv = document.createElement('div');
+      newsDiv.innerHTML = newsMgr.renderLogEntry(headline);
+      this.elLogScroll.appendChild(newsDiv.firstElementChild);
+    }
 
     // Inject advisor briefing for next turn (based on post-turn state)
     this._injectAdvisorBriefing(this.engine.state);
@@ -5559,6 +5669,202 @@ class TechTreeManager {
 }
 
 /* ============================================================
+   MODULE: NEWS HEADLINE SYSTEM
+============================================================ */
+
+class NewsHeadlineSystem {
+  constructor() {
+    this._lastHeadlines = new Set();
+  }
+
+  reset() {
+    this._lastHeadlines.clear();
+  }
+
+  generate(state, prevSnapshot, event) {
+    const headlines = [];
+    const s = state;
+    const prev = prevSnapshot || {};
+
+    // Event-driven headlines
+    if (event) {
+      headlines.push(...this._eventHeadlines(event, s));
+    }
+
+    // Temperature milestone headlines
+    if (prev.temperature < 1.5 && s.temperature >= 1.5) {
+      headlines.push({ pub: 'BBC News', icon: '📺', tone: 'negative',
+        headline: 'UK passes 1.5°C warming threshold',
+        standfirst: 'Climate scientists warn of accelerating tipping point feedbacks as UK domestic pathway crosses Paris Agreement danger line.' });
+    }
+    if (prev.temperature < 2.0 && s.temperature >= 2.0) {
+      headlines.push({ pub: 'The Guardian', icon: '📰', tone: 'negative',
+        headline: '2°C breached: Paris Agreement target now out of reach',
+        standfirst: 'Failure to decarbonise fast enough has locked in dangerous warming levels. Adaptation is now the only option for the most vulnerable communities.' });
+    }
+
+    // Net Zero milestones
+    if (prev.netZeroProgress < 50 && s.netZeroProgress >= 50) {
+      headlines.push({ pub: 'Financial Times', icon: '📊', tone: 'positive',
+        headline: 'UK reaches halfway to Net Zero target',
+        standfirst: 'Clean energy investment drives emissions progress, but analysts warn the second half of the transition will be harder and more expensive.' });
+    }
+    if (prev.netZeroProgress < 75 && s.netZeroProgress >= 75) {
+      headlines.push({ pub: 'The Times', icon: '📰', tone: 'positive',
+        headline: 'Net Zero within striking distance as UK hits 75% milestone',
+        standfirst: 'Government hails "historic progress" as three quarters of emissions reductions are now locked in.' });
+    }
+    if (prev.netZeroProgress < 100 && s.netZeroProgress >= 100) {
+      headlines.push({ pub: 'BBC News', icon: '📺', tone: 'positive',
+        headline: 'UK achieves Net Zero emissions',
+        standfirst: 'The United Kingdom has met its legally binding 2050 commitment. Celebrations across the country as decades of investment pay off.' });
+    }
+
+    // Grid crisis
+    if (s.gridReliability < 35 && (prev.gridReliability || 100) >= 35) {
+      headlines.push({ pub: 'Daily Mail', icon: '📰', tone: 'negative',
+        headline: 'Blackout Britain: grid reliability plunges to crisis levels',
+        standfirst: 'Hospitals activate emergency generators as rolling power cuts hit millions. National Grid urges "immediate restraint" on electricity use.' });
+    }
+
+    // Financial crisis
+    if (s.financialStability < 35 && (prev.financialStability || 100) >= 35) {
+      headlines.push({ pub: 'Financial Times', icon: '📊', tone: 'negative',
+        headline: 'UK financial system enters crisis as climate transition costs cascade',
+        standfirst: 'Bank of England activates emergency lending facilities. Pension funds face unprecedented stranded asset write-downs.' });
+    }
+
+    // Social crisis
+    if (s.socialStability < 40 && (prev.socialStability || 100) >= 40) {
+      headlines.push({ pub: 'The Guardian', icon: '📰', tone: 'negative',
+        headline: 'Public trust in climate transition collapses',
+        standfirst: 'Fuel poverty protests spread to all major cities. Polling shows 68% now oppose government energy policy.' });
+    }
+
+    // Energy mix achievements
+    if (s.energy.gas <= 5 && (prev.energy?.gas || 28) > 5) {
+      headlines.push({ pub: 'The Guardian', icon: '📰', tone: 'positive',
+        headline: 'UK virtually eliminates gas from energy mix',
+        standfirst: 'Fossil fuel phase-out nearly complete as wind, solar, and nuclear dominate. North Sea operations wind down to skeleton crew.' });
+    }
+    const totalE = s.energy.wind + s.energy.solar + s.energy.nuclear + s.energy.gas + s.energy.storage;
+    const renewPct = totalE > 0 ? ((s.energy.wind + s.energy.solar) / totalE) * 100 : 0;
+    const prevTotalE = prev.energy ? (prev.energy.wind + prev.energy.solar + prev.energy.nuclear + prev.energy.gas + (prev.energy.storage || 5)) : 0;
+    const prevRenewPct = prevTotalE > 0 ? ((prev.energy?.wind + prev.energy?.solar) / prevTotalE) * 100 : 0;
+    if (renewPct >= 60 && prevRenewPct < 60) {
+      headlines.push({ pub: 'BBC News', icon: '📺', tone: 'positive',
+        headline: 'Renewables now generate over 60% of UK electricity',
+        standfirst: 'Offshore wind and solar farms surpass historic milestone. Energy Secretary calls it "the point of no return for clean power".' });
+    }
+
+    // Strong stability headline
+    if (s.financialStability >= 80 && s.socialStability >= 80 && s.gridReliability >= 80) {
+      if (!this._lastHeadlines.has('triple_stable')) {
+        this._lastHeadlines.add('triple_stable');
+        headlines.push({ pub: 'The Economist', icon: '📊', tone: 'positive',
+          headline: 'Britain\'s triple stability: a model for the world',
+          standfirst: 'Financial resilience, social cohesion, and grid reliability all above 80%. International observers take note.' });
+      }
+    }
+
+    // Investment-pattern headlines
+    if (s.infrastructure.energyTransition >= 120 && !this._lastHeadlines.has('energy_heavy')) {
+      this._lastHeadlines.add('energy_heavy');
+      headlines.push({ pub: 'Financial Times', icon: '📊', tone: 'warning',
+        headline: 'Massive energy transition spend raises stranded asset concerns',
+        standfirst: 'Analysts warn that aggressive fossil phase-out without financial buffers is creating systemic risk in UK pension funds.' });
+    }
+
+    // High temperature, moderate headline
+    if (s.temperature >= 1.8 && s.temperature < 2.0 && !this._lastHeadlines.has('temp_18')) {
+      this._lastHeadlines.add('temp_18');
+      headlines.push({ pub: 'The Times', icon: '📰', tone: 'warning',
+        headline: 'UK on track to breach 2°C without urgent action',
+        standfirst: 'Climate Change Committee issues "red alert" as warming trajectory approaches Paris Agreement danger threshold.' });
+    }
+
+    // Return the most relevant headline (prioritise event > milestone > state)
+    if (headlines.length === 0) return this._generateGenericHeadline(s);
+    return headlines[0];
+  }
+
+  _eventHeadlines(event, s) {
+    const headlines = [];
+    switch (event.type) {
+      case 'FLOOD':
+        headlines.push({ pub: 'BBC News', icon: '📺', tone: 'negative',
+          headline: event.severity === 'MAJOR'
+            ? 'Thames Barrier overwhelmed in worst flooding for a generation'
+            : 'East Anglia flooding displaces thousands',
+          standfirst: event.severity === 'MAJOR'
+            ? 'National emergency declared as central London districts submerged. Emergency services stretched to breaking point.'
+            : 'Communities along the Norfolk coast evacuated as storm surge breaches defences. Government faces questions over preparedness.' });
+        break;
+      case 'HEATWAVE':
+        headlines.push({ pub: 'The Guardian', icon: '📰', tone: 'negative',
+          headline: event.severity === 'MAJOR'
+            ? 'Extreme heat emergency: excess deaths pass 10,000'
+            : 'Record-breaking heatwave overwhelms NHS',
+          standfirst: event.severity === 'MAJOR'
+            ? 'GDP contracts as crop failures spread and infrastructure buckles. Scientists say this will be "the new normal" without faster action.'
+            : 'Emergency cooling centres opened in every major city as 40°C temperatures persist for a second week.' });
+        break;
+      case 'STORM':
+        headlines.push({ pub: 'Daily Mail', icon: '📰', tone: 'negative',
+          headline: 'Storm Idris leaves trail of destruction across northern Britain',
+          standfirst: 'Schools, hospitals, and power lines damaged as 100mph winds batter communities from Manchester to Edinburgh.' });
+        break;
+      case 'FINANCIAL':
+        headlines.push({ pub: 'Financial Times', icon: '📊', tone: 'negative',
+          headline: 'Fossil asset write-down sends shockwaves through pension sector',
+          standfirst: 'International carbon accounting rules force rapid revaluation. Major funds warn of reduced payouts for millions of retirees.' });
+        break;
+      case 'SOCIAL':
+        headlines.push({ pub: 'The Guardian', icon: '📰', tone: 'negative',
+          headline: 'Fuel poverty crisis triggers nationwide protests',
+          standfirst: '"I\'m not a protester. I\'m just cold." Rising energy costs drive anger across communities already struggling with the cost of living.' });
+        break;
+      case 'GRID':
+        headlines.push({ pub: 'BBC News', icon: '📺', tone: 'negative',
+          headline: 'National Grid blackout: hospitals on emergency generators',
+          standfirst: 'Cascading grid failure leaves millions without power. Government faces demands for immediate investment in backup capacity.' });
+        break;
+    }
+    return headlines;
+  }
+
+  _generateGenericHeadline(s) {
+    if (s.temperature < 1.4 && s.netZeroProgress >= 40) {
+      return { pub: 'The Economist', icon: '📊', tone: 'positive',
+        headline: 'UK climate strategy: steady as she goes',
+        standfirst: `Temperature holding at ${s.temperature.toFixed(1)}°C with Net Zero at ${Math.round(s.netZeroProgress)}%. Markets cautiously optimistic.` };
+    }
+    if (s.socialStability >= 70 && s.financialStability >= 70) {
+      return { pub: 'The Times', icon: '📰', tone: 'positive',
+        headline: 'Transition proceeds with public backing intact',
+        standfirst: 'Social cohesion and financial stability hold firm as government balances climate ambition with public consent.' };
+    }
+    return { pub: 'BBC News', icon: '📺', tone: 'warning',
+      headline: `UK climate outlook: challenges ahead at ${s.temperature.toFixed(1)}°C`,
+      standfirst: `Net Zero progress stands at ${Math.round(s.netZeroProgress)}%. Grid at ${Math.round(s.gridReliability)}%, social stability at ${Math.round(s.socialStability)}%.` };
+  }
+
+  renderLogEntry(headline) {
+    return `<div class="log-news ${headline.tone}">
+      <div class="news-masthead">
+        <span>${headline.icon}</span>
+        <span class="news-masthead-name">${headline.pub}</span>
+        <span>· BREAKING</span>
+      </div>
+      <div class="news-headline">${headline.headline}</div>
+      <div class="news-standfirst">${headline.standfirst}</div>
+    </div>`;
+  }
+}
+
+const newsMgr = new NewsHeadlineSystem();
+
+/* ============================================================
    MODULE: SIMULATION RUNNER
 ============================================================ */
 
@@ -5761,6 +6067,17 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
+
+  // Show news ticker in simulation overlay
+  const simHeadline = newsMgr.generate(engine.state, result.logEntry.snapshot, result.event);
+  if (simHeadline) {
+    const ticker = document.createElement('div');
+    ticker.style.cssText = 'margin-top:16px;padding:8px 12px;background:rgba(0,0,0,0.4);border-left:3px solid var(--accent-blue-lt);border-radius:4px;font-size:11px;opacity:0;transition:opacity 0.5s;';
+    ticker.innerHTML = `<div style="font-family:var(--font-editorial);font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:2px;">${simHeadline.headline}</div><div style="color:var(--text-muted);font-size:10px;">${simHeadline.pub} \u00b7 ${startYear + 5}</div>`;
+    overlay.querySelector('#sim-card').appendChild(ticker);
+    requestAnimationFrame(() => ticker.style.opacity = '1');
+  }
+
   await _delay(1500);
 
   // Dismiss overlay
