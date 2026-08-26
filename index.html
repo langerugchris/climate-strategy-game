@@ -1198,6 +1198,67 @@ body { transition: filter 2s ease; }
   text-align: center;
   min-height: 18px;
 }
+#sim-speed-btn {
+  display: block;
+  margin: var(--gap-sm) auto 0;
+  padding: 4px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.04em;
+}
+#sim-speed-btn:hover { background: var(--border-strong); color: var(--text-primary); }
+#sim-news-ticker {
+  margin-top: var(--gap-sm);
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.03);
+  border-left: 2px solid var(--accent-blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  min-height: 28px;
+  animation: fadeIn 0.35s ease;
+}
+.momentum-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(76,175,129,0.15);
+  color: var(--accent-green-lt);
+  border: 1px solid rgba(76,175,129,0.3);
+  margin-left: 4px;
+  vertical-align: middle;
+  letter-spacing: 0.06em;
+}
+.research-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 6px 0;
+}
+.research-opt {
+  padding: 3px 8px;
+  font-size: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.3;
+}
+.research-opt:hover { border-color: var(--accent-blue); color: var(--text-primary); }
+.research-opt.selected { border-color: var(--accent-blue-lt); background: rgba(29,112,184,0.18); color: var(--text-primary); font-weight: 600; }
+.research-opt.purchased { border-color: var(--accent-green); background: rgba(0,112,60,0.12); color: var(--accent-green-lt); opacity: 0.7; cursor: default; }
+.research-opt.locked { opacity: 0.35; cursor: not-allowed; }
 
 /* ===== MINI-EVENT PANEL ===== */
 #mini-event-panel {
@@ -1868,7 +1929,7 @@ body { transition: filter 2s ease; }
 }
 #scenario-screen.hidden { display: none; }
 #scenario-content {
-  max-width: 640px;
+  max-width: 860px;
   width: 100%;
   text-align: center;
 }
@@ -2278,6 +2339,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage"  style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2357,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2461,7 +2527,8 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
-        <div class="card-rationale">R&amp;D investment unlocks permanent technology multipliers applied to all future spending in that area. Cheap — £15bn per block — but the payoff compounds over remaining turns. Prioritise the upgrade that amplifies your weakest investment area.</div>
+        <div class="card-rationale">R&amp;D investment unlocks permanent technology multipliers. Choose which upgrade to research — some require prerequisites. The payoff compounds over remaining turns.</div>
+        <div id="research-picker" class="research-picker"></div>
         <div class="card-effects">
           <span class="effect-tag pos" id="research-effect-tag">Solar blocks give 1.5× Net Zero progress</span>
           <span class="effect-tag info" id="research-all-done" style="display:none">All upgrades purchased ✓</span>
@@ -2966,6 +3033,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="industrial_north">
+        <span class="scenario-card-icon">🏭</span>
+        <div class="scenario-card-name">Industrial North</div>
+        <div class="scenario-card-desc">A post-industrial heartland with strong grid infrastructure but deep social fractures. Gas dependency is high and communities distrust the transition.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£95bn/turn</span></div>
+          <div class="scenario-stat">Grid: <span>75% (strong)</span></div>
+          <div class="scenario-stat">Social: <span>60% (fragile)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="tech_vanguard">
+        <span class="scenario-card-icon">🔬</span>
+        <div class="scenario-card-name">Tech Vanguard</div>
+        <div class="scenario-card-desc">Heavy early investment in solar and storage technology gives a head start — but financial markets are nervous about the pace of change.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
+          <div class="scenario-stat">Net Zero: <span>45% head start</span></div>
+          <div class="scenario-stat">Financial: <span>60% (strained)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3028,6 +3117,7 @@ body { transition: filter 2s ease; }
       <li>🌡️ <strong>Delay is compounding</strong> — above 1.5°C, tipping points accelerate warming beyond your control. Early action is far cheaper than late action</li>
     </ul>
     <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
+    <p class="advisor-note" style="margin-top:8px;font-size:12px;">📈 <strong>Policy momentum:</strong> investing in the same area two turns running gives a 20% effectiveness bonus — sustained commitment is rewarded.</p>
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
   </div>
 </div>
@@ -3372,6 +3462,29 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  industrial_north: {
+    label: 'Industrial North',
+    apply(state) {
+      state.socialStability = 60;
+      state.socialCapital = -5;
+      state.energy.gas = 40;
+      state.energy.nuclear = 20;
+      state.infrastructure.gridAndStorage = 35;
+      state.gridReliability = 75;
+      state._budgetOverride = 95;
+    },
+  },
+  tech_vanguard: {
+    label: 'Tech Vanguard',
+    apply(state) {
+      state.energy.solar = 18;
+      state.energy.storage = 15;
+      state.energy.gas = 20;
+      state.financialStability = 60;
+      state.netZeroProgress = 45;
+      state._budgetOverride = 90;
+    },
+  },
 };
 
 /* ============================================================
@@ -3570,6 +3683,8 @@ class GameEngine {
         research: 0,
       },
       spentThisTurn: 0,
+      previousDecisions: { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 },
+      momentumBonuses: {},
       netZeroAchieved: false,
       socialBreakdownOccurred: false,
       currentRandomEvent: null,
@@ -3586,6 +3701,7 @@ class GameEngine {
       energy: Object.assign({}, this.state.energy),
       infrastructure: Object.assign({}, this.state.infrastructure),
       currentDecisions: Object.assign({}, this.state.currentDecisions),
+      previousDecisions: Object.assign({}, this.state.previousDecisions),
     });
   }
 
@@ -3642,36 +3758,45 @@ class GameEngine {
     const infra = { ...s.infrastructure };
 
     // Mirror _applyInvestments
+    const prev = s.previousDecisions;
+    const mom = (cat) => (prev[cat] > 0 && d[cat] > 0) ? 1.2 : 1.0;
+
     const et = d.energyTransition;
     if (et > 0) {
-      e.wind    = clamp(e.wind    + et * 8,  0, 120);
-      e.solar   = clamp(e.solar   + et * 6,  0, 100);
+      const m = mom('energyTransition');
+      e.wind    = clamp(e.wind    + et * 8 * m,  0, 120);
+      e.solar   = clamp(e.solar   + et * 6 * m,  0, 100);
       e.gas     = clamp(e.gas     - et * 7,  0, 100);
-      netZeroProgress = clamp(netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
+      const nzBonus = techTree.multipliers.hydrogenEconomy ? 15 : 10;
+      netZeroProgress = clamp(netZeroProgress + et * nzBonus * techTree.multipliers.energyNZ * m, 0, 100);
       strandedAssets  = clamp(strandedAssets  + et * 12, 0, 100);
       infra.energyTransition += et * 30;
     }
     const gs = d.gridAndStorage;
     if (gs > 0) {
-      e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
+      const m = mom('gridAndStorage');
+      e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage * m, 0, 100);
       e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
       infra.gridAndStorage += gs * 35;
     }
     const ad = d.adaptation;
     if (ad > 0) {
-      socialStability = clamp(socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
+      const m = mom('adaptation');
+      socialStability = clamp(socialStability + ad * 5 * techTree.multipliers.adaptMitigate * m, 0, 100);
       infra.adaptation += ad * 25;
     }
     const ss = d.socialSupport;
     if (ss > 0) {
-      socialStability    = clamp(socialStability    + ss * 8 * techTree.multipliers.socialGain, 0, 100);
+      const m = mom('socialSupport');
+      socialStability    = clamp(socialStability    + ss * 8 * techTree.multipliers.socialGain * m, 0, 100);
       financialStability = clamp(financialStability + ss * 3, 0, 100);
       infra.socialSupport += ss * 20;
       socialCapital = clamp(socialCapital + ss * 4, 0, 60);
     }
     const fr = d.financialResilience;
     if (fr > 0) {
-      financialStability = clamp(financialStability + fr * 10 * techTree.multipliers.finGain, 0, 100);
+      const m = mom('financialResilience');
+      financialStability = clamp(financialStability + fr * 10 * techTree.multipliers.finGain * m, 0, 100);
       strandedAssets     = clamp(strandedAssets     - fr * 8,  0, 100);
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
@@ -3777,6 +3902,7 @@ class GameEngine {
     turnHistory.record(s);
 
     // Phase 12: Advance turn
+    s.previousDecisions = { ...s.currentDecisions };
     s.turn++;
     s.year += 5;
     s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
@@ -3797,14 +3923,23 @@ class GameEngine {
   _applyInvestments() {
     const s = this.state;
     const d = s.currentDecisions;
+    const prev = s.previousDecisions;
+
+    const momentum = (cat) => (prev[cat] > 0 && d[cat] > 0) ? 1.2 : 1.0;
+    s.momentumBonuses = {};
+    for (const cat of Object.keys(d)) {
+      if (cat !== 'research' && prev[cat] > 0 && d[cat] > 0) s.momentumBonuses[cat] = true;
+    }
 
     // Energy Transition
     const et = d.energyTransition;
     if (et > 0) {
-      s.energy.wind    = this._clamp(s.energy.wind    + et * 8,  0, 120);
-      s.energy.solar   = this._clamp(s.energy.solar   + et * 6,  0, 100);
+      const mom = momentum('energyTransition');
+      s.energy.wind    = this._clamp(s.energy.wind    + et * 8 * mom,  0, 120);
+      s.energy.solar   = this._clamp(s.energy.solar   + et * 6 * mom,  0, 100);
       s.energy.gas     = this._clamp(s.energy.gas     - et * 7,  0, 100);
-      s.netZeroProgress = this._clamp(s.netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
+      const nzBonus = techTree.multipliers.hydrogenEconomy ? 15 : 10;
+      s.netZeroProgress = this._clamp(s.netZeroProgress + et * nzBonus * techTree.multipliers.energyNZ * mom, 0, 100);
       s.strandedAssets  = this._clamp(s.strandedAssets  + et * 12, 0, 100);
       s.infrastructure.energyTransition += et * 30;
     }
@@ -3812,7 +3947,8 @@ class GameEngine {
     // Grid & Storage
     const gs = d.gridAndStorage;
     if (gs > 0) {
-      s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
+      const mom = momentum('gridAndStorage');
+      s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage * mom, 0, 100);
       s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
       s.infrastructure.gridAndStorage += gs * 35;
     }
@@ -3820,23 +3956,26 @@ class GameEngine {
     // Adaptation
     const ad = d.adaptation;
     if (ad > 0) {
-      s.socialStability = this._clamp(s.socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
+      const mom = momentum('adaptation');
+      s.socialStability = this._clamp(s.socialStability + ad * 5 * techTree.multipliers.adaptMitigate * mom, 0, 100);
       s.infrastructure.adaptation += ad * 25;
     }
 
     // Social Support
     const ss = d.socialSupport;
     if (ss > 0) {
-      s.socialStability    = this._clamp(s.socialStability    + ss * 8 * techTree.multipliers.socialGain, 0, 100);
+      const mom = momentum('socialSupport');
+      s.socialStability    = this._clamp(s.socialStability    + ss * 8 * techTree.multipliers.socialGain * mom, 0, 100);
       s.financialStability = this._clamp(s.financialStability + ss * 3, 0, 100);
       s.infrastructure.socialSupport += ss * 20;
-      s.socialCapital = this._clamp(s.socialCapital + ss * 4, 0, 60); // accumulates across turns
+      s.socialCapital = this._clamp(s.socialCapital + ss * 4, 0, 60);
     }
 
     // Financial Resilience
     const fr = d.financialResilience;
     if (fr > 0) {
-      s.financialStability = this._clamp(s.financialStability + fr * 10 * techTree.multipliers.finGain, 0, 100);
+      const mom = momentum('financialResilience');
+      s.financialStability = this._clamp(s.financialStability + fr * 10 * techTree.multipliers.finGain * mom, 0, 100);
       s.strandedAssets     = this._clamp(s.strandedAssets     - fr * 8,  0, 100);
       s.propertyValue      = this._clamp(s.propertyValue      + fr * 5,  0, 100);
       s.infrastructure.financialResilience += fr * 30;
@@ -3890,7 +4029,8 @@ class GameEngine {
 
     // If player ignored energy transition this turn, gas demand rebounds (existing infrastructure keeps running)
     if (s.currentDecisions.energyTransition === 0) {
-      e.gas = this._clamp(e.gas + 6, 0, 100);
+      const gasRebound = techTree.multipliers.hydrogenEconomy ? 3 : 6;
+      e.gas = this._clamp(e.gas + gasRebound, 0, 100);
     }
 
     const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
@@ -3997,11 +4137,13 @@ class GameEngine {
 
   _describeDecisions(d) {
     const out = [];
-    if (d.energyTransition > 0)   out.push(`Energy Transition ×${d.energyTransition} (£${d.energyTransition * 30}bn)`);
-    if (d.gridAndStorage > 0)     out.push(`Grid & Storage ×${d.gridAndStorage} (£${d.gridAndStorage * 35}bn)`);
-    if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)`);
-    if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
-    if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
+    const mb = this.state.momentumBonuses || {};
+    const tag = (cat) => mb[cat] ? ' ⬆+20%' : '';
+    if (d.energyTransition > 0)   out.push(`Energy Transition ×${d.energyTransition} (£${d.energyTransition * 30}bn)${tag('energyTransition')}`);
+    if (d.gridAndStorage > 0)     out.push(`Grid & Storage ×${d.gridAndStorage} (£${d.gridAndStorage * 35}bn)${tag('gridAndStorage')}`);
+    if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)${tag('adaptation')}`);
+    if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)${tag('socialSupport')}`);
+    if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)${tag('financialResilience')}`);
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
@@ -4265,10 +4407,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4801,10 +4945,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4843,6 +4989,25 @@ class UI {
       card.classList.toggle('allocated',      count > 0 && count < MAX_BLOCKS_PER_CAT);
       card.classList.toggle('maxed',          count >= MAX_BLOCKS_PER_CAT);
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
+
+      // Momentum badge
+      if (cat !== 'research') {
+        const nameEl = card.querySelector('.card-name');
+        if (nameEl) {
+          let badge = nameEl.querySelector('.momentum-badge');
+          const hasMomentum = state.previousDecisions[cat] > 0;
+          if (hasMomentum && count > 0) {
+            if (!badge) { badge = document.createElement('span'); badge.className = 'momentum-badge'; nameEl.appendChild(badge); }
+            badge.textContent = '+20% MOMENTUM';
+          } else if (hasMomentum && count === 0) {
+            if (!badge) { badge = document.createElement('span'); badge.className = 'momentum-badge'; badge.style.opacity = '0.5'; nameEl.appendChild(badge); }
+            badge.textContent = 'MOMENTUM AVAILABLE';
+            badge.style.opacity = '0.5';
+          } else {
+            if (badge) badge.remove();
+          }
+        }
+      }
     }
     this._renderResearchCard();
   }
@@ -4850,6 +5015,34 @@ class UI {
   _renderResearchCard() {
     const nextUpgrade = techTree.nextUpgrade();
     const plusBtn = document.getElementById('plus-research');
+    const picker = document.getElementById('research-picker');
+
+    if (picker) {
+      picker.innerHTML = '';
+      for (const u of RESEARCH_UPGRADES) {
+        const btn = document.createElement('button');
+        btn.className = 'research-opt';
+        btn.textContent = u.name;
+        btn.title = u.desc;
+        if (techTree._purchased.has(u.id)) {
+          btn.classList.add('purchased');
+          btn.textContent = '✓ ' + u.name;
+        } else {
+          const avail = techTree.availableUpgrades();
+          if (!avail.find(a => a.id === u.id)) {
+            btn.classList.add('locked');
+          } else {
+            if (nextUpgrade && nextUpgrade.id === u.id) btn.classList.add('selected');
+            btn.addEventListener('click', () => {
+              techTree.selectUpgrade(u.id);
+              this._renderResearchCard();
+            });
+          }
+        }
+        picker.appendChild(btn);
+      }
+    }
+
     if (!nextUpgrade || techTree.isComplete()) {
       const nameEl = document.getElementById('research-upgrade-name');
       if (nameEl) nameEl.textContent = 'All upgrades purchased';
@@ -5496,31 +5689,43 @@ const RESEARCH_UPGRADES = [
     id:   'solar_supply_chain',
     name: 'Solar Supply Chain',
     desc: 'Energy blocks give 1.5× Net Zero progress',
+    tier: 1,
     apply(m) { m.energyNZ = 1.5; },
   },
   {
     id:   'battery_density',
     name: 'Battery Energy Density',
     desc: 'Grid blocks give 1.4× Storage per block',
+    tier: 1,
     apply(m) { m.gridStorage = 1.4; },
   },
   {
     id:   'community_networks',
     name: 'Community Resilience Hubs',
     desc: 'Social Support blocks give 1.5× Social Stability',
+    tier: 1,
     apply(m) { m.socialGain = 1.5; },
   },
   {
     id:   'green_finance_regs',
     name: 'Green Finance Regulations',
     desc: 'Financial Resilience blocks give 1.5× Stability gain',
+    tier: 2, requires: ['solar_supply_chain', 'battery_density'],
     apply(m) { m.finGain = 1.5; },
   },
   {
     id:   'ai_flood_prediction',
     name: 'AI Flood Prediction',
     desc: 'Adaptation blocks give 1.6× event damage mitigation',
+    tier: 2, requires: ['community_networks'],
     apply(m) { m.adaptMitigate = 1.6; },
+  },
+  {
+    id:   'hydrogen_economy',
+    name: 'Green Hydrogen Economy',
+    desc: 'Gas rebound halved; Net Zero +5 per Energy block',
+    tier: 3, requires: ['green_finance_regs', 'ai_flood_prediction'],
+    apply(m) { m.hydrogenEconomy = true; },
   },
 ];
 
@@ -5532,12 +5737,32 @@ class TechTreeManager {
       socialGain:    1.0,
       finGain:       1.0,
       adaptMitigate: 1.0,
+      hydrogenEconomy: false,
     };
     this._purchased = new Set();
+    this._selectedId = null;
+  }
+
+  availableUpgrades() {
+    return RESEARCH_UPGRADES.filter(u => {
+      if (this._purchased.has(u.id)) return false;
+      if (u.requires) return u.requires.some(r => this._purchased.has(r));
+      return true;
+    });
   }
 
   nextUpgrade() {
-    return RESEARCH_UPGRADES.find(u => !this._purchased.has(u.id)) || null;
+    if (this._selectedId) {
+      const sel = RESEARCH_UPGRADES.find(u => u.id === this._selectedId);
+      if (sel && !this._purchased.has(sel.id)) return sel;
+    }
+    const avail = this.availableUpgrades();
+    return avail.length > 0 ? avail[0] : null;
+  }
+
+  selectUpgrade(id) {
+    const avail = this.availableUpgrades();
+    if (avail.find(u => u.id === id)) this._selectedId = id;
   }
 
   purchase() {
@@ -5545,6 +5770,7 @@ class TechTreeManager {
     if (!upgrade) return null;
     upgrade.apply(this.multipliers);
     this._purchased.add(upgrade.id);
+    this._selectedId = null;
     return upgrade;
   }
 
@@ -5553,8 +5779,9 @@ class TechTreeManager {
   }
 
   reset() {
-    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0, hydrogenEconomy:false };
     this._purchased.clear();
+    this._selectedId = null;
   }
 }
 
@@ -5726,8 +5953,34 @@ const MINI_EVENTS_POOL = [
   },
 ];
 
+const SIM_NEWS_HEADLINES = [
+  'European carbon border adjustment raises UK export costs',
+  'India announces accelerated coal phase-out timeline',
+  'Arctic summer ice hits record low for third consecutive year',
+  'Global reinsurance costs up 40% \u2014 UK flood premiums spike',
+  'China deploys 200GW of solar in single year',
+  'North Sea decommissioning costs exceed Treasury forecasts',
+  'Record winter storm causes widespread grid disruption across Northern Europe',
+  'IPCC updates warning: 1.5\u00b0C overshoot now likely before 2035',
+  'UK offshore wind auction attracts record investment bids',
+  'Heat-related NHS admissions double in under-5s',
+  'Battery recycling breakthrough cuts storage costs by 30%',
+  'Thames Estuary 2100 plan brought forward after review',
+  'Scottish hydrogen hub begins commercial production',
+  'EU Green Deal accelerates \u2014 pressure on UK to match pace',
+  'Global food prices surge after simultaneous crop failures',
+  'UK pension funds face new mandatory climate risk disclosure',
+  'Permafrost methane emissions detected at unprecedented rates',
+  'New modular nuclear reactor receives UK planning approval',
+  'Coastal erosion forces relocation of three Norfolk villages',
+  'Green bond issuance hits \u00a350bn globally in single quarter',
+];
+
+let _simSpeedMultiplier = 1;
+
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
+  _simSpeedMultiplier = 1;
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
@@ -5741,10 +5994,18 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Tick through years with possible mini-events
   let minisFired = 0;
+  const usedHeadlines = new Set();
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
-    await _delay(4250);
+
+    // Show a news headline
+    let headline;
+    do { headline = SIM_NEWS_HEADLINES[Math.floor(Math.random() * SIM_NEWS_HEADLINES.length)]; } while (usedHeadlines.has(headline) && usedHeadlines.size < SIM_NEWS_HEADLINES.length);
+    usedHeadlines.add(headline);
+    _setSimNews(overlay, headline);
+
+    await _simDelay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
@@ -5761,7 +6022,8 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
-  await _delay(1500);
+  _setSimNews(overlay, '');
+  await _simDelay(1500);
 
   // Dismiss overlay
   overlay.classList.add('sim-fade-out');
@@ -5819,7 +6081,20 @@ function _buildSimOverlay(startYear) {
         <div id="sim-progress-fill" style="width:0%"></div>
       </div>
       <div id="sim-status">Running 5-year policy simulation\u2026</div>
+      <div id="sim-news-ticker"></div>
+      <button id="sim-speed-btn">\u25b6\u25b6 Fast Forward</button>
     </div>`;
+  const speedBtn = d.querySelector('#sim-speed-btn');
+  speedBtn.addEventListener('click', () => {
+    if (_simSpeedMultiplier === 1) {
+      _simSpeedMultiplier = 4;
+      speedBtn.textContent = '\u25b6\u25b6\u25b6 Skip';
+    } else if (_simSpeedMultiplier === 4) {
+      _simSpeedMultiplier = 20;
+      speedBtn.textContent = '\u23e9 Skipping\u2026';
+      speedBtn.disabled = true;
+    }
+  });
   return d;
 }
 
@@ -5885,6 +6160,18 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function _simDelay(ms) { return _delay(Math.max(ms / _simSpeedMultiplier, 50)); }
+
+function _setSimNews(overlay, text) {
+  const el = overlay.querySelector('#sim-news-ticker');
+  if (!el) return;
+  if (!text) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  el.textContent = text;
+  el.style.animation = 'none';
+  el.offsetHeight;
+  el.style.animation = 'fadeIn 0.35s ease';
+}
 
 /* ============================================================
    MODULE: LEGACY SYSTEM
