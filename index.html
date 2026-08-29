@@ -310,6 +310,27 @@ body {
   z-index: 2;
 }
 
+/* ===== SUB-INDICATORS ===== */
+.sub-indicators {
+  display: flex;
+  gap: var(--gap-sm);
+  margin-top: 3px;
+}
+.sub-indicator {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.sub-indicator-val {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+.sub-indicator-val.high { color: var(--status-danger); }
+.sub-indicator-val.low  { color: var(--status-good); }
+
 /* ===== ENERGY MIX ===== */
 #energy-mix-section {
   margin-top: var(--gap-md);
@@ -631,6 +652,23 @@ body {
 
 #end-turn-btn:active {
   transform: scale(0.98);
+}
+
+#reset-turn-btn {
+  padding: 10px 16px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+#reset-turn-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 /* ===== LOG PANEL (RIGHT) ===== */
@@ -1197,6 +1235,31 @@ body { transition: filter 2s ease; }
   color: var(--text-muted);
   text-align: center;
   min-height: 18px;
+}
+#sim-speed-controls {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: var(--gap-sm);
+}
+.sim-speed-btn {
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.sim-speed-btn.active {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue-lt);
+  color: white;
+}
+.sim-speed-btn:hover:not(.active) {
+  background: var(--bg-tertiary);
 }
 
 /* ===== MINI-EVENT PANEL ===== */
@@ -2241,6 +2304,10 @@ body { transition: filter 2s ease; }
           <div class="bar-ghost" id="ghost-fin"></div>
         </div>
         <div class="sparkline-container" id="spark-fin"></div>
+        <div class="sub-indicators">
+          <div class="sub-indicator">Stranded Assets: <span class="sub-indicator-val" id="sub-stranded">0</span></div>
+          <div class="sub-indicator">Property: <span class="sub-indicator-val" id="sub-property">100</span></div>
+        </div>
       </div>
 
       <!-- Social Stability -->
@@ -2255,6 +2322,9 @@ body { transition: filter 2s ease; }
           <div class="bar-ghost" id="ghost-soc"></div>
         </div>
         <div class="sparkline-container" id="spark-soc"></div>
+        <div class="sub-indicators">
+          <div class="sub-indicator">Social Capital: <span class="sub-indicator-val" id="sub-social-capital">0</span></div>
+        </div>
       </div>
 
       <!-- Net Zero Progress -->
@@ -2278,6 +2348,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage"  style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2366,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2450,7 +2525,10 @@ body { transition: filter 2s ease; }
           <div class="card-icon">🔬</div>
           <div class="card-info">
             <div class="card-name">Research &amp; Development</div>
-            <div class="card-sub" id="research-upgrade-name">Solar Supply Chain</div>
+            <div class="card-sub">
+              <select id="research-upgrade-select" style="background:var(--bg-elevated);color:var(--text-secondary);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:2px 4px;font-size:11px;font-family:inherit;cursor:pointer;max-width:160px;"></select>
+              <span id="research-upgrade-name" style="display:none">Solar Supply Chain</span>
+            </div>
           </div>
           <div class="card-cost-controls">
             <div class="card-cost">£15bn/block</div>
@@ -2900,6 +2978,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="reset-turn-btn" title="Reset all allocations this turn">Reset</button>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -2982,6 +3061,11 @@ body { transition: filter 2s ease; }
       <div class="hook-stat"><span class="hook-stat-num">1.1°C</span><span class="hook-stat-label">current warming above pre-industrial</span></div>
       <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
       <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
+    </div>
+    <div id="hook-legacy" style="display:none;margin-bottom:var(--gap-lg);padding:12px 16px;background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);text-align:center;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:4px;">Your Career</div>
+      <div id="hook-legacy-title" style="font-size:18px;font-weight:700;color:var(--accent-blue-lt);margin-bottom:4px;"></div>
+      <div id="hook-legacy-detail" style="font-size:12px;color:var(--text-secondary);line-height:1.5;"></div>
     </div>
     <button id="hook-btn">New Game →</button>
     <button id="hook-continue-btn" class="hidden" style="display:none;margin-top:10px;width:100%;padding:12px 24px;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;">↺ Continue saved game — <span id="hook-continue-label"></span></button>
@@ -4265,10 +4349,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4389,6 +4475,22 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+      });
+    }
+
+    // Reset turn button
+    const resetTurnBtn = document.getElementById('reset-turn-btn');
+    if (resetTurnBtn) {
+      resetTurnBtn.addEventListener('click', () => {
+        if (this.engine.state.isResolvingTurn) return;
+        const s = this.engine.state;
+        for (const cat of Object.keys(s.currentDecisions)) {
+          s.currentDecisions[cat] = 0;
+        }
+        s.spentThisTurn = 0;
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        this.render(this.engine.getState());
       });
     }
 
@@ -4613,6 +4715,7 @@ class UI {
     this._renderProjection(state);
     this._renderSparklines(state);
     this._renderEnergyMix(state);
+    this._renderSubIndicators(state);
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
@@ -4801,10 +4904,30 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
+  }
+
+  _renderSubIndicators(state) {
+    const stranded = document.getElementById('sub-stranded');
+    const property = document.getElementById('sub-property');
+    const socCap   = document.getElementById('sub-social-capital');
+    if (stranded) {
+      stranded.textContent = Math.round(state.strandedAssets);
+      stranded.className = 'sub-indicator-val' + (state.strandedAssets > 40 ? ' high' : state.strandedAssets < 15 ? ' low' : '');
+    }
+    if (property) {
+      property.textContent = Math.round(state.propertyValue);
+      property.className = 'sub-indicator-val' + (state.propertyValue < 60 ? ' high' : '');
+    }
+    if (socCap) {
+      socCap.textContent = Math.round(state.socialCapital);
+      socCap.className = 'sub-indicator-val' + (state.socialCapital >= 20 ? ' low' : '');
+    }
   }
 
   _renderBudget(state) {
@@ -4848,11 +4971,15 @@ class UI {
   }
 
   _renderResearchCard() {
+    const available = techTree.availableUpgrades();
     const nextUpgrade = techTree.nextUpgrade();
     const plusBtn = document.getElementById('plus-research');
-    if (!nextUpgrade || techTree.isComplete()) {
+    const selectEl = document.getElementById('research-upgrade-select');
+
+    if (available.length === 0 || techTree.isComplete()) {
+      if (selectEl) selectEl.style.display = 'none';
       const nameEl = document.getElementById('research-upgrade-name');
-      if (nameEl) nameEl.textContent = 'All upgrades purchased';
+      if (nameEl) { nameEl.style.display = ''; nameEl.textContent = 'All upgrades purchased'; }
       const tagEl = document.getElementById('research-effect-tag');
       if (tagEl) tagEl.style.display = 'none';
       const doneEl = document.getElementById('research-all-done');
@@ -4860,9 +4987,23 @@ class UI {
       if (plusBtn) plusBtn.disabled = true;
     } else {
       const nameEl = document.getElementById('research-upgrade-name');
-      if (nameEl) nameEl.textContent = nextUpgrade.name;
+      if (nameEl) nameEl.style.display = 'none';
+      if (selectEl) {
+        selectEl.style.display = '';
+        const currentVal = selectEl.value;
+        selectEl.innerHTML = available.map(u =>
+          `<option value="${u.id}"${u.id === (nextUpgrade?.id || '') ? ' selected' : ''}>${u.name}</option>`
+        ).join('');
+        if (!selectEl._bound) {
+          selectEl._bound = true;
+          selectEl.addEventListener('change', () => {
+            techTree.selectUpgrade(selectEl.value);
+            this._renderResearchCard();
+          });
+        }
+      }
       const tagEl = document.getElementById('research-effect-tag');
-      if (tagEl) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
+      if (tagEl && nextUpgrade) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
       const doneEl = document.getElementById('research-all-done');
       if (doneEl) doneEl.style.display = 'none';
     }
@@ -5328,52 +5469,61 @@ class UI {
   // ===== ADVISOR BRIEFINGS =====
   _buildAdvisorBriefing(state, turnNum) {
     if (turnNum === 0) return null;
-    const msgs = [];
+    const warnings = [];
+    const opportunities = [];
 
     if (state.gridReliability < 45) {
-      msgs.push('Grid reliability has fallen to critical levels. Without emergency storage investment, blackouts are near-certain this term.');
+      warnings.push('Grid reliability has fallen to critical levels. Without emergency storage investment, blackouts are near-certain this term.');
     } else if (state.gridReliability < 60 && state.energy.gas < 20) {
-      msgs.push('You are pushing renewables hard without sufficient backup storage. Grid failure risk is elevated — consider Grid & Storage investment.');
+      warnings.push('Renewables are growing without sufficient backup storage. Grid failure risk is elevated — consider Grid & Storage investment.');
     }
 
     if (state.financialStability < 45) {
-      msgs.push('Financial stability is in the danger zone. Stranded fossil assets are cascading through pension funds. Financial Resilience investment is now urgent.');
+      warnings.push('Financial stability is in the danger zone. Stranded fossil assets are cascading through pension funds. Financial Resilience investment is now urgent.');
+    } else if (state.strandedAssets > 40) {
+      warnings.push(`Stranded fossil assets at ${Math.round(state.strandedAssets)} — pension fund exposure is growing. Consider Financial Resilience to manage the write-down.`);
     }
 
     if (state.socialStability < 50) {
-      msgs.push(`Public consent for the transition is fracturing (${Math.round(state.socialStability)}%). Fuel poverty and job losses are driving anger. Social Support investment is overdue.`);
+      warnings.push(`Public consent for the transition is fracturing (${Math.round(state.socialStability)}%). Fuel poverty and job losses are driving anger. Social Support investment is overdue.`);
+    } else if (state.infrastructure.energyTransition > state.infrastructure.socialSupport + 30) {
+      warnings.push('Energy transition is outpacing social support. Rising bills and job losses may erode public consent — consider balancing with Social Support.');
     }
 
     if (state.temperature > 1.6) {
-      msgs.push(`Temperature has passed 1.6°C — tipping point feedbacks are now accelerating warming beyond policy control alone. Every turn of delay costs disproportionately more.`);
+      warnings.push(`Temperature has passed 1.6°C — tipping point feedbacks are now accelerating warming. Every turn of delay costs disproportionately more.`);
     }
 
     if (state.netZeroProgress < 40 && turnNum >= 3) {
-      msgs.push(`Net Zero progress stands at just ${Math.round(state.netZeroProgress)}% with only ${5 - turnNum} terms remaining. The 2050 target requires dramatic acceleration.`);
+      warnings.push(`Net Zero progress stands at just ${Math.round(state.netZeroProgress)}% with only ${5 - turnNum} terms remaining. The 2050 target requires dramatic acceleration.`);
     }
 
-    if (state.strandedAssets > 50) {
-      msgs.push('Stranded fossil assets now exceed 50 — pension fund exposure is systemic. Financial Resilience investment or managed asset write-downs are required to stabilise the system.');
+    if (state.netZeroProgress >= 80 && state.netZeroProgress < 100) {
+      opportunities.push('Net Zero is within reach — one strong Energy Transition investment could cross the line this term.');
+    }
+    if (state.gridReliability >= 80) {
+      opportunities.push('Grid stability is strong. You have room to push renewable buildout without risking blackouts.');
+    }
+    if (state.financialStability >= 75 && state.socialStability >= 75) {
+      opportunities.push('Both financial and social stability are healthy — the transition has a solid foundation.');
+    }
+    if (state.socialCapital >= 30) {
+      opportunities.push(`Social capital is high (${Math.round(state.socialCapital)}). This buffer will protect against future disruption.`);
     }
 
+    const msgs = [...warnings, ...opportunities];
     if (msgs.length === 0) {
-      // Positive reinforcement
-      const positives = [];
-      if (state.netZeroProgress >= 80) positives.push('Net Zero is within reach this term.');
-      if (state.gridReliability >= 80) positives.push('The grid is stable — renewables are well-supported by backup capacity.');
-      if (state.financialStability >= 75 && state.socialStability >= 75) positives.push('Both financial and social stability remain strong — the transition is proceeding on a sound foundation.');
-      if (positives.length > 0) msgs.push(positives[0]);
-      else msgs.push('No critical risks identified this term. Maintain investment momentum.');
+      msgs.push('No critical risks identified this term. Maintain investment momentum.');
     }
-
-    return msgs[0];
+    return msgs.slice(0, 3);
   }
 
   _injectAdvisorBriefing(state) {
-    const briefing = this._buildAdvisorBriefing(state, state.turn);
-    if (!briefing) return;
+    const briefings = this._buildAdvisorBriefing(state, state.turn);
+    if (!briefings || briefings.length === 0) return;
     const div = document.createElement('div');
-    div.innerHTML = `<div class="log-advisor">${briefing}<span class="log-advisor-from">— Cabinet Office Permanent Secretary · Turn ${state.turn + 1} Briefing</span></div>`;
+    const items = briefings.map(b => `<li>${b}</li>`).join('');
+    div.innerHTML = `<div class="log-advisor"><ul style="list-style:none;padding:0;margin:0;">${items}</ul><span class="log-advisor-from">— Cabinet Office Permanent Secretary · Turn ${state.turn + 1} Briefing</span></div>`;
     this.elLogScroll.appendChild(div);
     this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
   }
@@ -5534,10 +5684,24 @@ class TechTreeManager {
       adaptMitigate: 1.0,
     };
     this._purchased = new Set();
+    this._selectedId = null;
+  }
+
+  availableUpgrades() {
+    return RESEARCH_UPGRADES.filter(u => !this._purchased.has(u.id));
   }
 
   nextUpgrade() {
-    return RESEARCH_UPGRADES.find(u => !this._purchased.has(u.id)) || null;
+    if (this._selectedId) {
+      const sel = RESEARCH_UPGRADES.find(u => u.id === this._selectedId && !this._purchased.has(u.id));
+      if (sel) return sel;
+    }
+    return this.availableUpgrades()[0] || null;
+  }
+
+  selectUpgrade(id) {
+    const upgrade = RESEARCH_UPGRADES.find(u => u.id === id && !this._purchased.has(u.id));
+    if (upgrade) this._selectedId = id;
   }
 
   purchase() {
@@ -5545,6 +5709,7 @@ class TechTreeManager {
     if (!upgrade) return null;
     upgrade.apply(this.multipliers);
     this._purchased.add(upgrade.id);
+    this._selectedId = null;
     return upgrade;
   }
 
@@ -5555,6 +5720,7 @@ class TechTreeManager {
   reset() {
     this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
     this._purchased.clear();
+    this._selectedId = null;
   }
 }
 
@@ -5726,6 +5892,11 @@ const MINI_EVENTS_POOL = [
   },
 ];
 
+let _simSpeed = 1;
+function _simDelay(baseMs) {
+  return new Promise(r => setTimeout(r, Math.round(baseMs / _simSpeed)));
+}
+
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
 
@@ -5744,7 +5915,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
-    await _delay(4250);
+    await _simDelay(4250);
 
     if (minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
@@ -5761,7 +5932,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
-  await _delay(1500);
+  await _simDelay(1500);
 
   // Dismiss overlay
   overlay.classList.add('sim-fade-out');
@@ -5819,7 +5990,18 @@ function _buildSimOverlay(startYear) {
         <div id="sim-progress-fill" style="width:0%"></div>
       </div>
       <div id="sim-status">Running 5-year policy simulation\u2026</div>
+      <div id="sim-speed-controls">
+        <button class="sim-speed-btn${_simSpeed === 1 ? ' active' : ''}" data-speed="1">1\u00d7</button>
+        <button class="sim-speed-btn${_simSpeed === 2 ? ' active' : ''}" data-speed="2">2\u00d7</button>
+        <button class="sim-speed-btn${_simSpeed === 4 ? ' active' : ''}" data-speed="4">4\u00d7</button>
+      </div>
     </div>`;
+  d.querySelectorAll('.sim-speed-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _simSpeed = parseInt(btn.dataset.speed);
+      d.querySelectorAll('.sim-speed-btn').forEach(b => b.classList.toggle('active', b === btn));
+    });
+  });
   return d;
 }
 
@@ -5978,6 +6160,24 @@ if (_titleEl) _titleEl.textContent = 'HM Government \u00B7 Climate Risk Simulati
 const sceneSection = document.getElementById('scene-section');
 const gameMain     = document.getElementById('game-main');
 if (sceneSection && gameMain) gameMain.after(sceneSection);
+
+// Populate legacy display on hook screen
+(function populateHookLegacy() {
+  const ls = legacySystem;
+  if (ls.data.runs === 0) return;
+  const el = document.getElementById('hook-legacy');
+  const elTitle = document.getElementById('hook-legacy-title');
+  const elDetail = document.getElementById('hook-legacy-detail');
+  if (!el || !elTitle || !elDetail) return;
+  elTitle.textContent = ls.title();
+  const lines = [`Level ${ls.level()} · ${ls.data.xp} XP · ${ls.data.runs} run${ls.data.runs !== 1 ? 's' : ''}`];
+  if (ls.data.bestScore > 0) lines.push(`Best score: ${ls.data.bestScore}`);
+  const b = ls.startingBonuses();
+  if (b.budgetBonus > 0) lines.push(`+£${b.budgetBonus}bn starting budget bonus`);
+  if (b.nuclearUnlocked) lines.push('Nuclear unlocked from start');
+  elDetail.innerHTML = lines.join('<br>');
+  el.style.display = '';
+})();
 
 const ui = new UI(engine);
 ui.render(engine.getState());
