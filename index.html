@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -609,6 +609,30 @@ body {
 #total-spend {
   font-weight: 700;
   color: var(--text-primary);
+}
+
+#reset-alloc-btn {
+  touch-action: manipulation;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+#reset-alloc-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#reset-alloc-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
 }
 
 #end-turn-btn {
@@ -2278,6 +2302,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2296,6 +2321,10 @@ body { transition: filter 2s ease; }
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
+          </div>
         </div>
       </div>
 
@@ -2311,7 +2340,7 @@ body { transition: filter 2s ease; }
           <span id="budget-remaining-display">£100bn</span> remaining
         </div>
       </div>
-      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
+      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>R</kbd> to reset, <kbd>Enter</kbd> to advance.</div>
     </div>
 
     <div id="investment-cards">
@@ -2900,6 +2929,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="reset-alloc-btn" title="Reset all allocations">Reset</button>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -2963,6 +2993,17 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="climate_emergency">
+        <span class="scenario-card-icon">🔥</span>
+        <div class="scenario-card-name">Climate Emergency</div>
+        <div class="scenario-card-desc">Warming has already reached the critical 1.5°C threshold. Tipping points are active, gas dependency is high, and extreme weather is the new normal. Emergency funding unlocked.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temperature: <span>1.5°C (tipping)</span></div>
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Grid: <span>55% (strained)</span></div>
         </div>
       </div>
 
@@ -3372,6 +3413,16 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  climate_emergency: {
+    label: 'Climate Emergency',
+    apply(state) {
+      state.temperature = 1.5;
+      state.energy.gas += 15;
+      state.gridReliability = 55;
+      state.socialStability = 60;
+      state._budgetOverride = 110;
+    },
+  },
 };
 
 /* ============================================================
@@ -3626,6 +3677,15 @@ class GameEngine {
     s.spentThisTurn -= BLOCK_COSTS[category];
   }
 
+  resetAllocations() {
+    const s = this.state;
+    if (s.isResolvingTurn) return;
+    for (const cat of Object.keys(s.currentDecisions)) {
+      s.currentDecisions[cat] = 0;
+    }
+    s.spentThisTurn = 0;
+  }
+
   // Returns projected metric values after applying current decisions — pure, no state mutation
   getProjection() {
     const s = this.state;
@@ -3654,7 +3714,8 @@ class GameEngine {
     const gs = d.gridAndStorage;
     if (gs > 0) {
       e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
+      const nuclearBonus = legacySystem.startingBonuses().nuclearUnlocked ? 3 : 0;
+      e.nuclear = clamp(e.nuclear + gs * (5 + nuclearBonus),  0, 80);
       infra.gridAndStorage += gs * 35;
     }
     const ad = d.adaptation;
@@ -3813,7 +3874,8 @@ class GameEngine {
     const gs = d.gridAndStorage;
     if (gs > 0) {
       s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
+      const nuclearBonus = legacySystem.startingBonuses().nuclearUnlocked ? 3 : 0;
+      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * (5 + nuclearBonus),  0, 80);
       s.infrastructure.gridAndStorage += gs * 35;
     }
 
@@ -4265,10 +4327,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4324,6 +4388,11 @@ class UI {
       if (keyMap[e.key]) {
         if (e.shiftKey) this.engine.deallocateBlock(keyMap[e.key]);
         else this.engine.allocateBlock(keyMap[e.key]);
+        this.render(this.engine.getState());
+      } else if ((e.key === 'r' || e.key === 'R') && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+        this.engine.resetAllocations();
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
         this.render(this.engine.getState());
       } else if (e.key === 'Enter' && !e.repeat) {
         this.elEndTurnBtn.click();
@@ -4415,6 +4484,18 @@ class UI {
       await runSimulationPhase(this.engine, this, effectsMgr);
       this.elEndTurnBtn.disabled = false;
     });
+
+    // Reset allocations
+    const resetAllocBtn = document.getElementById('reset-alloc-btn');
+    if (resetAllocBtn) {
+      resetAllocBtn.addEventListener('click', () => {
+        this.engine.resetAllocations();
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
+      });
+    }
 
     // Event dismiss
     this.elEventDismiss.addEventListener('click', () => {
@@ -4801,10 +4882,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4825,6 +4908,10 @@ class UI {
 
     // Budget status class
     this.elBudStatus.className = rem < 20 ? 'depleted' : rem < 40 ? 'tight' : '';
+
+    // Show/hide reset allocations button
+    const resetBtn = document.getElementById('reset-alloc-btn');
+    if (resetBtn) resetBtn.classList.toggle('visible', spent > 0);
   }
 
   _renderCards(state) {
@@ -4995,8 +5082,9 @@ class UI {
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
-    // Decisions
-    html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+    // Narrative summary of decisions
+    const narrative = this._buildTurnNarrative(entry);
+    html += `<div class="log-text">${narrative}</div>`;
 
     // Event notice
     if (entry.event) {
