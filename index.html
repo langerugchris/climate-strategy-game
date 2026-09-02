@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -1139,6 +1139,80 @@ body { transition: filter 2s ease; }
 #advisor-dismiss-btn:active { transform: scale(0.96) !important; }
 .mini-btn:active            { transform: scale(0.95) !important; }
 
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  pointer-events: none;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
+#tutorial-highlight {
+  position: absolute;
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.72), 0 0 20px rgba(83,144,217,0.4);
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+#tutorial-tooltip {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-md) var(--gap-lg);
+  max-width: 340px;
+  width: max-content;
+  pointer-events: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: fadeIn 0.3s ease;
+}
+#tutorial-tooltip h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: 6px;
+}
+#tutorial-tooltip p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-md);
+}
+#tutorial-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+#tutorial-step-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  flex: 1;
+}
+.tutorial-btn {
+  padding: 6px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.tutorial-btn:hover { background: var(--bg-elevated); }
+.tutorial-btn.primary {
+  background: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue);
+}
+.tutorial-btn.primary:hover { background: var(--accent-blue-lt); }
+
 /* ===== SIMULATION OVERLAY ===== */
 #sim-overlay {
   position: fixed;
@@ -1622,6 +1696,63 @@ body { transition: filter 2s ease; }
   flex-shrink: 0;
 }
 #settings-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+
+/* ===== LEGACY DISPLAY ===== */
+#legacy-display {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 2px;
+}
+#legacy-display .legacy-title {
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  font-size: 13px;
+}
+#legacy-display .legacy-xp {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+.legacy-level-pips {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+  margin-top: 3px;
+}
+.legacy-level-pips .lpip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.legacy-level-pips .lpip.filled {
+  background: var(--accent-blue-lt);
+  box-shadow: 0 0 4px var(--accent-blue-lt);
+}
+
+/* ===== RESET TURN BUTTON ===== */
+#reset-turn-btn {
+  padding: 8px 16px;
+  background: none;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+}
+#reset-turn-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+#reset-turn-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
 
 /* ===== SETTINGS MODAL ===== */
 #settings-modal {
@@ -2159,6 +2290,7 @@ body { transition: filter 2s ease; }
     </div>
   </div>
   <div id="header-center">
+    <div id="legacy-display"></div>
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
@@ -2278,6 +2410,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2428,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2900,6 +3037,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="reset-turn-btn" disabled>Reset</button>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -3083,6 +3221,21 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- INTERACTIVE TUTORIAL -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-backdrop"></div>
+  <div id="tutorial-highlight"></div>
+  <div id="tutorial-tooltip">
+    <h3 id="tutorial-title"></h3>
+    <p id="tutorial-text"></p>
+    <div id="tutorial-nav">
+      <span id="tutorial-step-count"></span>
+      <button class="tutorial-btn" id="tutorial-skip-btn">Skip</button>
+      <button class="tutorial-btn primary" id="tutorial-next-btn">Next</button>
+    </div>
+  </div>
+</div>
+
 <script>
 'use strict';
 
@@ -3167,6 +3320,41 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '☀️',
+    title: 'Severe Drought — South-East England',
+    description: 'Three months without significant rainfall. Reservoir levels drop below 30%. Hosepipe bans and water rationing imposed across London and the Home Counties.',
+    story: 'Thames Water declared an emergency drought status after Grafham Water reservoir fell to its lowest level since 1976. Mohammed Khalil, a market gardener in Kent, watched half his crop wither. "We\'re an island surrounded by water and we can\'t keep the taps on."',
+    effects: { socialStability: -8, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'WILDFIRE', type: 'WILDFIRE', severity: 'MODERATE', icon: '🔥',
+    title: 'Moorland Wildfires — Peak District',
+    description: 'Unprecedented temperatures ignite dry peatland across the Peak District and North York Moors. Thousands evacuated.',
+    story: 'Firefighter Laura Chen spent four days on the Kinder Scout line. "Peat fires burn underground — you put one out and it resurfaces twenty metres away." Seventy homes in Glossop were evacuated as smoke turned the sky orange.',
+    effects: { socialStability: -10, propertyValue: -6 },
+    infraDamage: false, budgetPenaltyNext: 8,
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'SUPPLY_CHAIN', type: 'SUPPLY_CHAIN', severity: 'MODERATE', icon: '🚢',
+    title: 'Global Supply Chain Disruption',
+    description: 'Climate-driven port closures across South-East Asia disrupt solar panel and battery imports. Renewable deployment stalls. Costs surge.',
+    story: 'Port Klang in Malaysia closed for the third time in six months after flooding. Octopus Energy paused five solar farm installations in Wales — panels stuck on a container ship in the Strait of Malacca.',
+    effects: { financialStability: -8, netZeroProgress: -5 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'INSURANCE_CRISIS', type: 'FINANCIAL', severity: 'MAJOR', icon: '🏠',
+    title: 'Flood Insurance Market Collapse',
+    description: 'Major insurers withdraw from flood-risk postcodes across England. Property values plunge in affected areas. Mortgage lenders freeze new loans.',
+    story: 'Aviva and Direct Line simultaneously announced they would no longer offer home insurance in 1,200 postcodes across East Anglia, Somerset, and the Humber estuary. Estate agent Rachel Gómez in Hull said viewings dropped to zero overnight.',
+    effects: { propertyValue: -18, financialStability: -12, socialStability: -6 },
+    infraDamage: false, budgetPenaltyNext: 15,
+    condition: (s) => s.temperature > 1.6 && s.infrastructure.adaptation < 40,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3409,11 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'extreme_victory', icon: '👑', name: 'Iron Will', desc: 'Achieve Net Zero on Extreme difficulty', check: (s) => difficultyMgr.active === 'extreme' && s.netZeroProgress >= 100 },
+  { id: 'cool_headed', icon: '❄️', name: 'Cool Headed', desc: 'Finish with temperature below 1.3°C', check: (s) => s.temperature < 1.3 },
+  { id: 'balanced', icon: '🎯', name: 'Balanced Approach', desc: 'Invest at least 1 block in every category across the game', check: (s) => { const log = s.log || []; const cats = new Set(); for (const entry of log) { if (entry.decisions) { for (const [k, v] of Object.entries(entry.decisions)) { if (v > 0) cats.add(k); } } } return cats.size >= 6; }},
+  { id: 'five_stars', icon: '⭐', name: 'Five Star Service', desc: 'Complete 5 games', check: () => legacySystem.data.runs >= 5 },
+  { id: 'chancellor', icon: '🎩', name: 'Chancellor', desc: 'Reach Chancellor rank in the Legacy system', check: () => legacySystem.level() >= 5 },
 ];
 
 class AchievementManager {
@@ -4265,15 +4458,19 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
-    this.elBudStatus  = document.getElementById('budget-status');
-    this.elBudDisplay = document.getElementById('budget-remaining-display');
-    this.elTotalSpend = document.getElementById('total-spend');
-    this.elEndTurnBtn = document.getElementById('end-turn-btn');
+    this.elBudStatus   = document.getElementById('budget-status');
+    this.elBudDisplay  = document.getElementById('budget-remaining-display');
+    this.elTotalSpend  = document.getElementById('total-spend');
+    this.elEndTurnBtn  = document.getElementById('end-turn-btn');
+    this.elResetBtn    = document.getElementById('reset-turn-btn');
+    this.elLegacyDisp  = document.getElementById('legacy-display');
 
     this.elLogScroll  = document.getElementById('log-scroll');
 
@@ -4389,12 +4586,31 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (!tutorialMgr.isDone()) {
+          setTimeout(() => tutorialMgr.start(), 400);
+        }
       });
     }
 
     // No-spend warning element
     this._noSpendWarned = false;
     this.elNoSpendWarning = document.getElementById('no-spend-warning');
+
+    // Reset turn — clears all block allocations
+    if (this.elResetBtn) {
+      this.elResetBtn.addEventListener('click', () => {
+        if (this.engine.state.isResolvingTurn) return;
+        const s = this.engine.state;
+        for (const cat of this.categories) {
+          s.currentDecisions[cat] = 0;
+        }
+        s.spentThisTurn = 0;
+        this._noSpendWarned = false;
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
+      });
+    }
 
     // End turn
     this.elEndTurnBtn.addEventListener('click', async () => {
@@ -4616,8 +4832,30 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._renderLegacy();
+    if (this.elResetBtn) this.elResetBtn.disabled = state.spentThisTurn === 0;
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+  }
+
+  _renderLegacy() {
+    if (!this.elLegacyDisp) return;
+    const d = legacySystem.data;
+    if (d.runs === 0) {
+      this.elLegacyDisp.innerHTML = '';
+      return;
+    }
+    const lvl = legacySystem.level();
+    const title = legacySystem.title();
+    const maxLvl = 10;
+    const pips = Array.from({length: 5}, (_, i) => {
+      const threshold = [0, 3, 5, 7, 10][i];
+      return `<div class="lpip${lvl >= threshold ? ' filled' : ''}"></div>`;
+    }).join('');
+    this.elLegacyDisp.innerHTML = `
+      <div class="legacy-title">${title}</div>
+      <div class="legacy-level-pips">${pips}</div>
+      <div class="legacy-xp">${d.xp} XP · ${d.runs} run${d.runs !== 1 ? 's' : ''}</div>`;
   }
 
   _renderHeader(state) {
@@ -4801,10 +5039,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -5724,6 +5964,75 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_water_crisis',
+    icon: '💧',
+    title: 'Water Shortage Emergency',
+    prompt: 'Reservoir levels are critically low after a dry winter. How do you respond?',
+    explanation: 'Climate change is making UK droughts more common and more severe. Emergency desalination plants provide water fast but are hugely energy-intensive — increasing emissions and grid strain. Water rationing is free but deeply unpopular and hits businesses hard.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: s.temperature > 1.8 ? '⚠ drought risk high' : 'warming trend',
+    }),
+    optA: {
+      label: '🏭 Build emergency desalination plants',
+      consequence: 'Costs £10bn next turn · −3 Grid Reliability (energy demand) · −2% Net Zero',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.gridReliability = Math.max(0, s.gridReliability - 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 2); },
+    },
+    optB: {
+      label: '🚿 Implement mandatory water rationing',
+      consequence: 'No cost · −8 Social Stability (deeply unpopular) · −3 Financial (business impact)',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 8); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'mini_transport',
+    icon: '🚂',
+    title: 'Rail Network Buckled',
+    prompt: 'Extreme heat has buckled rail tracks across England. The transport network needs a response.',
+    explanation: 'UK rail infrastructure was built for a cooler climate. Heat-resilient track costs more but future-proofs the network. Speed restrictions are cheap but cause chaos — commuters miss work, freight is delayed, and public frustration grows.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🛤️ Emergency heat-resilient rail upgrade',
+      consequence: 'Costs £7bn next turn · +adaptation infrastructure · public confidence maintained',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.infrastructure.adaptation += 10; },
+    },
+    optB: {
+      label: '🐌 Impose speed restrictions and cancellations',
+      consequence: 'No cost · −6 Social Stability · −4 Financial (commuter and freight disruption)',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 6); s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'mini_housing',
+    icon: '🏗️',
+    title: 'Housing Retrofit Debate',
+    prompt: 'Parliament is debating mandatory energy efficiency standards for all UK homes by 2035.',
+    explanation: 'UK housing stock is among the least energy-efficient in Europe. Mandatory retrofits cut emissions and bills long-term but the upfront cost falls on homeowners — many of whom can\'t afford it. A voluntary scheme with subsidies is gentler but slower and less effective.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Social Stability: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🏠 Mandate retrofits with partial subsidies',
+      consequence: 'Costs £12bn next turn · +8% Net Zero · −5 Social (homeowner backlash)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialStability = Math.max(0, s.socialStability - 5); },
+    },
+    optB: {
+      label: '🤝 Voluntary scheme with full grants',
+      consequence: 'Costs £8bn next turn · +3% Net Zero · +3 Social (popular but slower)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    condition: (s) => s.netZeroProgress < 80,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5885,6 +6194,125 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ============================================================
+   MODULE: INTERACTIVE TUTORIAL
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done_v1';
+    this._step = 0;
+    this._active = false;
+    this._steps = [
+      {
+        target: '#metrics-panel',
+        title: 'National Indicators',
+        text: 'This panel shows the state of the nation. Watch temperature, grid reliability, financial and social stability, and your progress towards Net Zero. If any metric hits zero, it\'s game over.',
+      },
+      {
+        target: '#energy-mix-section',
+        title: 'Energy Mix',
+        text: 'The UK\'s energy mix shows how electricity is generated. Your goal is to shift from gas to renewables and storage — but do it too fast and the grid can\'t cope.',
+      },
+      {
+        target: '.investment-card',
+        title: 'Investment Cards',
+        text: 'Each turn, allocate investment blocks to shape policy. Use + and - to add or remove blocks. Each category costs a different amount — check your budget carefully.',
+      },
+      {
+        target: '#budget-status',
+        title: 'Your Budget',
+        text: 'You have a limited budget each term. Financial stability and events affect how much you get. Spend wisely — you can\'t do everything.',
+      },
+      {
+        target: '#action-bar',
+        title: 'Advance Time',
+        text: 'When you\'re ready, click Advance to simulate the next 5 years. You\'ll face mini-events that demand tough choices, and random climate disasters may strike.',
+      },
+      {
+        target: '#log-panel',
+        title: 'Policy Record',
+        text: 'Every decision, event, and outcome is recorded here. Use the log to track what happened and plan your next move. Advisor briefings will guide you between turns.',
+      },
+    ];
+  }
+
+  isDone() {
+    try { return localStorage.getItem(this._KEY) === '1'; } catch { return false; }
+  }
+
+  _markDone() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  start() {
+    if (this.isDone()) return;
+    this._step = 0;
+    this._active = true;
+    this._overlay = document.getElementById('tutorial-overlay');
+    this._highlight = document.getElementById('tutorial-highlight');
+    this._tooltip = document.getElementById('tutorial-tooltip');
+    this._titleEl = document.getElementById('tutorial-title');
+    this._textEl = document.getElementById('tutorial-text');
+    this._countEl = document.getElementById('tutorial-step-count');
+    this._nextBtn = document.getElementById('tutorial-next-btn');
+    this._skipBtn = document.getElementById('tutorial-skip-btn');
+
+    this._nextBtn.addEventListener('click', () => this._advance());
+    this._skipBtn.addEventListener('click', () => this._finish());
+    document.getElementById('tutorial-backdrop').addEventListener('click', () => this._advance());
+
+    this._overlay.classList.remove('hidden');
+    this._showStep();
+  }
+
+  _showStep() {
+    const step = this._steps[this._step];
+    if (!step) { this._finish(); return; }
+
+    const el = document.querySelector(step.target);
+    if (!el) { this._step++; this._showStep(); return; }
+
+    const rect = el.getBoundingClientRect();
+    const pad = 6;
+    this._highlight.style.top = (rect.top - pad) + 'px';
+    this._highlight.style.left = (rect.left - pad) + 'px';
+    this._highlight.style.width = (rect.width + pad * 2) + 'px';
+    this._highlight.style.height = (rect.height + pad * 2) + 'px';
+
+    this._titleEl.textContent = step.title;
+    this._textEl.textContent = step.text;
+    this._countEl.textContent = `${this._step + 1} / ${this._steps.length}`;
+    this._nextBtn.textContent = this._step === this._steps.length - 1 ? 'Got it' : 'Next';
+
+    const ttRect = this._tooltip.getBoundingClientRect();
+    let ttTop = rect.bottom + 12;
+    let ttLeft = rect.left + rect.width / 2 - 170;
+    if (ttTop + 200 > window.innerHeight) ttTop = rect.top - 200;
+    if (ttLeft < 8) ttLeft = 8;
+    if (ttLeft + 340 > window.innerWidth) ttLeft = window.innerWidth - 348;
+    this._tooltip.style.top = Math.max(8, ttTop) + 'px';
+    this._tooltip.style.left = ttLeft + 'px';
+  }
+
+  _advance() {
+    this._step++;
+    if (this._step >= this._steps.length) {
+      this._finish();
+    } else {
+      this._showStep();
+    }
+  }
+
+  _finish() {
+    this._active = false;
+    this._markDone();
+    this._overlay.classList.add('hidden');
+  }
+}
+
+const tutorialMgr = new TutorialManager();
 
 /* ============================================================
    MODULE: LEGACY SYSTEM
