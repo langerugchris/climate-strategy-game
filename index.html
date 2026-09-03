@@ -681,6 +681,15 @@ body {
   font-family: var(--font-editorial);
 }
 
+.log-narrative {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
 .log-metrics {
   display: flex;
   flex-wrap: wrap;
@@ -1018,6 +1027,136 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+/* ===== POLICY SECTION ===== */
+#policy-section {
+  margin-top: var(--gap-md);
+  border-top: 2px solid var(--border-subtle);
+  padding-top: var(--gap-md);
+}
+
+#policy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--gap-sm);
+  padding: 0 var(--gap-sm);
+}
+
+.policy-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+#political-capital-display {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#pol-cap-value {
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+}
+
+#policy-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.policy-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.policy-card.enacted {
+  border-color: var(--accent-green);
+  background: rgba(0, 112, 60, 0.08);
+}
+
+.policy-card-top {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+.policy-card-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.policy-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.policy-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.policy-card-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.policy-enact-btn {
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.policy-enact-btn:hover:not(:disabled) {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
+.policy-enact-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.policy-enact-btn.enacted {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+.policy-card-rationale {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+.policy-card-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.policy-card-cost {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
 
 /* ===== SCENE SECTION ===== */
 #scene-section {
@@ -1593,15 +1732,6 @@ body { transition: filter 2s ease; }
   margin-top: 4px;
   font-style: italic;
   line-height: 1.4;
-}
-
-/* ===== LOG NARRATIVE ===== */
-.log-narrative {
-  font-size: 12px;
-  color: var(--text-primary);
-  line-height: 1.6;
-  font-family: Georgia, 'Times New Roman', serif;
-  margin-bottom: 4px;
 }
 
 /* ===== SETTINGS BUTTON ===== */
@@ -2278,6 +2408,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2426,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2469,6 +2604,18 @@ body { transition: filter 2s ease; }
         <div class="card-citation">Based on UKRI Net Zero Innovation portfolio</div>
       </div>
 
+    </div>
+
+    <!-- POLICY REGULATIONS -->
+    <div id="policy-section">
+      <div id="policy-header">
+        <span class="policy-title">Policy &amp; Regulation</span>
+        <div id="political-capital-display">
+          <span id="pol-cap-icon">🏛️</span>
+          <span id="pol-cap-value">100</span> Political Capital
+        </div>
+      </div>
+      <div id="policy-cards"></div>
     </div>
 
     <!-- SCENE VISUALISATION -->
@@ -3101,6 +3248,42 @@ const BLOCK_COSTS = {
 
 const MAX_BLOCKS_PER_CAT = 2;
 
+const POLICIES = [
+  {
+    id: 'carbon_tax',
+    icon: '💰',
+    name: 'Carbon Price Floor',
+    sub: 'Escalating tax on fossil fuels',
+    rationale: 'A rising carbon price makes fossil energy progressively more expensive, accelerating the market-driven transition. Revenue funds green investment — but higher fuel costs hit households and industry hard. Popular with economists; unpopular with voters.',
+    effects: { netZeroProgress: 6, socialStability: -4, strandedAssets: 8 },
+    budgetGain: 10,
+    socialCost: 4,
+    citation: 'Based on UK Carbon Price Support mechanism',
+  },
+  {
+    id: 'building_standards',
+    icon: '🏗️',
+    name: 'Net Zero Building Code',
+    sub: 'Mandatory retrofit & new-build standards',
+    rationale: 'Mandating energy efficiency in all new builds and requiring retrofit of existing housing stock cuts emissions from the UK\'s 29 million homes. Effective but expensive for homeowners and politically sensitive — especially for older housing stock in the North.',
+    effects: { netZeroProgress: 4, socialStability: -3, temperature: -0.02 },
+    budgetGain: 0,
+    socialCost: 3,
+    citation: 'Based on Future Homes Standard 2025',
+  },
+  {
+    id: 'petrol_ban',
+    icon: '🚗',
+    name: 'Combustion Vehicle Phase-out',
+    sub: 'Ban new petrol/diesel car sales',
+    rationale: 'Transport accounts for 27% of UK emissions. Banning new internal combustion vehicle sales forces manufacturers and consumers to switch to electric — but EV infrastructure is patchy outside cities, and second-hand car prices spike.',
+    effects: { netZeroProgress: 8, socialStability: -6 },
+    budgetGain: 0,
+    socialCost: 6,
+    citation: 'Based on UK 2035 ICE phase-out target',
+  },
+];
+
 const RANDOM_EVENTS = [
   {
     id: 'FLOOD_MINOR', type: 'FLOOD', severity: 'MINOR', icon: '🌊',
@@ -3570,6 +3753,8 @@ class GameEngine {
         research: 0,
       },
       spentThisTurn: 0,
+      policiesEnacted: {},
+      politicalCapital: 100,
       netZeroAchieved: false,
       socialBreakdownOccurred: false,
       currentRandomEvent: null,
@@ -3586,6 +3771,7 @@ class GameEngine {
       energy: Object.assign({}, this.state.energy),
       infrastructure: Object.assign({}, this.state.infrastructure),
       currentDecisions: Object.assign({}, this.state.currentDecisions),
+      policiesEnacted: Object.assign({}, this.state.policiesEnacted),
     });
   }
 
@@ -3781,6 +3967,9 @@ class GameEngine {
     s.year += 5;
     s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
     s.spentThisTurn = 0;
+
+    // Regenerate political capital each turn
+    s.politicalCapital = Math.min(100, s.politicalCapital + 8);
 
     // Recalculate budget for next turn
     s.budget = this.getEffectiveBudget();
@@ -4004,7 +4193,63 @@ class GameEngine {
     if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
     if (out.length === 0) out.push('No investment this turn');
+    const enacted = Object.keys(this.state.policiesEnacted);
+    if (enacted.length > 0) {
+      const policyNames = enacted.map(id => {
+        const p = POLICIES.find(pol => pol.id === id);
+        return p ? p.name : id;
+      });
+      out.push(`Policies: ${policyNames.join(', ')}`);
+    }
     return out;
+  }
+
+  enactPolicy(policyId) {
+    const s = this.state;
+    if (s.isResolvingTurn) return { success: false, reason: 'Turn in progress' };
+    if (s.policiesEnacted[policyId]) return { success: false, reason: 'Already enacted' };
+    const policy = POLICIES.find(p => p.id === policyId);
+    if (!policy) return { success: false, reason: 'Unknown policy' };
+    if (s.politicalCapital < policy.socialCost) return { success: false, reason: 'Insufficient political capital' };
+    s.policiesEnacted[policyId] = s.turn;
+    s.politicalCapital -= policy.socialCost;
+    // Apply effects immediately
+    for (const [key, val] of Object.entries(policy.effects)) {
+      if (key === 'temperature') {
+        s.temperature = Math.round((s.temperature + val) * 100) / 100;
+      } else if (key === 'strandedAssets') {
+        s.strandedAssets = this._clamp(s.strandedAssets + val, 0, 100);
+      } else if (s[key] !== undefined) {
+        s[key] = this._clamp(s[key] + val, 0, 100);
+      }
+    }
+    if (policy.budgetGain > 0) {
+      s.budget += policy.budgetGain;
+    }
+    return { success: true };
+  }
+
+  repealPolicy(policyId) {
+    const s = this.state;
+    if (s.isResolvingTurn) return;
+    if (!s.policiesEnacted[policyId]) return;
+    const policy = POLICIES.find(p => p.id === policyId);
+    if (!policy) return;
+    delete s.policiesEnacted[policyId];
+    s.politicalCapital += policy.socialCost;
+    // Reverse effects
+    for (const [key, val] of Object.entries(policy.effects)) {
+      if (key === 'temperature') {
+        s.temperature = Math.round((s.temperature - val) * 100) / 100;
+      } else if (key === 'strandedAssets') {
+        s.strandedAssets = this._clamp(s.strandedAssets - val, 0, 100);
+      } else if (s[key] !== undefined) {
+        s[key] = this._clamp(s[key] - val, 0, 100);
+      }
+    }
+    if (policy.budgetGain > 0) {
+      s.budget -= policy.budgetGain;
+    }
   }
 
   reset(scenarioKey) {
@@ -4265,10 +4510,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4295,6 +4542,8 @@ class UI {
     this.elRestartBtn     = document.getElementById('restart-btn');
 
     this.categories = Object.keys(BLOCK_COSTS);
+    this.elPolicyCards = document.getElementById('policy-cards');
+    this.elPolCapValue = document.getElementById('pol-cap-value');
   }
 
   _bindEvents() {
@@ -4313,6 +4562,7 @@ class UI {
         // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
         this._noSpendWarned = false;
+        this._budgetWarned = false;
         this.render(this.engine.getState());
       });
     });
@@ -4394,6 +4644,7 @@ class UI {
 
     // No-spend warning element
     this._noSpendWarned = false;
+    this._budgetWarned = false;
     this.elNoSpendWarning = document.getElementById('no-spend-warning');
 
     // End turn
@@ -4408,7 +4659,20 @@ class UI {
         this.elNoSpendWarning.classList.remove('hidden');
         return;
       }
+
+      // Warn when >50% budget unspent
+      const remaining = s.budget - s.spentThisTurn;
+      if (remaining > s.budget * 0.5 && s.spentThisTurn > 0 && !this._budgetWarned) {
+        this._budgetWarned = true;
+        if (this.elNoSpendWarning) {
+          this.elNoSpendWarning.textContent = `£${remaining}bn unspent — click again to proceed anyway`;
+          this.elNoSpendWarning.classList.remove('hidden');
+        }
+        return;
+      }
+
       this._noSpendWarned = false;
+      this._budgetWarned = false;
       this.elNoSpendWarning.classList.add('hidden');
 
       this.elEndTurnBtn.disabled = true;
@@ -4615,6 +4879,7 @@ class UI {
     this._renderEnergyMix(state);
     this._renderBudget(state);
     this._renderCards(state);
+    this._renderPolicies(state);
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
@@ -4805,6 +5070,8 @@ class UI {
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elSegStorage.style.flexGrow = e.storage;
+    this.elLegStorage.textContent    = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4865,6 +5132,64 @@ class UI {
       if (tagEl) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
       const doneEl = document.getElementById('research-all-done');
       if (doneEl) doneEl.style.display = 'none';
+    }
+  }
+
+  _renderPolicies(state) {
+    if (!this.elPolicyCards) return;
+    if (this.elPolCapValue) this.elPolCapValue.textContent = state.politicalCapital;
+
+    this.elPolicyCards.innerHTML = '';
+    for (const policy of POLICIES) {
+      const enacted = !!state.policiesEnacted[policy.id];
+      const canAfford = state.politicalCapital >= policy.socialCost;
+      const card = document.createElement('div');
+      card.className = 'policy-card' + (enacted ? ' enacted' : '');
+
+      let effectTags = '';
+      for (const [key, val] of Object.entries(policy.effects)) {
+        const labels = { netZeroProgress: 'NZ', socialStability: 'Social', strandedAssets: 'Stranded', temperature: 'Temp' };
+        const label = labels[key] || key;
+        const isGood = key === 'temperature' ? val < 0 : (key === 'strandedAssets' ? val < 0 : val > 0);
+        const sign = val > 0 ? '+' : '';
+        const suffix = key === 'temperature' ? '°C' : '';
+        effectTags += `<span class="effect-tag ${isGood ? 'pos' : 'neg'}">${label} ${sign}${val}${suffix}</span>`;
+      }
+      if (policy.budgetGain > 0) {
+        effectTags += `<span class="effect-tag pos">Budget +£${policy.budgetGain}bn</span>`;
+      }
+
+      card.innerHTML = `
+        <div class="policy-card-top">
+          <div class="policy-card-icon">${policy.icon}</div>
+          <div class="policy-card-info">
+            <div class="policy-card-name">${policy.name}</div>
+            <div class="policy-card-sub">${policy.sub}</div>
+          </div>
+          <button class="policy-enact-btn ${enacted ? 'enacted' : ''}"
+                  data-policy="${policy.id}"
+                  ${!enacted && !canAfford ? 'disabled' : ''}
+                  ${state.isResolvingTurn ? 'disabled' : ''}>
+            ${enacted ? '✓ Enacted' : `Enact (${policy.socialCost} PC)`}
+          </button>
+        </div>
+        <div class="policy-card-rationale">${policy.rationale}</div>
+        <div class="policy-card-effects">${effectTags}</div>
+        <div class="policy-card-cost">${policy.citation}</div>`;
+
+      const btn = card.querySelector('.policy-enact-btn');
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        effectsMgr.haptic('light');
+        if (enacted) {
+          this.engine.repealPolicy(policy.id);
+        } else {
+          this.engine.enactPolicy(policy.id);
+        }
+        this.render(this.engine.getState());
+      });
+
+      this.elPolicyCards.appendChild(card);
     }
   }
 
@@ -4997,6 +5322,10 @@ class UI {
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+    const narrative = this._buildTurnNarrative(entry);
+    if (narrative) {
+      html += `<div class="log-narrative">${narrative}</div>`;
+    }
 
     // Event notice
     if (entry.event) {
@@ -5074,10 +5403,12 @@ class UI {
         </div>`;
     }
     if (event.budgetPenaltyNext > 0) {
+      const mitigate = Math.min(this.engine.state.infrastructure.adaptation / 200, 0.5);
+      const actualPenalty = Math.round(event.budgetPenaltyNext * (1 - mitigate));
       effectsHtml += `
         <div class="event-effect-row">
           <span class="event-effect-label">Next Turn Budget</span>
-          <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
+          <span class="event-effect-val neg">−£${actualPenalty}bn</span>
         </div>`;
     }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
@@ -5256,7 +5587,7 @@ class UI {
         <div class="achievement-icon">${earned ? ach.icon : '🔒'}</div>
         <div class="achievement-info">
           <div class="achievement-name">${ach.name}</div>
-          <div class="achievement-desc">${earned ? ach.desc : '???'}</div>
+          <div class="achievement-desc">${ach.desc}</div>
         </div>
       </div>`;
     }
@@ -5731,6 +6062,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
+  let skipRequested = false;
 
   // Resolve turn instantly behind the curtain
   const result = engine.resolveTurn();
@@ -5739,14 +6071,19 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
+  const skipBtn = overlay.querySelector('#sim-skip-btn');
+  if (skipBtn) {
+    skipBtn.addEventListener('click', () => { skipRequested = true; skipBtn.textContent = 'Skipping\u2026'; }, { once: true });
+  }
+
   // Tick through years with possible mini-events
   let minisFired = 0;
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
-    await _delay(4250);
+    if (!skipRequested) await _delay(4250);
 
-    if (minisFired < 2 && Math.random() < 0.50) {
+    if (!skipRequested && minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
       if (eligible.length > 0) {
         const evt = eligible[Math.floor(Math.random() * eligible.length)];
@@ -5761,11 +6098,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
   _setSimStatus(overlay, 'Assessing policy outcomes\u2026');
-  await _delay(1500);
+  if (!skipRequested) await _delay(1500);
 
   // Dismiss overlay
   overlay.classList.add('sim-fade-out');
-  await _delay(500);
+  await _delay(skipRequested ? 100 : 500);
   overlay.remove();
 
   // Recalculate next-turn budget to include any mini-event penalties
@@ -5819,6 +6156,7 @@ function _buildSimOverlay(startYear) {
         <div id="sim-progress-fill" style="width:0%"></div>
       </div>
       <div id="sim-status">Running 5-year policy simulation\u2026</div>
+      <button id="sim-skip-btn" style="margin-top:12px;padding:6px 20px;background:rgba(255,255,255,0.1);color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);cursor:pointer;font-size:12px;transition:background 0.2s">Skip simulation \u25b8\u25b8</button>
     </div>`;
   return d;
 }
