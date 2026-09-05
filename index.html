@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -1495,6 +1495,86 @@ body { transition: filter 2s ease; }
 /* ===== FLOOD WATER ===== */
 #flood-water { transition: opacity 0.5s ease; }
 
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  pointer-events: auto;
+}
+#tutorial-tooltip {
+  position: absolute;
+  background: var(--bg-elevated);
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-md);
+  max-width: 320px;
+  pointer-events: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: tutorialFadeIn 0.3s ease;
+}
+@keyframes tutorialFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#tutorial-step-num {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-blue-lt);
+  margin-bottom: 4px;
+}
+#tutorial-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+#tutorial-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--gap-md);
+}
+#tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+#tutorial-skip {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+#tutorial-next {
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+#tutorial-next:hover { background: var(--accent-blue-lt); }
+.tutorial-highlight {
+  position: relative;
+  z-index: 10000;
+  box-shadow: 0 0 0 4px var(--accent-blue-lt), 0 0 20px rgba(83,144,217,0.4);
+  border-radius: var(--radius-md);
+}
+
 /* ===== ENDGAME SCORE SECTION ===== */
 #endgame-score-section {
   text-align: center;
@@ -1999,6 +2079,22 @@ body { transition: filter 2s ease; }
   line-height: 1.3;
 }
 .achievement-card.earned .achievement-name { color: var(--accent-blue-lt); }
+.achievement-card.new {
+  border-color: var(--status-good);
+  box-shadow: 0 0 12px rgba(0, 200, 83, 0.4);
+  animation: achievementPulse 1.5s ease-in-out 3;
+}
+.achievement-card.new .achievement-name::after {
+  content: ' NEW';
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--status-good);
+  letter-spacing: 0.1em;
+}
+@keyframes achievementPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(0, 200, 83, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(0, 200, 83, 0.7); }
+}
 
 /* ===== ENDGAME POLICY TIMELINE ===== */
 #endgame-timeline {
@@ -2277,6 +2373,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:29"></div>
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
         </div>
         <div id="energy-mix-legend">
@@ -2291,6 +2388,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-nuclear)"></div>
             <span>Nuclear</span><span class="legend-val" id="leg-nuclear">13</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
@@ -2924,6 +3025,20 @@ body { transition: filter 2s ease; }
   <div class="tooltip-drivers" id="tt-drivers"></div>
   <div class="tooltip-threshold" id="tt-threshold"></div>
   <div class="tooltip-source" id="tt-source"></div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-backdrop"></div>
+  <div id="tutorial-tooltip">
+    <div id="tutorial-step-num"></div>
+    <div id="tutorial-title"></div>
+    <div id="tutorial-text"></div>
+    <div id="tutorial-actions">
+      <button id="tutorial-skip">Skip tutorial</button>
+      <button id="tutorial-next">Next</button>
+    </div>
+  </div>
 </div>
 
 <!-- SCENARIO SELECTION SCREEN -->
@@ -4264,10 +4379,12 @@ class UI {
     this.elSegWind    = document.getElementById('seg-wind');
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elSegGas     = document.getElementById('seg-gas');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
+    this.elLegStorage = document.getElementById('leg-storage');
     this.elLegGas     = document.getElementById('leg-gas');
 
     this.elBudStatus  = document.getElementById('budget-status');
@@ -4800,10 +4917,12 @@ class UI {
     this.elSegWind.style.flexGrow    = e.wind;
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elSegGas.style.flexGrow     = e.gas;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
+    this.elLegStorage.textContent = Math.round(e.storage);
     this.elLegGas.textContent     = Math.round(e.gas);
   }
 
@@ -4949,7 +5068,7 @@ class UI {
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
-      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1);
+      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.storage + state.energy.gas + 1);
       const smokeOpacity = Math.max(0, (gasShare - 0.15) / 0.4);
       smokeGroup.style.opacity = smokeOpacity;
     }
@@ -4995,8 +5114,12 @@ class UI {
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
+    // Narrative summary
+    const narrative = this._buildTurnNarrative(entry);
+    html += `<div class="log-text" style="font-family:var(--font-editorial);font-style:italic;color:var(--text-secondary);margin-bottom:4px;">${narrative}</div>`;
+
     // Decisions
-    html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
+    html += `<div class="log-text" style="font-size:11px;color:var(--text-muted);">${entry.decisions.join('; ')}</div>`;
 
     // Event notice
     if (entry.event) {
@@ -5040,15 +5163,19 @@ class UI {
 
     // Flood visual effect
     if (event.type === 'FLOOD') {
+      const water = document.getElementById('flood-water');
       const floodAnim = document.getElementById('flood-anim');
-      if (floodAnim) floodAnim.beginElement();
-      setTimeout(() => {
-        const water = document.getElementById('flood-water');
-        if (water) {
-          water.setAttribute('y', '200');
+      if (water && floodAnim) {
+        water.style.opacity = '0.55';
+        floodAnim.beginElement();
+        setTimeout(() => {
           water.style.opacity = '0';
-        }
-      }, 8000); // recede after 8 seconds
+          setTimeout(() => {
+            floodAnim.endElement();
+            water.setAttribute('y', '200');
+          }, 600);
+        }, 8000);
+      }
     }
 
     let effectsHtml = '';
@@ -5768,8 +5895,13 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   await _delay(500);
   overlay.remove();
 
-  // Recalculate next-turn budget to include any mini-event penalties
-  // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
+  // Recalculate metrics after mini-event state mutations
+  // (mini-events modify state directly after resolveTurn() formulas ran)
+  if (minisFired > 0) {
+    engine._recalcGrid();
+    engine._recalcFinancial();
+    engine._recalcSocial();
+  }
   engine.state.budget = engine.getEffectiveBudget();
 
   // Unlock inputs — simulation complete
@@ -5969,6 +6101,10 @@ const _bonuses = legacySystem.startingBonuses();
 if (_bonuses.budgetBonus > 0) {
   engine.state.budget += _bonuses.budgetBonus;
 }
+if (_bonuses.nuclearUnlocked) {
+  engine.state.energy.nuclear += 10;
+  engine._recalcGrid();
+}
 
 // Set header subtitle
 const _titleEl = document.querySelector('#game-title p');
@@ -5988,6 +6124,118 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
+
+/* ============================================================
+   MODULE: INTERACTIVE TUTORIAL
+============================================================ */
+
+const tutorialMgr = (() => {
+  const KEY = 'uk_climate_tutorial_done';
+  const steps = [
+    {
+      target: '#metrics-panel',
+      title: 'National Metrics',
+      text: 'These five gauges track the state of the nation. Temperature rising means faster warming. Grid, Financial, and Social stability must stay above zero or the government falls. Net Zero tracks decarbonisation progress.',
+    },
+    {
+      target: '#energy-mix-section',
+      title: 'Energy Mix',
+      text: 'This bar shows the UK energy breakdown. Investing in Energy Transition grows wind and solar while shrinking gas. Grid & Storage adds battery capacity and nuclear. Watch how your decisions reshape the mix each turn.',
+    },
+    {
+      target: '.invest-card',
+      title: 'Investment Cards',
+      text: 'Click a card to allocate one block of spending (click again for two). Each block costs a portion of your budget. Balance across priorities — neglecting social support while pushing energy transition creates public backlash.',
+    },
+    {
+      target: '#budget-status',
+      title: 'Budget',
+      text: 'Your five-year term budget is limited. Unspent funds do not carry over. Hover over metric bars to see projected outcomes before you commit.',
+    },
+    {
+      target: '#end-turn-btn',
+      title: 'Advance',
+      text: 'When you are ready, click Advance. A five-year simulation plays out with possible crises that require snap decisions. After five terms (2050), your legacy is scored.',
+    },
+  ];
+
+  let currentStep = 0;
+  let prevHighlight = null;
+
+  function isDone() {
+    try { return localStorage.getItem(KEY) === '1'; } catch { return false; }
+  }
+
+  function markDone() {
+    try { localStorage.setItem(KEY, '1'); } catch {}
+  }
+
+  function show(stepIdx) {
+    const overlay = document.getElementById('tutorial-overlay');
+    if (!overlay) return;
+    if (stepIdx >= steps.length) { dismiss(); return; }
+    currentStep = stepIdx;
+    const step = steps[stepIdx];
+
+    if (prevHighlight) prevHighlight.classList.remove('tutorial-highlight');
+    const targetEl = document.querySelector(step.target);
+    if (targetEl) {
+      targetEl.classList.add('tutorial-highlight');
+      prevHighlight = targetEl;
+    }
+
+    document.getElementById('tutorial-step-num').textContent = `Step ${stepIdx + 1} of ${steps.length}`;
+    document.getElementById('tutorial-title').textContent = step.title;
+    document.getElementById('tutorial-text').textContent = step.text;
+    const nextBtn = document.getElementById('tutorial-next');
+    nextBtn.textContent = stepIdx === steps.length - 1 ? 'Got it!' : 'Next';
+
+    overlay.classList.remove('hidden');
+
+    if (targetEl) {
+      const rect = targetEl.getBoundingClientRect();
+      const tooltip = document.getElementById('tutorial-tooltip');
+      const ttRect = tooltip.getBoundingClientRect();
+      let top = rect.bottom + 12;
+      let left = rect.left + rect.width / 2 - ttRect.width / 2;
+      if (top + ttRect.height > window.innerHeight - 20) {
+        top = rect.top - ttRect.height - 12;
+      }
+      left = Math.max(12, Math.min(left, window.innerWidth - ttRect.width - 12));
+      top = Math.max(12, top);
+      tooltip.style.top = top + 'px';
+      tooltip.style.left = left + 'px';
+    }
+  }
+
+  function dismiss() {
+    if (prevHighlight) prevHighlight.classList.remove('tutorial-highlight');
+    prevHighlight = null;
+    const overlay = document.getElementById('tutorial-overlay');
+    if (overlay) overlay.classList.add('hidden');
+    markDone();
+  }
+
+  function init() {
+    if (isDone()) return;
+    const nextBtn = document.getElementById('tutorial-next');
+    const skipBtn = document.getElementById('tutorial-skip');
+    if (nextBtn) nextBtn.addEventListener('click', () => show(currentStep + 1));
+    if (skipBtn) skipBtn.addEventListener('click', dismiss);
+
+    const advisorBtn = document.getElementById('advisor-dismiss-btn');
+    if (advisorBtn) {
+      const origHandler = advisorBtn.onclick;
+      advisorBtn.addEventListener('click', () => {
+        setTimeout(() => show(0), 400);
+      });
+    }
+  }
+
+  return { init, isDone, show, dismiss };
+})();
+
+tutorialMgr.init();
 </script>
 </body>
 </html>
