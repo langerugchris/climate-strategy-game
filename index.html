@@ -2444,7 +2444,59 @@ body { transition: filter 2s ease; }
         <div class="card-citation">Based on Bank of England Climate Stress Testing 2022</div>
       </div>
 
-      <!-- Research & Development (6th card) -->
+      <!-- Transport Decarbonisation -->
+      <div class="investment-card" id="card-transport">
+        <div class="card-top">
+          <div class="card-icon">🚗</div>
+          <div class="card-info">
+            <div class="card-name">Transport Decarbonisation</div>
+            <div class="card-sub">EVs, Rail Electrification, Active Travel</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£20bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-transport" data-cat="transport">−</button>
+              <span class="block-count" id="count-transport">0</span>
+              <button class="block-btn" id="plus-transport" data-cat="transport">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">Transport is 27% of UK emissions. EV mandates and rail electrification cut emissions fast — but mass charging strains the grid, congestion zones are politically toxic, and the switchover disrupts millions of daily routines.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">NZ +7, Gas −4</span>
+          <span class="effect-tag neg">Grid −3 (EV load)</span>
+          <span class="effect-tag warn">Social −2 (disruption)</span>
+        </div>
+        <div class="card-citation">Based on DfT Transport Decarbonisation Plan 2021</div>
+      </div>
+
+      <!-- Buildings & Heating -->
+      <div class="investment-card" id="card-buildings">
+        <div class="card-top">
+          <div class="card-icon">🏠</div>
+          <div class="card-info">
+            <div class="card-name">Buildings &amp; Heating</div>
+            <div class="card-sub">Heat Pumps, Insulation, Building Regs</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£25bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-buildings" data-cat="buildings">−</button>
+              <span class="block-count" id="count-buildings">0</span>
+              <button class="block-btn" id="plus-buildings" data-cat="buildings">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">UK homes are among Europe's leakiest. Retrofitting insulation and replacing gas boilers with heat pumps cuts heating emissions and lowers bills long-term — but the upfront cost is enormous and disrupts households for weeks during installation.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">NZ +5, Social +3 (lower bills)</span>
+          <span class="effect-tag neg">Gas −5 (replaces boilers)</span>
+          <span class="effect-tag warn">Fin −2 (retrofit costs)</span>
+        </div>
+        <div class="card-citation">Based on CCC Sixth Carbon Budget buildings pathway</div>
+      </div>
+
+      <!-- Research & Development (8th card) -->
       <div class="investment-card" id="card-research">
         <div class="card-top">
           <div class="card-icon">🔬</div>
@@ -2966,6 +3018,17 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_crisis">
+        <span class="scenario-card-icon">⚡</span>
+        <div class="scenario-card-name">Energy Crisis</div>
+        <div class="scenario-card-desc">Global gas price shocks have left the UK dangerously dependent on fossil fuels. Renewables are underdeveloped, the grid is fragile, and public anger is rising.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Gas: <span>45 (high dependency)</span></div>
+          <div class="scenario-stat">Grid: <span>45% (fragile)</span></div>
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3027,7 +3090,7 @@ body { transition: filter 2s ease; }
       <li>🤝 <strong>Public consent</strong> — the transition raises energy bills. Workers in oil &amp; gas face redundancy. Ignore the social cost and you lose the political mandate to continue</li>
       <li>🌡️ <strong>Delay is compounding</strong> — above 1.5°C, tipping points accelerate warming beyond your control. Early action is far cheaper than late action</li>
     </ul>
-    <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
+    <p class="advisor-note">Each term covers five years and £100bn to allocate across eight investment areas. The trade-offs are real — you cannot do everything at once.</p>
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
   </div>
 </div>
@@ -3096,6 +3159,8 @@ const BLOCK_COSTS = {
   adaptation:          25,
   socialSupport:       20,
   financialResilience: 30,
+  transport:           20,
+  buildings:           25,
   research:            15,
 };
 
@@ -3167,6 +3232,23 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'INTL_CARBON_TAX', type: 'INTERNATIONAL', severity: 'MODERATE', icon: '🌐',
+    title: 'EU Carbon Border Tax Hits UK Exports',
+    description: 'The EU imposes a Carbon Border Adjustment Mechanism on UK goods. Industries without green credentials face steep tariffs.',
+    story: 'Sheffield steel producer Margaret Chen watched her order book halve overnight. "We were ready to decarbonise — we just needed two more years of investment. The EU didn\'t wait."',
+    effects: { financialStability: -12 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.netZeroProgress < 60,
+  },
+  {
+    id: 'GLOBAL_SUPPLY_SHOCK', type: 'INTERNATIONAL', severity: 'MAJOR', icon: '🚢',
+    title: 'Global Supply Chain Disruption',
+    description: 'Extreme weather abroad disrupts critical supply chains for solar panels, batteries, and EV components. Renewable buildout stalls.',
+    story: 'A Category 5 cyclone devastated three Chinese polysilicon factories supplying 40% of global solar cell feedstock. UK renewable installation timelines slipped by eighteen months.',
+    effects: { netZeroProgress: -8, financialStability: -6 },
+    infraDamage: false, budgetPenaltyNext: 15,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3303,9 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'green_transport', icon: '🚗', name: 'Green Commute', desc: 'Build 80+ transport infrastructure', check: (s) => s.infrastructure.transport >= 80 },
+  { id: 'warm_homes', icon: '🏠', name: 'Warm Homes', desc: 'Build 80+ buildings infrastructure', check: (s) => s.infrastructure.buildings >= 80 },
+  { id: 'full_spectrum', icon: '🌈', name: 'Full Spectrum', desc: 'Invest in all 8 categories in a single game', check: (s) => s.infrastructure.energyTransition > 0 && s.infrastructure.gridAndStorage > 0 && s.infrastructure.adaptation > 0 && s.infrastructure.socialSupport > 0 && s.infrastructure.financialResilience > 0 && s.infrastructure.transport > 0 && s.infrastructure.buildings > 0 },
 ];
 
 class AchievementManager {
@@ -3285,7 +3370,7 @@ const METRIC_TOOLTIPS = {
   soc: {
     title: '🏘️ Social Stability',
     desc: 'Public trust, social cohesion, and political mandate for the transition. Reflects energy affordability, employment impacts of fossil phase-out, and quality of public services.',
-    drivers: '↑ Raised by: Social Support investment, adaptation, accumulated social capital\n↓ Lowered by: rising energy bills, grid failures, job losses without support, high temperatures',
+    drivers: '↑ Raised by: Social Support investment, Buildings (warmer homes), adaptation, accumulated social capital\n↓ Lowered by: rising energy bills, grid failures, transport disruption, job losses without support, high temperatures',
     threshold: 'Below 40%: political mandate collapses — the transition programme becomes undeliverable without emergency intervention.',
     thresholdGood: false,
     source: 'Composite indicator — illustrative figures for educational simulation',
@@ -3293,7 +3378,7 @@ const METRIC_TOOLTIPS = {
   nz: {
     title: '🌱 Net Zero Progress',
     desc: 'Cumulative progress toward the UK\'s legal Net Zero 2050 commitment. Represents the combined effect of renewable buildout, fossil fuel phase-out, and carbon removal.',
-    drivers: '↑ Raised by: Energy Transition investment (especially with R&D upgrades)\n↓ Lowered by: gas rebound when no energy investment is made; emergency gas commissioning',
+    drivers: '↑ Raised by: Energy Transition, Transport, Buildings investment (especially with R&D upgrades)\n↓ Lowered by: gas rebound when no energy investment is made; emergency gas commissioning',
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
@@ -3370,6 +3455,18 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_crisis: {
+    label: 'Energy Crisis',
+    apply(state) {
+      state.energy.gas = 45;
+      state.energy.wind = 15;
+      state.energy.solar = 3;
+      state.gridReliability = 45;
+      state.socialStability = 55;
+      state.temperature = 1.25;
+      state._budgetOverride = 110;
     },
   },
 };
@@ -3457,7 +3554,7 @@ class AnalyticsTracker {
       completedRuns: 0,
       scenarioCounts: {},
       difficultyCounts: {},
-      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0 },
+      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, transport: 0, buildings: 0, research: 0 },
       scoreTotal: 0,
       eventTotal: 0,
     };
@@ -3557,6 +3654,8 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        transport: 0,
+        buildings: 0,
       },
       strandedAssets: 0,
       propertyValue: 100,
@@ -3567,6 +3666,8 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        transport: 0,
+        buildings: 0,
         research: 0,
       },
       spentThisTurn: 0,
@@ -3676,12 +3777,28 @@ class GameEngine {
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
     }
+    const tp = d.transport;
+    if (tp > 0) {
+      netZeroProgress = clamp(netZeroProgress + tp * 7 * techTree.multipliers.transportNZ, 0, 100);
+      e.gas           = clamp(e.gas           - tp * 4,  0, 100);
+      socialStability = clamp(socialStability  - tp * 2,  0, 100);
+      infra.transport += tp * 20;
+    }
+    const bd = d.buildings;
+    if (bd > 0) {
+      netZeroProgress    = clamp(netZeroProgress    + bd * 5 * techTree.multipliers.buildingsNZ, 0, 100);
+      socialStability    = clamp(socialStability    + bd * 3,  0, 100);
+      financialStability = clamp(financialStability - bd * 2,  0, 100);
+      e.gas              = clamp(e.gas              - bd * 5,  0, 100);
+      infra.buildings += bd * 25;
+    }
 
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
+    const evLoad          = infra.transport * 0.15;
     const backup          = e.nuclear + e.storage + (e.gas * 0.5);
     const renew           = Math.max(e.wind + e.solar, 1);
-    const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
+    const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50 - evLoad), 0, 100);
 
     // Mirror _recalcFinancial
     const strandedDrag  = strandedAssets * 0.55;
@@ -3694,9 +3811,10 @@ class GameEngine {
     const finPenalty   = financialStability < 45 ? (45 - financialStability) * 0.5 : 0;
     const capBonus     = socialCapital * 0.35;
     const supBonus     = infra.socialSupport * 0.15;
+    const bldgBonus    = infra.buildings * 0.1;
     const energyBurden = Math.max(0, (infra.energyTransition - infra.socialSupport) * 0.07);
     const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
-    socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
+    socialStability    = clamp(Math.round(62 + capBonus + supBonus + bldgBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
 
     return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
   }
@@ -3779,7 +3897,7 @@ class GameEngine {
     // Phase 12: Advance turn
     s.turn++;
     s.year += 5;
-    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, transport:0, buildings:0, research:0 };
     s.spentThisTurn = 0;
 
     // Recalculate budget for next turn
@@ -3842,6 +3960,26 @@ class GameEngine {
       s.infrastructure.financialResilience += fr * 30;
     }
 
+    // Transport Decarbonisation
+    const tp = d.transport;
+    if (tp > 0) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + tp * 7 * techTree.multipliers.transportNZ, 0, 100);
+      s.energy.gas       = this._clamp(s.energy.gas       - tp * 4,  0, 100);
+      s.gridReliability  = this._clamp(s.gridReliability  - tp * 3,  0, 100); // EV charging load
+      s.socialStability  = this._clamp(s.socialStability   - tp * 2,  0, 100); // disruption
+      s.infrastructure.transport += tp * 20;
+    }
+
+    // Buildings & Heating
+    const bd = d.buildings;
+    if (bd > 0) {
+      s.netZeroProgress    = this._clamp(s.netZeroProgress    + bd * 5 * techTree.multipliers.buildingsNZ, 0, 100);
+      s.socialStability    = this._clamp(s.socialStability    + bd * 3,  0, 100); // warmer homes, lower bills
+      s.financialStability = this._clamp(s.financialStability - bd * 2,  0, 100); // retrofit costs
+      s.energy.gas         = this._clamp(s.energy.gas         - bd * 5,  0, 100); // replaces gas boilers
+      s.infrastructure.buildings += bd * 25;
+    }
+
     // Research — purchases next TechTree upgrade per block allocated
     const rs = d.research;
     for (let i = 0; i < rs; i++) {
@@ -3853,9 +3991,10 @@ class GameEngine {
     const s = this.state;
     const e = s.energy;
     const gridFactor = 1 + (s.infrastructure.gridAndStorage / 300);
+    const evLoad = s.infrastructure.transport * 0.15; // EV charging strains grid
     const backup  = e.nuclear + e.storage + (e.gas * 0.5);
     const renew   = Math.max(e.wind + e.solar, 1);
-    const raw     = (backup / renew) * gridFactor * 50;
+    const raw     = (backup / renew) * gridFactor * 50 - evLoad;
     s.gridReliability = this._clamp(Math.round(raw), 0, 100);
   }
 
@@ -3875,12 +4014,13 @@ class GameEngine {
     const finPenalty  = s.financialStability < 45 ? (45 - s.financialStability) * 0.5 : 0;
     const capBonus    = s.socialCapital * 0.35; // persistent trust built over time
     const supBonus    = s.infrastructure.socialSupport * 0.15; // reduced since capital accumulates
+    const bldgBonus   = s.infrastructure.buildings * 0.1; // warmer homes improve quality of life
     // Energy burden: rapid decarbonisation raises bills — if not cushioned by social support, public anger grows
     const energyBurden = Math.max(0, (s.infrastructure.energyTransition - s.infrastructure.socialSupport) * 0.07);
     // Temperature drag: sustained high temperatures directly damage wellbeing and housing
     const tempDrag = Math.max(0, (s.temperature - 1.3) * 8);
     s.socialStability = this._clamp(
-      Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100
+      Math.round(62 + capBonus + supBonus + bldgBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100
     );
   }
 
@@ -3936,7 +4076,9 @@ class GameEngine {
         { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
         { e: RANDOM_EVENTS[4], w: 20 },  // STORM
         { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 12 },  // INTL_CARBON_TAX
+        { e: RANDOM_EVENTS[9], w: 10 },  // GLOBAL_SUPPLY_SHOCK
       ];
     } else {
       pool = [
@@ -3945,7 +4087,9 @@ class GameEngine {
         { e: RANDOM_EVENTS[4], w: 18 },  // STORM
         { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
         { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[5], w: 10 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 10 },  // INTL_CARBON_TAX
+        { e: RANDOM_EVENTS[9], w: 15 },  // GLOBAL_SUPPLY_SHOCK
       ];
     }
 
@@ -4002,6 +4146,8 @@ class GameEngine {
     if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)`);
     if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
     if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
+    if (d.transport > 0)           out.push(`Transport ×${d.transport} (£${d.transport * 20}bn)`);
+    if (d.buildings > 0)           out.push(`Buildings & Heating ×${d.buildings} (£${d.buildings * 25}bn)`);
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
@@ -4142,6 +4288,12 @@ function buildOrderlyNarrative(s) {
   }
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
+  }
+  if (s.infrastructure.transport > 40) {
+    parts.push(`Transport decarbonisation played a pivotal role. The shift to electric vehicles and rail electrification eliminated one of the UK's largest emission sources, though it required massive grid upgrades to handle the new charging load.`);
+  }
+  if (s.infrastructure.buildings > 40) {
+    parts.push(`The national retrofit programme transformed the UK's housing stock. Millions of homes received heat pumps and insulation, cutting heating emissions while improving quality of life and reducing fuel poverty.`);
   }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
@@ -4318,7 +4470,7 @@ class UI {
     });
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
-    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
+    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'transport', '7':'buildings', '8':'research' };
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
@@ -5522,6 +5674,18 @@ const RESEARCH_UPGRADES = [
     desc: 'Adaptation blocks give 1.6× event damage mitigation',
     apply(m) { m.adaptMitigate = 1.6; },
   },
+  {
+    id:   'ev_battery_manufacturing',
+    name: 'EV Battery Manufacturing',
+    desc: 'Transport blocks give 1.4× Net Zero progress',
+    apply(m) { m.transportNZ = 1.4; },
+  },
+  {
+    id:   'modular_retrofit_kits',
+    name: 'Modular Retrofit Kits',
+    desc: 'Buildings blocks give 1.5× Net Zero progress',
+    apply(m) { m.buildingsNZ = 1.5; },
+  },
 ];
 
 class TechTreeManager {
@@ -5532,6 +5696,8 @@ class TechTreeManager {
       socialGain:    1.0,
       finGain:       1.0,
       adaptMitigate: 1.0,
+      transportNZ:   1.0,
+      buildingsNZ:   1.0,
     };
     this._purchased = new Set();
   }
@@ -5723,6 +5889,52 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_ulez',
+    icon: '🚗',
+    title: 'ULEZ Expansion Backlash',
+    prompt: 'Expanding clean air zones to more cities is sparking protests from drivers. How do you proceed?',
+    explanation: 'Ultra Low Emission Zones cut air pollution and push people toward EVs and public transport — but they hit low-income drivers hardest, who can\'t afford newer vehicles. A scrappage scheme softens the blow but costs more. Pushing ahead without support gets faster results but fuels resentment.',
+    contextFn: (s) => ({
+      label: 'Transport Infrastructure',
+      value: `${Math.round(s.infrastructure.transport)}`,
+      note: `Social Stability: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🚫 Push ahead without concessions',
+      consequence: '+5% Net Zero · −6 Social (public anger) · no cost',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.max(0, s.socialStability - 6); },
+    },
+    optB: {
+      label: '💷 Fund vehicle scrappage scheme',
+      consequence: 'Costs £7bn next turn · +3% Net Zero · +3 Social (softens transition)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    condition: (s) => s.infrastructure.transport > 15,
+  },
+  {
+    id: 'mini_heat_pump',
+    icon: '🏠',
+    title: 'Heat Pump Installation Crisis',
+    prompt: 'Mass heat pump rollout is stalling — not enough trained installers and homeowners are resisting disruption.',
+    explanation: 'The UK needs 600,000 heat pump installations per year to meet Net Zero. But there aren\'t enough installers, and many homeowners dread the week-long disruption. Fast-tracking with army engineers gets numbers up but cuts corners on quality. A slower community-led approach builds trust but delays emissions cuts.',
+    contextFn: (s) => ({
+      label: 'Buildings Infrastructure',
+      value: `${Math.round(s.infrastructure.buildings)}`,
+      note: `Gas share: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '🪖 Deploy army engineers for mass rollout',
+      consequence: 'Costs £5bn next turn · gas −6 · −4 Social (corners cut, complaints)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.energy.gas = Math.max(0, s.energy.gas - 6); s.socialStability = Math.max(0, s.socialStability - 4); },
+    },
+    optB: {
+      label: '🤝 Community-led installer training programme',
+      consequence: 'Costs £3bn next turn · gas −2 · +4 Social Capital (builds local trust)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.energy.gas = Math.max(0, s.energy.gas - 2); s.socialCapital = Math.min(60, s.socialCapital + 4); },
+    },
+    condition: (s) => s.infrastructure.buildings > 20,
   },
 ];
 
