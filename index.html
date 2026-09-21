@@ -611,6 +611,24 @@ body {
   color: var(--text-primary);
 }
 
+#reset-alloc-btn {
+  padding: 10px 16px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+#reset-alloc-btn:hover {
+  background: var(--border-strong);
+  color: var(--text-primary);
+}
+
 #end-turn-btn {
   touch-action: manipulation;
   padding: 10px 24px;
@@ -663,6 +681,8 @@ body {
 .log-entry.danger  { border-left-color: var(--status-danger); }
 .log-entry.info    { border-left-color: var(--status-info); }
 .log-entry.event   { border-left-color: var(--status-danger); background: #1a0d0d; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.log-entry.positive { border-left-color: var(--status-good); }
+.log-entry.positive-event { border-left-color: var(--status-good); background: #0d1a0d; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 .log-entry.welcome { border-left-color: var(--accent-blue); }
 
 .log-year {
@@ -726,6 +746,10 @@ body {
   max-width: 480px;
   width: 90vw;
   animation: slideUp 0.3s ease;
+}
+
+#event-card.positive {
+  border-color: var(--status-good);
 }
 
 @keyframes slideUp {
@@ -2270,6 +2294,19 @@ body { transition: filter 2s ease; }
         <div class="sparkline-container" id="spark-nz"></div>
       </div>
 
+      <!-- Carbon Budget -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🏭 Carbon Budget</span>
+          <span class="metric-value"><span id="val-cb">100</span>% <span class="metric-delta" id="delta-cb"></span></span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill" id="bar-cb" style="width:100%"></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">UK 6th Carbon Budget remaining (cumulative emissions)</div>
+        <div class="sparkline-container" id="spark-cb"></div>
+      </div>
+
       <!-- Energy Mix -->
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
@@ -2900,6 +2937,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="reset-alloc-btn" title="Clear all allocations this turn">↺ Reset</button>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -3167,6 +3205,30 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'TECH', severity: 'POSITIVE', icon: '🔬',
+    title: 'Green Technology Breakthrough',
+    description: 'UK research labs achieve a major advance in solid-state battery technology, dramatically reducing storage costs.',
+    story: 'Professor Elena Torres at the Faraday Institution announced the breakthrough at a packed press conference. "This changes the economics of grid storage overnight," she said. UK manufacturing firms are already scaling production.',
+    effects: { gridReliability: 8, financialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+  },
+  {
+    id: 'INTL_ACCORD', type: 'DIPLOMATIC', severity: 'POSITIVE', icon: '🌍',
+    title: 'International Climate Accord',
+    description: 'A landmark global agreement establishes binding emissions targets. Carbon markets surge, validating UK green investment.',
+    story: 'At the COP summit, 140 nations signed the binding Accord. UK Climate Envoy remarked: "Every pound we invested in the transition just became more valuable — the world is moving with us."',
+    effects: { financialStability: 8, socialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+  },
+  {
+    id: 'GREEN_INVESTMENT', type: 'FINANCIAL', severity: 'POSITIVE', icon: '💚',
+    title: 'Green Investment Surge',
+    description: 'International investors pour capital into UK green bonds and renewable infrastructure, boosting financial stability.',
+    story: 'BlackRock\'s UK head told the Financial Times: "The UK\'s climate policy framework is now the most investable in Europe. We\'re doubling our allocation."',
+    effects: { financialStability: 10 },
+    infraDamage: false, budgetPenaltyNext: -15,
+  },
 ];
 
 /* ============================================================
@@ -3297,6 +3359,14 @@ const METRIC_TOOLTIPS = {
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
+  },
+  cb: {
+    title: '🏭 Carbon Budget',
+    desc: 'The UK\'s remaining share of the global carbon budget under the 6th Carbon Budget. Depletes each turn based on fossil fuel use and emissions.',
+    drivers: '↑ Preserved by: renewable energy buildout, Net Zero progress\n↓ Depleted by: gas dependency, delayed action',
+    threshold: 'At 0%: the UK has exhausted its fair share of the global carbon budget. Subsequent emissions represent a debt to future generations.',
+    thresholdGood: false,
+    source: 'Based on UK Climate Change Committee 6th Carbon Budget',
   },
 };
 
@@ -3517,6 +3587,7 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      carbonBudget: state.carbonBudget,
     });
   }
   reset() { this.data = []; }
@@ -3558,6 +3629,7 @@ class GameEngine {
         socialSupport: 0,
         financialResilience: 0,
       },
+      carbonBudget: 100,
       strandedAssets: 0,
       propertyValue: 100,
       socialCapital: 0,
@@ -3712,6 +3784,7 @@ class GameEngine {
       gridReliability: s.gridReliability,
       financialStability: s.financialStability,
       socialStability: s.socialStability,
+      carbonBudget: s.carbonBudget,
       energy: Object.assign({}, s.energy),
     };
 
@@ -3763,12 +3836,14 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      eventPositive: event ? event.severity === 'POSITIVE' : false,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
       afterGrid:     s.gridReliability,
       afterFin:      s.financialStability,
       afterSoc:      s.socialStability,
+      afterCB:       s.carbonBudget,
     };
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
@@ -3907,6 +3982,10 @@ class GameEngine {
 
     if (s.netZeroAchieved) delta *= 0.45;
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
+
+    // Carbon budget depletes based on gas share and lack of net zero progress
+    const carbonBurn = 8 + (gasShare * 15) - (renewShare * 5) - (s.netZeroProgress * 0.06);
+    s.carbonBudget = this._clamp(s.carbonBudget - Math.max(carbonBurn, 1), 0, 100);
   }
 
   _resolveEvent() {
@@ -3928,6 +4007,7 @@ class GameEngine {
         { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
         { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
         { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[8], w: 8 },   // TECH_BREAKTHROUGH
       ];
     } else if (s.temperature < 2.0) {
       pool = [
@@ -3937,6 +4017,8 @@ class GameEngine {
         { e: RANDOM_EVENTS[4], w: 20 },  // STORM
         { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
         { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[9], w: 6 },   // INTL_ACCORD
+        { e: RANDOM_EVENTS[8], w: 5 },   // TECH_BREAKTHROUGH
       ];
     } else {
       pool = [
@@ -3946,6 +4028,7 @@ class GameEngine {
         { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
         { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
         { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[10], w: 4 },  // GREEN_INVESTMENT
       ];
     }
 
@@ -3962,8 +4045,9 @@ class GameEngine {
       if (roll <= 0) { selectedEvent = item.e; break; }
     }
 
-    // Mitigation factor from adaptation
-    const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+    // Mitigation factor from adaptation (only for negative events)
+    const isPositive = selectedEvent.severity === 'POSITIVE';
+    const mitigate = isPositive ? 0 : Math.min(s.infrastructure.adaptation / 200, 0.5);
 
     // Apply effects
     const applied = {};
@@ -3979,9 +4063,11 @@ class GameEngine {
       }
     }
 
-    // Budget penalty next turn
-    if (selectedEvent.budgetPenaltyNext > 0) {
-      const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
+    // Budget penalty next turn (negative = bonus)
+    if (selectedEvent.budgetPenaltyNext !== 0) {
+      const penaltyMitigated = isPositive
+        ? selectedEvent.budgetPenaltyNext
+        : Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
       s.nextTurnBudgetPenalty += penaltyMitigated;
     }
 
@@ -4037,10 +4123,11 @@ function calculateScore(state) {
   const stabAvg = (s.financialStability + s.socialStability) / 2;
   const stabScore = Math.round((stabAvg / 100) * 30);
 
-  // Resilience Score (0-10): adaptation built, events survived
+  // Resilience Score (0-10): adaptation built, events survived, carbon budget preserved
   const adaptLevel = s.infrastructure.adaptation / 100;
   const eventPenalty = s.eventCount * 1.5;
-  const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
+  const cbBonus = (s.carbonBudget || 0) / 100 * 2; // up to 2 bonus points for preserving carbon budget
+  const resScore = Math.round(Math.max(0, Math.min(10, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0) + cbBonus)));
 
   const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
   return { total, tempScore, nzScore, stabScore, resScore };
@@ -4259,6 +4346,7 @@ class UI {
       { key: 'fin',   valId: 'val-fin',  barId: 'bar-fin',  deltaId: 'delta-fin' },
       { key: 'soc',   valId: 'val-soc',  barId: 'bar-soc',  deltaId: 'delta-soc' },
       { key: 'nz',    valId: 'val-nz',   barId: 'bar-nz',   deltaId: 'delta-nz' },
+      { key: 'cb',    valId: 'val-cb',   barId: 'bar-cb',   deltaId: 'delta-cb' },
     ];
 
     this.elSegWind    = document.getElementById('seg-wind');
@@ -4329,6 +4417,22 @@ class UI {
         this.elEndTurnBtn.click();
       }
     });
+
+    // Reset allocations button
+    const resetBtn = document.getElementById('reset-alloc-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        const s = this.engine.state;
+        if (s.isResolvingTurn || s.gameOver) return;
+        for (const cat of Object.keys(s.currentDecisions)) {
+          s.currentDecisions[cat] = 0;
+        }
+        s.spentThisTurn = 0;
+        this._noSpendWarned = false;
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this.render(this.engine.getState());
+      });
+    }
 
     // Hook screen → advisor overlay
     // Check for saved game and show continue button
@@ -4655,6 +4759,7 @@ class UI {
       fin:  { val: state.financialStability, snap: state.lastSnapshot ? state.lastSnapshot.financialStability : null },
       soc:  { val: state.socialStability, snap: state.lastSnapshot ? state.lastSnapshot.socialStability : null },
       nz:   { val: state.netZeroProgress, snap: state.lastSnapshot ? state.lastSnapshot.netZeroProgress : null },
+      cb:   { val: state.carbonBudget, snap: state.lastSnapshot ? state.lastSnapshot.carbonBudget : null },
     };
 
     for (const m of this.metrics) {
@@ -4665,9 +4770,14 @@ class UI {
       const bar = document.getElementById(m.barId);
       bar.style.width = Math.max(0, val) + '%';
       // Status colour
-      const status = m.key === 'nz'
-        ? (val >= 100 ? 'good' : val >= 60 ? 'info' : val >= 30 ? 'warn' : 'danger')
-        : (val >= 60 ? 'good' : val >= 35 ? 'warn' : 'danger');
+      let status;
+      if (m.key === 'nz') {
+        status = val >= 100 ? 'good' : val >= 60 ? 'info' : val >= 30 ? 'warn' : 'danger';
+      } else if (m.key === 'cb') {
+        status = val >= 50 ? 'good' : val >= 25 ? 'warn' : 'danger';
+      } else {
+        status = val >= 60 ? 'good' : val >= 35 ? 'warn' : 'danger';
+      }
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
     }
@@ -4680,6 +4790,7 @@ class UI {
       { containerId: 'spark-fin',  key: 'financialStability', color: '#5390d9', invert: false, min: 0, max: 100 },
       { containerId: 'spark-soc',  key: 'socialStability', color: '#ffd600', invert: false, min: 0, max: 100 },
       { containerId: 'spark-nz',   key: 'netZeroProgress', color: '#448aff', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-cb',   key: 'carbonBudget', color: '#b39ddb', invert: true, min: 0, max: 100 },
     ];
 
     for (const s of series) {
@@ -4991,16 +5102,23 @@ class UI {
     const tempDelta = entry.afterTemp - entry.snapshot.temperature;
     const socDelta  = entry.afterSoc  - entry.snapshot.socialStability;
     const overallGood = socDelta > 0 && tempDelta < 0.15;
-    div.className = 'log-entry ' + (entry.event ? 'event' : overallGood ? 'good' : 'warn');
+    const isPositiveEvent = entry.eventPositive;
+    div.className = 'log-entry ' + (entry.event ? (isPositiveEvent ? 'positive-event' : 'event') : overallGood ? 'good' : 'warn');
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
 
+    // Turn narrative
+    const narrative = this._buildTurnNarrative(entry);
+    if (narrative) html += `<div class="log-narrative">${narrative}</div>`;
+
     // Event notice
     if (entry.event) {
-      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+      const eventColor = isPositiveEvent ? 'var(--status-good)' : 'var(--status-danger)';
+      const eventIcon = isPositiveEvent ? '✨' : '⚠';
+      html += `<div class="log-text" style="color:${eventColor};margin-top:4px;">${eventIcon} ${entry.event}</div>`;
     }
 
     // Metric chips
@@ -5010,6 +5128,7 @@ class UI {
     html += this._chip('Fin',  Math.round(entry.snapshot.financialStability), Math.round(entry.afterFin), false, '%');
     html += this._chip('Soc',  Math.round(entry.snapshot.socialStability), Math.round(entry.afterSoc), false, '%');
     html += this._chip('NZ',   Math.round(entry.snapshot.netZeroProgress), Math.round(entry.afterNZ), false, '%');
+    if (entry.afterCB !== undefined) html += this._chip('CB', Math.round(entry.snapshot.carbonBudget), Math.round(entry.afterCB), false, '%');
     html += '</div>';
 
     div.innerHTML = html;
@@ -5037,6 +5156,14 @@ class UI {
     this.elEventDesc.textContent  = event.description;
     const storyEl = document.getElementById('event-story-display');
     if (storyEl) storyEl.textContent = event.story || '';
+
+    // Positive/negative event card styling
+    const eventCard = document.getElementById('event-card');
+    if (event.severity === 'POSITIVE') {
+      eventCard.classList.add('positive');
+    } else {
+      eventCard.classList.remove('positive');
+    }
 
     // Flood visual effect
     if (event.type === 'FLOOD') {
@@ -5077,7 +5204,13 @@ class UI {
       effectsHtml += `
         <div class="event-effect-row">
           <span class="event-effect-label">Next Turn Budget</span>
-          <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
+          <span class="event-effect-val neg">-£${event.budgetPenaltyNext}bn</span>
+        </div>`;
+    } else if (event.budgetPenaltyNext < 0) {
+      effectsHtml += `
+        <div class="event-effect-row">
+          <span class="event-effect-label">Next Turn Budget</span>
+          <span class="event-effect-val pos">+£${Math.abs(event.budgetPenaltyNext)}bn</span>
         </div>`;
     }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
@@ -5103,6 +5236,7 @@ class UI {
     const gridStatus  = s.gridReliability >= 60 ? 'good' : s.gridReliability >= 35 ? 'warn' : 'danger';
     const finStatus   = s.financialStability >= 60 ? 'good' : s.financialStability >= 35 ? 'warn' : 'danger';
     const socStatus   = s.socialStability >= 60 ? 'good' : s.socialStability >= 35 ? 'warn' : 'danger';
+    const cbStatus    = s.carbonBudget >= 50 ? 'good' : s.carbonBudget >= 25 ? 'warn' : 'danger';
 
     this.elEndgameMetrics.innerHTML = `
       <div class="endgame-metric-tile">
@@ -5124,6 +5258,10 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Social Stability</div>
         <div class="endgame-metric-val ${socStatus}">${Math.round(s.socialStability)}%</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Carbon Budget</div>
+        <div class="endgame-metric-val ${cbStatus}">${Math.round(s.carbonBudget)}%</div>
       </div>
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
@@ -5281,6 +5419,7 @@ class UI {
       '🏦 Financial Stability':'fin',
       '🏘️ Social Stability':   'soc',
       '🌱 Net Zero Progress':  'nz',
+      '🏭 Carbon Budget':      'cb',
     };
 
     document.querySelectorAll('.metric-name').forEach(el => {
@@ -5723,6 +5862,52 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_cop_summit',
+    icon: '🌐',
+    title: 'COP Climate Summit',
+    prompt: 'The UK is hosting COP. Your stance will signal global climate ambition.',
+    explanation: 'Hosting COP is a diplomatic opportunity. An ambitious pledge locks in emissions targets and attracts green investment — but commits future budgets. A cautious approach preserves flexibility but signals weakness, potentially undermining international carbon markets that benefit UK green bonds.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🌍 Announce ambitious new targets',
+      consequence: '+6% Net Zero · +5 Financial (investment flood) · Costs £10bn next turn in binding commitments',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.financialStability = Math.min(100, s.financialStability + 5); s.nextTurnBudgetPenalty += 10; },
+    },
+    optB: {
+      label: '🤝 Maintain current commitments',
+      consequence: 'No cost · −3 Financial (investors disappointed) · preserves budget flexibility',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    condition: (s) => s.turn < 4,
+  },
+  {
+    id: 'mini_eu_carbon_border',
+    icon: '🇪🇺',
+    title: 'EU Carbon Border Tax',
+    prompt: 'The EU is implementing a carbon border adjustment. How does the UK respond?',
+    explanation: 'The EU\'s Carbon Border Adjustment Mechanism taxes imports based on their carbon footprint. Aligning the UK\'s carbon price means UK exporters avoid the tariff — but raises domestic energy costs. Negotiating an exemption preserves cheap energy but weakens the case for domestic carbon pricing.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Social Stability: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '📊 Align UK carbon price with EU',
+      consequence: '+4 Financial (trade access) · −4 Social (higher bills) · +3% Net Zero',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 4); s.socialStability = Math.max(0, s.socialStability - 4); s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    },
+    optB: {
+      label: '🛡️ Negotiate UK exemption',
+      consequence: '−3 Financial (trade friction) · +2 Social (cheaper energy) · no climate benefit',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 3); s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    condition: (s) => s.turn >= 1,
   },
 ];
 
