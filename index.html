@@ -2277,6 +2277,108 @@ body { transition: filter 2s ease; }
   background: repeating-linear-gradient(90deg, currentColor 0 6px, transparent 6px 10px);
   height: 2px;
 }
+
+/* ===== RUN COMPARISON PANEL ===== */
+#endgame-comparison {
+  margin: var(--gap-md) 0;
+  padding: var(--gap-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+#endgame-comparison-title {
+  font-family: var(--font-system);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--gap-sm);
+}
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--gap-sm);
+}
+.comparison-col {
+  text-align: center;
+}
+.comparison-col-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.comparison-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 3px 0;
+}
+.comparison-row .comp-metric-name {
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 50px;
+  text-align: right;
+}
+.comparison-row .comp-val {
+  font-weight: 700;
+  font-family: var(--font-mono);
+  min-width: 42px;
+  text-align: center;
+}
+.comparison-row .comp-val.better { color: var(--status-good); }
+.comparison-row .comp-val.worse { color: var(--status-danger); }
+.comparison-row .comp-val.same { color: var(--text-muted); }
+.comparison-row .comp-delta {
+  font-size: 10px;
+  min-width: 38px;
+  text-align: left;
+}
+.comp-delta.pos { color: var(--status-good); }
+.comp-delta.neg { color: var(--status-danger); }
+.comparison-no-data {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: var(--gap-sm) 0;
+  font-style: italic;
+}
+
+/* ===== KEYBOARD SHORTCUTS HINT ===== */
+#kb-shortcuts-hint {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  display: none;
+  z-index: 50;
+  opacity: 0.85;
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  #kb-shortcuts-hint { display: block; }
+}
+.kb-key {
+  display: inline-block;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  margin: 0 2px;
+}
 </style>
 </head>
 <body>
@@ -3061,6 +3163,13 @@ body { transition: filter 2s ease; }
   <div class="tooltip-source" id="tt-source"></div>
 </div>
 
+<!-- KEYBOARD SHORTCUTS HINT (desktop only) -->
+<div id="kb-shortcuts-hint">
+  <span class="kb-key">1</span>–<span class="kb-key">6</span> add blocks
+  &nbsp; <span class="kb-key">Shift</span>+<span class="kb-key">1</span>–<span class="kb-key">6</span> remove
+  &nbsp; <span class="kb-key">Enter</span> end turn
+</div>
+
 <!-- SCENARIO SELECTION SCREEN -->
 <div id="scenario-screen" class="hidden">
   <div id="scenario-content">
@@ -3498,6 +3607,129 @@ class HighScoreManager {
 const highScoreMgr = new HighScoreManager();
 
 /* ============================================================
+   RUN HISTORY (for endgame comparison)
+============================================================ */
+
+class RunHistoryManager {
+  constructor() {
+    this._KEY = 'uk_climate_runhistory_v1';
+    this.runs = this._load();
+  }
+  _load() {
+    try {
+      const raw = localStorage.getItem(this._KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  }
+  _save() {
+    try { localStorage.setItem(this._KEY, JSON.stringify(this.runs)); } catch {}
+  }
+  record(state, scoreTotal) {
+    this.runs.push({
+      score: scoreTotal,
+      temp: +state.temperature.toFixed(2),
+      nz: Math.round(state.netZeroProgress),
+      grid: Math.round(state.gridReliability),
+      fin: Math.round(state.financialStability),
+      soc: Math.round(state.socialStability),
+      events: state.eventCount || 0,
+      ts: Date.now(),
+    });
+    if (this.runs.length > 20) this.runs = this.runs.slice(-20);
+    this._save();
+  }
+  getBest() {
+    if (this.runs.length === 0) return null;
+    return this.runs.reduce((a, b) => a.score >= b.score ? a : b);
+  }
+  getAverage() {
+    if (this.runs.length === 0) return null;
+    const n = this.runs.length;
+    return {
+      score: Math.round(this.runs.reduce((s, r) => s + r.score, 0) / n),
+      temp: +(this.runs.reduce((s, r) => s + r.temp, 0) / n).toFixed(2),
+      nz: Math.round(this.runs.reduce((s, r) => s + r.nz, 0) / n),
+      grid: Math.round(this.runs.reduce((s, r) => s + r.grid, 0) / n),
+      fin: Math.round(this.runs.reduce((s, r) => s + r.fin, 0) / n),
+      soc: Math.round(this.runs.reduce((s, r) => s + r.soc, 0) / n),
+      events: Math.round(this.runs.reduce((s, r) => s + r.events, 0) / n),
+    };
+  }
+  count() { return this.runs.length; }
+  clear() { this.runs = []; this._save(); }
+}
+
+const runHistoryMgr = new RunHistoryManager();
+
+function buildComparisonPanel(currentState, currentScore) {
+  const prev = runHistoryMgr.count();
+  if (prev === 0) {
+    return `<div id="endgame-comparison">
+      <div id="endgame-comparison-title">Run Comparison</div>
+      <div class="comparison-no-data">Complete more runs to see how you compare.</div>
+    </div>`;
+  }
+
+  const best = runHistoryMgr.getBest();
+  const avg = runHistoryMgr.getAverage();
+
+  const cur = {
+    score: currentScore,
+    temp: +currentState.temperature.toFixed(2),
+    nz: Math.round(currentState.netZeroProgress),
+    grid: Math.round(currentState.gridReliability),
+    fin: Math.round(currentState.financialStability),
+    soc: Math.round(currentState.socialStability),
+  };
+
+  const metrics = [
+    { key: 'score', label: 'Score', higher: true },
+    { key: 'temp', label: 'Temp', higher: false, fmt: v => v.toFixed(1) + '°C' },
+    { key: 'nz', label: 'Net Zero', higher: true, fmt: v => v + '%' },
+    { key: 'grid', label: 'Grid', higher: true, fmt: v => v + '%' },
+    { key: 'fin', label: 'Financial', higher: true, fmt: v => v + '%' },
+    { key: 'soc', label: 'Social', higher: true, fmt: v => v + '%' },
+  ];
+
+  const fmtVal = (v, m) => (m.fmt ? m.fmt(v) : String(v));
+
+  const deltaHtml = (curV, refV, higher) => {
+    const d = curV - refV;
+    if (Math.abs(d) < 0.01) return '<span class="comp-delta">—</span>';
+    const isGood = higher ? d > 0 : d < 0;
+    const sign = d > 0 ? '+' : '';
+    const display = typeof curV === 'number' && curV < 10 ? `${sign}${d.toFixed(1)}` : `${sign}${Math.round(d)}`;
+    return `<span class="comp-delta ${isGood ? 'pos' : 'neg'}">${display}</span>`;
+  };
+
+  let rows = '';
+  for (const m of metrics) {
+    rows += `<div class="comparison-row">
+      <span class="comp-metric-name">${m.label}</span>
+      <span class="comp-val">${fmtVal(cur[m.key], m)}</span>
+      ${deltaHtml(cur[m.key], avg[m.key], m.higher)}
+      ${deltaHtml(cur[m.key], best[m.key], m.higher)}
+    </div>`;
+  }
+
+  return `<div id="endgame-comparison">
+    <div id="endgame-comparison-title">Run Comparison (${prev} previous run${prev !== 1 ? 's' : ''})</div>
+    <div class="comparison-grid">
+      <div class="comparison-col">
+        <div class="comparison-col-label">Metric</div>
+      </div>
+      <div class="comparison-col">
+        <div class="comparison-col-label">vs Average</div>
+      </div>
+      <div class="comparison-col">
+        <div class="comparison-col-label">vs Best</div>
+      </div>
+    </div>
+    ${rows}
+  </div>`;
+}
+
+/* ============================================================
    STARTER SCENARIOS
 ============================================================ */
 
@@ -3753,6 +3985,7 @@ class GameEngine {
       currentRandomEvent: null,
       eventCount: 0,
       lastEventTurn: -1,
+      miniEventChoices: [],
       log: [],
       lastSnapshot: null,
     };
@@ -4538,6 +4771,7 @@ function buildTrajectoryChart(turnHistoryData) {
   const nzData = turns.map(t => t.netZeroProgress);
   const gridData = turns.map(t => t.gridReliability);
   const socData = turns.map(t => t.socialStability);
+  const finData = turns.map(t => t.financialStability);
 
   let svg = `<svg class="trajectory-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
 
@@ -4578,6 +4812,7 @@ function buildTrajectoryChart(turnHistoryData) {
     { data: nzData, yFn: yPct, color: '#448aff', label: 'Net Zero' },
     { data: gridData, yFn: yPct, color: '#4caf81', label: 'Grid' },
     { data: socData, yFn: yPct, color: '#ffd600', label: 'Social' },
+    { data: finData, yFn: yPct, color: '#b39ddb', label: 'Financial' },
     { data: tempData, yFn: yTemp, color: '#ff7043', label: 'Temp' },
   ];
 
@@ -4913,6 +5148,7 @@ class UI {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
       document.getElementById('endgame-trajectory')?.remove();
+      document.getElementById('endgame-comparison')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -4996,6 +5232,8 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    const kbHint = document.getElementById('kb-shortcuts-hint');
+    if (kbHint) kbHint.style.display = (state.isResolvingTurn || state.gameOver) ? 'none' : '';
   }
 
   _renderHeader(state) {
@@ -5558,8 +5796,11 @@ class UI {
 
     const trajectoryHtml = buildTrajectoryChart(turnHistory.data);
 
+    const comparisonHtml = buildComparisonPanel(s, score.total);
+    runHistoryMgr.record(s, score.total);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', trajectoryHtml + timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', trajectoryHtml + comparisonHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -6118,6 +6359,121 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_cop_summit',
+    icon: '🌍',
+    title: 'COP Climate Summit',
+    prompt: 'The UK is under pressure at the UN climate summit. What stance do you take?',
+    explanation: 'International summits shape global ambition. An ambitious pledge raises the UK\'s profile and unlocks cooperation benefits — but binds you to tighter targets next term. A pragmatic position protects flexibility but disappoints allies and climate groups, weakening your mandate.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: s.netZeroProgress > 70 ? 'strong position to lead' : 'credibility gap with allies',
+    }),
+    optA: {
+      label: '🏛️ Pledge ambitious new targets',
+      consequence: '+8 Net Zero progress · +5 Social Capital · Costs £7bn (international fund)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialCapital = Math.min(60, s.socialCapital + 5); s.nextTurnBudgetPenalty += 7; },
+    },
+    optB: {
+      label: '🤝 Take pragmatic position',
+      consequence: 'No cost · −3 Social Capital · +4 Financial Stability (market certainty)',
+      effect: (s) => { s.socialCapital = Math.max(0, s.socialCapital - 3); s.financialStability = Math.min(100, s.financialStability + 4); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_tech_breakthrough',
+    icon: '🔬',
+    title: 'Green Technology Breakthrough',
+    prompt: 'UK researchers announce a major advance in solid-state batteries. How do you capitalise?',
+    explanation: 'A genuine breakthrough in energy storage could accelerate the entire transition. Massive public investment secures UK manufacturing jobs and grid benefits — but crowds out other spending. Licensing the technology abroad costs nothing and builds diplomatic capital, but the UK loses its competitive edge.',
+    contextFn: (s) => ({
+      label: 'Energy Storage',
+      value: `${Math.round(s.energy.storage)}`,
+      note: `Grid Reliability: ${Math.round(s.gridReliability)}%`,
+    }),
+    optA: {
+      label: '🏭 Massive public investment in UK manufacturing',
+      consequence: 'Costs £12bn · Storage +15 · Grid +8 · creates industrial jobs',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.energy.storage = Math.min(100, s.energy.storage + 15); s.gridReliability = Math.min(100, s.gridReliability + 8); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optB: {
+      label: '📜 License technology internationally',
+      consequence: 'No cost · Storage +5 · +6 Social Capital (global leadership) · +£8bn revenue next turn',
+      effect: (s) => { s.energy.storage = Math.min(100, s.energy.storage + 5); s.socialCapital = Math.min(60, s.socialCapital + 6); s.nextTurnBudgetPenalty -= 8; },
+    },
+    condition: (s) => s.infrastructure.energyTransition > 30 || s.energy.storage > 15,
+  },
+  {
+    id: 'mini_flood_followup',
+    icon: '🌊',
+    title: 'Flooding Returns',
+    prompt: 'The same communities that flooded before are at risk again.',
+    explanation: 'You chose emergency response last time — the infrastructure was rebuilt as-is. Without permanent defences, the same areas remain vulnerable to every major rainfall event. This is the political cost of short-term thinking.',
+    contextFn: (s) => ({
+      label: 'Adaptation Infrastructure',
+      value: `${Math.round(s.infrastructure.adaptation)}`,
+      note: 'Previous: emergency rebuild chosen',
+    }),
+    optA: {
+      label: '🏗️ Now fund permanent defences',
+      consequence: 'Costs £10bn · +adaptation infrastructure · communities finally protected',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.infrastructure.adaptation += 25; s.socialCapital = Math.min(60, s.socialCapital + 2); },
+    },
+    optB: {
+      label: '🚒 Emergency response again',
+      consequence: 'Costs £9bn · −4 Social Capital (public anger at repeated failure)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 9; s.socialCapital = Math.max(0, s.socialCapital - 4); },
+    },
+    condition: (s) => s.miniEventChoices.some(c => c.id === 'mini_flood' && c.choice === 'A') && s.temperature > 1.3,
+  },
+  {
+    id: 'mini_workers_followup',
+    icon: '💼',
+    title: 'Green Skills Dividend',
+    prompt: 'The retraining programme you funded is producing results.',
+    explanation: 'Your earlier investment in green skills retraining is bearing fruit — retrained North Sea workers are filling offshore wind and hydrogen roles across Scotland. This is a chance to scale the programme further.',
+    contextFn: (s) => ({
+      label: 'Social Capital',
+      value: `${Math.round(s.socialCapital)}`,
+      note: 'Previous: retraining programme funded',
+    }),
+    optA: {
+      label: '📈 Scale the programme nationally',
+      consequence: 'Costs £8bn · +6 Net Zero · +5 Social Capital · builds green workforce',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.socialCapital = Math.min(60, s.socialCapital + 5); },
+    },
+    optB: {
+      label: '✅ Declare success and move on',
+      consequence: 'No further cost · +2 Social Stability (good news story)',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 2); },
+    },
+    condition: (s) => s.miniEventChoices.some(c => c.id === 'mini_workers' && c.choice === 'A'),
+  },
+  {
+    id: 'mini_stranded_followup',
+    icon: '📉',
+    title: 'Stranded Assets — Round Two',
+    prompt: 'The pension bailout bought time, but fossil exposure remains.',
+    explanation: 'The full bailout you chose earlier kept pension funds afloat, but the underlying fossil assets are still on their books. As decarbonisation accelerates, the same crisis is recurring — this time with less public patience for another expensive rescue.',
+    contextFn: (s) => ({
+      label: 'Stranded Assets',
+      value: `${Math.round(s.strandedAssets)}`,
+      note: 'Previous: full bailout chosen',
+    }),
+    optA: {
+      label: '⚖️ This time, managed resolution',
+      consequence: 'Costs £8bn · −20 Stranded Assets · fixes root cause this time',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.strandedAssets = Math.max(0, s.strandedAssets - 20); },
+    },
+    optB: {
+      label: '🏦 Bail out again',
+      consequence: 'Costs £25bn · −8 Social Capital (public furious at repeated bailout)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 25; s.socialCapital = Math.max(0, s.socialCapital - 8); },
+    },
+    condition: (s) => s.miniEventChoices.some(c => c.id === 'mini_stranded_shock' && c.choice === 'A') && s.strandedAssets > 20,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -6273,8 +6629,14 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
       setTimeout(() => { panel.remove(); resolve(); }, 300);
     };
 
-    panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
-    panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
+    panel.querySelector('.opt-a').addEventListener('click', () => {
+      engine.state.miniEventChoices.push({ id: evt.id, choice: 'A', turn: engine.state.turn });
+      cleanup(evt.optA.effect);
+    }, { once: true });
+    panel.querySelector('.opt-b').addEventListener('click', () => {
+      engine.state.miniEventChoices.push({ id: evt.id, choice: 'B', turn: engine.state.turn });
+      cleanup(evt.optB.effect);
+    }, { once: true });
   });
 }
 
