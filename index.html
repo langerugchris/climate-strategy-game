@@ -1860,15 +1860,16 @@ body { transition: filter 2s ease; }
   inset: 0;
   background: #04080f;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 1900;
   padding: var(--gap-xl);
+  padding-top: max(var(--gap-xl), 5vh);
   overflow-y: auto;
 }
 #scenario-screen.hidden { display: none; }
 #scenario-content {
-  max-width: 640px;
+  max-width: 780px;
   width: 100%;
   text-align: center;
 }
@@ -2075,6 +2076,110 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== NEWS TICKER ===== */
+#news-ticker {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+}
+#news-ticker-label {
+  background: var(--accent-blue);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 10px;
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+#news-ticker-track {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+}
+.ticker-headline {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: ticker-scroll 18s linear infinite;
+  padding-left: 100%;
+}
+@keyframes ticker-scroll {
+  0%   { transform: translateY(-50%) translateX(0); }
+  100% { transform: translateY(-50%) translateX(-100%); }
+}
+.ticker-headline .ticker-breaking {
+  color: var(--status-danger);
+  font-weight: 700;
+  font-style: normal;
+  margin-right: 6px;
+}
+
+/* ===== ENDGAME LESSONS LEARNED ===== */
+#endgame-lessons {
+  margin-top: var(--gap-lg);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--accent-blue-lt);
+}
+#endgame-lessons-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.lesson-item {
+  display: flex;
+  gap: var(--gap-sm);
+  padding: var(--gap-xs) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.lesson-item:last-child { border-bottom: none; }
+.lesson-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+.lesson-text {
+  color: var(--text-secondary);
+}
+.lesson-text strong {
+  color: var(--text-primary);
+}
+.lesson-grade {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.lesson-grade.good { background: rgba(0,200,83,0.15); color: var(--status-good); }
+.lesson-grade.warn { background: rgba(255,214,0,0.15); color: var(--status-warn); }
+.lesson-grade.danger { background: rgba(255,61,0,0.15); color: var(--status-danger); }
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2177,6 +2282,14 @@ body { transition: filter 2s ease; }
   </div>
 </header>
 
+<!-- ===== NEWS TICKER ===== -->
+<div id="news-ticker">
+  <div id="news-ticker-label">LIVE</div>
+  <div id="news-ticker-track">
+    <div class="ticker-headline" id="ticker-text">UK Climate Strategy simulation initialising — awaiting ministerial decisions...</div>
+  </div>
+</div>
+
 <!-- ===== MAIN LAYOUT ===== -->
 <main id="game-main">
 
@@ -2278,6 +2391,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage"  style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2409,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2966,6 +3084,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_crisis">
+        <span class="scenario-card-icon">⚡</span>
+        <div class="scenario-card-name">Energy Crisis</div>
+        <div class="scenario-card-desc">A global gas supply shock has sent energy prices spiralling. The grid is under severe pressure and public anger is rising — but the case for renewables has never been stronger.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Grid: <span>40% (critical)</span></div>
+          <div class="scenario-stat">Gas price shock: <span>+15 Stranded</span></div>
+          <div class="scenario-stat">Social: <span>55% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="global_leader">
+        <span class="scenario-card-icon">🌍</span>
+        <div class="scenario-card-name">Global Leader</div>
+        <div class="scenario-card-desc">The UK has positioned itself as a global climate leader. International credibility is high, but expectations are immense — failure would be a diplomatic catastrophe.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Net Zero: <span>45% head start</span></div>
+          <div class="scenario-stat">Social: <span>60% (high expectations)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3372,6 +3512,28 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  energy_crisis: {
+    label: 'Energy Crisis',
+    apply(state) {
+      state.gridReliability = 40;
+      state.socialStability = 55;
+      state.strandedAssets = 15;
+      state.energy.gas = 40;
+      state.energy.wind = 22;
+      state.energy.solar = 4;
+    },
+  },
+  global_leader: {
+    label: 'Global Leader',
+    apply(state) {
+      state.netZeroProgress = 45;
+      state.socialStability = 60;
+      state.energy.wind = 35;
+      state.energy.solar = 10;
+      state.energy.gas = 22;
+      state._budgetOverride = 110;
+    },
+  },
 };
 
 /* ============================================================
@@ -3499,6 +3661,114 @@ class AnalyticsTracker {
 }
 
 const analyticsMgr = new AnalyticsTracker();
+
+/* ============================================================
+   NEWS HEADLINE TICKER
+============================================================ */
+
+const HEADLINE_POOLS = {
+  neutral: [
+    'Bank of England publishes annual climate stress test results — pension funds await guidance',
+    'National Grid ESO confirms record wind generation overnight — gas plants on standby',
+    'COP negotiations enter final day as developing nations demand increased climate finance',
+    'UK Met Office upgrades 10-year climate projection — trend continues upward',
+    'ONS report: green jobs now outpace fossil sector employment for first time',
+    'Planning applications for onshore wind reach 5-year high amid shifting public sentiment',
+  ],
+  lowTemp: [
+    'Climate scientists cautiously optimistic as UK emissions pathway tracks below 1.5°C target',
+    'Insurance premiums stabilise as flood risk models show adaptation investment paying off',
+    'UK cited as model for orderly transition at latest UN climate summit',
+  ],
+  highTemp: [
+    'BREAKING: Met Office issues extreme heat warning for southern England — 42°C expected',
+    'Thames Barrier activation frequency has tripled since 2025, Environment Agency warns',
+    'Permafrost methane readings alarm Arctic monitoring stations — feedback loop accelerating',
+    'Crop yields fall for third consecutive year across East Anglia — food security debate intensifies',
+    'BREAKING: UK heatwave death toll revised upward — hospitals cancel elective procedures',
+  ],
+  lowGrid: [
+    'BREAKING: National Grid declares Electricity Supply Emergency — rolling blackouts possible',
+    'Energy regulator warns grid margin below safe operating threshold for coming winter',
+    'Hospital trusts activate backup generators as grid frequency drops below 49.5Hz',
+  ],
+  lowFinancial: [
+    'BREAKING: Pension fund consortium warns of systemic risk from stranded fossil assets',
+    'Bank of England expands emergency lending facility as climate-exposed banks face capital shortfall',
+    'Property values in coastal areas fall sharply — mortgage lenders tighten flood zone criteria',
+  ],
+  lowSocial: [
+    'BREAKING: Fuel poverty protests spread to 12 cities — government approval ratings at historic low',
+    'Trade unions warn of "winter of discontent" as energy transition redundancies accelerate',
+    'Community groups organise mutual aid networks as public service cuts bite across northern England',
+  ],
+  highNZ: [
+    'UK Net Zero target within reach — Climate Change Committee praises sustained investment',
+    'Last coal-fired power station decommissioned ahead of schedule — era of fossil generation ends',
+    'Green bond issuance reaches record high as investors price in orderly transition outcome',
+  ],
+  gasHigh: [
+    'North Sea gas infrastructure operating at peak capacity despite decommissioning timeline',
+    'Methane emissions from UK gas network higher than official estimates, satellite data reveals',
+  ],
+};
+
+class NewsTicker {
+  constructor() {
+    this._el = document.getElementById('ticker-text');
+    this._idx = 0;
+    this._headlines = [];
+    this._timer = null;
+  }
+
+  update(state) {
+    const pool = [...HEADLINE_POOLS.neutral];
+    if (state.temperature < 1.5) pool.push(...HEADLINE_POOLS.lowTemp);
+    if (state.temperature > 1.8) pool.push(...HEADLINE_POOLS.highTemp);
+    if (state.gridReliability < 50) pool.push(...HEADLINE_POOLS.lowGrid);
+    if (state.financialStability < 45) pool.push(...HEADLINE_POOLS.lowFinancial);
+    if (state.socialStability < 50) pool.push(...HEADLINE_POOLS.lowSocial);
+    if (state.netZeroProgress > 75) pool.push(...HEADLINE_POOLS.highNZ);
+    if (state.energy.gas > 35) pool.push(...HEADLINE_POOLS.gasHigh);
+
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    this._headlines = pool;
+    this._idx = 0;
+    this._show();
+    this._startRotation();
+  }
+
+  _show() {
+    if (!this._el || this._headlines.length === 0) return;
+    const text = this._headlines[this._idx % this._headlines.length];
+    const isBreaking = text.startsWith('BREAKING:');
+    if (isBreaking) {
+      this._el.innerHTML = `<span class="ticker-breaking">BREAKING</span> ${text.replace('BREAKING: ', '')}`;
+    } else {
+      this._el.textContent = text;
+    }
+    this._el.style.animation = 'none';
+    void this._el.offsetWidth;
+    this._el.style.animation = '';
+  }
+
+  _startRotation() {
+    clearInterval(this._timer);
+    this._timer = setInterval(() => {
+      this._idx++;
+      this._show();
+    }, 19000);
+  }
+
+  stop() {
+    clearInterval(this._timer);
+  }
+}
+
+const newsTicker = new NewsTicker();
 
 /* ============================================================
    TURN HISTORY TRACKER
@@ -4265,10 +4535,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4536,6 +4808,7 @@ class UI {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
       document.getElementById('endgame-timeline')?.remove();
+      document.getElementById('endgame-lessons')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
       // Reset scenario card selection to default
@@ -4618,6 +4891,7 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    newsTicker.update(state);
   }
 
   _renderHeader(state) {
@@ -4801,10 +5075,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -5150,6 +5426,9 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    // Build strategic debrief
+    const lessonsHtml = this._buildLessonsLearned(s);
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
@@ -5165,7 +5444,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + lessonsHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5261,6 +5540,106 @@ class UI {
       </div>`;
     }
     html += `</div></div>`;
+    return html;
+  }
+
+  _buildLessonsLearned(state) {
+    const lessons = [];
+    const s = state;
+
+    const grade = (val, goodThresh, warnThresh) => {
+      if (val >= goodThresh) return '<span class="lesson-grade good">Strong</span>';
+      if (val >= warnThresh) return '<span class="lesson-grade warn">Mixed</span>';
+      return '<span class="lesson-grade danger">Weak</span>';
+    };
+
+    const totalEnergyBlocks = Math.floor(s.infrastructure.energyTransition / 30);
+    const totalGridBlocks = Math.floor(s.infrastructure.gridAndStorage / 35);
+    const totalSocialBlocks = Math.floor(s.infrastructure.socialSupport / 20);
+    const totalFinBlocks = Math.floor(s.infrastructure.financialResilience / 30);
+    const totalAdaptBlocks = Math.floor(s.infrastructure.adaptation / 25);
+
+    if (totalEnergyBlocks >= 4 && totalGridBlocks < 2) {
+      lessons.push({
+        icon: '⚡',
+        text: `<strong>Grid neglected during rapid transition.</strong> You invested heavily in renewables (${totalEnergyBlocks} energy blocks) but only ${totalGridBlocks} grid block${totalGridBlocks !== 1 ? 's' : ''}. Intermittent renewables need backup storage to prevent blackouts. ${grade(s.gridReliability, 60, 40)}`,
+      });
+    } else if (totalGridBlocks >= 3) {
+      lessons.push({
+        icon: '⚡',
+        text: `<strong>Grid infrastructure was a priority.</strong> ${totalGridBlocks} grid blocks kept the lights on through the renewable transition — a common failure point in real climate policy. ${grade(s.gridReliability, 60, 40)}`,
+      });
+    }
+
+    if (totalEnergyBlocks >= 3 && totalSocialBlocks < 2) {
+      lessons.push({
+        icon: '🤝',
+        text: `<strong>The Just Transition was underfunded.</strong> Rapid decarbonisation (${totalEnergyBlocks} energy blocks) without adequate social support (${totalSocialBlocks}) raised bills and displaced workers. In the real world, this pattern has collapsed climate programmes in France (gilets jaunes) and Australia. ${grade(s.socialStability, 65, 40)}`,
+      });
+    } else if (totalSocialBlocks >= 3) {
+      lessons.push({
+        icon: '🤝',
+        text: `<strong>Social investment maintained public consent.</strong> ${totalSocialBlocks} social support blocks cushioned the transition's distributional costs — the approach recommended by the ILO Just Transition framework. ${grade(s.socialStability, 65, 40)}`,
+      });
+    }
+
+    if (s.strandedAssets > 40 && totalFinBlocks < 2) {
+      lessons.push({
+        icon: '🏦',
+        text: `<strong>Stranded asset risk was unmanaged.</strong> With ${Math.round(s.strandedAssets)} stranded asset exposure and only ${totalFinBlocks} financial resilience block${totalFinBlocks !== 1 ? 's' : ''}, pension funds absorbed losses they were never designed for. The Bank of England's 2022 stress test warned of exactly this scenario. ${grade(s.financialStability, 60, 40)}`,
+      });
+    }
+
+    if (totalAdaptBlocks < 2 && s.eventCount >= 2) {
+      lessons.push({
+        icon: '🌊',
+        text: `<strong>Adaptation was neglected.</strong> ${s.eventCount} climate events struck with only ${totalAdaptBlocks} adaptation block${totalAdaptBlocks !== 1 ? 's' : ''} in place. Each event caused more damage than it needed to. The UK Climate Risk Assessment 2022 identifies adaptation as the most cost-effective form of climate spending. ${grade(totalAdaptBlocks, 3, 1)}`,
+      });
+    } else if (totalAdaptBlocks >= 3) {
+      lessons.push({
+        icon: '🛡️',
+        text: `<strong>Strong adaptation reduced climate damage.</strong> ${totalAdaptBlocks} adaptation blocks cut event damage significantly. Physical risk management is often overlooked in favour of mitigation — your approach balanced both. ${grade(100, 60, 40)}`,
+      });
+    }
+
+    if (s.temperature > 1.5 && totalEnergyBlocks < 3) {
+      lessons.push({
+        icon: '🌡️',
+        text: `<strong>Delayed action compounded warming.</strong> Temperature reached ${s.temperature.toFixed(1)}°C — above the 1.5°C tipping point threshold. Each degree of delay makes the next degree harder to prevent, as permafrost methane and Arctic ice loss create self-reinforcing feedback. ${grade(0, 1.5, 2.0)}`,
+      });
+    }
+
+    if (techTree.isComplete()) {
+      lessons.push({
+        icon: '🔬',
+        text: `<strong>Full R&D investment paid off.</strong> All 5 technology upgrades unlocked, amplifying the effectiveness of every subsequent investment block. Early R&D spending compounds — exactly as real-world innovation economics predict. ${grade(100, 60, 40)}`,
+      });
+    } else if (techTree._purchased.size === 0) {
+      lessons.push({
+        icon: '🔬',
+        text: `<strong>No R&D investment was made.</strong> Technology multipliers remained at 1.0×, meaning every investment block was less effective than it could have been. At £15bn per block, R&D is the cheapest category — and its returns compound over remaining turns.`,
+      });
+    }
+
+    if (s.netZeroProgress >= 100 && s.temperature < 1.8 && s.socialStability >= 60 && s.financialStability >= 60) {
+      lessons.push({
+        icon: '🌱',
+        text: `<strong>A balanced strategy succeeded.</strong> You achieved Net Zero while maintaining social cohesion and financial stability — the "orderly transition" that central banks and climate scientists advocate. This outcome is rare in both the simulation and reality.`,
+      });
+    }
+
+    if (lessons.length === 0) {
+      lessons.push({
+        icon: '📊',
+        text: `<strong>A mixed strategy with trade-offs.</strong> No single investment area dominated — your approach spread resources across the board. The challenge is whether any area got enough sustained investment to cross its effectiveness threshold.`,
+      });
+    }
+
+    let html = `<div id="endgame-lessons"><div id="endgame-lessons-title">Strategic Debrief</div>`;
+    for (const l of lessons) {
+      html += `<div class="lesson-item"><div class="lesson-icon">${l.icon}</div><div class="lesson-text">${l.text}</div></div>`;
+    }
+    html += `</div>`;
     return html;
   }
 
@@ -5723,6 +6102,52 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_cop_summit',
+    icon: '🌍',
+    title: 'COP Climate Summit',
+    prompt: 'The UK is hosting the next COP summit. How do you use the platform?',
+    explanation: 'Hosting COP is a chance to lead by example — but ambition comes at a price. Pledging aggressive new targets builds international credibility and accelerates global cooperation, but locks the UK into commitments that constrain future budgets. A diplomatic approach protects domestic flexibility but risks being seen as backsliding on the world stage.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🎯 Pledge ambitious new targets',
+      consequence: 'Costs £10bn next turn (summit commitments) · +8% Net Zero · +5 Social Capital (international credibility)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialCapital = Math.min(60, s.socialCapital + 5); },
+    },
+    optB: {
+      label: '🤝 Focus on diplomatic consensus',
+      consequence: 'Costs £3bn · +2% Net Zero · no Social Capital change (seen as cautious)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_carbon_border',
+    icon: '🏭',
+    title: 'EU Carbon Border Tax',
+    prompt: 'The EU is implementing a Carbon Border Adjustment Mechanism. How does the UK respond?',
+    explanation: 'The EU\'s carbon border tax penalises imports from countries with weaker carbon pricing. Aligning the UK\'s system avoids trade friction and accelerates decarbonisation — but raises costs for UK manufacturers. Rejecting alignment protects domestic industry in the short term but risks trade barriers and a "race to the bottom" on climate standards.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🔗 Align with EU carbon pricing',
+      consequence: 'Costs £7bn next turn (transition costs) · +6% Net Zero · −3 Financial short-term · prevents trade barriers',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.financialStability = Math.max(0, s.financialStability - 3); },
+    },
+    optB: {
+      label: '🛡️ Maintain independent carbon policy',
+      consequence: 'No cost · −4% Net Zero (weaker incentive) · +3 Financial short-term (lower industry costs)',
+      effect: (s) => { s.netZeroProgress = Math.max(0, s.netZeroProgress - 4); s.financialStability = Math.min(100, s.financialStability + 3); },
+    },
+    condition: (s) => s.netZeroProgress > 30,
   },
 ];
 
