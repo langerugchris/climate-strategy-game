@@ -1249,6 +1249,252 @@ body { transition: filter 2s ease; }
 .opt-a:hover { background: rgba(29,112,184,0.30); }
 .opt-b:hover { background: rgba(255,214,0,0.20); }
 
+/* ===== LEGACY INDICATOR ===== */
+#legacy-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-left: var(--gap-sm);
+}
+.legacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.legacy-badge.lv1 { background: rgba(144,156,184,0.15); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+.legacy-badge.lv3 { background: rgba(29,112,184,0.15); color: var(--accent-blue-lt); border: 1px solid rgba(29,112,184,0.3); }
+.legacy-badge.lv5 { background: rgba(179,157,219,0.15); color: #b39ddb; border: 1px solid rgba(179,157,219,0.3); }
+.legacy-badge.lv7 { background: rgba(255,214,0,0.12); color: #ffd600; border: 1px solid rgba(255,214,0,0.25); }
+.legacy-badge.lv10 { background: rgba(0,200,83,0.12); color: var(--status-good); border: 1px solid rgba(0,200,83,0.25); }
+.legacy-xp-bar {
+  width: 48px;
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.legacy-xp-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent-blue-lt);
+  transition: width 0.5s ease;
+}
+
+/* ===== TECH TREE MODAL ===== */
+#tech-tree-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+}
+#tech-tree-modal.hidden { display: none; }
+#tech-tree-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 640px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+#tech-tree-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tech-tree-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+.tech-tier {
+  display: flex;
+  gap: var(--gap-sm);
+  align-items: stretch;
+}
+.tech-tier-label {
+  width: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+.tech-node {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all 0.25s;
+  cursor: default;
+}
+.tech-node.purchased {
+  border-color: var(--accent-green-lt);
+  background: rgba(0,112,60,0.12);
+}
+.tech-node.available {
+  border-color: var(--accent-blue-lt);
+  background: rgba(29,112,184,0.08);
+  box-shadow: 0 0 8px rgba(83,144,217,0.15);
+}
+.tech-node.locked {
+  opacity: 0.45;
+}
+.tech-node-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.tech-node-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.tech-node-status {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+.tech-node.purchased .tech-node-status { color: var(--accent-green-lt); }
+.tech-node.available .tech-node-status { color: var(--accent-blue-lt); }
+.tech-node.locked .tech-node-status { color: var(--text-muted); }
+.tech-connector {
+  display: flex;
+  justify-content: center;
+  padding: 0 60px;
+}
+.tech-connector-line {
+  width: 2px;
+  height: 12px;
+  background: var(--border-strong);
+}
+.tech-connector-line.active { background: var(--accent-green-lt); }
+#tech-tree-close {
+  background: none;
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  font-size: 11px;
+  cursor: pointer;
+}
+#tech-tree-close:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+.tech-tree-link {
+  font-size: 10px;
+  color: var(--accent-blue-lt);
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 4px;
+  display: inline-block;
+}
+.tech-tree-link:hover { color: var(--text-primary); }
+
+/* ===== SUMMIT EVENT IN SIMULATION ===== */
+.mini-event-summit-context {
+  display: flex;
+  gap: var(--gap-sm);
+  margin-top: var(--gap-sm);
+  flex-wrap: wrap;
+}
+.summit-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  background: rgba(29,112,184,0.08);
+  border: 1px solid rgba(29,112,184,0.15);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+}
+.summit-stat-val {
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+}
+
+/* ===== WEATHER PARTICLES ===== */
+.weather-particle {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+@keyframes rain-fall {
+  0%   { opacity: 0.6; transform: translateY(-10px); }
+  100% { opacity: 0; transform: translateY(180px); }
+}
+@keyframes heat-shimmer {
+  0%   { opacity: 0; transform: translateY(0) scaleX(1); }
+  50%  { opacity: 0.15; transform: translateY(-8px) scaleX(1.2); }
+  100% { opacity: 0; transform: translateY(-16px) scaleX(0.8); }
+}
+#weather-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ===== ENDGAME LEGACY SECTION ===== */
+#endgame-legacy-section {
+  margin-top: var(--gap-md);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+#endgame-legacy-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-sm);
+}
+.legacy-level-display {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+}
+.legacy-title-display {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.legacy-xp-detail {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   /* Release the viewport-lock so the whole page scrolls naturally */
@@ -2160,6 +2406,7 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <span id="legacy-indicator"></span>
   </div>
   <div id="header-right">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -3083,6 +3330,17 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- TECH TREE MODAL -->
+<div id="tech-tree-modal" class="hidden">
+  <div id="tech-tree-card">
+    <div id="tech-tree-title">
+      <span>Research & Technology Tree</span>
+      <button id="tech-tree-close">Close</button>
+    </div>
+    <div id="tech-tree-content" class="tech-tree-grid"></div>
+  </div>
+</div>
+
 <script>
 'use strict';
 
@@ -3221,6 +3479,7 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'cool_head', icon: '❄️', name: 'Cool Head', desc: 'Finish with temperature below 1.3°C', check: (s) => s.temperature < 1.3 },
 ];
 
 class AchievementManager {
@@ -3387,7 +3646,7 @@ class SaveManager {
     this._KEY = 'uk_climate_save_v2';
   }
 
-  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
+  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty, techQueue) {
     try {
       const payload = {
         version: 2,
@@ -3397,6 +3656,7 @@ class SaveManager {
         techPurchased: [...techPurchased],
         activeScenario,
         activeDifficulty,
+        techQueue: techQueue || [],
       };
       localStorage.setItem(this._KEY, JSON.stringify(payload));
     } catch (e) { /* storage full or unavailable */ }
@@ -3654,7 +3914,8 @@ class GameEngine {
     const gs = d.gridAndStorage;
     if (gs > 0) {
       e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
+      const nuclearBonus = techTree.multipliers.hydrogenGrid ? 3 : 0;
+      e.nuclear = clamp(e.nuclear + gs * (5 + nuclearBonus),  0, 80);
       infra.gridAndStorage += gs * 35;
     }
     const ad = d.adaptation;
@@ -3813,7 +4074,8 @@ class GameEngine {
     const gs = d.gridAndStorage;
     if (gs > 0) {
       s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
+      const nuclearBonus = techTree.multipliers.hydrogenGrid ? 3 : 0;
+      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * (5 + nuclearBonus),  0, 80);
       s.infrastructure.gridAndStorage += gs * 35;
     }
 
@@ -3906,7 +4168,8 @@ class GameEngine {
     }
 
     if (s.netZeroAchieved) delta *= 0.45;
-    s.temperature = Math.round((s.temperature + delta) * 100) / 100;
+    if (techTree.multipliers.carbonCapture) delta -= 0.03;
+    s.temperature = Math.round((s.temperature + Math.max(delta, 0.01)) * 100) / 100;
   }
 
   _resolveEvent() {
@@ -4018,6 +4281,7 @@ class GameEngine {
     this.state.budget = this.getEffectiveBudget();
     const bonuses = legacySystem.startingBonuses();
     if (bonuses.budgetBonus > 0) this.state.budget += bonuses.budgetBonus;
+    if (bonuses.nuclearUnlocked) this.state.energy.nuclear += 10;
   }
 }
 
@@ -4349,6 +4613,7 @@ class UI {
           const upgrade = RESEARCH_UPGRADES.find(u => u.id === id);
           if (upgrade) { upgrade.apply(techTree.multipliers); techTree._purchased.add(id); }
         }
+        if (payload.techQueue) techTree._queue = [...payload.techQueue];
         // Restore history
         turnHistory.data = payload.historyData || [];
         this._activeScenario = payload.activeScenario || 'standard';
@@ -4447,6 +4712,19 @@ class UI {
       });
     }
 
+    // Tech tree modal
+    const techTreeCloseBtn = document.getElementById('tech-tree-close');
+    if (techTreeCloseBtn) {
+      techTreeCloseBtn.addEventListener('click', () => {
+        document.getElementById('tech-tree-modal').classList.add('hidden');
+      });
+    }
+    document.getElementById('tech-tree-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'tech-tree-modal') {
+        e.target.classList.add('hidden');
+      }
+    });
+
     // Init metric tooltips
     this._initTooltips();
 
@@ -4538,6 +4816,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('endgame-legacy-section')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -4616,8 +4895,10 @@ class UI {
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._updateLegacyIndicator();
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    effectsMgr.updateWeather(state.temperature);
   }
 
   _renderHeader(state) {
@@ -4850,21 +5131,34 @@ class UI {
   _renderResearchCard() {
     const nextUpgrade = techTree.nextUpgrade();
     const plusBtn = document.getElementById('plus-research');
+    const nameEl = document.getElementById('research-upgrade-name');
+    const tagEl = document.getElementById('research-effect-tag');
+    const doneEl = document.getElementById('research-all-done');
     if (!nextUpgrade || techTree.isComplete()) {
-      const nameEl = document.getElementById('research-upgrade-name');
       if (nameEl) nameEl.textContent = 'All upgrades purchased';
-      const tagEl = document.getElementById('research-effect-tag');
       if (tagEl) tagEl.style.display = 'none';
-      const doneEl = document.getElementById('research-all-done');
       if (doneEl) doneEl.style.display = '';
       if (plusBtn) plusBtn.disabled = true;
     } else {
-      const nameEl = document.getElementById('research-upgrade-name');
       if (nameEl) nameEl.textContent = nextUpgrade.name;
-      const tagEl = document.getElementById('research-effect-tag');
       if (tagEl) { tagEl.textContent = nextUpgrade.desc; tagEl.style.display = ''; }
-      const doneEl = document.getElementById('research-all-done');
       if (doneEl) doneEl.style.display = 'none';
+    }
+    // Add tech tree link if not already present
+    const card = document.getElementById('card-research');
+    if (card && !card.querySelector('.tech-tree-link')) {
+      const link = document.createElement('div');
+      link.className = 'tech-tree-link';
+      link.textContent = `View Tech Tree (${techTree._purchased.size}/${RESEARCH_UPGRADES.length})`;
+      link.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this._buildTechTreeContent();
+        document.getElementById('tech-tree-modal').classList.remove('hidden');
+      });
+      card.appendChild(link);
+    } else if (card) {
+      const link = card.querySelector('.tech-tree-link');
+      if (link) link.textContent = `View Tech Tree (${techTree._purchased.size}/${RESEARCH_UPGRADES.length})`;
     }
   }
 
@@ -5164,8 +5458,22 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    // Build legacy/progression display
+    const legacyResult = legacySystem.data;
+    const lvl = legacySystem.level();
+    const lvlTitle = legacySystem.title();
+    const legacyHtml = `
+      <div id="endgame-legacy-section">
+        <div id="endgame-legacy-title">Career Progression</div>
+        <div class="legacy-level-display">Level ${lvl}</div>
+        <div class="legacy-title-display">${lvlTitle}</div>
+        <div class="legacy-xp-detail">${legacyResult.xp} XP across ${legacyResult.runs} run${legacyResult.runs !== 1 ? 's' : ''} · Best score: ${legacyResult.bestScore}</div>
+        ${lvl >= 5 && lvl < 10 ? '<div class="legacy-xp-detail" style="color:var(--accent-blue-lt)">Perk: +£20bn starting budget</div>' : ''}
+        ${lvl >= 10 ? '<div class="legacy-xp-detail" style="color:var(--status-good)">Perks: +£20bn starting budget · +10 Nuclear capacity</div>' : ''}
+      </div>`;
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml + legacyHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5379,6 +5687,61 @@ class UI {
   }
 
   // ===== HIGH SCORE TABLE =====
+  // ===== TECH TREE MODAL =====
+  _buildTechTreeContent() {
+    const content = document.getElementById('tech-tree-content');
+    if (!content) return;
+    const tiers = [1, 2, 3];
+    let html = '';
+    for (const tier of tiers) {
+      const nodes = RESEARCH_UPGRADES.filter(u => u.tier === tier);
+      if (tier > 1) {
+        const prevTier = RESEARCH_UPGRADES.filter(u => u.tier === tier - 1);
+        const anyPrevPurchased = prevTier.some(u => techTree.getStatus(u.id) === 'purchased');
+        html += `<div class="tech-connector"><div class="tech-connector-line${anyPrevPurchased ? ' active' : ''}"></div></div>`;
+      }
+      html += `<div class="tech-tier"><div class="tech-tier-label">Tier ${tier}</div>`;
+      for (const node of nodes) {
+        const status = techTree.getStatus(node.id);
+        const statusLabel = status === 'purchased' ? '✓ Researched' : status === 'available' ? 'Available' : 'Locked';
+        const isQueued = techTree._queue.includes(node.id);
+        html += `<div class="tech-node ${status}" data-tech-id="${node.id}">
+          <div class="tech-node-name">${node.name}</div>
+          <div class="tech-node-desc">${node.desc}</div>
+          <div class="tech-node-status">${statusLabel}${isQueued ? ' (queued)' : ''}</div>
+          ${status === 'available' ? `<div class="tech-tree-link" data-queue="${node.id}">Queue for next R&D block</div>` : ''}
+        </div>`;
+      }
+      html += `</div>`;
+    }
+    content.innerHTML = html;
+    content.querySelectorAll('.tech-tree-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.stopPropagation();
+        techTree.queueUpgrade(link.dataset.queue);
+        this._renderResearchCard();
+        this._buildTechTreeContent();
+      });
+    });
+  }
+
+  _updateLegacyIndicator() {
+    const el = document.getElementById('legacy-indicator');
+    if (!el) return;
+    const legacy = legacySystem;
+    const lvl = legacy.level();
+    const title = legacy.title();
+    const xp = legacy.data.xp;
+    const thresholds = [0, 150, 350, 600, 900];
+    const lvlClass = lvl >= 10 ? 'lv10' : lvl >= 7 ? 'lv7' : lvl >= 5 ? 'lv5' : lvl >= 3 ? 'lv3' : 'lv1';
+    const currentThreshold = thresholds[Math.min(thresholds.length - 1, [1,1,1,3,3,5,5,7,7,7,10].indexOf(lvl))];
+    const nextThreshold = lvl >= 10 ? 900 : thresholds[thresholds.findIndex(t => t > xp)] || 900;
+    const progress = lvl >= 10 ? 100 : Math.round(((xp - currentThreshold) / (nextThreshold - currentThreshold)) * 100);
+    el.innerHTML = `
+      <span class="legacy-badge ${lvlClass}">Lv${lvl} ${title}</span>
+      ${lvl < 10 ? `<span class="legacy-xp-bar"><span class="legacy-xp-fill" style="width:${progress}%"></span></span>` : ''}`;
+  }
+
   _buildHighScoreHTML() {
     const scores = highScoreMgr.getTable();
     if (scores.length === 0) {
@@ -5474,6 +5837,55 @@ class EffectsManager {
     sky.setAttribute('fill', `rgb(${r},${g},${b})`);
   }
 
+  updateWeather(temperature) {
+    const sceneSection = document.getElementById('scene-section');
+    if (!sceneSection) return;
+    let layer = document.getElementById('weather-layer');
+    if (!layer) {
+      sceneSection.style.position = 'relative';
+      layer = document.createElement('div');
+      layer.id = 'weather-layer';
+      sceneSection.appendChild(layer);
+    }
+
+    layer.innerHTML = '';
+    const t = Math.max(0, Math.min(1, (temperature - 1.1) / 1.9));
+
+    if (t > 0.5) {
+      const count = Math.round((t - 0.5) * 16);
+      for (let i = 0; i < count; i++) {
+        const shimmer = document.createElement('div');
+        shimmer.className = 'weather-particle';
+        shimmer.style.cssText = `
+          left: ${10 + Math.random() * 80}%;
+          bottom: ${Math.random() * 30}%;
+          width: ${20 + Math.random() * 40}px;
+          height: 3px;
+          background: rgba(255,${180 + Math.random() * 40},0,0.12);
+          border-radius: 50%;
+          animation: heat-shimmer ${2 + Math.random() * 2}s ease-in-out ${Math.random() * 3}s infinite;
+        `;
+        layer.appendChild(shimmer);
+      }
+    } else if (t > 0.15) {
+      const count = Math.round((0.5 - t) * 20);
+      for (let i = 0; i < count; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'weather-particle';
+        drop.style.cssText = `
+          left: ${Math.random() * 100}%;
+          top: 0;
+          width: 1px;
+          height: ${4 + Math.random() * 6}px;
+          background: rgba(83,144,217,0.4);
+          border-radius: 1px;
+          animation: rain-fall ${0.6 + Math.random() * 0.6}s linear ${Math.random() * 2}s infinite;
+        `;
+        layer.appendChild(drop);
+      }
+    }
+  }
+
   haptic(style = 'medium') {
     if (window.Capacitor?.Plugins?.Haptics) {
       const map = { light: 'LIGHT', medium: 'MEDIUM', heavy: 'HEAVY' };
@@ -5496,48 +5908,106 @@ const RESEARCH_UPGRADES = [
     id:   'solar_supply_chain',
     name: 'Solar Supply Chain',
     desc: 'Energy blocks give 1.5× Net Zero progress',
+    tier: 1,
+    requires: [],
     apply(m) { m.energyNZ = 1.5; },
   },
   {
     id:   'battery_density',
     name: 'Battery Energy Density',
     desc: 'Grid blocks give 1.4× Storage per block',
+    tier: 1,
+    requires: [],
     apply(m) { m.gridStorage = 1.4; },
   },
   {
     id:   'community_networks',
     name: 'Community Resilience Hubs',
     desc: 'Social Support blocks give 1.5× Social Stability',
+    tier: 2,
+    requires: ['solar_supply_chain'],
     apply(m) { m.socialGain = 1.5; },
   },
   {
     id:   'green_finance_regs',
     name: 'Green Finance Regulations',
     desc: 'Financial Resilience blocks give 1.5× Stability gain',
+    tier: 2,
+    requires: ['battery_density'],
     apply(m) { m.finGain = 1.5; },
   },
   {
     id:   'ai_flood_prediction',
     name: 'AI Flood Prediction',
     desc: 'Adaptation blocks give 1.6× event damage mitigation',
+    tier: 3,
+    requires: ['community_networks', 'green_finance_regs'],
     apply(m) { m.adaptMitigate = 1.6; },
+  },
+  {
+    id:   'hydrogen_grid',
+    name: 'Green Hydrogen Grid',
+    desc: 'Grid & Storage blocks give +3 additional nuclear capacity',
+    tier: 2,
+    requires: ['battery_density'],
+    apply(m) { m.hydrogenGrid = true; },
+  },
+  {
+    id:   'carbon_capture',
+    name: 'Direct Air Capture',
+    desc: 'Each turn reduces temperature by 0.03°C passively',
+    tier: 3,
+    requires: ['solar_supply_chain', 'community_networks'],
+    apply(m) { m.carbonCapture = true; },
+  },
+  {
+    id:   'climate_diplomacy',
+    name: 'Climate Diplomacy Corps',
+    desc: 'International summits give double benefits',
+    tier: 3,
+    requires: ['green_finance_regs', 'hydrogen_grid'],
+    apply(m) { m.diplomacyBonus = true; },
   },
 ];
 
 class TechTreeManager {
   constructor() {
     this.multipliers = {
-      energyNZ:      1.0,
-      gridStorage:   1.0,
-      socialGain:    1.0,
-      finGain:       1.0,
-      adaptMitigate: 1.0,
+      energyNZ:       1.0,
+      gridStorage:    1.0,
+      socialGain:     1.0,
+      finGain:        1.0,
+      adaptMitigate:  1.0,
+      hydrogenGrid:   false,
+      carbonCapture:  false,
+      diplomacyBonus: false,
     };
     this._purchased = new Set();
+    this._queue = [];
+  }
+
+  availableUpgrades() {
+    return RESEARCH_UPGRADES.filter(u =>
+      !this._purchased.has(u.id) &&
+      u.requires.every(req => this._purchased.has(req))
+    );
   }
 
   nextUpgrade() {
-    return RESEARCH_UPGRADES.find(u => !this._purchased.has(u.id)) || null;
+    if (this._queue.length > 0) {
+      const queued = RESEARCH_UPGRADES.find(u => u.id === this._queue[0]);
+      if (queued && !this._purchased.has(queued.id) &&
+          queued.requires.every(r => this._purchased.has(r))) {
+        return queued;
+      }
+      this._queue.shift();
+    }
+    const available = this.availableUpgrades();
+    return available.length > 0 ? available[0] : null;
+  }
+
+  queueUpgrade(id) {
+    this._queue = [id];
   }
 
   purchase() {
@@ -5545,7 +6015,18 @@ class TechTreeManager {
     if (!upgrade) return null;
     upgrade.apply(this.multipliers);
     this._purchased.add(upgrade.id);
+    if (this._queue.length > 0 && this._queue[0] === upgrade.id) {
+      this._queue.shift();
+    }
     return upgrade;
+  }
+
+  getStatus(id) {
+    if (this._purchased.has(id)) return 'purchased';
+    const u = RESEARCH_UPGRADES.find(r => r.id === id);
+    if (!u) return 'locked';
+    if (u.requires.every(r => this._purchased.has(r))) return 'available';
+    return 'locked';
   }
 
   isComplete() {
@@ -5553,8 +6034,9 @@ class TechTreeManager {
   }
 
   reset() {
-    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0, hydrogenGrid:false, carbonCapture:false, diplomacyBonus:false };
     this._purchased.clear();
+    this._queue = [];
   }
 }
 
@@ -5724,6 +6206,62 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_summit_trade',
+    icon: '🌐',
+    title: 'International Climate Summit',
+    prompt: 'The G20 is negotiating a green technology transfer deal. How does the UK participate?',
+    explanation: 'International cooperation accelerates decarbonisation through shared R&D and supply chains. Leading the deal costs political capital and money, but accelerates your transition. Playing it safe preserves budget but misses a once-in-a-decade opportunity.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🤝 Lead the green tech pact',
+      consequence: 'Costs £10bn · +8 Net Zero · +5 Social Capital (global prestige)',
+      effect: (s) => {
+        const bonus = techTree.multipliers.diplomacyBonus ? 2 : 1;
+        s.nextTurnBudgetPenalty += Math.round(10 / bonus);
+        s.netZeroProgress = Math.min(100, s.netZeroProgress + 8 * bonus);
+        s.socialCapital = Math.min(60, s.socialCapital + 5 * bonus);
+      },
+    },
+    optB: {
+      label: '🏛️ Observe and protect UK interests',
+      consequence: 'No cost · +2 Financial Stability · miss the acceleration window',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 2); },
+    },
+    condition: (s) => s.turn >= 1 && s.netZeroProgress < 90,
+  },
+  {
+    id: 'mini_summit_carbon',
+    icon: '🌍',
+    title: 'Carbon Border Adjustment',
+    prompt: 'The EU proposes a joint carbon border tax. Join or stay out?',
+    explanation: 'A carbon border tax penalises imports from high-emission countries, protecting domestic green industry. Joining strengthens the transition but risks trade disputes that damage financial stability. Staying out avoids disruption but leaves UK industry exposed to cheaper, dirtier imports.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Stranded assets: ${Math.round(s.strandedAssets)}`,
+    }),
+    optA: {
+      label: '🛡️ Join the carbon border coalition',
+      consequence: 'Costs £5bn · +6 Net Zero · −4 Financial Stability (trade disruption)',
+      effect: (s) => {
+        const bonus = techTree.multipliers.diplomacyBonus ? 2 : 1;
+        s.nextTurnBudgetPenalty += Math.round(5 / bonus);
+        s.netZeroProgress = Math.min(100, s.netZeroProgress + 6 * bonus);
+        s.financialStability = Math.max(0, s.financialStability - Math.round(4 / bonus));
+      },
+    },
+    optB: {
+      label: '🏪 Maintain open trade policy',
+      consequence: 'No cost · +3 Financial Stability · gas +3 (cheaper fossil imports)',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 3); s.energy.gas = Math.min(100, s.energy.gas + 3); },
+    },
+    condition: (s) => s.turn >= 2 && s.strandedAssets > 10,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5796,11 +6334,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     ui._pendingEndgame = null;
     ui.showEventModal(result.event);
     // Auto-save after event shown (state is post-event)
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, techTree._queue);
     ui.render(engine.getState());
   } else {
     // Auto-save mid-game progress
-    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active);
+    saveMgr.save(engine.state, turnHistory.data, techTree._purchased, ui._activeScenario, difficultyMgr.active, techTree._queue);
     ui.render(engine.getState());
     fxMgr.pulseAll();
   }
@@ -5968,6 +6506,9 @@ engine.state.budget = engine.getEffectiveBudget();
 const _bonuses = legacySystem.startingBonuses();
 if (_bonuses.budgetBonus > 0) {
   engine.state.budget += _bonuses.budgetBonus;
+}
+if (_bonuses.nuclearUnlocked) {
+  engine.state.energy.nuclear += 10;
 }
 
 // Set header subtitle
