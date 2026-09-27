@@ -2142,6 +2142,70 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== POLICY SYNERGY INDICATORS ===== */
+.synergy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(76,175,129,0.12);
+  color: var(--status-good);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(76,175,129,0.25);
+  animation: synergyPulse 2s ease-in-out infinite;
+}
+@keyframes synergyPulse {
+  0%, 100% { border-color: rgba(76,175,129,0.25); }
+  50% { border-color: rgba(76,175,129,0.55); }
+}
+.synergy-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+/* ===== LETTER GRADE ===== */
+#endgame-grade {
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 4px;
+  letter-spacing: -0.04em;
+}
+#endgame-grade.grade-a { color: var(--status-good); }
+#endgame-grade.grade-b { color: var(--accent-blue-lt); }
+#endgame-grade.grade-c { color: var(--status-warn); }
+#endgame-grade.grade-d { color: #ff7043; }
+#endgame-grade.grade-f { color: var(--status-danger); }
+#endgame-grade-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+}
+
+/* ===== SIM HEADLINE ===== */
+.sim-headline {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: var(--gap-sm);
+  line-height: 1.5;
+  opacity: 0;
+  animation: headlineFade 3.5s ease-in-out forwards;
+}
+@keyframes headlineFade {
+  0% { opacity: 0; transform: translateY(4px); }
+  15% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; }
+  100% { opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -2966,6 +3030,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_superpower">
+        <span class="scenario-card-icon">⚡</span>
+        <div class="scenario-card-name">Energy Superpower</div>
+        <div class="scenario-card-desc">Aggressive renewables targets left you with strong wind and nuclear capacity — but the grid is stressed from rapid buildout.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Wind: <span>45 (high)</span></div>
+          <div class="scenario-stat">Grid: <span>55% (stressed)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="late_start">
+        <span class="scenario-card-icon">⏰</span>
+        <div class="scenario-card-name">Late Start</div>
+        <div class="scenario-card-desc">Climate action was delayed for a decade. Temperature is already elevated, Net Zero progress is minimal, and public trust has eroded.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£120bn/turn</span></div>
+          <div class="scenario-stat">Temperature: <span>1.4°C (elevated)</span></div>
+          <div class="scenario-stat">Net Zero: <span>15% (behind)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3100,6 +3186,13 @@ const BLOCK_COSTS = {
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
+
+const POLICY_SYNERGIES = [
+  { cats: ['energyTransition', 'gridAndStorage'], label: 'Integrated Grid', bonus: { gridReliability: 5, netZeroProgress: 3 }, desc: '+5 Grid, +3 Net Zero' },
+  { cats: ['socialSupport', 'adaptation'], label: 'Community Resilience', bonus: { socialStability: 4 }, desc: '+4 Social Stability' },
+  { cats: ['financialResilience', 'energyTransition'], label: 'Managed Transition', bonus: { strandedAssets: -5 }, desc: '-5 Stranded Assets' },
+  { cats: ['gridAndStorage', 'research'], label: 'Storage Breakthrough', bonus: { storage: 3 }, desc: '+3 Storage' },
+];
 
 const RANDOM_EVENTS = [
   {
@@ -3370,6 +3463,28 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_superpower: {
+    label: 'Energy Superpower',
+    apply(state) {
+      state.energy.wind = 45;
+      state.energy.solar = 15;
+      state.energy.nuclear = 20;
+      state.energy.gas = 15;
+      state.netZeroProgress = 45;
+      state.gridReliability = 55;
+      state._budgetOverride = 110;
+    },
+  },
+  late_start: {
+    label: 'Late Start',
+    apply(state) {
+      state.temperature = 1.4;
+      state.netZeroProgress = 15;
+      state.socialCapital = 10;
+      state.financialStability = 60;
+      state._budgetOverride = 120;
     },
   },
 };
@@ -3677,11 +3792,28 @@ class GameEngine {
       infra.financialResilience += fr * 30;
     }
 
+    // Synergy bonuses (mirror _applySynergies)
+    for (const syn of POLICY_SYNERGIES) {
+      if (syn.cats.every(c => d[c] > 0)) {
+        if (syn.bonus.netZeroProgress) netZeroProgress = clamp(netZeroProgress + syn.bonus.netZeroProgress, 0, 100);
+        if (syn.bonus.socialStability) socialStability = clamp(socialStability + syn.bonus.socialStability, 0, 100);
+        if (syn.bonus.strandedAssets) strandedAssets = clamp(strandedAssets + syn.bonus.strandedAssets, 0, 100);
+        if (syn.bonus.storage) e.storage = clamp(e.storage + syn.bonus.storage, 0, 100);
+      }
+    }
+
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
     const backup          = e.nuclear + e.storage + (e.gas * 0.5);
     const renew           = Math.max(e.wind + e.solar, 1);
-    const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
+    let gridReliability   = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
+
+    // Apply grid synergy bonus after grid calc
+    for (const syn of POLICY_SYNERGIES) {
+      if (syn.cats.every(c => d[c] > 0) && syn.bonus.gridReliability) {
+        gridReliability = clamp(gridReliability + syn.bonus.gridReliability, 0, 100);
+      }
+    }
 
     // Mirror _recalcFinancial
     const strandedDrag  = strandedAssets * 0.55;
@@ -3846,6 +3978,24 @@ class GameEngine {
     const rs = d.research;
     for (let i = 0; i < rs; i++) {
       techTree.purchase();
+    }
+
+    this._applySynergies();
+  }
+
+  _applySynergies() {
+    const s = this.state;
+    const d = s.currentDecisions;
+    this._activeSynergies = [];
+    for (const syn of POLICY_SYNERGIES) {
+      if (syn.cats.every(c => d[c] > 0)) {
+        this._activeSynergies.push(syn);
+        if (syn.bonus.gridReliability) s.gridReliability = this._clamp(s.gridReliability + syn.bonus.gridReliability, 0, 100);
+        if (syn.bonus.netZeroProgress) s.netZeroProgress = this._clamp(s.netZeroProgress + syn.bonus.netZeroProgress, 0, 100);
+        if (syn.bonus.socialStability) s.socialStability = this._clamp(s.socialStability + syn.bonus.socialStability, 0, 100);
+        if (syn.bonus.strandedAssets) s.strandedAssets = this._clamp(s.strandedAssets + syn.bonus.strandedAssets, 0, 100);
+        if (syn.bonus.storage) s.energy.storage = this._clamp(s.energy.storage + syn.bonus.storage, 0, 100);
+      }
     }
   }
 
@@ -4046,6 +4196,22 @@ function calculateScore(state) {
   return { total, tempScore, nzScore, stabScore, resScore };
 }
 
+function getLetterGrade(score) {
+  if (score >= 95) return { letter: 'A+', css: 'grade-a' };
+  if (score >= 90) return { letter: 'A',  css: 'grade-a' };
+  if (score >= 85) return { letter: 'A-', css: 'grade-a' };
+  if (score >= 80) return { letter: 'B+', css: 'grade-b' };
+  if (score >= 75) return { letter: 'B',  css: 'grade-b' };
+  if (score >= 70) return { letter: 'B-', css: 'grade-b' };
+  if (score >= 65) return { letter: 'C+', css: 'grade-c' };
+  if (score >= 60) return { letter: 'C',  css: 'grade-c' };
+  if (score >= 55) return { letter: 'C-', css: 'grade-c' };
+  if (score >= 50) return { letter: 'D+', css: 'grade-d' };
+  if (score >= 45) return { letter: 'D',  css: 'grade-d' };
+  if (score >= 40) return { letter: 'D-', css: 'grade-d' };
+  return { letter: 'F', css: 'grade-f' };
+}
+
 /* ============================================================
    END GAME EVALUATION
 ============================================================ */
@@ -4224,7 +4390,8 @@ function buildShareText(state, result) {
     MANAGED: '🌤️ Managed Transition',
   };
   const label = scenarios[result.scenario] || result.title;
-  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
+  const grade = getLetterGrade(score.total);
+  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nGrade: ${grade.letter} — Score: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
 }
 
 /* ============================================================
@@ -4509,7 +4676,7 @@ class UI {
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
             <div class="log-year">2025 — Briefing</div>
-            <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard'}</strong>. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
+            <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard'}</strong>. Temperature: ${this.engine.state.temperature.toFixed(1)}°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
           </div>`;
         this.render(this.engine.getState());
       });
@@ -4843,6 +5010,16 @@ class UI {
       card.classList.toggle('allocated',      count > 0 && count < MAX_BLOCKS_PER_CAT);
       card.classList.toggle('maxed',          count >= MAX_BLOCKS_PER_CAT);
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
+
+      const oldSyn = card.querySelector('.synergy-row');
+      if (oldSyn) oldSyn.remove();
+      const activeSynergies = POLICY_SYNERGIES.filter(syn => syn.cats.includes(cat) && syn.cats.every(c => state.currentDecisions[c] > 0));
+      if (activeSynergies.length > 0) {
+        const row = document.createElement('div');
+        row.className = 'synergy-row';
+        row.innerHTML = activeSynergies.map(s => `<span class="synergy-badge">⚡ ${s.label}: ${s.desc}</span>`).join('');
+        card.querySelector('.card-effects').after(row);
+      }
     }
     this._renderResearchCard();
   }
@@ -5150,8 +5327,12 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    const grade = getLetterGrade(score.total);
+
     const scoreHtml = `
       <div id="endgame-score-section">
+        <div id="endgame-grade" class="${grade.css}">${grade.letter}</div>
+        <div id="endgame-grade-label">Performance Grade</div>
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
         <div id="endgame-score-label">Your Climate Score</div>
         ${radarHtml}
@@ -5726,6 +5907,24 @@ const MINI_EVENTS_POOL = [
   },
 ];
 
+const NEWSPAPER_HEADLINES = [
+  { condition: s => s.temperature > 1.5, text: 'TIMES: "UK Breaches 1.5°C Threshold — Scientists Warn of Accelerating Feedback Loops"' },
+  { condition: s => s.netZeroProgress >= 80, text: 'GUARDIAN: "Britain On Track for Net Zero — A Global First Among Major Economies"' },
+  { condition: s => s.netZeroProgress < 30 && s.turn >= 2, text: 'TELEGRAPH: "Net Zero Targets Looking Increasingly Unrealistic, Warn Advisors"' },
+  { condition: s => s.gridReliability < 40, text: 'DAILY MAIL: "Blackout Britain: Grid Reliability Plummets as Renewables Surge"' },
+  { condition: s => s.gridReliability > 80, text: 'FINANCIAL TIMES: "UK Grid Emerges as Most Reliable in Europe After Storage Push"' },
+  { condition: s => s.socialStability < 40, text: 'BBC NEWS: "Fuel Poverty Protests Spread to Major Cities Amid Transition Costs"' },
+  { condition: s => s.socialStability > 80, text: 'GUARDIAN: "Public Support for Climate Programme Reaches Record High"' },
+  { condition: s => s.financialStability < 40, text: 'FINANCIAL TIMES: "Pension Funds Face Systemic Risk from Stranded Fossil Assets"' },
+  { condition: s => s.strandedAssets > 50, text: 'ECONOMIST: "North Sea Write-Downs Trigger Contagion Fears in Banking Sector"' },
+  { condition: s => s.energy.wind > 60, text: 'TIMES: "Wind Power Now Generates More Electricity Than Gas for First Time"' },
+  { condition: s => s.energy.solar > 40, text: 'GUARDIAN: "Solar Revolution: UK Rooftops Now Power 2 Million Homes"' },
+  { condition: s => s.energy.gas < 10, text: 'BBC NEWS: "Last UK Gas Plant Decommissioned — End of the Fossil Fuel Era"' },
+  { condition: () => true, text: 'OBSERVER: "Climate Policy — The Hardest Test of Government in a Generation"' },
+  { condition: () => true, text: 'METRO: "What Does Net Zero Actually Mean for Your Energy Bills?"' },
+  { condition: () => true, text: 'INDEPENDENT: "Inside the Civil Service Team Running Britain\'s Climate Transition"' },
+];
+
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
 
@@ -5753,6 +5952,17 @@ async function runSimulationPhase(engine, ui, fxMgr) {
         fxMgr.haptic('medium');
         await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
         minisFired++;
+      }
+    } else {
+      const hlEligible = NEWSPAPER_HEADLINES.filter(h => h.condition(engine.state));
+      if (hlEligible.length > 0) {
+        const hl = hlEligible[Math.floor(Math.random() * hlEligible.length)];
+        const hlEl = document.createElement('div');
+        hlEl.className = 'sim-headline';
+        hlEl.textContent = hl.text;
+        overlay.querySelector('#sim-card').appendChild(hlEl);
+        await _delay(3000);
+        hlEl.remove();
       }
     }
   }
