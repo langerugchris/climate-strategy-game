@@ -2193,6 +2193,144 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== ENDGAME PROGRESSION CHART ===== */
+#endgame-progression {
+  margin: var(--gap-lg) 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-md);
+}
+#endgame-progression-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+  text-align: center;
+}
+#endgame-progression svg {
+  width: 100%;
+  display: block;
+}
+.prog-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-md);
+  margin-top: var(--gap-sm);
+  flex-wrap: wrap;
+}
+.prog-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.prog-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(0,0,0,0.82);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--gap-xl);
+  animation: fadeIn 0.3s ease;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-card {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 480px;
+  width: 100%;
+  animation: slideUp 0.3s ease;
+  position: relative;
+}
+#tutorial-step-indicator {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: var(--gap-lg);
+  font-family: var(--font-editorial);
+}
+#tutorial-actions {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: flex-end;
+}
+.tutorial-btn {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+}
+#tutorial-next-btn {
+  background: var(--accent-blue);
+  color: white;
+}
+#tutorial-next-btn:hover { background: var(--accent-blue-lt); }
+#tutorial-skip-btn {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+}
+#tutorial-skip-btn:hover { background: var(--border-strong); }
+.tutorial-highlight {
+  position: relative;
+  z-index: 3001;
+  box-shadow: 0 0 0 4px var(--accent-blue-lt), 0 0 20px rgba(83,144,217,0.4);
+  border-radius: var(--radius-md);
+}
+
+/* ===== RESET/UNDO BUTTONS ===== */
+#allocation-tools {
+  display: flex;
+  gap: var(--gap-sm);
+  align-items: center;
+}
+.tool-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+}
+.tool-btn:hover { background: var(--border-strong); border-color: var(--accent-blue); }
+.tool-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2433,6 +2571,10 @@ body { transition: filter 2s ease; }
         <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
         <div id="budget-status">
           <span id="budget-remaining-display">£100bn</span> remaining
+          <div id="allocation-tools">
+            <button class="tool-btn" id="undo-alloc-btn" title="Undo last allocation" disabled>↶ Undo</button>
+            <button class="tool-btn" id="reset-alloc-btn" title="Reset all allocations">⟳ Reset</button>
+          </div>
         </div>
       </div>
       <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
@@ -3147,6 +3289,7 @@ body { transition: filter 2s ease; }
     <p id="endgame-subtitle-display"></p>
     <div id="endgame-metrics-grid"></div>
     <div id="endgame-narrative-display"></div>
+    <div id="endgame-progression"></div>
     <div id="endgame-ngfs-label"></div>
     <button id="share-btn">📤 Share your result</button>
     <button id="restart-btn">↺ Play Again</button>
@@ -3228,6 +3371,19 @@ body { transition: filter 2s ease; }
     <button class="mobile-tab" data-panel="log-panel">
       <span class="mobile-tab-icon">📋</span>Log
     </button>
+  </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-card">
+    <div id="tutorial-step-indicator">Step 1 of 6</div>
+    <div id="tutorial-title">Welcome, Minister</div>
+    <div id="tutorial-body">Let's walk through the controls before your first budget session.</div>
+    <div id="tutorial-actions">
+      <button class="tutorial-btn" id="tutorial-skip-btn">Skip Tour</button>
+      <button class="tutorial-btn" id="tutorial-next-btn">Next →</button>
+    </div>
   </div>
 </div>
 
@@ -4472,6 +4628,8 @@ class UI {
   }
 
   _bindEvents() {
+    this._allocHistory = [];
+
     // Block +/- buttons — pointerdown for zero-latency input
     document.querySelectorAll('.block-btn').forEach(btn => {
       btn.addEventListener('pointerdown', (e) => {
@@ -4480,17 +4638,45 @@ class UI {
         const isMinus = btn.id.startsWith('minus-');
         effectsMgr.haptic('light');
         if (isMinus) {
-          this.engine.deallocateBlock(cat);
-          audioEngine.deallocate();
+          if (this.engine.state.currentDecisions[cat] > 0) {
+            this.engine.deallocateBlock(cat);
+            this._allocHistory.push({ type: 'remove', cat });
+            audioEngine.deallocate();
+          }
         } else {
-          this.engine.allocateBlock(cat);
-          audioEngine.allocate();
+          const result = this.engine.allocateBlock(cat);
+          if (result.success) {
+            this._allocHistory.push({ type: 'add', cat });
+            audioEngine.allocate();
+          }
         }
-        // Hide no-spend warning if any block is allocated
         if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
         this._noSpendWarned = false;
+        this._updateAllocTools();
         this.render(this.engine.getState());
       });
+    });
+
+    // Undo last allocation
+    document.getElementById('undo-alloc-btn').addEventListener('click', () => {
+      if (!this._allocHistory.length) return;
+      const last = this._allocHistory.pop();
+      if (last.type === 'add') this.engine.deallocateBlock(last.cat);
+      else this.engine.allocateBlock(last.cat);
+      this._updateAllocTools();
+      this.render(this.engine.getState());
+    });
+
+    // Reset all allocations
+    document.getElementById('reset-alloc-btn').addEventListener('click', () => {
+      for (const cat of this.categories) {
+        while (this.engine.state.currentDecisions[cat] > 0) {
+          this.engine.deallocateBlock(cat);
+        }
+      }
+      this._allocHistory = [];
+      this._updateAllocTools();
+      this.render(this.engine.getState());
     });
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
@@ -4589,6 +4775,8 @@ class UI {
 
       audioEngine.endTurn();
       this.elEndTurnBtn.disabled = true;
+      this._allocHistory = [];
+      this._updateAllocTools();
 
       // If research blocks allocated and multiple upgrades available, let player choose
       const researchBlocks = this.engine.state.currentDecisions.research;
@@ -4750,6 +4938,8 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      const progReset = document.getElementById('endgame-progression');
+      if (progReset) progReset.innerHTML = '';
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -5508,6 +5698,18 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
+    // Build metric progression chart
+    const progEl = document.getElementById('endgame-progression');
+    if (progEl) {
+      const chartContent = this._buildProgressionChart();
+      if (chartContent) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = chartContent;
+        const inner = tmp.firstElementChild;
+        progEl.innerHTML = inner ? inner.innerHTML : '';
+      }
+    }
+
     this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
@@ -5568,6 +5770,53 @@ class UI {
       ${dataPoints.map(p => `<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="3" fill="var(--accent-blue-lt)"/>`).join('')}
       ${labels.join('')}
     </svg></div>`;
+  }
+
+  _buildProgressionChart() {
+    const data = turnHistory.data;
+    if (data.length < 2) return '';
+    const W = 440, H = 160, PAD_L = 42, PAD_R = 10, PAD_T = 10, PAD_B = 28;
+    const plotW = W - PAD_L - PAD_R, plotH = H - PAD_T - PAD_B;
+    const metrics = [
+      { key: 'temperature', label: 'Temp', color: '#e85d75', scale: [0.8, 3.0], fmt: v => v.toFixed(1) + '°C' },
+      { key: 'netZeroProgress', label: 'Net Zero', color: '#5390d9', scale: [0, 100], fmt: v => Math.round(v) + '%' },
+      { key: 'gridReliability', label: 'Grid', color: '#f9c74f', scale: [0, 100], fmt: v => Math.round(v) + '%' },
+      { key: 'financialStability', label: 'Finance', color: '#43aa8b', scale: [0, 100], fmt: v => Math.round(v) + '%' },
+      { key: 'socialStability', label: 'Social', color: '#b56dff', scale: [0, 100], fmt: v => Math.round(v) + '%' },
+    ];
+    const xStep = plotW / (data.length - 1);
+    let svgInner = '';
+    // Y-axis grid
+    for (let i = 0; i <= 4; i++) {
+      const y = PAD_T + (plotH * i) / 4;
+      svgInner += `<line x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}" stroke="var(--border-subtle)" stroke-width="0.5" stroke-dasharray="3,3"/>`;
+    }
+    // X-axis labels (years)
+    data.forEach((d, i) => {
+      const x = PAD_L + i * xStep;
+      svgInner += `<text x="${x}" y="${H - 4}" text-anchor="middle" fill="var(--text-muted)" font-size="9">${d.year}</text>`;
+    });
+    // Lines
+    for (const m of metrics) {
+      const [lo, hi] = m.scale;
+      const pts = data.map((d, i) => {
+        const x = PAD_L + i * xStep;
+        const norm = (d[m.key] - lo) / (hi - lo);
+        const y = PAD_T + plotH - norm * plotH;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      });
+      svgInner += `<polyline points="${pts.join(' ')}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+      // End dot
+      const lastPt = pts[pts.length - 1].split(',');
+      svgInner += `<circle cx="${lastPt[0]}" cy="${lastPt[1]}" r="3" fill="${m.color}"/>`;
+    }
+    const legend = metrics.map(m => `<span class="prog-legend-item"><span class="prog-legend-dot" style="background:${m.color}"></span>${m.label}</span>`).join('');
+    return `<div id="endgame-progression"><div id="endgame-progression-title">Metric Progression</div><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${svgInner}</svg><div class="prog-legend">${legend}</div></div>`;
+  }
+
+  _updateAllocTools() {
+    const undoBtn = document.getElementById('undo-alloc-btn');
+    if (undoBtn) undoBtn.disabled = !this._allocHistory || !this._allocHistory.length;
   }
 
   _buildPolicyTimeline(state) {
@@ -6196,6 +6445,75 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.turn >= 1 && s.infrastructure.energyTransition > 30,
   },
+  {
+    id: 'mini_food_supply',
+    icon: '🌾',
+    title: 'Food Supply Disruption',
+    prompt: 'Extreme weather has devastated UK harvests. How do you respond?',
+    explanation: 'Climate change is making UK farming increasingly unreliable. Emergency food imports stabilise prices immediately but increase carbon emissions from long-haul freight. Investing in climate-resilient agriculture costs more upfront but builds long-term food security and reduces import dependency.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Adaptation: ${Math.round(s.infrastructure.adaptation)}`,
+    }),
+    optA: {
+      label: '🚢 Emergency food imports',
+      consequence: 'Costs £7bn next turn · +5 Social · increases emissions (−3 Net Zero)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.socialStability = Math.min(100, s.socialStability + 5); s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); },
+    },
+    optB: {
+      label: '🌱 Fund climate-resilient farming',
+      consequence: 'Costs £10bn next turn · −3 Social short-term · +25 adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.socialStability = Math.max(0, s.socialStability - 3); s.infrastructure.adaptation += 25; },
+    },
+    condition: (s) => s.temperature > 1.4 && s.infrastructure.adaptation < 80,
+  },
+  {
+    id: 'mini_nhs_heat',
+    icon: '🏥',
+    title: 'NHS Heatwave Surge',
+    prompt: 'Hospitals are overwhelmed by heat-related admissions. What\'s your priority?',
+    explanation: 'Rising temperatures are pushing NHS capacity to breaking point each summer. Emergency funding patches the immediate crisis but doesn\'t address the root cause. A long-term programme to retrofit hospitals and care homes with cooling systems costs more but prevents future surges and saves lives every year.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '💉 Emergency NHS surge funding',
+      consequence: 'Costs £8bn next turn · +6 Social · no lasting infrastructure benefit',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.socialStability = Math.min(100, s.socialStability + 6); },
+    },
+    optB: {
+      label: '❄️ Hospital & care home cooling programme',
+      consequence: 'Costs £12bn next turn · −2 Social (takes time) · +20 adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.socialStability = Math.max(0, s.socialStability - 2); s.infrastructure.adaptation += 20; },
+    },
+    condition: (s) => s.temperature > 1.5 && s.socialStability > 30,
+  },
+  {
+    id: 'mini_energy_embargo',
+    icon: '🛢️',
+    title: 'International Energy Embargo',
+    prompt: 'A geopolitical crisis has cut off gas imports. How does the UK respond?',
+    explanation: 'An international conflict has disrupted global gas markets, sending prices soaring. Restarting domestic North Sea extraction provides energy security quickly but reverses decarbonisation progress. Accelerating the transition to domestic renewables takes longer but permanently reduces import dependency and advances Net Zero.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Gas dependency: ${Math.round(s.energy.gas)}`,
+    }),
+    optA: {
+      label: '⛽ Reopen North Sea gas fields',
+      consequence: '+10 Grid Reliability · −8 Net Zero · +15 Stranded Assets',
+      effect: (s) => { s.gridReliability = Math.min(100, s.gridReliability + 10); s.netZeroProgress = Math.max(0, s.netZeroProgress - 8); s.strandedAssets = Math.min(100, s.strandedAssets + 15); },
+    },
+    optB: {
+      label: '🔋 Fast-track domestic renewables & storage',
+      consequence: 'Costs £15bn next turn · −5 Grid short-term · +10 Net Zero · +15 storage infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 15; s.gridReliability = Math.max(0, s.gridReliability - 5); s.netZeroProgress = Math.min(100, s.netZeroProgress + 10); s.infrastructure.gridAndStorage += 15; },
+    },
+    condition: (s) => s.energy.gas > 15 && s.turn >= 1,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -6565,6 +6883,108 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+/* ============================================================
+   MODULE: TUTORIAL SYSTEM
+============================================================ */
+
+const TutorialManager = (() => {
+  const KEY = 'uk_climate_tutorial_done';
+  const steps = [
+    {
+      title: 'Welcome, Minister',
+      body: 'You\'ve just been appointed Chancellor of the Exchequer with one mandate: steer Britain to Net Zero by 2050 while keeping the lights on and the public onside. This quick tour will show you the controls.',
+      highlight: null,
+    },
+    {
+      title: 'Your Dashboard',
+      body: 'The left panel tracks five critical metrics: temperature, Net Zero progress, grid reliability, financial stability and social stability. Watch all five — neglecting any one can end your programme.',
+      highlight: '#metrics-panel',
+    },
+    {
+      title: 'Investment Decisions',
+      body: 'Each term you allocate budget blocks across six policy areas. Each block costs a different amount. Use + and − buttons, or press 1–6 on your keyboard. You can allocate up to 2 blocks per area.',
+      highlight: '#investment-cards',
+    },
+    {
+      title: 'Undo & Reset',
+      body: 'Made a mistake? Use Undo to reverse your last allocation, or Reset to clear all blocks and start fresh for this turn. Your budget is fully refunded.',
+      highlight: '#budget-status',
+    },
+    {
+      title: 'The Tech Tree',
+      body: 'Investing in R&D unlocks permanent technology multipliers from a branching tech tree. Each breakthrough opens new research paths — plan your route carefully. Click "View Tech Tree" to see your options.',
+      highlight: '#card-research',
+    },
+    {
+      title: 'You\'re Ready',
+      body: 'Allocate your first budget, then click "Advance" to see the consequences play out. Remember: early action compounds — every term of delay makes the challenge harder. Good luck, Minister.',
+      highlight: '#end-turn-btn',
+    },
+  ];
+
+  let currentStep = 0;
+  const overlay = document.getElementById('tutorial-overlay');
+  const titleEl = document.getElementById('tutorial-title');
+  const bodyEl = document.getElementById('tutorial-body');
+  const stepEl = document.getElementById('tutorial-step-indicator');
+  const nextBtn = document.getElementById('tutorial-next-btn');
+  const skipBtn = document.getElementById('tutorial-skip-btn');
+  let prevHighlight = null;
+
+  function show(idx) {
+    if (prevHighlight) {
+      document.querySelector(prevHighlight)?.classList.remove('tutorial-highlight');
+    }
+    const step = steps[idx];
+    stepEl.textContent = `Step ${idx + 1} of ${steps.length}`;
+    titleEl.textContent = step.title;
+    bodyEl.textContent = step.body;
+    nextBtn.textContent = idx === steps.length - 1 ? 'Start Playing →' : 'Next →';
+    if (step.highlight) {
+      const el = document.querySelector(step.highlight);
+      if (el) {
+        el.classList.add('tutorial-highlight');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+    prevHighlight = step.highlight;
+  }
+
+  function close() {
+    if (prevHighlight) {
+      document.querySelector(prevHighlight)?.classList.remove('tutorial-highlight');
+    }
+    overlay.classList.add('hidden');
+    try { localStorage.setItem(KEY, '1'); } catch {}
+  }
+
+  function shouldShow() {
+    try { return !localStorage.getItem(KEY); } catch { return false; }
+  }
+
+  function init() {
+    if (!shouldShow()) return;
+    nextBtn.addEventListener('click', () => {
+      currentStep++;
+      if (currentStep >= steps.length) { close(); return; }
+      show(currentStep);
+    });
+    skipBtn.addEventListener('click', close);
+    overlay.classList.remove('hidden');
+    show(0);
+  }
+
+  return { init };
+})();
+
+// Start tutorial after advisor overlay is dismissed
+const _origAdvisorDismiss = document.getElementById('advisor-dismiss-btn');
+if (_origAdvisorDismiss) {
+  _origAdvisorDismiss.addEventListener('click', () => {
+    setTimeout(() => TutorialManager.init(), 500);
+  }, { once: true });
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
