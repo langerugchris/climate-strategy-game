@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d17">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>UK Climate Strategy 2025–2050</title>
 <style>
 /* ===== RESET + ROOT VARIABLES ===== */
@@ -1132,6 +1132,22 @@ body {
 /* ===== BODY HEAT FILTER ===== */
 body { transition: filter 2s ease; }
 
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .bar-fill, .temp-needle, .bar-ghost { transition: none !important; }
+}
+
+/* ===== FOCUS VISIBLE ===== */
+button:focus-visible, .scenario-card:focus-visible, .block-btn:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+
 /* ===== BUTTON ACTIVE SCALE ===== */
 .block-btn:active           { transform: scale(0.88) !important; }
 #end-turn-btn:active        { transform: scale(0.94) !important; }
@@ -1473,6 +1489,67 @@ body { transition: filter 2s ease; }
   color: var(--text-muted);
   line-height: 1.6;
 }
+
+/* ===== LEGACY / XP DISPLAY ===== */
+#hook-legacy {
+  margin-bottom: var(--gap-lg);
+  padding: var(--gap-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: none;
+}
+#hook-legacy.visible { display: block; }
+#hook-legacy-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-xs);
+}
+#hook-legacy-level {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--gap-sm);
+}
+#hook-legacy-xp-track {
+  height: 6px;
+  background: var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+#hook-legacy-xp-fill {
+  height: 100%;
+  background: var(--accent-blue-lt);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+#hook-legacy-xp-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+#hook-legacy-stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-lg);
+  margin-top: var(--gap-sm);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.legacy-stat-val { font-weight: 700; color: var(--text-primary); }
+
+#header-legacy {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-blue-lt);
+  display: none;
+}
+#header-legacy.visible { display: block; }
 
 /* ===== EVENT STORY BLOCKQUOTE ===== */
 #event-story-display {
@@ -2075,6 +2152,168 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== ENDGAME PROGRESSION CHARTS ===== */
+#endgame-progression {
+  margin: var(--gap-lg) 0;
+}
+#endgame-progression-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.progression-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-md);
+}
+@media (max-width: 480px) {
+  .progression-charts { grid-template-columns: 1fr; }
+}
+.prog-chart {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+}
+.prog-chart-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.prog-chart svg {
+  width: 100%;
+  display: block;
+}
+.prog-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.prog-area {
+  opacity: 0.15;
+}
+.prog-dot {
+  stroke: var(--bg-tertiary);
+  stroke-width: 1.5;
+}
+.prog-grid-line {
+  stroke: var(--border-subtle);
+  stroke-width: 0.5;
+}
+.prog-axis-label {
+  fill: var(--text-muted);
+  font-size: 8px;
+  font-family: var(--font-system);
+}
+.prog-target-line {
+  stroke-dasharray: 4 3;
+  stroke-width: 1;
+}
+.prog-target-label {
+  font-size: 7px;
+  font-family: var(--font-system);
+}
+.prog-line-anim {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: progDraw 1.2s ease-out forwards;
+}
+@keyframes progDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: none;
+}
+#tutorial-overlay.active { display: block; }
+#tutorial-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+}
+#tutorial-spotlight {
+  position: absolute;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+#tutorial-tooltip {
+  position: absolute;
+  max-width: 320px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-md);
+  color: var(--text-primary);
+  z-index: 3001;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+#tutorial-step-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-xs);
+}
+#tutorial-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+}
+#tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+#tutorial-skip {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+#tutorial-skip:hover { color: var(--text-secondary); }
+#tutorial-next {
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#tutorial-next:hover { background: var(--accent-blue-lt); }
+#tutorial-dots {
+  display: flex;
+  gap: 6px;
+}
+.tutorial-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.tutorial-dot.active { background: var(--accent-blue-lt); }
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2147,7 +2386,7 @@ body { transition: filter 2s ease; }
 <body>
 
 <!-- ===== HEADER ===== -->
-<header id="game-header">
+<header id="game-header" role="banner">
   <div id="header-left">
     <svg id="gov-crown" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="30" cy="30" r="29" fill="#1d70b8" opacity="0.15" stroke="#1d70b8" stroke-width="1.5"/>
@@ -2156,13 +2395,14 @@ body { transition: filter 2s ease; }
     <div id="game-title">
       <h1>UK Climate Strategy 2025–2050</h1>
       <p>Climate Risk Simulation</p>
+      <div id="header-legacy"></div>
     </div>
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="settings-btn" title="Settings" aria-label="Open settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2178,7 +2418,7 @@ body { transition: filter 2s ease; }
 </header>
 
 <!-- ===== MAIN LAYOUT ===== -->
-<main id="game-main">
+<main id="game-main" role="main">
 
   <!-- LEFT: METRICS PANEL -->
   <aside class="panel" id="metrics-panel">
@@ -2278,6 +2518,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2536,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2983,6 +3228,16 @@ body { transition: filter 2s ease; }
       <div class="hook-stat"><span class="hook-stat-num">2050</span><span class="hook-stat-label">UK Net Zero legal target</span></div>
       <div class="hook-stat"><span class="hook-stat-num">£100bn</span><span class="hook-stat-label">per term to invest</span></div>
     </div>
+    <div id="hook-legacy">
+      <div id="hook-legacy-title"></div>
+      <div id="hook-legacy-level"></div>
+      <div id="hook-legacy-xp-track"><div id="hook-legacy-xp-fill"></div></div>
+      <div id="hook-legacy-xp-label"><span id="hook-xp-current"></span><span id="hook-xp-next"></span></div>
+      <div id="hook-legacy-stats">
+        <span><span class="legacy-stat-val" id="hook-legacy-runs">0</span> runs</span>
+        <span>Best: <span class="legacy-stat-val" id="hook-legacy-best">0</span></span>
+      </div>
+    </div>
     <button id="hook-btn">New Game →</button>
     <button id="hook-continue-btn" class="hidden" style="display:none;margin-top:10px;width:100%;padding:12px 24px;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;">↺ Continue saved game — <span id="hook-continue-label"></span></button>
     <p id="hook-source">Scenarios based on the NGFS climate framework. Educational simulation — numbers are illustrative, not precise forecasts.</p>
@@ -3012,6 +3267,21 @@ body { transition: filter 2s ease; }
     <div id="endgame-ngfs-label"></div>
     <button id="share-btn">📤 Share your result</button>
     <button id="restart-btn">↺ Play Again</button>
+  </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay">
+  <div id="tutorial-backdrop"></div>
+  <div id="tutorial-spotlight"></div>
+  <div id="tutorial-tooltip">
+    <div id="tutorial-step-label"></div>
+    <div id="tutorial-text"></div>
+    <div id="tutorial-actions">
+      <button id="tutorial-skip">Skip tutorial</button>
+      <div id="tutorial-dots"></div>
+      <button id="tutorial-next">Next</button>
+    </div>
   </div>
 </div>
 
@@ -4265,10 +4535,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4389,6 +4661,9 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+        if (typeof tutorialMgr !== 'undefined' && tutorialMgr.shouldShow()) {
+          setTimeout(() => tutorialMgr.start(), 400);
+        }
       });
     }
 
@@ -4535,6 +4810,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-progression')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -4801,10 +5077,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage || 0;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage || 0);
   }
 
   _renderBudget(state) {
@@ -5146,6 +5424,9 @@ class UI {
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
 
+    // Build progression charts
+    const progressionHtml = this._buildProgressionCharts();
+
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
@@ -5165,7 +5446,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', progressionHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5245,6 +5526,78 @@ class UI {
     }
     html += `</div></div>`;
     return html;
+  }
+
+  _buildProgressionCharts() {
+    const data = turnHistory.data;
+    if (data.length < 2) return '';
+
+    const w = 200, h = 80, pad = { top: 8, right: 8, bottom: 16, left: 28 };
+    const innerW = w - pad.left - pad.right;
+    const innerH = h - pad.top - pad.bottom;
+
+    const buildChart = (series, label, color, min, max, targetVal, targetLabel) => {
+      const n = series.length;
+      const xStep = n > 1 ? innerW / (n - 1) : 0;
+
+      const points = series.map((v, i) => ({
+        x: pad.left + i * xStep,
+        y: pad.top + innerH - ((v - min) / (max - min)) * innerH,
+        v
+      }));
+
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaPath = linePath + ` L${points[n-1].x.toFixed(1)},${pad.top + innerH} L${points[0].x.toFixed(1)},${pad.top + innerH} Z`;
+
+      const gridLines = [0, 0.5, 1].map(frac => {
+        const y = pad.top + innerH - frac * innerH;
+        const val = min + frac * (max - min);
+        return `<line class="prog-grid-line" x1="${pad.left}" y1="${y.toFixed(1)}" x2="${w - pad.right}" y2="${y.toFixed(1)}"/>
+          <text class="prog-axis-label" x="${pad.left - 3}" y="${(y + 3).toFixed(1)}" text-anchor="end">${Number.isInteger(val) ? val : val.toFixed(1)}</text>`;
+      }).join('');
+
+      const yearLabels = data.map((d, i) => {
+        const x = pad.left + i * xStep;
+        return `<text class="prog-axis-label" x="${x.toFixed(1)}" y="${h - 2}" text-anchor="middle">${d.year}</text>`;
+      }).join('');
+
+      const dots = points.map(p =>
+        `<circle class="prog-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${color}"><title>${p.v.toFixed ? p.v.toFixed(1) : p.v}</title></circle>`
+      ).join('');
+
+      let targetLine = '';
+      if (targetVal !== undefined) {
+        const ty = pad.top + innerH - ((targetVal - min) / (max - min)) * innerH;
+        const tColor = label.includes('Temp') ? 'var(--status-warn)' : 'var(--status-good)';
+        targetLine = `<line class="prog-target-line" x1="${pad.left}" y1="${ty.toFixed(1)}" x2="${w - pad.right}" y2="${ty.toFixed(1)}" stroke="${tColor}"/>
+          <text class="prog-target-label" x="${w - pad.right}" y="${(ty - 3).toFixed(1)}" text-anchor="end" fill="${tColor}">${targetLabel}</text>`;
+      }
+
+      return `<div class="prog-chart">
+        <div class="prog-chart-label">${label}</div>
+        <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet">
+          ${gridLines}${yearLabels}${targetLine}
+          <path class="prog-area" d="${areaPath}" fill="${color}"/>
+          <path class="prog-line prog-line-anim" d="${linePath}" stroke="${color}"/>
+          ${dots}
+        </svg>
+      </div>`;
+    };
+
+    const tempSeries = data.map(d => d.temperature);
+    const nzSeries   = data.map(d => d.netZeroProgress);
+    const gridSeries = data.map(d => d.gridReliability);
+    const socSeries  = data.map(d => d.socialStability);
+
+    return `<div id="endgame-progression">
+      <div id="endgame-progression-title">Journey to 2050</div>
+      <div class="progression-charts">
+        ${buildChart(tempSeries, 'Temperature (°C)', 'var(--status-danger)', 1.0, Math.max(2.5, ...tempSeries) + 0.2, 1.5, '1.5°C target')}
+        ${buildChart(nzSeries, 'Net Zero Progress (%)', 'var(--status-good)', 0, 100, 100, '100% target')}
+        ${buildChart(gridSeries, 'Grid Reliability (%)', 'var(--energy-storage)', 0, 100, 60, 'Safe level')}
+        ${buildChart(socSeries, 'Social Stability (%)', 'var(--energy-nuclear)', 0, 100, 60, 'Safe level')}
+      </div>
+    </div>`;
   }
 
   _buildAchievementsDisplay(newlyEarned) {
@@ -5887,6 +6240,130 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /* ============================================================
+   MODULE: TUTORIAL SYSTEM
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done';
+    this._step = 0;
+    this._active = false;
+    this._overlay = document.getElementById('tutorial-overlay');
+    this._spotlight = document.getElementById('tutorial-spotlight');
+    this._tooltip = document.getElementById('tutorial-tooltip');
+    this._stepLabel = document.getElementById('tutorial-step-label');
+    this._text = document.getElementById('tutorial-text');
+    this._dots = document.getElementById('tutorial-dots');
+    this._nextBtn = document.getElementById('tutorial-next');
+    this._skipBtn = document.getElementById('tutorial-skip');
+
+    this._steps = [
+      {
+        target: '#metrics-panel',
+        text: 'These are your key metrics. Temperature, grid reliability, financial and social stability, and net zero progress. Keep them all in the green to succeed.',
+        position: 'right'
+      },
+      {
+        target: '#investment-cards',
+        text: 'Allocate your budget here by clicking + buttons. Each investment block costs a set amount. You can add up to 2 blocks per category per turn.',
+        position: 'top'
+      },
+      {
+        target: '#energy-mix-section',
+        text: 'The energy mix shows your power grid composition. Investing in Energy Transition shifts the mix from gas to renewables. Grid & Storage adds battery backup.',
+        position: 'left'
+      },
+      {
+        target: '#budget-status',
+        text: 'Your remaining budget for this term. Spend wisely — unspent budget does not carry over. Balancing multiple risks is key.',
+        position: 'top'
+      },
+      {
+        target: '#end-turn-btn',
+        text: 'When ready, click Advance to resolve your decisions. A 5-year simulation will play out, with possible events and policy dilemmas. Good luck, Minister!',
+        position: 'top'
+      }
+    ];
+
+    this._nextBtn.addEventListener('click', () => this._advance());
+    this._skipBtn.addEventListener('click', () => this._finish());
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return false; }
+  }
+
+  start() {
+    if (!this.shouldShow()) return;
+    this._step = 0;
+    this._active = true;
+    this._overlay.classList.add('active');
+    this._renderDots();
+    this._showStep();
+  }
+
+  _advance() {
+    this._step++;
+    if (this._step >= this._steps.length) {
+      this._finish();
+      return;
+    }
+    this._showStep();
+  }
+
+  _finish() {
+    this._active = false;
+    this._overlay.classList.remove('active');
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  _renderDots() {
+    this._dots.innerHTML = this._steps.map((_, i) =>
+      `<div class="tutorial-dot${i === 0 ? ' active' : ''}"></div>`
+    ).join('');
+  }
+
+  _showStep() {
+    const step = this._steps[this._step];
+    const target = document.querySelector(step.target);
+    if (!target) { this._advance(); return; }
+
+    this._stepLabel.textContent = `Step ${this._step + 1} of ${this._steps.length}`;
+    this._text.textContent = step.text;
+    this._nextBtn.textContent = this._step === this._steps.length - 1 ? 'Start playing' : 'Next';
+
+    this._dots.querySelectorAll('.tutorial-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === this._step);
+    });
+
+    const rect = target.getBoundingClientRect();
+    const margin = 8;
+    this._spotlight.style.left = (rect.left - margin) + 'px';
+    this._spotlight.style.top = (rect.top - margin) + 'px';
+    this._spotlight.style.width = (rect.width + margin * 2) + 'px';
+    this._spotlight.style.height = (rect.height + margin * 2) + 'px';
+
+    const tipW = 320;
+    const tipH = 180;
+    let tipLeft, tipTop;
+    if (step.position === 'right') {
+      tipLeft = rect.right + 16;
+      tipTop = rect.top + rect.height / 2 - tipH / 2;
+    } else if (step.position === 'left') {
+      tipLeft = rect.left - tipW - 16;
+      tipTop = rect.top + rect.height / 2 - tipH / 2;
+    } else {
+      tipLeft = rect.left + rect.width / 2 - tipW / 2;
+      tipTop = rect.bottom + 16;
+    }
+    tipLeft = Math.max(16, Math.min(window.innerWidth - tipW - 16, tipLeft));
+    tipTop = Math.max(16, Math.min(window.innerHeight - tipH - 16, tipTop));
+    this._tooltip.style.left = tipLeft + 'px';
+    this._tooltip.style.top = tipTop + 'px';
+  }
+}
+
+/* ============================================================
    MODULE: LEGACY SYSTEM
 ============================================================ */
 
@@ -5937,6 +6414,28 @@ class LegacySystem {
     return 'Shadow Minister';
   }
 
+  xpThresholds() {
+    return [0, 150, 350, 600, 900];
+  }
+
+  xpProgress() {
+    const thresholds = this.xpThresholds();
+    const xp = this.data.xp;
+    let currentThreshold = 0;
+    let nextThreshold = thresholds[1] || 150;
+    for (let i = thresholds.length - 1; i >= 0; i--) {
+      if (xp >= thresholds[i]) {
+        currentThreshold = thresholds[i];
+        nextThreshold = thresholds[i + 1] || thresholds[i] + 300;
+        break;
+      }
+    }
+    const progress = nextThreshold > currentThreshold
+      ? (xp - currentThreshold) / (nextThreshold - currentThreshold)
+      : 1;
+    return { xp, currentThreshold, nextThreshold, progress: Math.min(1, progress) };
+  }
+
   startingBonuses() {
     const lvl = this.level();
     return {
@@ -5955,6 +6454,7 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const tutorialMgr  = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -5981,6 +6481,28 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Populate legacy/XP UI on hook screen and header
+(function initLegacyUI() {
+  const legacy = legacySystem;
+  const hookLegacy = document.getElementById('hook-legacy');
+  const headerLegacy = document.getElementById('header-legacy');
+  if (legacy.data.runs > 0 && hookLegacy) {
+    hookLegacy.classList.add('visible');
+    document.getElementById('hook-legacy-title').textContent = legacy.title();
+    document.getElementById('hook-legacy-level').textContent = `Level ${legacy.level()} · ${legacy.data.runs} run${legacy.data.runs !== 1 ? 's' : ''} completed`;
+    const xpInfo = legacy.xpProgress();
+    document.getElementById('hook-legacy-xp-fill').style.width = (xpInfo.progress * 100) + '%';
+    document.getElementById('hook-xp-current').textContent = `${xpInfo.xp} XP`;
+    document.getElementById('hook-xp-next').textContent = xpInfo.progress >= 1 ? 'MAX' : `${xpInfo.nextThreshold} XP`;
+    document.getElementById('hook-legacy-runs').textContent = legacy.data.runs;
+    document.getElementById('hook-legacy-best').textContent = legacy.data.bestScore;
+  }
+  if (legacy.data.runs > 0 && headerLegacy) {
+    headerLegacy.textContent = legacy.title();
+    headerLegacy.classList.add('visible');
+  }
+})();
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
