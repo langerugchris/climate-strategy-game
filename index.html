@@ -346,8 +346,8 @@ body {
 
 #energy-mix-legend {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px 8px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px 6px;
 }
 
 .legend-item {
@@ -2116,6 +2116,205 @@ body { transition: filter 2s ease; }
   border-top: 2px solid var(--accent-blue-lt);
 }
 
+/* ===== APPROVAL RATING (HEADER) ===== */
+#approval-gauge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+#approval-gauge-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+#approval-gauge-bar {
+  width: 48px;
+  height: 6px;
+  background: var(--border-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+}
+#approval-gauge-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease, background 0.6s ease;
+}
+#approval-gauge-val {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ===== MOMENTUM BADGE ===== */
+.momentum-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 3px;
+  background: rgba(83, 144, 217, 0.15);
+  color: var(--accent-blue-lt);
+  border: 1px solid rgba(83, 144, 217, 0.3);
+  animation: momentumPulse 2s ease-in-out infinite;
+}
+.momentum-badge.strong {
+  background: rgba(76, 175, 129, 0.15);
+  color: var(--accent-green-lt);
+  border-color: rgba(76, 175, 129, 0.3);
+}
+@keyframes momentumPulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+
+/* ===== DIPLOMACY OFFER ===== */
+.diplomacy-offer {
+  margin: var(--gap-sm) 0;
+  padding: var(--gap-sm) var(--gap-md);
+  background: linear-gradient(135deg, rgba(29, 112, 184, 0.08), rgba(29, 112, 184, 0.02));
+  border: 1px solid rgba(29, 112, 184, 0.25);
+  border-radius: var(--radius-md);
+  animation: diplomacySlideIn 0.4s ease;
+}
+@keyframes diplomacySlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.diplomacy-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.diplomacy-flag {
+  font-size: 16px;
+}
+.diplomacy-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.diplomacy-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.diplomacy-actions {
+  display: flex;
+  gap: 6px;
+}
+.diplomacy-btn {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+.diplomacy-btn.accept {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: white;
+}
+.diplomacy-btn.accept:hover { background: var(--accent-blue-lt); }
+.diplomacy-btn.decline:hover { background: var(--bg-tertiary); }
+.diplomacy-btn:active { transform: scale(0.95); }
+.diplomacy-cost {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ===== EMISSIONS TRACKER ===== */
+#emissions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  margin-top: 4px;
+  border-top: 1px dashed var(--border-subtle);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+#emissions-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== ENDGAME COMPARISON ===== */
+#endgame-comparison {
+  margin-top: var(--gap-md);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+#endgame-comparison-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-sm);
+}
+.comparison-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 4px 0;
+  font-size: 12px;
+}
+.comparison-label {
+  flex: 1;
+  color: var(--text-secondary);
+}
+.comparison-bar-track {
+  flex: 2;
+  height: 8px;
+  background: var(--border-subtle);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.comparison-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+.comparison-bar-fill.player { background: var(--accent-blue-lt); }
+.comparison-bar-fill.benchmark { background: var(--text-muted); opacity: 0.4; }
+.comparison-val {
+  min-width: 36px;
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.comparison-marker {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 12px;
+  background: var(--status-warn);
+  border-radius: 1px;
+}
+
 @media (max-width: 768px) {
   #mobile-tabs { display: block; }
 
@@ -2160,6 +2359,13 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <div id="approval-gauge">
+      <span id="approval-gauge-label">Approval</span>
+      <div id="approval-gauge-bar">
+        <div id="approval-gauge-fill" style="width:60%;background:var(--status-warn)"></div>
+      </div>
+      <span id="approval-gauge-val">60%</span>
+    </div>
   </div>
   <div id="header-right">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -2201,6 +2407,10 @@ body { transition: filter 2s ease; }
         </div>
         <div style="font-size:10px;color:var(--text-secondary);margin-top:3px;line-height:1.4;">UK domestic pathway · if replicated globally → global temp</div>
         <div class="sparkline-container" id="spark-temp"></div>
+        <div id="emissions-row">
+          <span>Annual Emissions</span>
+          <span id="emissions-value">146 MtCO2e</span>
+        </div>
       </div>
 
       <!-- Budget -->
@@ -2278,6 +2488,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2506,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -3101,6 +3316,69 @@ const BLOCK_COSTS = {
 
 const MAX_BLOCKS_PER_CAT = 2;
 
+const DIPLOMACY_DEALS = [
+  {
+    id: 'eu_carbon_border',
+    flag: '🇪🇺',
+    partner: 'European Union',
+    title: 'Carbon Border Adjustment Mechanism',
+    desc: 'Join the EU CBAM framework. Reduces stranded asset exposure by aligning UK carbon pricing with European markets.',
+    cost: { budget: 10 },
+    effect(state) {
+      state.strandedAssets = Math.max(0, state.strandedAssets - 15);
+    },
+    logText: 'EU CBAM alignment reduces stranded asset exposure.',
+  },
+  {
+    id: 'us_clean_tech',
+    flag: '🇺🇸',
+    partner: 'United States',
+    title: 'Clean Technology Transfer Agreement',
+    desc: 'Joint US-UK R&D programme accelerates battery and hydrogen technology. Boosts energy transition effectiveness.',
+    cost: { budget: 8 },
+    effect(state, techTree) {
+      techTree.multipliers.energyNZ = Math.round((techTree.multipliers.energyNZ * 1.15) * 100) / 100;
+    },
+    logText: 'US tech transfer boosts energy transition R&D multiplier.',
+  },
+  {
+    id: 'china_solar',
+    flag: '🇨🇳',
+    partner: 'China',
+    title: 'Solar Manufacturing Partnership',
+    desc: 'Secure preferential pricing on Chinese solar panels. Reduces cost of Energy Transition investment blocks.',
+    cost: { budget: 5 },
+    effect(state) {
+      state.costDiscounts.energyTransition = (state.costDiscounts.energyTransition || 0) + 8;
+    },
+    logText: 'Chinese solar deal cuts Energy Transition cost by £8bn/block.',
+  },
+  {
+    id: 'g7_climate_finance',
+    flag: '🌐',
+    partner: 'G7 Summit',
+    title: 'G7 Climate Finance Commitment',
+    desc: 'Lead the G7 climate finance pledge. Boosts UK credibility and unlocks shared funding next term.',
+    cost: { socialStability: -5 },
+    effect(state) {
+      state.nextTurnBudgetBonus += 20;
+    },
+    logText: 'G7 finance pledge: +£20bn budget next term.',
+  },
+  {
+    id: 'global_methane',
+    flag: '🌍',
+    partner: 'Global Methane Pledge',
+    title: 'Global Methane Reduction Pact',
+    desc: 'Commit to aggressive methane cuts across UK agriculture and waste. Provides immediate temperature benefit.',
+    cost: { budget: 6 },
+    effect(state) {
+      state.temperature = Math.round((state.temperature - 0.04) * 100) / 100;
+    },
+    logText: 'Methane pledge: immediate −0.04°C temperature benefit.',
+  },
+];
+
 const RANDOM_EVENTS = [
   {
     id: 'FLOOD_MINOR', type: 'FLOOD', severity: 'MINOR', icon: '🌊',
@@ -3577,15 +3855,28 @@ class GameEngine {
       lastEventTurn: -1,
       log: [],
       lastSnapshot: null,
+      approvalRating: 60,
+      momentum: {
+        energyTransition: 0,
+        gridAndStorage: 0,
+        adaptation: 0,
+        socialSupport: 0,
+        financialResilience: 0,
+      },
+      diplomacyHistory: [],
+      costDiscounts: {},
+      nextTurnBudgetBonus: 0,
+      annualEmissions: 146,
     };
   }
 
   getState() {
-    // Return a shallow copy sufficient for rendering
     return Object.assign({}, this.state, {
       energy: Object.assign({}, this.state.energy),
       infrastructure: Object.assign({}, this.state.infrastructure),
       currentDecisions: Object.assign({}, this.state.currentDecisions),
+      momentum: Object.assign({}, this.state.momentum),
+      costDiscounts: Object.assign({}, this.state.costDiscounts),
     });
   }
 
@@ -3598,20 +3889,34 @@ class GameEngine {
       ? this.state._budgetOverride
       : difficultyMgr.preset.baseBudget;
     if (this.state.financialStability > 80) base += 20;
+    if (this.state.approvalRating > 70) base += 10;
     base -= this.state.nextTurnBudgetPenalty;
-    // After turn 1, budget override only applies once (first turn), then uses normal base
+    base += this.state.nextTurnBudgetBonus;
+    this.state.nextTurnBudgetBonus = 0;
     if (this.state.turn > 0) {
       delete this.state._budgetOverride;
     }
     return Math.max(base, 20);
   }
 
+  _getMomentumMultiplier(cat) {
+    const streak = this.state.momentum[cat] || 0;
+    if (streak >= 3) return 1.3;
+    if (streak >= 2) return 1.2;
+    return 1.0;
+  }
+
+  getBlockCost(category) {
+    return Math.max(5, BLOCK_COSTS[category] - (this.state.costDiscounts[category] || 0));
+  }
+
   allocateBlock(category) {
     const s = this.state;
     if (s.isResolvingTurn) return { success: false, reason: 'Turn in progress' };
-    const cost = BLOCK_COSTS[category];
+    const cost = this.getBlockCost(category);
     const current = s.currentDecisions[category];
-    if (current >= MAX_BLOCKS_PER_CAT) return { success: false, reason: 'Max 2 blocks per category' };
+    const maxBlocks = s.approvalRating < 30 ? 1 : MAX_BLOCKS_PER_CAT;
+    if (current >= maxBlocks) return { success: false, reason: maxBlocks < MAX_BLOCKS_PER_CAT ? 'Low approval limits investment' : 'Max 2 blocks per category' };
     if (s.spentThisTurn + cost > s.budget) return { success: false, reason: 'Insufficient budget' };
     s.currentDecisions[category]++;
     s.spentThisTurn += cost;
@@ -3623,7 +3928,7 @@ class GameEngine {
     if (s.isResolvingTurn) return;
     if (s.currentDecisions[category] <= 0) return;
     s.currentDecisions[category]--;
-    s.spentThisTurn -= BLOCK_COSTS[category];
+    s.spentThisTurn -= this.getBlockCost(category);
   }
 
   // Returns projected metric values after applying current decisions — pure, no state mutation
@@ -3641,38 +3946,43 @@ class GameEngine {
     let socialCapital      = s.socialCapital;
     const infra = { ...s.infrastructure };
 
-    // Mirror _applyInvestments
+    // Mirror _applyInvestments (with momentum)
     const et = d.energyTransition;
     if (et > 0) {
-      e.wind    = clamp(e.wind    + et * 8,  0, 120);
-      e.solar   = clamp(e.solar   + et * 6,  0, 100);
+      const mom = this._getMomentumMultiplier('energyTransition');
+      e.wind    = clamp(e.wind    + et * 8 * mom,  0, 120);
+      e.solar   = clamp(e.solar   + et * 6 * mom,  0, 100);
       e.gas     = clamp(e.gas     - et * 7,  0, 100);
-      netZeroProgress = clamp(netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
+      netZeroProgress = clamp(netZeroProgress + et * 10 * techTree.multipliers.energyNZ * mom, 0, 100);
       strandedAssets  = clamp(strandedAssets  + et * 12, 0, 100);
       infra.energyTransition += et * 30;
     }
     const gs = d.gridAndStorage;
     if (gs > 0) {
-      e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
+      const mom = this._getMomentumMultiplier('gridAndStorage');
+      e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage * mom, 0, 100);
+      e.nuclear = clamp(e.nuclear + gs * 5 * mom,  0, 80);
       infra.gridAndStorage += gs * 35;
     }
     const ad = d.adaptation;
     if (ad > 0) {
-      socialStability = clamp(socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
+      const mom = this._getMomentumMultiplier('adaptation');
+      socialStability = clamp(socialStability + ad * 5 * techTree.multipliers.adaptMitigate * mom, 0, 100);
       infra.adaptation += ad * 25;
     }
     const ss = d.socialSupport;
     if (ss > 0) {
-      socialStability    = clamp(socialStability    + ss * 8 * techTree.multipliers.socialGain, 0, 100);
-      financialStability = clamp(financialStability + ss * 3, 0, 100);
+      const mom = this._getMomentumMultiplier('socialSupport');
+      socialStability    = clamp(socialStability    + ss * 8 * techTree.multipliers.socialGain * mom, 0, 100);
+      financialStability = clamp(financialStability + ss * 3 * mom, 0, 100);
       infra.socialSupport += ss * 20;
       socialCapital = clamp(socialCapital + ss * 4, 0, 60);
     }
     const fr = d.financialResilience;
     if (fr > 0) {
-      financialStability = clamp(financialStability + fr * 10 * techTree.multipliers.finGain, 0, 100);
-      strandedAssets     = clamp(strandedAssets     - fr * 8,  0, 100);
+      const mom = this._getMomentumMultiplier('financialResilience');
+      financialStability = clamp(financialStability + fr * 10 * techTree.multipliers.finGain * mom, 0, 100);
+      strandedAssets     = clamp(strandedAssets     - fr * 8 * mom,  0, 100);
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
     }
@@ -3730,18 +4040,21 @@ class GameEngine {
     // Phase 5: Social formula
     this._recalcSocial();
 
-    // Phase 6: Temperature
+    // Phase 6: Temperature + emissions
     this._progressTemp();
+
+    // Phase 6b: Approval rating
+    this._recalcApproval();
 
     // Phase 7: Random event
     const event = this._resolveEvent();
     s.currentRandomEvent = event;
     if (event) {
       s.eventCount++;
-      // Recalc formulas again after event damage
       this._recalcGrid();
       this._recalcFinancial();
       this._recalcSocial();
+      this._recalcApproval();
     }
 
     // Phase 8: Breakdown check
@@ -3754,6 +4067,15 @@ class GameEngine {
     // Phase 9: Net Zero check
     if (s.netZeroProgress >= 100 && !s.netZeroAchieved) {
       s.netZeroAchieved = true;
+    }
+
+    // Phase 9b: Track momentum streaks (before decisions reset)
+    for (const cat of Object.keys(s.momentum)) {
+      if (s.currentDecisions[cat] > 0) {
+        s.momentum[cat]++;
+      } else {
+        s.momentum[cat] = 0;
+      }
     }
 
     // Phase 10: Build log entry
@@ -3769,6 +4091,7 @@ class GameEngine {
       afterGrid:     s.gridReliability,
       afterFin:      s.financialStability,
       afterSoc:      s.socialStability,
+      afterApproval: s.approvalRating,
     };
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
@@ -3801,10 +4124,11 @@ class GameEngine {
     // Energy Transition
     const et = d.energyTransition;
     if (et > 0) {
-      s.energy.wind    = this._clamp(s.energy.wind    + et * 8,  0, 120);
-      s.energy.solar   = this._clamp(s.energy.solar   + et * 6,  0, 100);
+      const mom = this._getMomentumMultiplier('energyTransition');
+      s.energy.wind    = this._clamp(s.energy.wind    + et * 8 * mom,  0, 120);
+      s.energy.solar   = this._clamp(s.energy.solar   + et * 6 * mom,  0, 100);
       s.energy.gas     = this._clamp(s.energy.gas     - et * 7,  0, 100);
-      s.netZeroProgress = this._clamp(s.netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
+      s.netZeroProgress = this._clamp(s.netZeroProgress + et * 10 * techTree.multipliers.energyNZ * mom, 0, 100);
       s.strandedAssets  = this._clamp(s.strandedAssets  + et * 12, 0, 100);
       s.infrastructure.energyTransition += et * 30;
     }
@@ -3812,37 +4136,41 @@ class GameEngine {
     // Grid & Storage
     const gs = d.gridAndStorage;
     if (gs > 0) {
-      s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
+      const mom = this._getMomentumMultiplier('gridAndStorage');
+      s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage * mom, 0, 100);
+      s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5 * mom,  0, 80);
       s.infrastructure.gridAndStorage += gs * 35;
     }
 
     // Adaptation
     const ad = d.adaptation;
     if (ad > 0) {
-      s.socialStability = this._clamp(s.socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
+      const mom = this._getMomentumMultiplier('adaptation');
+      s.socialStability = this._clamp(s.socialStability + ad * 5 * techTree.multipliers.adaptMitigate * mom, 0, 100);
       s.infrastructure.adaptation += ad * 25;
     }
 
     // Social Support
     const ss = d.socialSupport;
     if (ss > 0) {
-      s.socialStability    = this._clamp(s.socialStability    + ss * 8 * techTree.multipliers.socialGain, 0, 100);
-      s.financialStability = this._clamp(s.financialStability + ss * 3, 0, 100);
+      const mom = this._getMomentumMultiplier('socialSupport');
+      s.socialStability    = this._clamp(s.socialStability    + ss * 8 * techTree.multipliers.socialGain * mom, 0, 100);
+      s.financialStability = this._clamp(s.financialStability + ss * 3 * mom, 0, 100);
       s.infrastructure.socialSupport += ss * 20;
-      s.socialCapital = this._clamp(s.socialCapital + ss * 4, 0, 60); // accumulates across turns
+      s.socialCapital = this._clamp(s.socialCapital + ss * 4, 0, 60);
     }
 
     // Financial Resilience
     const fr = d.financialResilience;
     if (fr > 0) {
-      s.financialStability = this._clamp(s.financialStability + fr * 10 * techTree.multipliers.finGain, 0, 100);
-      s.strandedAssets     = this._clamp(s.strandedAssets     - fr * 8,  0, 100);
+      const mom = this._getMomentumMultiplier('financialResilience');
+      s.financialStability = this._clamp(s.financialStability + fr * 10 * techTree.multipliers.finGain * mom, 0, 100);
+      s.strandedAssets     = this._clamp(s.strandedAssets     - fr * 8 * mom,  0, 100);
       s.propertyValue      = this._clamp(s.propertyValue      + fr * 5,  0, 100);
       s.infrastructure.financialResilience += fr * 30;
     }
 
-    // Research — purchases next TechTree upgrade per block allocated
+    // Research
     const rs = d.research;
     for (let i = 0; i < rs; i++) {
       techTree.purchase();
@@ -3884,11 +4212,23 @@ class GameEngine {
     );
   }
 
+  _recalcApproval() {
+    const s = this.state;
+    let approval = 50;
+    approval += (s.socialStability - 50) * 0.4;
+    if (s.temperature > 1.5) approval -= (s.temperature - 1.5) * 15;
+    if (s.financialStability > 70) approval += 5;
+    if (s.financialStability < 40) approval -= 10;
+    if (s.netZeroProgress > 70) approval += 5;
+    if (s.eventCount > 0) approval -= s.eventCount * 3;
+    if (s.gridReliability < 40) approval -= 8;
+    s.approvalRating = this._clamp(Math.round(approval), 0, 100);
+  }
+
   _progressTemp() {
     const s = this.state;
     const e = s.energy;
 
-    // If player ignored energy transition this turn, gas demand rebounds (existing infrastructure keeps running)
     if (s.currentDecisions.energyTransition === 0) {
       e.gas = this._clamp(e.gas + 6, 0, 100);
     }
@@ -3896,6 +4236,8 @@ class GameEngine {
     const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
     const gasShare   = total > 0 ? e.gas / total : 0;
     const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
+
+    s.annualEmissions = Math.round(gasShare * 400);
 
     let delta = difficultyMgr.preset.warmingRate + (gasShare - renewShare) * 0.22;
     delta = Math.max(delta, 0.03); // residual warming even at Net Zero
@@ -3997,12 +4339,13 @@ class GameEngine {
 
   _describeDecisions(d) {
     const out = [];
-    if (d.energyTransition > 0)   out.push(`Energy Transition ×${d.energyTransition} (£${d.energyTransition * 30}bn)`);
-    if (d.gridAndStorage > 0)     out.push(`Grid & Storage ×${d.gridAndStorage} (£${d.gridAndStorage * 35}bn)`);
-    if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)`);
-    if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
-    if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
-    if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
+    const cost = (cat) => this.getBlockCost(cat);
+    if (d.energyTransition > 0)   out.push(`Energy Transition ×${d.energyTransition} (£${d.energyTransition * cost('energyTransition')}bn)`);
+    if (d.gridAndStorage > 0)     out.push(`Grid & Storage ×${d.gridAndStorage} (£${d.gridAndStorage * cost('gridAndStorage')}bn)`);
+    if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * cost('adaptation')}bn)`);
+    if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * cost('socialSupport')}bn)`);
+    if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * cost('financialResilience')}bn)`);
+    if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * cost('research')}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
   }
@@ -4224,7 +4567,7 @@ function buildShareText(state, result) {
     MANAGED: '🌤️ Managed Transition',
   };
   const label = scenarios[result.scenario] || result.title;
-  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
+  return `I just played UK Climate Strategy 2025–2050.\n\n${label}\nScore: ${score.total}/100\nTemperature: ${state.temperature.toFixed(1)}°C | Net Zero: ${Math.round(state.netZeroProgress)}% | Approval: ${state.approvalRating}%\n\nCan you do better?\nhttps://langerugchris.github.io/climate-strategy-game/`;
 }
 
 /* ============================================================
@@ -4265,10 +4608,16 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
+
+    this.elApprovalFill = document.getElementById('approval-gauge-fill');
+    this.elApprovalVal  = document.getElementById('approval-gauge-val');
+    this.elEmissionsVal = document.getElementById('emissions-value');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4348,6 +4697,15 @@ class UI {
         for (const id of payload.techPurchased) {
           const upgrade = RESEARCH_UPGRADES.find(u => u.id === id);
           if (upgrade) { upgrade.apply(techTree.multipliers); techTree._purchased.add(id); }
+        }
+        // Re-apply diplomacy effects that modified techTree
+        if (engine.state.diplomacyHistory) {
+          for (const dealId of engine.state.diplomacyHistory) {
+            const deal = DIPLOMACY_DEALS.find(d => d.id === dealId);
+            if (deal && deal.effect.length >= 2) {
+              deal.effect(engine.state, techTree);
+            }
+          }
         }
         // Restore history
         turnHistory.data = payload.historyData || [];
@@ -4538,6 +4896,7 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('endgame-comparison')?.remove();
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -4613,6 +4972,8 @@ class UI {
     this._renderProjection(state);
     this._renderSparklines(state);
     this._renderEnergyMix(state);
+    this._renderEmissions(state);
+    this._renderApproval(state);
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
@@ -4801,10 +5162,32 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
+  }
+
+  _renderEmissions(state) {
+    if (!this.elEmissionsVal) return;
+    const e = state.energy;
+    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
+    const gasShare = total > 0 ? e.gas / total : 0;
+    const emissions = Math.round(gasShare * 400);
+    this.elEmissionsVal.textContent = emissions + ' MtCO2e';
+    this.elEmissionsVal.style.color = emissions > 200 ? 'var(--status-danger)' : emissions > 100 ? 'var(--status-warn)' : 'var(--status-good)';
+  }
+
+  _renderApproval(state) {
+    if (!this.elApprovalFill) return;
+    const a = state.approvalRating;
+    this.elApprovalFill.style.width = a + '%';
+    const color = a >= 60 ? 'var(--status-good)' : a >= 35 ? 'var(--status-warn)' : 'var(--status-danger)';
+    this.elApprovalFill.style.background = color;
+    this.elApprovalVal.textContent = a + '%';
+    this.elApprovalVal.style.color = color;
   }
 
   _renderBudget(state) {
@@ -4828,11 +5211,12 @@ class UI {
   }
 
   _renderCards(state) {
+    const maxBlocks = state.approvalRating < 30 ? 1 : MAX_BLOCKS_PER_CAT;
     for (const cat of this.categories) {
       const count   = state.currentDecisions[cat];
-      const cost    = BLOCK_COSTS[cat];
+      const cost    = this.engine.getBlockCost(cat);
       const rem     = state.budget - state.spentThisTurn;
-      const canAdd  = count < MAX_BLOCKS_PER_CAT && rem >= cost;
+      const canAdd  = count < maxBlocks && rem >= cost;
       const canRem  = count > 0;
 
       document.getElementById(`count-${cat}`).textContent = count;
@@ -4840,9 +5224,38 @@ class UI {
       document.getElementById(`minus-${cat}`).disabled    = !canRem;
 
       const card = document.getElementById(`card-${cat}`);
-      card.classList.toggle('allocated',      count > 0 && count < MAX_BLOCKS_PER_CAT);
-      card.classList.toggle('maxed',          count >= MAX_BLOCKS_PER_CAT);
+      card.classList.toggle('allocated',      count > 0 && count < maxBlocks);
+      card.classList.toggle('maxed',          count >= maxBlocks);
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
+
+      // Momentum badge
+      if (cat !== 'research') {
+        const streak = state.momentum[cat] || 0;
+        let badge = card.querySelector('.momentum-badge');
+        if (streak >= 2) {
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'momentum-badge';
+            card.querySelector('.card-info').appendChild(badge);
+          }
+          const multi = streak >= 3 ? '1.3' : '1.2';
+          badge.textContent = `${multi}x momentum`;
+          badge.classList.toggle('strong', streak >= 3);
+        } else if (badge) {
+          badge.remove();
+        }
+      }
+
+      // Update displayed cost if discounted
+      const costEl = card.querySelector('.card-cost');
+      if (costEl) {
+        const baseCost = BLOCK_COSTS[cat];
+        if (cost < baseCost) {
+          costEl.innerHTML = `<s style="color:var(--text-muted)">£${baseCost}bn</s> £${cost}bn/block`;
+        } else {
+          costEl.textContent = `£${baseCost}bn/block`;
+        }
+      }
     }
     this._renderResearchCard();
   }
@@ -5015,10 +5428,78 @@ class UI {
     div.innerHTML = html;
     this.elLogScroll.appendChild(div);
 
-    // Inject advisor briefing for next turn (based on post-turn state)
     this._injectAdvisorBriefing(this.engine.state);
+    this._injectDiplomacyOffer(this.engine.state);
 
     this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
+  }
+
+  _injectDiplomacyOffer(state) {
+    if (state.turn < 1 || state.gameOver || state.turn >= 5) return;
+    const accepted = state.diplomacyHistory.filter(h => h.accepted).map(h => h.dealId);
+    const available = DIPLOMACY_DEALS.filter(d => !accepted.includes(d.id));
+    if (available.length === 0) return;
+    const deal = available[Math.floor(Math.random() * available.length)];
+
+    const costDesc = deal.cost.budget
+      ? `Cost: £${deal.cost.budget}bn from this turn's budget`
+      : deal.cost.socialStability
+        ? `Cost: ${Math.abs(deal.cost.socialStability)} Social Stability`
+        : '';
+
+    const div = document.createElement('div');
+    div.className = 'diplomacy-offer';
+    div.innerHTML = `
+      <div class="diplomacy-header">
+        <span class="diplomacy-flag">${deal.flag}</span>
+        <span class="diplomacy-title">${deal.partner}: ${deal.title}</span>
+      </div>
+      <div class="diplomacy-desc">${deal.desc}</div>
+      <div class="diplomacy-cost">${costDesc}</div>
+      <div class="diplomacy-actions">
+        <button class="diplomacy-btn accept">Accept</button>
+        <button class="diplomacy-btn decline">Decline</button>
+      </div>`;
+
+    const acceptBtn = div.querySelector('.accept');
+    const declineBtn = div.querySelector('.decline');
+
+    acceptBtn.addEventListener('click', () => {
+      const s = this.engine.state;
+      if (deal.cost.budget && (s.budget - s.spentThisTurn) < deal.cost.budget) {
+        acceptBtn.textContent = 'Insufficient budget';
+        acceptBtn.disabled = true;
+        return;
+      }
+      if (deal.cost.budget) {
+        s.budget -= deal.cost.budget;
+      }
+      if (deal.cost.socialStability) {
+        s.socialStability = Math.max(0, s.socialStability + deal.cost.socialStability);
+      }
+      deal.effect(s, techTree);
+      s.diplomacyHistory.push({ turn: s.turn, dealId: deal.id, accepted: true });
+      acceptBtn.textContent = 'Accepted';
+      acceptBtn.disabled = true;
+      declineBtn.disabled = true;
+      div.style.borderColor = 'var(--status-good)';
+      const confirm = document.createElement('div');
+      confirm.style.cssText = 'font-size:11px;color:var(--status-good);margin-top:4px;';
+      confirm.textContent = deal.logText;
+      div.appendChild(confirm);
+      effectsMgr.haptic('light');
+      this.render(this.engine.getState());
+    }, { once: true });
+
+    declineBtn.addEventListener('click', () => {
+      this.engine.state.diplomacyHistory.push({ turn: this.engine.state.turn, dealId: deal.id, accepted: false });
+      div.style.opacity = '0.5';
+      acceptBtn.disabled = true;
+      declineBtn.textContent = 'Declined';
+      declineBtn.disabled = true;
+    }, { once: true });
+
+    this.elLogScroll.appendChild(div);
   }
 
   _chip(label, before, after, invertBad, unit) {
@@ -5128,6 +5609,14 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Final Approval</div>
+        <div class="endgame-metric-val ${s.approvalRating >= 60 ? 'good' : s.approvalRating >= 35 ? 'warn' : 'danger'}">${s.approvalRating}%</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Annual Emissions</div>
+        <div class="endgame-metric-val ${s.annualEmissions < 100 ? 'good' : s.annualEmissions < 200 ? 'warn' : 'danger'}">${s.annualEmissions} MtCO2e</div>
       </div>`;
 
     this.elEndgameNarr.innerHTML = result.narrative;
@@ -5165,7 +5654,8 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    const comparisonHtml = this._buildComparisonBenchmarks(s, score);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', comparisonHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5264,6 +5754,42 @@ class UI {
     return html;
   }
 
+  _buildComparisonBenchmarks(state, score) {
+    const benchmarks = [
+      { label: 'Your Score', val: score.total, max: 100, benchmark: 72, benchmarkLabel: 'UN 1.5°C target' },
+      { label: 'Temperature', val: state.temperature, max: 3.0, benchmark: 1.5, benchmarkLabel: 'Paris Agreement', invert: true, unit: '°C' },
+      { label: 'Net Zero', val: state.netZeroProgress, max: 100, benchmark: 100, benchmarkLabel: 'Legal target', unit: '%' },
+      { label: 'Stability Avg', val: Math.round((state.financialStability + state.socialStability) / 2), max: 100, benchmark: 60, benchmarkLabel: 'Safe threshold', unit: '%' },
+    ];
+
+    let html = `<div id="endgame-comparison">
+      <div id="endgame-comparison-title">How You Compare</div>`;
+
+    for (const b of benchmarks) {
+      const pct = b.invert
+        ? Math.max(0, Math.min(100, ((b.max - b.val) / (b.max - 1.1)) * 100))
+        : Math.max(0, Math.min(100, (b.val / b.max) * 100));
+      const benchPct = b.invert
+        ? Math.max(0, Math.min(100, ((b.max - b.benchmark) / (b.max - 1.1)) * 100))
+        : Math.max(0, Math.min(100, (b.benchmark / b.max) * 100));
+      const valColor = b.invert
+        ? (b.val <= b.benchmark ? 'var(--status-good)' : 'var(--status-danger)')
+        : (b.val >= b.benchmark ? 'var(--status-good)' : 'var(--status-warn)');
+
+      html += `<div class="comparison-row">
+        <span class="comparison-label">${b.label}</span>
+        <div class="comparison-bar-track">
+          <div class="comparison-bar-fill player" style="width:${pct}%"></div>
+          <div class="comparison-marker" style="left:${benchPct}%" title="${b.benchmarkLabel}: ${b.benchmark}${b.unit || ''}"></div>
+        </div>
+        <span class="comparison-val" style="color:${valColor}">${b.unit === '°C' ? b.val.toFixed(1) : Math.round(b.val)}${b.unit || ''}</span>
+      </div>`;
+    }
+
+    html += `<div style="font-size:10px;color:var(--text-muted);margin-top:6px;">Gold markers show international benchmarks and legal targets.</div></div>`;
+    return html;
+  }
+
   // ===== METRIC TOOLTIP =====
   _initTooltips() {
     this._tooltip = document.getElementById('metric-tooltip');
@@ -5342,6 +5868,12 @@ class UI {
 
     if (state.socialStability < 50) {
       msgs.push(`Public consent for the transition is fracturing (${Math.round(state.socialStability)}%). Fuel poverty and job losses are driving anger. Social Support investment is overdue.`);
+    }
+
+    if (state.approvalRating < 30) {
+      msgs.push(`Public approval has collapsed to ${Math.round(state.approvalRating)}%. Your policy options are severely limited — each category is capped at 1 block. Prioritise Social Support and visible wins to rebuild trust.`);
+    } else if (state.approvalRating < 45) {
+      msgs.push(`Approval rating is falling (${Math.round(state.approvalRating)}%). If it drops below 30%, your ability to implement policy will be drastically curtailed.`);
     }
 
     if (state.temperature > 1.6) {
