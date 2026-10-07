@@ -36,6 +36,7 @@
   --energy-nuclear: #b39ddb;
   --energy-gas:     #ff7043;
   --energy-storage: #448aff;
+  --energy-hydrogen: #00bcd4;
   --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'Courier New', Courier, monospace;
   --font-editorial: Georgia, 'Times New Roman', serif;
@@ -343,6 +344,7 @@ body {
 .energy-seg.nuclear { background: var(--energy-nuclear); }
 .energy-seg.gas     { background: var(--energy-gas); }
 .energy-seg.storage { background: var(--energy-storage); }
+.energy-seg.hydrogen { background: var(--energy-hydrogen); }
 
 #energy-mix-legend {
   display: grid;
@@ -2270,6 +2272,18 @@ body { transition: filter 2s ease; }
         <div class="sparkline-container" id="spark-nz"></div>
       </div>
 
+      <!-- Carbon Budget -->
+      <div class="metric-block">
+        <div class="metric-label-row">
+          <span class="metric-name">🏔️ Carbon Budget</span>
+          <span class="metric-value"><span id="val-cb">11.0</span> GtCO2 <span class="metric-delta" id="delta-cb"></span></span>
+        </div>
+        <div class="bar-track" style="position:relative">
+          <div class="bar-fill good" id="bar-cb" style="width:100%"></div>
+        </div>
+        <div class="sparkline-container" id="spark-cb"></div>
+      </div>
+
       <!-- Energy Mix -->
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
@@ -2278,6 +2292,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg hydrogen" id="seg-hydrogen" style="flex-grow:0"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2310,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-hydrogen)"></div>
+            <span>H2</span><span class="legend-val" id="leg-hydrogen">0</span>
           </div>
         </div>
       </div>
@@ -3221,6 +3240,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'hydrogen_pioneer', icon: '💧', name: 'Hydrogen Pioneer', desc: 'Build hydrogen capacity above 30', check: (s) => (s.energy.hydrogen || 0) >= 30 },
+  { id: 'carbon_budget_hero', icon: '🏔️', name: 'Carbon Budget Guardian', desc: 'Finish with carbon budget above 5 GtCO2', check: (s) => (s.carbonBudget || 0) >= 5 },
 ];
 
 class AchievementManager {
@@ -3297,6 +3318,14 @@ const METRIC_TOOLTIPS = {
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
+  },
+  cb: {
+    title: '🏔️ Carbon Budget',
+    desc: 'The UK\'s remaining share of the global carbon budget for a 1.5°C pathway. Each turn, continued fossil fuel use depletes this irreversible allowance. Once exhausted, even reaching Net Zero cannot undo the cumulative emissions.',
+    drivers: '↑ Restored by: Carbon Capture technology, nature-based removal\n↓ Depleted by: gas-heavy energy mix, delayed transition, high overall emissions',
+    threshold: 'Below 3 GtCO2: budget critically low — the UK has almost certainly exceeded its fair share of global emissions. Above 6 GtCO2: still within manageable bounds.',
+    thresholdGood: true,
+    source: 'Based on IPCC AR6 remaining carbon budget estimates, UK proportional share',
   },
 };
 
@@ -3517,6 +3546,7 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      carbonBudget: state.carbonBudget || 0,
     });
   }
   reset() { this.data = []; }
@@ -3550,7 +3580,8 @@ class GameEngine {
       socialStability: 75,
       budget: 100,
       nextTurnBudgetPenalty: 0,
-      energy: { wind: 29, solar: 6, nuclear: 13, gas: 28, storage: 5 },
+      carbonBudget: 11.0,
+      energy: { wind: 29, solar: 6, nuclear: 13, gas: 28, storage: 5, hydrogen: 0 },
       infrastructure: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -3656,6 +3687,9 @@ class GameEngine {
       e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
       e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
       infra.gridAndStorage += gs * 35;
+      if (techTree.multipliers.hydrogenEconomy > 1) {
+        e.hydrogen = clamp((e.hydrogen || 0) + gs * 4, 0, 60);
+      }
     }
     const ad = d.adaptation;
     if (ad > 0) {
@@ -3679,7 +3713,7 @@ class GameEngine {
 
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
-    const backup          = e.nuclear + e.storage + (e.gas * 0.5);
+    const backup          = e.nuclear + e.storage + (e.gas * 0.5) + ((e.hydrogen || 0) * 0.7);
     const renew           = Math.max(e.wind + e.solar, 1);
     const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
 
@@ -3712,6 +3746,7 @@ class GameEngine {
       gridReliability: s.gridReliability,
       financialStability: s.financialStability,
       socialStability: s.socialStability,
+      carbonBudget: s.carbonBudget,
       energy: Object.assign({}, s.energy),
     };
 
@@ -3815,6 +3850,10 @@ class GameEngine {
       s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
       s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
       s.infrastructure.gridAndStorage += gs * 35;
+      // Hydrogen production when tech unlocked
+      if (techTree.multipliers.hydrogenEconomy > 1) {
+        s.energy.hydrogen = this._clamp((s.energy.hydrogen || 0) + gs * 4, 0, 60);
+      }
     }
 
     // Adaptation
@@ -3822,6 +3861,10 @@ class GameEngine {
     if (ad > 0) {
       s.socialStability = this._clamp(s.socialStability + ad * 5 * techTree.multipliers.adaptMitigate, 0, 100);
       s.infrastructure.adaptation += ad * 25;
+      // Carbon capture tech restores carbon budget
+      if (techTree.multipliers.carbonCapture > 1) {
+        s.carbonBudget = Math.min(11, (s.carbonBudget || 0) + ad * 0.3);
+      }
     }
 
     // Social Support
@@ -3831,6 +3874,10 @@ class GameEngine {
       s.financialStability = this._clamp(s.financialStability + ss * 3, 0, 100);
       s.infrastructure.socialSupport += ss * 20;
       s.socialCapital = this._clamp(s.socialCapital + ss * 4, 0, 60); // accumulates across turns
+      // Smart cities gives grid reliability co-benefit
+      if (techTree.multipliers.smartCities > 1) {
+        s.gridReliability = this._clamp(s.gridReliability + ss * 2, 0, 100);
+      }
     }
 
     // Financial Resilience
@@ -3853,7 +3900,7 @@ class GameEngine {
     const s = this.state;
     const e = s.energy;
     const gridFactor = 1 + (s.infrastructure.gridAndStorage / 300);
-    const backup  = e.nuclear + e.storage + (e.gas * 0.5);
+    const backup  = e.nuclear + e.storage + (e.gas * 0.5) + ((e.hydrogen || 0) * 0.7);
     const renew   = Math.max(e.wind + e.solar, 1);
     const raw     = (backup / renew) * gridFactor * 50;
     s.gridReliability = this._clamp(Math.round(raw), 0, 100);
@@ -3893,9 +3940,9 @@ class GameEngine {
       e.gas = this._clamp(e.gas + 6, 0, 100);
     }
 
-    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
+    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage + (e.hydrogen || 0);
     const gasShare   = total > 0 ? e.gas / total : 0;
-    const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
+    const renewShare = total > 0 ? (e.wind + e.solar + (e.hydrogen || 0)) / total : 0;
 
     let delta = difficultyMgr.preset.warmingRate + (gasShare - renewShare) * 0.22;
     delta = Math.max(delta, 0.03); // residual warming even at Net Zero
@@ -3907,6 +3954,10 @@ class GameEngine {
 
     if (s.netZeroAchieved) delta *= 0.45;
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
+
+    // Carbon budget depletion — gas-heavy mixes deplete faster
+    const gasShareCalc = total > 0 ? e.gas / total : 0;
+    s.carbonBudget = Math.max(0, (s.carbonBudget || 11) - (gasShareCalc * 0.5 + 0.12));
   }
 
   _resolveEvent() {
@@ -4143,6 +4194,12 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
+  if ((s.energy.hydrogen || 0) > 15) {
+    parts.push(`Green hydrogen emerged as a key pillar of the energy mix, decarbonising hard-to-electrify sectors like steel, shipping, and heating. The hydrogen economy created thousands of skilled jobs and reduced reliance on imported gas.`);
+  }
+  if ((s.carbonBudget || 0) > 5) {
+    parts.push(`Crucially, the UK stayed within its carbon budget — preserving its fair share of the global emissions space and maintaining credibility in international climate negotiations.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4174,6 +4231,9 @@ function buildHotHouseNarrative(s) {
 
   if (s.eventCount > 2) {
     parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, recovery time between shocks shrank until resilience collapsed entirely.`);
+  }
+  if ((s.carbonBudget || 0) < 2) {
+    parts.push(`The UK's carbon budget is effectively exhausted. The cumulative emissions overshoot means that even reaching Net Zero now would not undo the damage — the warming is locked in for centuries.`);
   }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
@@ -4261,14 +4321,20 @@ class UI {
       { key: 'nz',    valId: 'val-nz',   barId: 'bar-nz',   deltaId: 'delta-nz' },
     ];
 
-    this.elSegWind    = document.getElementById('seg-wind');
-    this.elSegSolar   = document.getElementById('seg-solar');
-    this.elSegNuclear = document.getElementById('seg-nuclear');
-    this.elSegGas     = document.getElementById('seg-gas');
-    this.elLegWind    = document.getElementById('leg-wind');
-    this.elLegSolar   = document.getElementById('leg-solar');
-    this.elLegNuclear = document.getElementById('leg-nuclear');
-    this.elLegGas     = document.getElementById('leg-gas');
+    this.elSegWind     = document.getElementById('seg-wind');
+    this.elSegSolar    = document.getElementById('seg-solar');
+    this.elSegNuclear  = document.getElementById('seg-nuclear');
+    this.elSegGas      = document.getElementById('seg-gas');
+    this.elSegHydrogen = document.getElementById('seg-hydrogen');
+    this.elLegWind     = document.getElementById('leg-wind');
+    this.elLegSolar    = document.getElementById('leg-solar');
+    this.elLegNuclear  = document.getElementById('leg-nuclear');
+    this.elLegGas      = document.getElementById('leg-gas');
+    this.elLegHydrogen = document.getElementById('leg-hydrogen');
+
+    this.elValCB    = document.getElementById('val-cb');
+    this.elDeltaCB  = document.getElementById('delta-cb');
+    this.elBarCB    = document.getElementById('bar-cb');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4671,6 +4737,16 @@ class UI {
       bar.className = 'bar-fill ' + status;
       if (m.deltaId) this._renderDelta(document.getElementById(m.deltaId), val, snap, false, 0);
     }
+
+    // Carbon Budget
+    const cb = state.carbonBudget !== undefined ? state.carbonBudget : 11.0;
+    const cbSnap = state.lastSnapshot ? (state.lastSnapshot.carbonBudget !== undefined ? state.lastSnapshot.carbonBudget : null) : null;
+    const cbPct = Math.max(0, (cb / 11) * 100);
+    this.elValCB.textContent = cb.toFixed(1);
+    this.elBarCB.style.width = cbPct + '%';
+    const cbStatus = cb > 6 ? 'good' : cb > 3 ? 'warn' : 'danger';
+    this.elBarCB.className = 'bar-fill ' + cbStatus;
+    if (this.elDeltaCB) this._renderDelta(this.elDeltaCB, cb, cbSnap, true, 1);
   }
 
   _renderSparklines() {
@@ -4680,6 +4756,7 @@ class UI {
       { containerId: 'spark-fin',  key: 'financialStability', color: '#5390d9', invert: false, min: 0, max: 100 },
       { containerId: 'spark-soc',  key: 'socialStability', color: '#ffd600', invert: false, min: 0, max: 100 },
       { containerId: 'spark-nz',   key: 'netZeroProgress', color: '#448aff', invert: false, min: 0, max: 100 },
+      { containerId: 'spark-cb',   key: 'carbonBudget', color: '#00bcd4', invert: true, min: 0, max: 11, decimals: 1 },
     ];
 
     for (const s of series) {
@@ -4801,10 +4878,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegHydrogen.style.flexGrow = e.hydrogen || 0;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegHydrogen.textContent = Math.round(e.hydrogen || 0);
   }
 
   _renderBudget(state) {
@@ -4949,7 +5028,7 @@ class UI {
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
-      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1);
+      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + (state.energy.hydrogen || 0) + 1);
       const smokeOpacity = Math.max(0, (gasShare - 0.15) / 0.4);
       smokeGroup.style.opacity = smokeOpacity;
     }
@@ -5126,8 +5205,24 @@ class UI {
         <div class="endgame-metric-val ${socStatus}">${Math.round(s.socialStability)}%</div>
       </div>
       <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Carbon Budget</div>
+        <div class="endgame-metric-val ${(s.carbonBudget || 0) > 6 ? 'good' : (s.carbonBudget || 0) > 3 ? 'warn' : 'danger'}">${(s.carbonBudget || 0).toFixed(1)} Gt</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Hydrogen</div>
+        <div class="endgame-metric-val ${(s.energy.hydrogen || 0) > 20 ? 'good' : (s.energy.hydrogen || 0) > 5 ? 'warn' : 'danger'}">${Math.round(s.energy.hydrogen || 0)}</div>
+      </div>
+      <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Carbon Budget</div>
+        <div class="endgame-metric-val ${(s.carbonBudget || 0) > 6 ? 'good' : (s.carbonBudget || 0) > 3 ? 'warn' : 'danger'}">${(s.carbonBudget || 0).toFixed(1)} GtCO2</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Hydrogen Capacity</div>
+        <div class="endgame-metric-val ${(s.energy.hydrogen || 0) > 20 ? 'good' : (s.energy.hydrogen || 0) > 5 ? 'warn' : 'danger'}">${Math.round(s.energy.hydrogen || 0)}</div>
       </div>`;
 
     this.elEndgameNarr.innerHTML = result.narrative;
@@ -5522,6 +5617,24 @@ const RESEARCH_UPGRADES = [
     desc: 'Adaptation blocks give 1.6× event damage mitigation',
     apply(m) { m.adaptMitigate = 1.6; },
   },
+  {
+    id: 'hydrogen_economy',
+    name: 'Hydrogen Electrolysis',
+    desc: 'Grid blocks now also produce green hydrogen (+4/block)',
+    apply(m) { m.hydrogenEconomy = 1.5; },
+  },
+  {
+    id: 'carbon_capture',
+    name: 'Carbon Capture Tech',
+    desc: 'Adaptation blocks now also restore 0.3 GtCO2 carbon budget',
+    apply(m) { m.carbonCapture = 1.5; },
+  },
+  {
+    id: 'smart_cities',
+    name: 'Smart City Networks',
+    desc: 'Social Support gives 1.3x Grid Reliability co-benefit',
+    apply(m) { m.smartCities = 1.3; },
+  },
 ];
 
 class TechTreeManager {
@@ -5532,6 +5645,9 @@ class TechTreeManager {
       socialGain:    1.0,
       finGain:       1.0,
       adaptMitigate: 1.0,
+      hydrogenEconomy: 1.0,
+      carbonCapture: 1.0,
+      smartCities:   1.0,
     };
     this._purchased = new Set();
   }
@@ -5553,7 +5669,7 @@ class TechTreeManager {
   }
 
   reset() {
-    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0, hydrogenEconomy:1.0, carbonCapture:1.0, smartCities:1.0 };
     this._purchased.clear();
   }
 }
@@ -5723,6 +5839,98 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_offshore_wind_breakthrough',
+    icon: '💨',
+    title: 'Offshore Wind Cost Breakthrough',
+    prompt: 'UK offshore wind costs have plummeted. How do you capitalise?',
+    explanation: 'Floating offshore wind technology has matured faster than expected, making deep-water sites viable. You can lock in cheap contracts now for massive expansion, or use the savings to reduce energy bills — both have merit.',
+    contextFn: (s) => ({
+      label: 'Wind Capacity',
+      value: `${Math.round(s.energy.wind)}`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🏗️ Lock in 20GW floating wind contracts',
+      consequence: 'Wind +12 · +8% Net Zero · Costs £4bn next turn',
+      effect: (s) => { s.energy.wind = Math.min(120, s.energy.wind + 12); s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.nextTurnBudgetPenalty += 4; },
+    },
+    optB: {
+      label: '💷 Pass savings to consumers via bill cuts',
+      consequence: '+6 Social · +3 Financial · Wind +4',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 6); s.financialStability = Math.min(100, s.financialStability + 3); s.energy.wind = Math.min(120, s.energy.wind + 4); },
+    },
+    condition: (s) => s.energy.wind > 30,
+  },
+  {
+    id: 'mini_solid_state_battery',
+    icon: '🔋',
+    title: 'Solid-State Battery Breakthrough',
+    prompt: 'A UK lab has achieved a major battery breakthrough. How do you respond?',
+    explanation: 'Solid-state batteries offer 3x the energy density of lithium-ion at lower cost. You can build a UK gigafactory to capture the manufacturing value chain, or license the technology broadly to accelerate grid storage deployment.',
+    contextFn: (s) => ({
+      label: 'Storage Capacity',
+      value: `${Math.round(s.energy.storage)}`,
+      note: `Grid: ${Math.round(s.gridReliability)}%`,
+    }),
+    optA: {
+      label: '🏭 Build UK gigafactory',
+      consequence: 'Costs £10bn next turn · Storage +15 · +5 Financial · builds industrial base',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.energy.storage = Math.min(100, s.energy.storage + 15); s.financialStability = Math.min(100, s.financialStability + 5); },
+    },
+    optB: {
+      label: '🌐 Open-license for fastest deployment',
+      consequence: 'Storage +8 · Grid +8 · +4% Net Zero · no budget cost',
+      effect: (s) => { s.energy.storage = Math.min(100, s.energy.storage + 8); s.gridReliability = Math.min(100, s.gridReliability + 8); s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); },
+    },
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
+  {
+    id: 'mini_green_hydrogen',
+    icon: '💧',
+    title: 'Green Hydrogen Cost Parity',
+    prompt: 'Green hydrogen has reached cost parity with grey. A hydrogen economy is now viable.',
+    explanation: 'Electrolysis powered by renewables can now produce hydrogen cheaper than steam methane reforming. This could decarbonise steel, shipping, and heating — sectors where electrification alone cannot reach. The question is whether to invest in production or distribution infrastructure.',
+    contextFn: (s) => ({
+      label: 'Hydrogen',
+      value: `${Math.round(s.energy.hydrogen || 0)}`,
+      note: `Grid: ${Math.round(s.gridReliability)}%`,
+    }),
+    optA: {
+      label: '⚗️ Build hydrogen production hubs',
+      consequence: 'Hydrogen +10 · +6% Net Zero · Costs £7bn next turn',
+      effect: (s) => { s.energy.hydrogen = Math.min(60, (s.energy.hydrogen || 0) + 10); s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.nextTurnBudgetPenalty += 7; },
+    },
+    optB: {
+      label: '🔧 Build hydrogen pipeline network',
+      consequence: 'Hydrogen +5 · +4 Grid · +3 Financial · Costs £5bn next turn',
+      effect: (s) => { s.energy.hydrogen = Math.min(60, (s.energy.hydrogen || 0) + 5); s.gridReliability = Math.min(100, s.gridReliability + 4); s.financialStability = Math.min(100, s.financialStability + 3); s.nextTurnBudgetPenalty += 5; },
+    },
+    condition: (s) => s.netZeroProgress > 40 && s.energy.wind > 35,
+  },
+  {
+    id: 'mini_carbon_capture',
+    icon: '🏔️',
+    title: 'Carbon Capture Viable at Scale',
+    prompt: 'Direct air capture costs have fallen below £100/tonne. Should the UK invest?',
+    explanation: 'Carbon capture is no longer science fiction — costs have dropped enough for industrial deployment. It can remove CO2 already in the atmosphere, buying time for the transition. But it competes for capital and energy with renewables.',
+    contextFn: (s) => ({
+      label: 'Carbon Budget',
+      value: `${(s.carbonBudget || 0).toFixed(1)} GtCO2`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🏗️ Deploy large-scale CCS clusters',
+      consequence: 'Carbon Budget +1.5 Gt · -0.05°C temperature · Costs £12bn next turn',
+      effect: (s) => { s.carbonBudget = Math.min(11, (s.carbonBudget || 0) + 1.5); s.temperature = Math.max(1.1, s.temperature - 0.05); s.nextTurnBudgetPenalty += 12; },
+    },
+    optB: {
+      label: '🌲 Invest in nature-based carbon sinks',
+      consequence: 'Carbon Budget +0.8 Gt · +3 Social · +4% Net Zero · Costs £4bn next turn',
+      effect: (s) => { s.carbonBudget = Math.min(11, (s.carbonBudget || 0) + 0.8); s.socialStability = Math.min(100, s.socialStability + 3); s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); s.nextTurnBudgetPenalty += 4; },
+    },
+    condition: (s) => s.temperature > 1.4,
   },
 ];
 
