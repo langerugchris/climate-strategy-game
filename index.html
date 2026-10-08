@@ -372,6 +372,175 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* ===== SECTOR EMISSIONS ===== */
+#sector-emissions-section {
+  margin-top: var(--gap-md);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+
+#sector-emissions-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+
+.sector-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  font-size: 11px;
+}
+
+.sector-label {
+  width: 68px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.sector-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+
+.sector-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.7s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+}
+
+.sector-val {
+  width: 28px;
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  font-size: 10px;
+}
+
+/* ===== JOURNEY CHART (ENDGAME) ===== */
+#endgame-journey {
+  margin: var(--gap-lg) 0 var(--gap-md);
+}
+
+#endgame-journey-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+  text-align: center;
+}
+
+#journey-chart-container {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+#journey-chart-container svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.journey-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: var(--gap-sm);
+  font-size: 11px;
+}
+
+.journey-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+
+.journey-legend-dot {
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ===== INTERNATIONAL EVENTS ===== */
+.intl-event-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 6px 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-blue);
+  border-left: 3px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  animation: intl-slide-in 0.4s ease-out;
+}
+
+.intl-event-banner .intl-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.intl-event-banner .intl-body {
+  flex: 1;
+}
+
+.intl-event-banner .intl-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.intl-event-banner .intl-desc {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.intl-effect-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+.intl-effect-tag.pos {
+  background: rgba(0, 200, 83, 0.15);
+  color: var(--status-good);
+}
+
+.intl-effect-tag.neg {
+  background: rgba(255, 61, 0, 0.15);
+  color: var(--status-danger);
+}
+
+.intl-effect-tag.neutral {
+  background: rgba(68, 138, 255, 0.15);
+  color: var(--status-info);
+}
+
+@keyframes intl-slide-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ===== DECISIONS PANEL (CENTRE) ===== */
 #decisions-panel {
   display: flex;
@@ -2299,6 +2468,30 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div id="sector-emissions-section">
+        <div id="sector-emissions-title">Sector Emissions</div>
+        <div class="sector-row">
+          <span class="sector-label">Power</span>
+          <div class="sector-bar-track"><div class="sector-bar-fill" id="sector-bar-power" style="width:65%;background:var(--energy-gas)"></div></div>
+          <span class="sector-val" id="sector-val-power">65</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-label">Transport</span>
+          <div class="sector-bar-track"><div class="sector-bar-fill" id="sector-bar-transport" style="width:85%;background:var(--energy-gas)"></div></div>
+          <span class="sector-val" id="sector-val-transport">85</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-label">Buildings</span>
+          <div class="sector-bar-track"><div class="sector-bar-fill" id="sector-bar-buildings" style="width:72%;background:var(--energy-gas)"></div></div>
+          <span class="sector-val" id="sector-val-buildings">72</span>
+        </div>
+        <div class="sector-row">
+          <span class="sector-label">Industry</span>
+          <div class="sector-bar-track"><div class="sector-bar-fill" id="sector-bar-industry" style="width:78%;background:var(--energy-gas)"></div></div>
+          <span class="sector-val" id="sector-val-industry">78</span>
+        </div>
+      </div>
+
     </div>
   </aside>
 
@@ -3170,6 +3363,93 @@ const RANDOM_EVENTS = [
 ];
 
 /* ============================================================
+   INTERNATIONAL EVENTS
+============================================================ */
+
+const INTERNATIONAL_EVENTS = [
+  {
+    id: 'cop_breakthrough', icon: '🌍', title: 'COP Climate Breakthrough',
+    desc: 'A landmark COP agreement commits major economies to accelerated decarbonisation. International carbon markets open to the UK.',
+    effectTag: '+5 Net Zero, +3 Social',
+    tagClass: 'pos',
+    apply(s) { s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.min(100, s.socialStability + 3); },
+    condition: (s) => s.turn >= 1 && s.netZeroProgress < 80,
+  },
+  {
+    id: 'eu_carbon_tariff', icon: '🇪🇺', title: 'EU Carbon Border Tariff',
+    desc: 'The EU imposes carbon border adjustment on UK exports. Industry faces higher costs unless emissions fall.',
+    effectTag: 'Industry pressure, -5 Financial',
+    tagClass: 'neg',
+    apply(s) { s.financialStability = Math.max(0, s.financialStability - 5); s.sectors.industry = Math.max(10, s.sectors.industry - 8); },
+    condition: (s) => s.sectors.industry > 50,
+  },
+  {
+    id: 'china_solar_glut', icon: '🇨🇳', title: 'Chinese Solar Panel Surplus',
+    desc: 'A global oversupply of solar panels drives UK installation costs down sharply. Solar capacity grows faster this term.',
+    effectTag: 'Solar +8, -2 Financial (trade deficit)',
+    tagClass: 'pos',
+    apply(s) { s.energy.solar = Math.min(100, s.energy.solar + 8); s.financialStability = Math.max(0, s.financialStability - 2); },
+    condition: (s) => s.energy.solar < 60,
+  },
+  {
+    id: 'us_lng_crisis', icon: '🇺🇸', title: 'US LNG Export Disruption',
+    desc: 'A hurricane season disrupts US LNG exports. Global gas prices spike, hitting UK energy bills and social stability.',
+    effectTag: '-6 Social, -4 Financial',
+    tagClass: 'neg',
+    apply(s) { s.socialStability = Math.max(0, s.socialStability - 6); s.financialStability = Math.max(0, s.financialStability - 4); },
+    condition: (s) => s.energy.gas > 15,
+  },
+  {
+    id: 'nordic_grid_link', icon: '🔗', title: 'Nordic Grid Interconnector',
+    desc: 'A new subsea cable links UK and Scandinavian grids, providing access to Norwegian hydropower as backup.',
+    effectTag: '+8 Grid Reliability',
+    tagClass: 'pos',
+    apply(s) { s.gridReliability = Math.min(100, s.gridReliability + 8); },
+    condition: (s) => s.turn >= 1 && s.gridReliability < 80,
+  },
+  {
+    id: 'global_recession', icon: '📉', title: 'Global Economic Slowdown',
+    desc: 'A worldwide recession squeezes government revenue. Next turn budget reduced, but emissions fall slightly from reduced industrial output.',
+    effectTag: '-12 Budget next turn, Industry -5',
+    tagClass: 'neg',
+    apply(s) { s.nextTurnBudgetPenalty += 12; s.sectors.industry = Math.max(10, s.sectors.industry - 5); },
+    condition: (s) => s.turn >= 2,
+  },
+  {
+    id: 'green_hydrogen_deal', icon: '🟢', title: 'Green Hydrogen Trade Deal',
+    desc: 'The UK signs a green hydrogen import agreement with Morocco and Australia, accelerating industrial decarbonisation.',
+    effectTag: 'Industry -12, +3 Net Zero',
+    tagClass: 'pos',
+    apply(s) { s.sectors.industry = Math.max(10, s.sectors.industry - 12); s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    condition: (s) => s.turn >= 2 && s.sectors.industry > 40,
+  },
+  {
+    id: 'ev_revolution', icon: '🚗', title: 'Global EV Price Parity',
+    desc: 'Electric vehicles reach price parity with petrol cars worldwide. UK transport emissions begin to fall rapidly.',
+    effectTag: 'Transport -15, +2 Social',
+    tagClass: 'pos',
+    apply(s) { s.sectors.transport = Math.max(15, s.sectors.transport - 15); s.socialStability = Math.min(100, s.socialStability + 2); },
+    condition: (s) => s.turn >= 1 && s.sectors.transport > 50,
+  },
+  {
+    id: 'insurance_retreat', icon: '🏠', title: 'Global Insurance Retreat',
+    desc: 'Major insurers withdraw from climate-exposed regions worldwide. UK coastal and flood-plain property values drop.',
+    effectTag: '-8 Property Value, -3 Social',
+    tagClass: 'neg',
+    apply(s) { s.propertyValue = Math.max(0, s.propertyValue - 8); s.socialStability = Math.max(0, s.socialStability - 3); },
+    condition: (s) => s.temperature > 1.4 && s.infrastructure.adaptation < 60,
+  },
+  {
+    id: 'tech_ccs_breakthrough', icon: '🔬', title: 'Carbon Capture Breakthrough',
+    desc: 'A scalable direct air capture technology proves commercially viable. Net Zero progress accelerates across all sectors.',
+    effectTag: '+8 Net Zero, Industry -6',
+    tagClass: 'pos',
+    apply(s) { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.sectors.industry = Math.max(10, s.sectors.industry - 6); },
+    condition: (s) => s.turn >= 3,
+  },
+];
+
+/* ============================================================
    DIFFICULTY SYSTEM
 ============================================================ */
 
@@ -3297,6 +3577,14 @@ const METRIC_TOOLTIPS = {
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
+  },
+  sectors: {
+    title: '🏭 Sector Emissions',
+    desc: 'Residual emissions intensity across four key UK sectors. Lower is better — reaching near-zero across all sectors contributes to Net Zero progress and earns bonus score points.',
+    drivers: '↓ Power: driven by renewable energy share\n↓ Transport: driven by Energy Transition investment and EV adoption\n↓ Buildings: driven by Adaptation (insulation) and Social Support (heat pumps)\n↓ Industry: driven by Financial Resilience (green finance) and Energy Transition',
+    threshold: 'Below 30% average = deep decarbonisation achieved. International events (e.g. EV revolution, green hydrogen) can accelerate sector progress.',
+    thresholdGood: false,
+    source: 'Based on CCC Sixth Carbon Budget sectoral pathways',
   },
 };
 
@@ -3517,6 +3805,7 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      sectors: state.sectors ? { ...state.sectors } : { power: 65, transport: 85, buildings: 72, industry: 78 },
     });
   }
   reset() { this.data = []; }
@@ -3558,6 +3847,8 @@ class GameEngine {
         socialSupport: 0,
         financialResilience: 0,
       },
+      sectors: { power: 65, transport: 85, buildings: 72, industry: 78 },
+      internationalBonus: { nzMod: 0, budgetMod: 0, socialMod: 0 },
       strandedAssets: 0,
       propertyValue: 100,
       socialCapital: 0,
@@ -3586,6 +3877,8 @@ class GameEngine {
       energy: Object.assign({}, this.state.energy),
       infrastructure: Object.assign({}, this.state.infrastructure),
       currentDecisions: Object.assign({}, this.state.currentDecisions),
+      sectors: Object.assign({}, this.state.sectors),
+      internationalBonus: Object.assign({}, this.state.internationalBonus),
     });
   }
 
@@ -3733,6 +4026,18 @@ class GameEngine {
     // Phase 6: Temperature
     this._progressTemp();
 
+    // Phase 6b: Sector emissions
+    this._updateSectors();
+
+    // Phase 6d: Sector emissions feed back into Net Zero progress
+    const sectorAvg = (s.sectors.power + s.sectors.transport + s.sectors.buildings + s.sectors.industry) / 4;
+    if (sectorAvg < 50) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + Math.round((50 - sectorAvg) * 0.15), 0, 100);
+    }
+
+    // Phase 6c: International event
+    const intlEvent = this._resolveInternational();
+
     // Phase 7: Random event
     const event = this._resolveEvent();
     s.currentRandomEvent = event;
@@ -3763,12 +4068,14 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      intlEvent: intlEvent ? intlEvent.title : null,
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
       afterGrid:     s.gridReliability,
       afterFin:      s.financialStability,
       afterSoc:      s.socialStability,
+      sectors: { ...s.sectors },
     };
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
@@ -3791,7 +4098,7 @@ class GameEngine {
       endgame = evaluateEndgame(s);
     }
 
-    return { logEntry, event, endgame };
+    return { logEntry, event, intlEvent, endgame };
   }
 
   _applyInvestments() {
@@ -3907,6 +4214,47 @@ class GameEngine {
 
     if (s.netZeroAchieved) delta *= 0.45;
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
+  }
+
+  _updateSectors() {
+    const s = this.state;
+    const d = s.currentDecisions;
+    const e = s.energy;
+    const total = Math.max(1, e.wind + e.solar + e.nuclear + e.gas + e.storage);
+    const gasShare = e.gas / total;
+    const renewShare = (e.wind + e.solar) / total;
+
+    // Power: driven by energy mix — high renewables = low emissions
+    s.sectors.power = this._clamp(Math.round(gasShare * 100 + 10 - renewShare * 30), 0, 100);
+
+    // Transport: slowly declines with energy transition and R&D
+    const transportDelta = d.energyTransition * 8 + (s.infrastructure.energyTransition * 0.06);
+    s.sectors.transport = this._clamp(Math.round(85 - transportDelta), 15, 100);
+
+    // Buildings: driven by adaptation (insulation) and social support (heat pumps)
+    const buildDelta = s.infrastructure.adaptation * 0.12 + s.infrastructure.socialSupport * 0.08;
+    s.sectors.buildings = this._clamp(Math.round(72 - buildDelta), 10, 100);
+
+    // Industry: driven by financial resilience (green finance) and energy transition
+    const indusDelta = s.infrastructure.financialResilience * 0.08 + s.infrastructure.energyTransition * 0.05;
+    s.sectors.industry = this._clamp(Math.round(78 - indusDelta), 10, 100);
+  }
+
+  _resolveInternational() {
+    const s = this.state;
+    s.internationalBonus = { nzMod: 0, budgetMod: 0, socialMod: 0 };
+
+    if (s.turn === 0) return null;
+
+    const pool = INTERNATIONAL_EVENTS.filter(evt => !evt.condition || evt.condition(s));
+    if (pool.length === 0) return null;
+
+    // One international event per turn, 60% chance
+    if (Math.random() > 0.60) return null;
+
+    const evt = pool[Math.floor(Math.random() * pool.length)];
+    evt.apply(s);
+    return evt;
   }
 
   _resolveEvent() {
@@ -4042,8 +4390,12 @@ function calculateScore(state) {
   const eventPenalty = s.eventCount * 1.5;
   const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
 
-  const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
-  return { total, tempScore, nzScore, stabScore, resScore };
+  // Sector Bonus (0-5): reward for deep sectoral decarbonisation
+  const sectorAvg = (s.sectors.power + s.sectors.transport + s.sectors.buildings + s.sectors.industry) / 4;
+  const sectorBonus = Math.round(Math.max(0, 5 - sectorAvg * 0.05));
+
+  const total = Math.min(100, tempScore + nzScore + stabScore + resScore + sectorBonus);
+  return { total, tempScore, nzScore, stabScore, resScore, sectorBonus };
 }
 
 /* ============================================================
@@ -4142,6 +4494,12 @@ function buildOrderlyNarrative(s) {
   }
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
+  }
+  const sectorAvg = (s.sectors.power + s.sectors.transport + s.sectors.buildings + s.sectors.industry) / 4;
+  if (sectorAvg < 30) {
+    parts.push(`Deep decarbonisation reached across all sectors: power generation is nearly zero-carbon, electric vehicles dominate transport, buildings are well-insulated, and industry has pivoted to green hydrogen and electrification.`);
+  } else if (s.sectors.transport > 50) {
+    parts.push(`Transport remains the lagging sector at ${Math.round(s.sectors.transport)}% of baseline emissions — a stubborn reminder that decarbonising heavy vehicles and aviation requires sustained investment beyond 2050.`);
   }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
@@ -4535,6 +4893,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-journey')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -4613,6 +4972,7 @@ class UI {
     this._renderProjection(state);
     this._renderSparklines(state);
     this._renderEnergyMix(state);
+    this._renderSectors(state);
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
@@ -4807,6 +5167,25 @@ class UI {
     this.elLegGas.textContent     = Math.round(e.gas);
   }
 
+  _renderSectors(state) {
+    const sectorDefs = [
+      { id: 'power',     val: state.sectors.power },
+      { id: 'transport', val: state.sectors.transport },
+      { id: 'buildings', val: state.sectors.buildings },
+      { id: 'industry',  val: state.sectors.industry },
+    ];
+    for (const sec of sectorDefs) {
+      const bar = document.getElementById(`sector-bar-${sec.id}`);
+      const label = document.getElementById(`sector-val-${sec.id}`);
+      if (!bar || !label) continue;
+      const v = Math.round(sec.val);
+      bar.style.width = v + '%';
+      label.textContent = v;
+      const color = v > 60 ? 'var(--energy-gas)' : v > 30 ? 'var(--status-warn)' : 'var(--status-good)';
+      bar.style.background = color;
+    }
+  }
+
   _renderBudget(state) {
     const rem   = state.budget - state.spentThisTurn;
     const spent = state.spentThisTurn;
@@ -4998,6 +5377,11 @@ class UI {
     // Decisions
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
 
+    // International event notice
+    if (entry.intlEvent) {
+      html += `<div class="log-text" style="color:var(--status-info);margin-top:4px;">🌍 ${entry.intlEvent}</div>`;
+    }
+
     // Event notice
     if (entry.event) {
       html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
@@ -5128,6 +5512,10 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Climate Events</div>
         <div class="endgame-metric-val ${s.eventCount > 3 ? 'danger' : s.eventCount > 1 ? 'warn' : 'good'}">${s.eventCount}</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Sector Avg Emissions</div>
+        <div class="endgame-metric-val ${(() => { const avg = Math.round((s.sectors.power + s.sectors.transport + s.sectors.buildings + s.sectors.industry) / 4); return avg <= 30 ? 'good' : avg <= 55 ? 'warn' : 'danger'; })()}">${Math.round((s.sectors.power + s.sectors.transport + s.sectors.buildings + s.sectors.industry) / 4)}%</div>
       </div>`;
 
     this.elEndgameNarr.innerHTML = result.narrative;
@@ -5142,6 +5530,9 @@ class UI {
 
     // Build radar chart SVG
     const radarHtml = this._buildRadarChart(score);
+
+    // Build journey chart
+    const journeyHtml = this._buildJourneyChart();
 
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
@@ -5160,12 +5551,13 @@ class UI {
           <div class="score-dim"><span class="score-dim-val">${score.nzScore}/30</span><span class="score-dim-name">Net Zero</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.stabScore}/30</span><span class="score-dim-name">Stability</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
+          <div class="score-dim"><span class="score-dim-val">${score.sectorBonus}/5</span><span class="score-dim-name">Sectors</span></div>
         </div>
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', journeyHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5188,6 +5580,7 @@ class UI {
       { label: 'Net Zero', val: score.nzScore, max: 30 },
       { label: 'Stability', val: score.stabScore, max: 30 },
       { label: 'Resilience', val: score.resScore, max: 10 },
+      { label: 'Sectors', val: score.sectorBonus, max: 5 },
     ];
     const cx = 110, cy = 110, r = 80;
     const n = dims.length;
@@ -5235,6 +5628,7 @@ class UI {
       html += `<div class="timeline-turn">
         <div class="timeline-year">${entry.year}–${entry.year + 5}</div>
         <div class="timeline-decisions">${entry.decisions.map(d => `<span class="tl-invest">${d}</span>`).join('<br>')}</div>
+        ${entry.intlEvent ? `<div class="timeline-event" style="color:var(--status-info)">🌍 ${entry.intlEvent}</div>` : ''}
         ${entry.event ? `<div class="timeline-event">⚠ ${entry.event}</div>` : ''}
         <div class="timeline-metrics">
           <span class="tl-chip ${chipStatus(entry.afterGrid)}">Grid ${Math.round(entry.afterGrid)}%</span>
@@ -5264,6 +5658,79 @@ class UI {
     return html;
   }
 
+  _buildJourneyChart() {
+    const data = turnHistory.data;
+    if (data.length < 2) return '';
+
+    const W = 560, H = 200, PAD_L = 42, PAD_R = 16, PAD_T = 16, PAD_B = 30;
+    const chartW = W - PAD_L - PAD_R;
+    const chartH = H - PAD_T - PAD_B;
+
+    const series = [
+      { key: 'gridReliability',    color: '#4caf81', label: 'Grid' },
+      { key: 'financialStability', color: '#5390d9', label: 'Financial' },
+      { key: 'socialStability',    color: '#ffd600', label: 'Social' },
+      { key: 'netZeroProgress',    color: '#448aff', label: 'Net Zero' },
+    ];
+
+    const xScale = (i) => PAD_L + (i / Math.max(data.length - 1, 1)) * chartW;
+    const yScale = (v) => PAD_T + (1 - v / 100) * chartH;
+
+    let gridLines = '';
+    for (const tick of [0, 25, 50, 75, 100]) {
+      const y = yScale(tick).toFixed(1);
+      gridLines += `<line x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}" stroke="var(--border-subtle)" stroke-width="0.5" stroke-dasharray="${tick === 50 ? '4,2' : ''}"/>`;
+      gridLines += `<text x="${PAD_L - 6}" y="${y}" text-anchor="end" dominant-baseline="middle" fill="var(--text-muted)" font-size="9" font-family="var(--font-system)">${tick}%</text>`;
+    }
+
+    let xLabels = '';
+    for (let i = 0; i < data.length; i++) {
+      const x = xScale(i).toFixed(1);
+      xLabels += `<text x="${x}" y="${H - 6}" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-family="var(--font-system)">${data[i].year}</text>`;
+    }
+
+    let paths = '';
+    for (const s of series) {
+      const points = data.map((d, i) => `${xScale(i).toFixed(1)},${yScale(d[s.key]).toFixed(1)}`);
+      const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p}`).join(' ');
+      const areaPath = linePath + ` L${xScale(data.length - 1).toFixed(1)},${yScale(0).toFixed(1)} L${xScale(0).toFixed(1)},${yScale(0).toFixed(1)} Z`;
+      paths += `<path d="${areaPath}" fill="${s.color}" fill-opacity="0.08"/>`;
+      paths += `<path d="${linePath}" fill="none" stroke="${s.color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+      for (let i = 0; i < data.length; i++) {
+        paths += `<circle cx="${xScale(i).toFixed(1)}" cy="${yScale(data[i][s.key]).toFixed(1)}" r="3.5" fill="${s.color}" stroke="var(--bg-secondary)" stroke-width="1.5"/>`;
+      }
+    }
+
+    // Temperature overlay line (separate scale: 1.0-3.0 mapped to chart height)
+    const tempPoints = data.map((d, i) => {
+      const normT = Math.min(1, Math.max(0, (d.temperature - 1.0) / 2.0));
+      return `${xScale(i).toFixed(1)},${(PAD_T + (1 - normT) * chartH).toFixed(1)}`;
+    });
+    const tempLinePath = tempPoints.map((p, i) => `${i === 0 ? 'M' : 'L'}${p}`).join(' ');
+    paths += `<path d="${tempLinePath}" fill="none" stroke="#ff7043" stroke-width="2" stroke-dasharray="6,3" stroke-linecap="round"/>`;
+    for (let i = 0; i < data.length; i++) {
+      const normT = Math.min(1, Math.max(0, (data[i].temperature - 1.0) / 2.0));
+      paths += `<circle cx="${xScale(i).toFixed(1)}" cy="${(PAD_T + (1 - normT) * chartH).toFixed(1)}" r="3" fill="#ff7043" stroke="var(--bg-secondary)" stroke-width="1.5"/>`;
+    }
+
+    const legend = [
+      ...series.map(s => `<span class="journey-legend-item"><span class="journey-legend-dot" style="background:${s.color}"></span>${s.label}</span>`),
+      `<span class="journey-legend-item"><span class="journey-legend-dot" style="background:#ff7043;border:1px dashed #ff7043"></span>Temp (1-3°C)</span>`,
+    ].join('');
+
+    return `<div id="endgame-journey">
+      <div id="endgame-journey-title">Your Climate Journey</div>
+      <div id="journey-chart-container">
+        <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+          ${gridLines}
+          ${xLabels}
+          ${paths}
+        </svg>
+      </div>
+      <div class="journey-legend">${legend}</div>
+    </div>`;
+  }
+
   // ===== METRIC TOOLTIP =====
   _initTooltips() {
     this._tooltip = document.getElementById('metric-tooltip');
@@ -5291,6 +5758,15 @@ class UI {
       el.addEventListener('mouseleave', () => this._hideTooltip());
       el.addEventListener('click', (e) => { e.stopPropagation(); this._toggleTooltip(key, e.target); });
     });
+
+    const sectorTitle = document.getElementById('sector-emissions-title');
+    if (sectorTitle) {
+      sectorTitle.style.cursor = 'help';
+      sectorTitle.addEventListener('mouseenter', (e) => this._showTooltip('sectors', e.target));
+      sectorTitle.addEventListener('mouseleave', () => this._hideTooltip());
+      sectorTitle.addEventListener('click', (e) => { e.stopPropagation(); this._toggleTooltip('sectors', e.target); });
+    }
+
     document.addEventListener('click', () => this._hideTooltip());
   }
 
@@ -5755,6 +6231,25 @@ async function runSimulationPhase(engine, ui, fxMgr) {
         minisFired++;
       }
     }
+  }
+
+  // Show international event banner if one fired
+  if (result.intlEvent) {
+    const intlBanner = document.createElement('div');
+    intlBanner.className = 'intl-event-banner';
+    intlBanner.innerHTML = `
+      <span class="intl-icon">${result.intlEvent.icon}</span>
+      <div class="intl-body">
+        <div class="intl-title">${result.intlEvent.title}</div>
+        <div class="intl-desc">${result.intlEvent.desc}</div>
+        <span class="intl-effect-tag ${result.intlEvent.tagClass}">${result.intlEvent.effectTag}</span>
+      </div>`;
+    overlay.querySelector('#sim-card').appendChild(intlBanner);
+    await _delay(3500);
+    intlBanner.style.opacity = '0';
+    intlBanner.style.transition = 'opacity 0.3s';
+    await _delay(400);
+    intlBanner.remove();
   }
 
   // Complete progress bar
