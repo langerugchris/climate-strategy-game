@@ -2142,6 +2142,46 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* Tutorial overlay */
+.tutorial-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn .3s ease;
+}
+.tutorial-card {
+  background: var(--bg-card); border-radius: 16px;
+  max-width: 520px; width: 90%; padding: 2rem;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  text-align: center; position: relative;
+}
+.tutorial-card h2 { margin: 0 0 .5rem; font-size: 1.5rem; }
+.tutorial-card .tutorial-icon { font-size: 2.5rem; margin-bottom: .5rem; }
+.tutorial-card p { color: var(--text-muted); line-height: 1.6; margin: 0 0 1.2rem; font-size: .95rem; }
+.tutorial-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 1.2rem; }
+.tutorial-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--border); transition: background .2s;
+}
+.tutorial-dots span.active { background: var(--accent); }
+.tutorial-actions { display: flex; gap: .75rem; justify-content: center; }
+.tutorial-actions button {
+  padding: .6rem 1.4rem; border-radius: 8px; border: none;
+  font-size: .9rem; cursor: pointer; font-weight: 600;
+}
+.tutorial-actions .tut-skip {
+  background: transparent; color: var(--text-muted); border: 1px solid var(--border);
+}
+.tutorial-actions .tut-next {
+  background: var(--accent); color: #fff;
+}
+.tutorial-actions .tut-next:hover { filter: brightness(1.1); }
+.tutorial-highlight {
+  position: relative; z-index: 10001;
+  box-shadow: 0 0 0 4px var(--accent), 0 0 20px rgba(67,97,238,0.4);
+  border-radius: 12px;
+}
 </style>
 </head>
 <body>
@@ -2966,6 +3006,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_independence">
+        <span class="scenario-card-icon">⚛️</span>
+        <div class="scenario-card-name">Energy Independence</div>
+        <div class="scenario-card-desc">The UK went nuclear early. Grid reliability is high and gas dependence low — but stranded North Sea assets are dragging on the financial system and social cohesion is fraying.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Nuclear: <span>25 (strong)</span></div>
+          <div class="scenario-stat">Grid: <span>80% (stable)</span></div>
+          <div class="scenario-stat">Stranded Assets: <span>25 (high)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="late_start">
+        <span class="scenario-card-icon">⏰</span>
+        <div class="scenario-card-name">Late Start (2035)</div>
+        <div class="scenario-card-desc">A decade of inaction has wasted critical time. You take office in 2035 with only 3 turns remaining, higher temperatures, and lagging Net Zero progress. Can you still make it?</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Starts: <span>2035 (3 turns left)</span></div>
+          <div class="scenario-stat">Temp: <span>1.55°C (elevated)</span></div>
+          <div class="scenario-stat">Net Zero: <span>20% (behind)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3167,6 +3229,41 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'DROUGHT', type: 'DROUGHT', severity: 'MODERATE', icon: '🏜️',
+    title: 'Summer Drought Emergency',
+    description: 'The driest summer on record triggers hosepipe bans nationwide. Crop failures drive food prices up 30%. Reservoir levels reach historic lows.',
+    story: 'In Somerset, dairy farmer Tom Ellison watched his fields turn brown for the third consecutive year. "The subsidies help, but you can\'t subsidise rain," he told BBC Somerset.',
+    effects: { socialStability: -12, financialStability: -8 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'CYBER_ATTACK', type: 'CYBER', severity: 'MAJOR', icon: '🔒',
+    title: 'Cyber Attack on Energy Grid',
+    description: 'State-sponsored hackers breach National Grid\'s smart-grid management systems. Rolling blackouts while systems are restored.',
+    story: 'GCHQ confirmed the attack originated from a state actor exploiting a vulnerability in smart-meter firmware. 1.2 million households lost power for 48 hours across the Midlands.',
+    effects: { gridReliability: -15, socialStability: -10, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 15,
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
+  {
+    id: 'INSURANCE_WITHDRAWAL', type: 'FINANCIAL', severity: 'MODERATE', icon: '🏠',
+    title: 'Flood Insurance Withdrawal',
+    description: 'Major insurers withdraw flood cover from 500,000 UK properties. Property values in affected areas collapse overnight.',
+    story: 'Alison Marsh discovered her home in Bewdley was now uninsurable after Aviva pulled cover from 12 postcodes along the Severn. "We can\'t sell and we can\'t stay," she said.',
+    effects: { propertyValue: -15, financialStability: -8, socialStability: -6 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.temperature > 1.4 && s.infrastructure.adaptation < 60,
+  },
+  {
+    id: 'GREEN_TECH_BOOM', type: 'POSITIVE', severity: 'MODERATE', icon: '🚀',
+    title: 'Green Technology Breakthrough',
+    description: 'UK researchers achieve a major advance in solid-state battery technology. International investment floods in. Confidence in the transition surges.',
+    story: 'Professor Elena Whitfield at Imperial College demonstrated a solid-state cell with twice the density at half the cost. "This is Britain\'s transistor moment," said the Science Secretary.',
+    effects: { financialStability: 8, socialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.gridAndStorage > 40,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3318,12 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'nuclear_nation', icon: '☢️', name: 'Nuclear Nation', desc: 'Build nuclear capacity above 40%', check: (s) => s.energy.nuclear >= 40 },
+  { id: 'cool_head', icon: '❄️', name: 'Cool Head', desc: 'Finish with temperature below 1.3°C', check: (s) => s.temperature < 1.3 },
+  { id: 'five_events', icon: '🌪️', name: 'Storm Chaser', desc: 'Experience 5 or more climate events in one game', check: (s) => s.eventCount >= 5 },
+  { id: 'balanced', icon: '🎯', name: 'Balanced Approach', desc: 'Finish with all three stability metrics within 10 points of each other', check: (s) => { const vals = [s.gridReliability, s.financialStability, s.socialStability]; return Math.max(...vals) - Math.min(...vals) <= 10; } },
+  { id: 'speed_run', icon: '⏱️', name: 'Speed Runner', desc: 'Reach Net Zero by Turn 2', check: (s) => s.netZeroProgress >= 100 && s.turn <= 2 },
+  { id: 'adaptation_king', icon: '🏗️', name: 'Fortress Britain', desc: 'Build adaptation infrastructure above 80', check: (s) => s.infrastructure.adaptation >= 80 },
 ];
 
 class AchievementManager {
@@ -3370,6 +3473,31 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_independence: {
+    label: 'Energy Independence',
+    apply(state) {
+      state.energy.nuclear = 25;
+      state.energy.gas     = 10;
+      state.energy.storage = 12;
+      state.gridReliability = 80;
+      state.socialStability = 60;
+      state.strandedAssets  = 25;
+      state._budgetOverride = 90;
+    },
+  },
+  late_start: {
+    label: 'Late Start (2035)',
+    apply(state) {
+      state.year = 2035;
+      state.turn = 2;
+      state.temperature    = 1.55;
+      state.netZeroProgress = 20;
+      state.energy.gas      = 35;
+      state.socialStability = 55;
+      state.financialStability = 55;
+      state._budgetOverride = 110;
     },
   },
 };
@@ -3919,38 +4047,47 @@ class GameEngine {
 
     if (Math.random() >= prob) return null;
 
-    // Build weighted pool based on temperature
+    // Build weighted pool based on temperature — use ID lookup for robustness
+    const evtById = (id) => RANDOM_EVENTS.find(e => e.id === id);
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: evtById('FINANCIAL_SHOCK'),     w: 25 },
+        { e: evtById('STORM'),               w: 20 },
+        { e: evtById('FLOOD_MINOR'),         w: 20 },
+        { e: evtById('HEATWAVE_MOD'),        w: 10 },
+        { e: evtById('SOCIAL_UNREST'),       w: 10 },
+        { e: evtById('CYBER_ATTACK'),        w: 8 },
+        { e: evtById('GREEN_TECH_BOOM'),     w: 7 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: evtById('FLOOD_MINOR'),         w: 15 },
+        { e: evtById('FLOOD_MAJOR'),         w: 10 },
+        { e: evtById('HEATWAVE_MOD'),        w: 18 },
+        { e: evtById('STORM'),               w: 15 },
+        { e: evtById('SOCIAL_UNREST'),       w: 12 },
+        { e: evtById('FINANCIAL_SHOCK'),     w: 10 },
+        { e: evtById('DROUGHT'),             w: 10 },
+        { e: evtById('INSURANCE_WITHDRAWAL'),w: 5 },
+        { e: evtById('GREEN_TECH_BOOM'),     w: 5 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: evtById('FLOOD_MAJOR'),         w: 18 },
+        { e: evtById('HEATWAVE_MAJOR'),      w: 18 },
+        { e: evtById('STORM'),               w: 14 },
+        { e: evtById('GRID_FAILURE'),        w: 12 },
+        { e: evtById('SOCIAL_UNREST'),       w: 12 },
+        { e: evtById('FINANCIAL_SHOCK'),     w: 8 },
+        { e: evtById('DROUGHT'),             w: 8 },
+        { e: evtById('INSURANCE_WITHDRAWAL'),w: 6 },
+        { e: evtById('CYBER_ATTACK'),        w: 4 },
       ];
     }
 
-    // Filter conditional events
-    pool = pool.filter(item => !item.e.condition || item.e.condition(s));
+    // Filter null lookups and conditional events
+    pool = pool.filter(item => item.e && (!item.e.condition || item.e.condition(s)));
     if (pool.length === 0) return null;
 
     // Weighted random selection
@@ -5724,6 +5861,75 @@ const MINI_EVENTS_POOL = [
     },
     condition: (s) => s.energy.nuclear > 20,
   },
+  {
+    id: 'mini_trade_deal',
+    icon: '🌍',
+    title: 'International Climate Summit',
+    prompt: 'The UK is offered a major green trade deal — but it comes with strings attached.',
+    explanation: 'The EU is offering preferential tariffs on UK green exports in exchange for binding climate commitments that would accelerate your timeline. Accepting locks in faster decarbonisation (good for Net Zero) but reduces your flexibility and increases budget pressure. Declining preserves sovereignty but forfeits economic benefits.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🤝 Accept binding green trade deal',
+      consequence: '+8% Net Zero progress · +5 Financial · Costs £7bn next turn (compliance)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.financialStability = Math.min(100, s.financialStability + 5); s.nextTurnBudgetPenalty += 7; },
+    },
+    optB: {
+      label: '🏴 Maintain policy independence',
+      consequence: 'No cost · +3 Social (sovereignty popular) · no economic benefit',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    condition: (s) => s.netZeroProgress > 30 && s.netZeroProgress < 90,
+  },
+  {
+    id: 'mini_wildfire',
+    icon: '🔥',
+    title: 'Moorland Wildfire Season',
+    prompt: 'Record-breaking wildfires are devastating upland peatlands — a major carbon store.',
+    explanation: 'UK peatlands store 3 billion tonnes of carbon — more than all of Europe\'s forests combined. Burning releases that stored carbon, creating a vicious feedback loop. Aerial firefighting is expensive but saves the carbon store. Controlled burns sacrifice some peatland but create firebreaks that protect the rest.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Adaptation built: ${Math.round(s.infrastructure.adaptation)}`,
+    }),
+    optA: {
+      label: '🚁 Massive aerial firefighting response',
+      consequence: 'Costs £10bn next turn · protects carbon store · no lasting damage',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; },
+    },
+    optB: {
+      label: '🔥 Strategic controlled burns for firebreaks',
+      consequence: 'Costs £3bn next turn · −3% Net Zero (carbon release) · +adaptation infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); s.infrastructure.adaptation += 12; },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'mini_ev_transition',
+    icon: '🚗',
+    title: 'EV Charging Crisis',
+    prompt: 'Electric vehicle adoption is outpacing charging infrastructure. Queues and range anxiety are causing a backlash.',
+    explanation: 'The ban on new petrol and diesel cars is approaching. If people can\'t charge conveniently, they\'ll blame the transition and support for climate policy will erode. You can either rush-build charging points (expensive) or delay the petrol ban (cheaper but undermines Net Zero credibility).',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Grid: ${Math.round(s.gridReliability)}%`,
+    }),
+    optA: {
+      label: '⚡ Emergency charging infrastructure rollout',
+      consequence: 'Costs £8bn next turn · +5 Social · +3% Net Zero · Grid −3 (extra demand)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.socialStability = Math.min(100, s.socialStability + 5); s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); s.gridReliability = Math.max(0, s.gridReliability - 3); },
+    },
+    optB: {
+      label: '🛢️ Delay petrol vehicle ban by 5 years',
+      consequence: 'No cost · +4 Social (popular short-term) · −5% Net Zero progress',
+      effect: (s) => { s.socialStability = Math.min(100, s.socialStability + 4); s.netZeroProgress = Math.max(0, s.netZeroProgress - 5); },
+    },
+    condition: (s) => s.netZeroProgress > 25,
+  },
 ];
 
 async function runSimulationPhase(engine, ui, fxMgr) {
@@ -5768,8 +5974,13 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   await _delay(500);
   overlay.remove();
 
+  // Recalculate formulas after mini-event state mutations
+  // (resolveTurn() already ran, but mini-events mutated state directly)
+  engine._recalcGrid();
+  engine._recalcFinancial();
+  engine._recalcSocial();
+
   // Recalculate next-turn budget to include any mini-event penalties
-  // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
   engine.state.budget = engine.getEffectiveBudget();
 
   // Unlock inputs — simulation complete
@@ -5948,6 +6159,121 @@ class LegacySystem {
 }
 
 /* ============================================================
+   TUTORIAL SYSTEM
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_seen_v1';
+    this._step = 0;
+    this._overlay = null;
+    this._highlighted = null;
+    this._steps = [
+      {
+        icon: '🇬🇧',
+        title: 'Welcome, Prime Minister',
+        body: 'You\'ve just taken office. The UK must reach Net Zero by 2050 while keeping the lights on, the economy stable, and the public onside. You have 5 turns — each covering a 5-year policy period.',
+      },
+      {
+        icon: '📊',
+        title: 'Watch Your Metrics',
+        body: 'The top panel shows your key indicators: Temperature, Grid Reliability, Financial Stability, Social Stability, and Net Zero Progress. If any stability metric drops below 40%, you risk a crisis cascade.',
+        highlight: '#metrics-panel',
+      },
+      {
+        icon: '🎛️',
+        title: 'Allocate Your Budget',
+        body: 'Each turn you get a limited budget to invest in 6 categories. Use the + and − buttons to assign investment blocks. Each category has a maximum of 2 blocks per turn — spread your resources wisely.',
+        highlight: '#decisions-panel',
+      },
+      {
+        icon: '🎲',
+        title: 'Expect the Unexpected',
+        body: 'Random climate events will test your strategy — storms, heatwaves, financial shocks, and more. You\'ll also face mini-dilemmas during each turn\'s simulation that require tough choices.',
+      },
+      {
+        icon: '🔬',
+        title: 'Research & Legacy',
+        body: 'Spend research points to unlock tech tree upgrades that boost your investments. After each game, you earn Legacy XP that provides small bonuses in future playthroughs. Try different scenarios and difficulty levels!',
+      },
+    ];
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return false; }
+  }
+
+  markSeen() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  start() {
+    if (!this.shouldShow()) return;
+    this._step = 0;
+    this._show();
+  }
+
+  _show() {
+    this._clearHighlight();
+    if (this._overlay) this._overlay.remove();
+
+    const step = this._steps[this._step];
+    const isLast = this._step === this._steps.length - 1;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'tutorial-overlay';
+
+    const dots = this._steps.map((_, i) =>
+      `<span class="${i === this._step ? 'active' : ''}"></span>`
+    ).join('');
+
+    overlay.innerHTML = `
+      <div class="tutorial-card">
+        <div class="tutorial-icon">${step.icon}</div>
+        <h2>${step.title}</h2>
+        <p>${step.body}</p>
+        <div class="tutorial-dots">${dots}</div>
+        <div class="tutorial-actions">
+          <button class="tut-skip">${isLast ? '' : 'Skip'}</button>
+          <button class="tut-next">${isLast ? 'Start Playing' : 'Next'}</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    this._overlay = overlay;
+
+    if (step.highlight) {
+      const el = document.querySelector(step.highlight);
+      if (el) { el.classList.add('tutorial-highlight'); this._highlighted = el; }
+    }
+
+    const skipBtn = overlay.querySelector('.tut-skip');
+    if (skipBtn) skipBtn.addEventListener('click', () => this._finish());
+    overlay.querySelector('.tut-next').addEventListener('click', () => {
+      if (isLast) { this._finish(); return; }
+      this._step++;
+      this._show();
+    });
+  }
+
+  _clearHighlight() {
+    if (this._highlighted) {
+      this._highlighted.classList.remove('tutorial-highlight');
+      this._highlighted = null;
+    }
+  }
+
+  _finish() {
+    this._clearHighlight();
+    if (this._overlay) { this._overlay.remove(); this._overlay = null; }
+    this.markSeen();
+  }
+}
+
+const tutorialMgr = new TutorialManager();
+
+/* ============================================================
    INITIALISATION
 ============================================================ */
 
@@ -5981,6 +6307,9 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Show tutorial for first-time players
+tutorialMgr.start();
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
