@@ -2142,6 +2142,311 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== NEWS TICKER ===== */
+.news-ticker {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  height: 22px;
+  margin-top: 4px;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+.ticker-track {
+  display: flex;
+  gap: 48px;
+  white-space: nowrap;
+  animation: tickerScroll 28s linear infinite;
+  width: max-content;
+}
+.ticker-item {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-system);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+.ticker-item::before {
+  content: '\25CF';
+  color: var(--accent-blue-lt);
+  margin-right: 6px;
+  font-size: 7px;
+  vertical-align: middle;
+}
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== CARBON BUDGET BLOCK ===== */
+.carbon-budget-block {
+  margin-bottom: var(--gap-md);
+  padding: var(--gap-sm);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+.carbon-budget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.carbon-budget-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.carbon-budget-value {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.carbon-budget-value.good   { color: var(--status-good); }
+.carbon-budget-value.warn   { color: var(--status-warn); }
+.carbon-budget-value.danger { color: var(--status-danger); }
+.carbon-budget-bar {
+  height: 8px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.carbon-budget-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease, background 0.5s ease;
+}
+.carbon-budget-fill.good   { background: var(--status-good); }
+.carbon-budget-fill.warn   { background: var(--status-warn); }
+.carbon-budget-fill.danger { background: var(--status-danger); }
+.carbon-budget-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ===== INTERNATIONAL COMPARISON ===== */
+.intl-comparison {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+.intl-comparison-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.intl-country-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 6px var(--gap-sm);
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+}
+.intl-country-row.highlight {
+  border-color: var(--accent-blue-lt);
+  background: rgba(83, 144, 217, 0.08);
+}
+.intl-flag {
+  font-size: 18px;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+.intl-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 70px;
+}
+.intl-stats {
+  display: flex;
+  gap: var(--gap-sm);
+  flex: 1;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.intl-stat {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.intl-stat.good   { background: #0c2a1a; color: var(--status-good); }
+.intl-stat.warn   { background: #2a2000; color: var(--status-warn); }
+.intl-stat.danger { background: #2a0e08; color: var(--status-danger); }
+
+/* ===== LEGACY CARDS ===== */
+.legacy-section {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+.legacy-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.legacy-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--gap-sm);
+}
+.legacy-card {
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-elevated) 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  text-align: center;
+  animation: legacyReveal 0.5s ease both;
+}
+.legacy-card:nth-child(2) { animation-delay: 0.15s; }
+.legacy-card:nth-child(3) { animation-delay: 0.3s; }
+@keyframes legacyReveal {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.legacy-card-icon {
+  font-size: 32px;
+  margin-bottom: var(--gap-sm);
+}
+.legacy-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: 4px;
+}
+.legacy-card-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ===== ACHIEVEMENT TOAST ===== */
+.achievement-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  z-index: 1100;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: toastSlideIn 0.4s ease both;
+  max-width: 320px;
+}
+.achievement-toast.toast-out {
+  animation: toastSlideOut 0.3s ease both;
+}
+@keyframes toastSlideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes toastSlideOut {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(120%); opacity: 0; }
+}
+.toast-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.toast-body {
+  min-width: 0;
+}
+.toast-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--status-good);
+  font-weight: 700;
+}
+.toast-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.toast-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+/* ===== CUMULATIVE EMISSIONS CHART ===== */
+.emissions-chart-section {
+  margin-top: var(--gap-lg);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border-subtle);
+}
+.emissions-chart-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.emissions-chart-svg {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.emissions-chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-md);
+  margin-top: var(--gap-sm);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.emissions-legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+@media (max-width: 430px) {
+  .intl-country-row {
+    flex-wrap: wrap;
+  }
+  .intl-stats {
+    justify-content: flex-start;
+  }
+  .legacy-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .achievement-toast {
+    right: 12px;
+    bottom: 80px;
+    left: 12px;
+    max-width: unset;
+  }
+}
 </style>
 </head>
 <body>
@@ -2160,6 +2465,9 @@ body { transition: filter 2s ease; }
   </div>
   <div id="header-center">
     <span id="difficulty-indicator"></span>
+    <div class="news-ticker" id="news-ticker">
+      <div class="ticker-track" id="ticker-track"></div>
+    </div>
   </div>
   <div id="header-right">
     <button id="settings-btn" title="Settings">⚙</button>
@@ -2268,6 +2576,21 @@ body { transition: filter 2s ease; }
           <div class="bar-ghost" id="ghost-nz"></div>
         </div>
         <div class="sparkline-container" id="spark-nz"></div>
+      </div>
+
+      <!-- Carbon Budget Countdown -->
+      <div class="carbon-budget-block" id="carbon-budget-block">
+        <div class="carbon-budget-header">
+          <span class="carbon-budget-label">Carbon Budget Remaining</span>
+          <span class="carbon-budget-value good" id="carbon-budget-val">4,700 Mt</span>
+        </div>
+        <div class="carbon-budget-bar">
+          <div class="carbon-budget-fill good" id="carbon-budget-fill" style="width:100%"></div>
+        </div>
+        <div class="carbon-budget-sub">
+          <span id="carbon-budget-used">0 Mt used</span>
+          <span>of 4,700 MtCO2</span>
+        </div>
       </div>
 
       <!-- Energy Mix -->
@@ -3517,6 +3840,7 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      carbonBudgetRemaining: state.carbonBudgetRemaining,
     });
   }
   reset() { this.data = []; }
@@ -3561,6 +3885,8 @@ class GameEngine {
       strandedAssets: 0,
       propertyValue: 100,
       socialCapital: 0,
+      carbonBudgetRemaining: 4700,
+      emissionsPerTurn: [],
       currentDecisions: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -3847,6 +4173,16 @@ class GameEngine {
     for (let i = 0; i < rs; i++) {
       techTree.purchase();
     }
+
+    // Carbon budget depletion — based on gas share and net zero progress
+    const totalEnergy = s.energy.wind + s.energy.solar + s.energy.nuclear + s.energy.gas + s.energy.storage;
+    const gasShare = totalEnergy > 0 ? s.energy.gas / totalEnergy : 0;
+    // Base emissions ~300 MtCO2 per 5-year period at current UK output, scaled by gas share
+    const baseEmissions = 300;
+    const nzReduction = s.netZeroProgress / 100;
+    const turnEmissions = Math.round(baseEmissions * (0.3 + gasShare * 1.4) * (1 - nzReduction * 0.6));
+    s.carbonBudgetRemaining = this._clamp(s.carbonBudgetRemaining - turnEmissions, 0, 4700);
+    s.emissionsPerTurn.push(turnEmissions);
   }
 
   _recalcGrid() {
@@ -4538,6 +4874,10 @@ class UI {
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
+      document.getElementById('intl-comparison')?.remove();
+      document.getElementById('legacy-section')?.remove();
+      document.getElementById('emissions-chart-section')?.remove();
+      document.querySelectorAll('.achievement-toast').forEach(t => t.remove());
       // Reset scenario card selection to default
       document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
       const def = document.querySelector('.scenario-card[data-scenario="standard"]');
@@ -4610,12 +4950,14 @@ class UI {
   render(state) {
     this._renderHeader(state);
     this._renderMetrics(state);
+    this._renderCarbonBudget(state);
     this._renderProjection(state);
     this._renderSparklines(state);
     this._renderEnergyMix(state);
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
+    this._updateTicker(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
   }
@@ -5165,7 +5507,17 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    // Build new endgame sections
+    const emissionsChartHtml = this._buildEmissionsChart(s);
+    const intlComparisonHtml = this._buildInternationalComparison(s);
+    const legacyCardsHtml = this._buildLegacyCards(s);
+
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + emissionsChartHtml + intlComparisonHtml + legacyCardsHtml + achievementsHtml);
+
+    // Show achievement toasts for newly earned
+    newAchievements.forEach((ach, i) => {
+      setTimeout(() => this._showAchievementToast(ach), 1500 + i * 600);
+    });
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5400,6 +5752,349 @@ class UI {
     });
     html += `</tbody></table>`;
     return html;
+  }
+
+  // ===== NEWS TICKER =====
+  _updateTicker(state) {
+    const track = document.getElementById('ticker-track');
+    if (!track) return;
+
+    const headlines = [];
+
+    // Temperature-based headlines
+    if (state.temperature < 1.4) {
+      headlines.push('UK warming pathway remains well below Paris targets');
+    } else if (state.temperature < 1.8) {
+      headlines.push('Climate scientists cautiously optimistic as UK warming stays moderate');
+    } else if (state.temperature < 2.2) {
+      headlines.push('Met Office warns UK warming approaching critical 2°C threshold');
+    } else {
+      headlines.push('Emergency COBRA meeting as UK warming pathway exceeds 2°C');
+    }
+
+    // Energy mix headlines
+    const total = state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + state.energy.storage;
+    const gasShare = total > 0 ? state.energy.gas / total : 0;
+    const renewShare = total > 0 ? (state.energy.wind + state.energy.solar) / total : 0;
+    if (renewShare > 0.6) {
+      headlines.push('Renewable energy now powers majority of UK grid');
+    } else if (gasShare > 0.35) {
+      headlines.push('Energy sector under pressure as gas dependency remains high');
+    }
+
+    // Social stability headlines
+    if (state.socialStability < 40) {
+      headlines.push('Public protests intensify over cost of energy transition');
+    } else if (state.socialStability > 80) {
+      headlines.push('Public approval of climate programme at record highs');
+    }
+
+    // Financial stability headlines
+    if (state.financialStability < 40) {
+      headlines.push('Bank of England issues financial stability warning');
+    } else if (state.financialStability > 80) {
+      headlines.push('UK economy shows resilience amid global climate transition');
+    }
+
+    // Grid reliability
+    if (state.gridReliability < 45) {
+      headlines.push('National Grid warns of blackout risk this winter');
+    }
+
+    // Net zero progress
+    if (state.netZeroProgress >= 100) {
+      headlines.push('BREAKING: UK achieves Net Zero emissions target');
+    } else if (state.netZeroProgress > 70) {
+      headlines.push('Net Zero within reach as decarbonisation accelerates');
+    }
+
+    // Carbon budget
+    if (state.carbonBudgetRemaining !== undefined) {
+      if (state.carbonBudgetRemaining < 1000) {
+        headlines.push('Climate Change Committee: carbon budget nearly exhausted');
+      }
+    }
+
+    // Always show at least 3
+    const fallbacks = [
+      'G7 leaders to discuss coordinated climate investment strategy',
+      'COP summit delegates assess national climate commitments',
+      'Treasury releases quarterly climate transition impact assessment',
+      'New climate modelling shows tipping point risks accelerating',
+    ];
+    while (headlines.length < 4) {
+      headlines.push(fallbacks[headlines.length % fallbacks.length]);
+    }
+
+    // Duplicate for seamless loop
+    const items = headlines.concat(headlines);
+    track.innerHTML = items.map(h => `<span class="ticker-item">${h}</span>`).join('');
+  }
+
+  // ===== CARBON BUDGET RENDERING =====
+  _renderCarbonBudget(state) {
+    const remaining = state.carbonBudgetRemaining !== undefined ? state.carbonBudgetRemaining : 4700;
+    const pct = Math.round((remaining / 4700) * 100);
+    const used = 4700 - remaining;
+    const status = pct > 50 ? 'good' : pct > 20 ? 'warn' : 'danger';
+
+    const valEl = document.getElementById('carbon-budget-val');
+    const fillEl = document.getElementById('carbon-budget-fill');
+    const usedEl = document.getElementById('carbon-budget-used');
+
+    if (valEl) {
+      valEl.textContent = remaining.toLocaleString() + ' Mt';
+      valEl.className = 'carbon-budget-value ' + status;
+    }
+    if (fillEl) {
+      fillEl.style.width = pct + '%';
+      fillEl.className = 'carbon-budget-fill ' + status;
+    }
+    if (usedEl) {
+      usedEl.textContent = used.toLocaleString() + ' Mt used';
+    }
+  }
+
+  // ===== INTERNATIONAL COMPARISON (Endgame) =====
+  _buildInternationalComparison(state) {
+    const ukTemp = state.temperature;
+    const ukNZ = state.netZeroProgress;
+
+    // Fictional peer outcomes with plausible randomised spreads
+    const peers = [
+      { name: 'United Kingdom', flag: '🇬🇧', temp: ukTemp, nz: ukNZ, highlight: true },
+      { name: 'Germany', flag: '🇩🇪',
+        temp: +(ukTemp + (Math.random() * 0.4 - 0.15)).toFixed(1),
+        nz: Math.round(Math.min(100, ukNZ + (Math.random() * 20 - 8))) },
+      { name: 'France', flag: '🇫🇷',
+        temp: +(ukTemp + (Math.random() * 0.3 - 0.2)).toFixed(1),
+        nz: Math.round(Math.min(100, ukNZ + (Math.random() * 15 - 3))) },
+      { name: 'United States', flag: '🇺🇸',
+        temp: +(ukTemp + (Math.random() * 0.6 - 0.1)).toFixed(1),
+        nz: Math.round(Math.max(0, ukNZ - (Math.random() * 25 + 5))) },
+      { name: 'China', flag: '🇨🇳',
+        temp: +(ukTemp + (Math.random() * 0.5 + 0.1)).toFixed(1),
+        nz: Math.round(Math.max(0, ukNZ - (Math.random() * 20 + 10))) },
+      { name: 'India', flag: '🇮🇳',
+        temp: +(ukTemp + (Math.random() * 0.7 + 0.1)).toFixed(1),
+        nz: Math.round(Math.max(0, ukNZ - (Math.random() * 30 + 10))) },
+    ];
+
+    // Sort by NZ descending
+    peers.sort((a, b) => b.nz - a.nz);
+
+    const statChip = (label, val, threshGood, threshWarn, invert) => {
+      let status;
+      if (invert) {
+        status = val < threshGood ? 'good' : val < threshWarn ? 'warn' : 'danger';
+      } else {
+        status = val >= threshGood ? 'good' : val >= threshWarn ? 'warn' : 'danger';
+      }
+      return `<span class="intl-stat ${status}">${label} ${val}</span>`;
+    };
+
+    let html = `<div class="intl-comparison" id="intl-comparison">
+      <div class="intl-comparison-title">International Comparison (Modelled Peers)</div>`;
+    for (const p of peers) {
+      html += `<div class="intl-country-row${p.highlight ? ' highlight' : ''}">
+        <span class="intl-flag">${p.flag}</span>
+        <span class="intl-name">${p.name}</span>
+        <div class="intl-stats">
+          ${statChip('Temp', p.temp + '°C', 1.8, 2.2, true)}
+          ${statChip('NZ', p.nz + '%', 80, 50, false)}
+        </div>
+      </div>`;
+    }
+    html += `</div>`;
+    return html;
+  }
+
+  // ===== LEGACY CARDS (Endgame) =====
+  _buildLegacyCards(state) {
+    const infra = state.infrastructure;
+    const cards = [];
+
+    // Evaluate investment patterns
+    if (infra.energyTransition >= 60) {
+      cards.push({
+        icon: '🌊',
+        title: 'Offshore Wind Pioneer',
+        desc: 'Your sustained investment in energy transition built a world-class renewable energy sector, setting the standard for offshore wind deployment.',
+      });
+    }
+    if (infra.financialResilience >= 60) {
+      cards.push({
+        icon: '🏦',
+        title: 'Financial Fortress',
+        desc: 'By shoring up financial resilience early, you shielded the economy from stranded asset shocks and preserved pension stability.',
+      });
+    }
+    if (infra.socialSupport >= 50) {
+      cards.push({
+        icon: '🤝',
+        title: 'Just Transition Champion',
+        desc: 'Your investment in social support ensured the transition did not leave communities behind, building lasting public trust.',
+      });
+    }
+    if (infra.gridAndStorage >= 60) {
+      cards.push({
+        icon: '⚡',
+        title: 'Grid Architect',
+        desc: 'Massive grid and storage investment created a flexible, reliable energy infrastructure that balanced renewables with demand.',
+      });
+    }
+    if (infra.adaptation >= 50) {
+      cards.push({
+        icon: '🛡️',
+        title: 'Climate Shield',
+        desc: 'Adaptation spending protected communities from flooding, heatwaves, and extreme weather, reducing human cost.',
+      });
+    }
+    if (state.netZeroAchieved && state.temperature < 1.8) {
+      cards.push({
+        icon: '🌟',
+        title: 'Climate Leader',
+        desc: 'Achieving Net Zero while keeping warming below 1.8°C places the UK among the most ambitious climate nations in history.',
+      });
+    }
+    if (state.eventCount === 0) {
+      cards.push({
+        icon: '🍀',
+        title: 'Fortune Favours the Prepared',
+        desc: 'No major climate event struck during your tenure — and preparation meant you would have been ready if one had.',
+      });
+    }
+
+    // If no cards earned, give a default
+    if (cards.length === 0) {
+      cards.push({
+        icon: '📜',
+        title: 'The Pragmatist',
+        desc: 'Your balanced approach to investment spread resources across multiple challenges without deep specialisation.',
+      });
+    }
+
+    // Show at most 3
+    const shown = cards.slice(0, 3);
+
+    let html = `<div class="legacy-section" id="legacy-section">
+      <div class="legacy-section-title">Your Policy Legacy</div>
+      <div class="legacy-cards-grid">`;
+    for (const c of shown) {
+      html += `<div class="legacy-card">
+        <div class="legacy-card-icon">${c.icon}</div>
+        <div class="legacy-card-title">${c.title}</div>
+        <div class="legacy-card-desc">${c.desc}</div>
+      </div>`;
+    }
+    html += `</div></div>`;
+    return html;
+  }
+
+  // ===== ACHIEVEMENT TOAST =====
+  _showAchievementToast(achievement) {
+    const toast = document.createElement('div');
+    toast.className = 'achievement-toast';
+    toast.innerHTML = `
+      <div class="toast-icon">${achievement.icon}</div>
+      <div class="toast-body">
+        <div class="toast-label">Achievement Unlocked</div>
+        <div class="toast-name">${achievement.name}</div>
+        <div class="toast-desc">${achievement.desc}</div>
+      </div>`;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-out');
+      setTimeout(() => toast.remove(), 350);
+    }, 3500);
+  }
+
+  // ===== CUMULATIVE EMISSIONS CHART (Endgame) =====
+  _buildEmissionsChart(state) {
+    const emissions = state.emissionsPerTurn || [];
+    if (emissions.length === 0) return '';
+
+    // Build cumulative series
+    const cumulative = [];
+    let sum = 0;
+    for (const e of emissions) {
+      sum += e;
+      cumulative.push(sum);
+    }
+
+    const maxVal = Math.max(4700, sum + 200);
+    const w = 360, h = 140, padL = 40, padR = 10, padT = 10, padB = 24;
+    const chartW = w - padL - padR;
+    const chartH = h - padT - padB;
+    const years = emissions.map((_, i) => 2030 + i * 5);
+
+    const xScale = (i) => padL + (i / (emissions.length - 1 || 1)) * chartW;
+    const yScale = (v) => padT + chartH - (v / maxVal) * chartH;
+
+    // Build area path
+    let areaPath = `M ${xScale(0)} ${yScale(0)}`;
+    for (let i = 0; i < cumulative.length; i++) {
+      areaPath += ` L ${xScale(i)} ${yScale(cumulative[i])}`;
+    }
+    areaPath += ` L ${xScale(cumulative.length - 1)} ${yScale(0)} Z`;
+
+    // Line path
+    let linePath = `M ${xScale(0)} ${yScale(cumulative[0])}`;
+    for (let i = 1; i < cumulative.length; i++) {
+      linePath += ` L ${xScale(i)} ${yScale(cumulative[i])}`;
+    }
+
+    // Budget line
+    const budgetY = yScale(4700);
+
+    // Per-turn emission bars
+    const maxE = Math.max(...emissions, 1);
+    let bars = '';
+    const barW = Math.max(16, chartW / emissions.length * 0.6);
+    for (let i = 0; i < emissions.length; i++) {
+      const bh = (emissions[i] / maxE) * (chartH * 0.35);
+      const bx = xScale(i) - barW / 2;
+      const by = padT + chartH - bh;
+      bars += `<rect x="${bx}" y="${by}" width="${barW}" height="${bh}" fill="var(--energy-gas)" fill-opacity="0.3" rx="2"/>`;
+    }
+
+    // Dots and labels
+    let dots = '', labels = '';
+    for (let i = 0; i < cumulative.length; i++) {
+      dots += `<circle cx="${xScale(i)}" cy="${yScale(cumulative[i])}" r="3.5" fill="var(--status-danger)" stroke="var(--bg-secondary)" stroke-width="1.5"/>`;
+      labels += `<text x="${xScale(i)}" y="${h - 4}" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-family="var(--font-system)">${years[i]}</text>`;
+    }
+
+    // Y-axis labels
+    const yLabels = [0, Math.round(maxVal / 2), maxVal].map(v =>
+      `<text x="${padL - 4}" y="${yScale(v) + 3}" text-anchor="end" fill="var(--text-muted)" font-size="8" font-family="var(--font-system)">${(v / 1000).toFixed(1)}</text>`
+    ).join('');
+
+    const svg = `<svg class="emissions-chart-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grid lines -->
+      <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + chartH}" stroke="var(--border-subtle)" stroke-width="0.5"/>
+      <line x1="${padL}" y1="${padT + chartH}" x2="${padL + chartW}" y2="${padT + chartH}" stroke="var(--border-subtle)" stroke-width="0.5"/>
+      <!-- Budget threshold -->
+      <line x1="${padL}" y1="${budgetY}" x2="${padL + chartW}" y2="${budgetY}" stroke="var(--status-danger)" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+      <text x="${padL + chartW}" y="${budgetY - 4}" text-anchor="end" fill="var(--status-danger)" font-size="8" font-family="var(--font-system)" opacity="0.7">Budget: 4.7 Gt</text>
+      ${bars}
+      <!-- Area -->
+      <path d="${areaPath}" fill="var(--status-danger)" fill-opacity="0.1"/>
+      <!-- Line -->
+      <path d="${linePath}" fill="none" stroke="var(--status-danger)" stroke-width="2"/>
+      ${dots}
+      ${labels}
+      ${yLabels}
+    </svg>`;
+
+    return `<div class="emissions-chart-section" id="emissions-chart-section">
+      <div class="emissions-chart-title">Cumulative CO₂ Emissions (GtCO₂)</div>
+      ${svg}
+      <div class="emissions-chart-legend">
+        <span><span class="emissions-legend-dot" style="background:var(--status-danger)"></span>Cumulative</span>
+        <span><span class="emissions-legend-dot" style="background:var(--energy-gas);opacity:0.5"></span>Per Period</span>
+      </div>
+    </div>`;
   }
 }
 
