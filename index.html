@@ -2142,6 +2142,220 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  pointer-events: none;
+}
+#tutorial-overlay.hidden { display: none; }
+#tutorial-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  pointer-events: auto;
+}
+#tutorial-card {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 360px;
+  width: 90vw;
+  pointer-events: auto;
+  animation: slideUp 0.3s ease;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+#tutorial-step-num {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-blue-lt);
+  margin-bottom: 4px;
+}
+#tutorial-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--gap-sm);
+}
+#tutorial-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-md);
+}
+#tutorial-actions {
+  display: flex;
+  gap: var(--gap-sm);
+  justify-content: flex-end;
+}
+.tutorial-btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+#tutorial-next-btn {
+  background: var(--accent-blue);
+  color: white;
+}
+#tutorial-next-btn:hover { background: var(--accent-blue-lt); }
+#tutorial-skip-btn {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+#tutorial-skip-btn:hover { background: var(--bg-elevated); }
+.tutorial-highlight {
+  position: relative;
+  z-index: 2501;
+  box-shadow: 0 0 0 4px var(--accent-blue-lt), 0 0 20px rgba(83,144,217,0.4);
+  border-radius: var(--radius-md);
+}
+
+/* ===== INTERNATIONAL PANEL ===== */
+#intl-section {
+  margin-top: var(--gap-md);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+#intl-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-sm);
+}
+.intl-meter {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-bottom: 6px;
+}
+.intl-meter-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  min-width: 70px;
+}
+.intl-meter-track {
+  flex: 1;
+  height: 8px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.intl-meter-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.intl-meter-fill.coop { background: var(--accent-green-lt); }
+.intl-meter-fill.trade { background: var(--energy-solar); }
+.intl-meter-val {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 28px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+#intl-status {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+/* ===== NEWSPAPER HEADLINE ===== */
+#newspaper-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 700;
+  background: linear-gradient(180deg, #1a1e30 0%, #131629 100%);
+  border-bottom: 2px solid var(--accent-blue-lt);
+  padding: var(--gap-md) var(--gap-lg);
+  text-align: center;
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+#newspaper-flash.visible {
+  transform: translateY(0);
+}
+#newspaper-source {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-blue-lt);
+  margin-bottom: 4px;
+}
+#newspaper-headline {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 4px;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+#newspaper-standfirst {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: Georgia, 'Times New Roman', serif;
+}
+@media (max-width: 430px) {
+  #newspaper-headline { font-size: 15px; }
+}
+
+/* ===== ENDGAME COMPARISON TABLE ===== */
+#endgame-comparison {
+  margin: var(--gap-lg) 0;
+}
+#endgame-comparison-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.comparison-table th {
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-strong);
+}
+.comparison-table td {
+  padding: 6px 8px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.comparison-table .yours td {
+  color: var(--accent-blue-lt);
+  font-weight: 700;
+  background: rgba(29,112,184,0.08);
+}
+.comparison-table .best td {
+  color: var(--status-good);
+}
 </style>
 </head>
 <body>
@@ -2297,6 +2511,22 @@ body { transition: filter 2s ease; }
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
           </div>
         </div>
+      </div>
+
+      <!-- International Diplomacy -->
+      <div id="intl-section">
+        <div id="intl-title">Global Standing</div>
+        <div class="intl-meter">
+          <span class="intl-meter-label">🌍 Cooperation</span>
+          <div class="intl-meter-track"><div class="intl-meter-fill coop" id="bar-coop" style="width:50%"></div></div>
+          <span class="intl-meter-val" id="val-coop">50</span>
+        </div>
+        <div class="intl-meter">
+          <span class="intl-meter-label">📦 Trade</span>
+          <div class="intl-meter-track"><div class="intl-meter-fill trade" id="bar-trade" style="width:60%"></div></div>
+          <span class="intl-meter-val" id="val-trade">60</span>
+        </div>
+        <div id="intl-status">UK holds moderate standing in global climate negotiations.</div>
       </div>
 
     </div>
@@ -2966,6 +3196,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="global_leader">
+        <span class="scenario-card-icon">🌍</span>
+        <div class="scenario-card-name">Global Leader</div>
+        <div class="scenario-card-desc">The UK has championed international climate cooperation. Strong diplomatic standing unlocks green trade advantages — but the world expects you to lead by example.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Cooperation: <span>80 (high)</span></div>
+          <div class="scenario-stat">Trade: <span>75 (strong)</span></div>
+          <div class="scenario-stat">Warming rate: <span>Slower globally</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="trade_war">
+        <span class="scenario-card-icon">🚧</span>
+        <div class="scenario-card-name">Trade War</div>
+        <div class="scenario-card-desc">Geopolitical tensions have fractured international cooperation. Carbon border taxes are disrupting trade. Budget is higher from protectionist revenue — but you're going it alone.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£120bn/turn</span></div>
+          <div class="scenario-stat">Cooperation: <span>20 (isolated)</span></div>
+          <div class="scenario-stat">Trade: <span>35 (disrupted)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3030,6 +3282,27 @@ body { transition: filter 2s ease; }
     <p class="advisor-note">Each term covers five years and £100bn to allocate across six investment areas. The trade-offs are real — you cannot do everything at once.</p>
     <button id="advisor-dismiss-btn">I understand — Begin →</button>
   </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorial-overlay" class="hidden">
+  <div id="tutorial-backdrop"></div>
+  <div id="tutorial-card">
+    <div id="tutorial-step-num">Step 1 of 5</div>
+    <div id="tutorial-title">Welcome</div>
+    <div id="tutorial-text">Welcome text</div>
+    <div id="tutorial-actions">
+      <button class="tutorial-btn" id="tutorial-skip-btn">Skip tutorial</button>
+      <button class="tutorial-btn" id="tutorial-next-btn">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEWSPAPER FLASH -->
+<div id="newspaper-flash">
+  <div id="newspaper-source">BBC News · Breaking</div>
+  <div id="newspaper-headline">Headline</div>
+  <div id="newspaper-standfirst">Standfirst text</div>
 </div>
 
 <!-- SETTINGS MODAL -->
@@ -3359,7 +3632,6 @@ const STARTER_SCENARIOS = {
       state.energy.gas   = Math.max(0,   state.energy.gas   - 12);
       state.netZeroProgress = 55;
       state.strandedAssets  = 18;
-      // Budget override applied after init
       state._budgetOverride = 85;
     },
   },
@@ -3372,7 +3644,300 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  global_leader: {
+    label: 'Global Leader',
+    apply(state) {
+      state.intl.cooperation = 80;
+      state.intl.tradeOpenness = 75;
+      state.netZeroProgress = 40;
+    },
+  },
+  trade_war: {
+    label: 'Trade War',
+    apply(state) {
+      state.intl.cooperation = 20;
+      state.intl.tradeOpenness = 35;
+      state._budgetOverride = 120;
+      state.strandedAssets = 8;
+    },
+  },
 };
+
+/* ============================================================
+   INTERNATIONAL DIPLOMACY EVENTS
+============================================================ */
+
+const INTL_EVENTS_POOL = [
+  {
+    id: 'cop_success',
+    icon: '🌍',
+    title: 'COP Climate Summit — Breakthrough',
+    prompt: 'A historic agreement is within reach. Will the UK commit to binding targets?',
+    explanation: 'International climate agreements amplify domestic action by ensuring other nations move in lockstep. Committing to binding targets boosts UK credibility and unlocks green trade deals — but constrains future policy flexibility and commits budget.',
+    contextFn: (s) => ({
+      label: 'Global Cooperation',
+      value: `${s.intl.cooperation}`,
+      note: s.intl.cooperation > 60 ? 'strong standing' : 'room to grow',
+    }),
+    optA: {
+      label: '🤝 Commit to binding targets',
+      consequence: '+15 Cooperation · +5 Trade · Costs £4bn · warming slows globally',
+      effect: (s) => { s.intl.cooperation = Math.min(100, s.intl.cooperation + 15); s.intl.tradeOpenness = Math.min(100, s.intl.tradeOpenness + 5); s.nextTurnBudgetPenalty += 4; },
+    },
+    optB: {
+      label: '📝 Non-binding pledge only',
+      consequence: '+3 Cooperation · no cost · no trade benefit',
+      effect: (s) => { s.intl.cooperation = Math.min(100, s.intl.cooperation + 3); },
+    },
+    condition: (s) => s.intl.cooperation >= 30,
+  },
+  {
+    id: 'carbon_tariff',
+    icon: '📦',
+    title: 'EU Carbon Border Adjustment',
+    prompt: 'The EU is imposing carbon tariffs. How does the UK respond?',
+    explanation: 'Carbon border adjustments penalise imports from countries with weak climate policy. Aligning with the EU standard opens trade but locks you into their pace of transition. A bilateral deal preserves sovereignty but takes longer to negotiate.',
+    contextFn: (s) => ({
+      label: 'Trade Openness',
+      value: `${s.intl.tradeOpenness}`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🇪🇺 Align with EU carbon standard',
+      consequence: '+10 Trade · +5 Cooperation · −3 Social (industry adjustment)',
+      effect: (s) => { s.intl.tradeOpenness = Math.min(100, s.intl.tradeOpenness + 10); s.intl.cooperation = Math.min(100, s.intl.cooperation + 5); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    optB: {
+      label: '🇬🇧 Negotiate bilateral deal',
+      consequence: '+3 Trade · no Social cost · slower integration',
+      effect: (s) => { s.intl.tradeOpenness = Math.min(100, s.intl.tradeOpenness + 3); },
+    },
+    condition: () => true,
+  },
+  {
+    id: 'tech_transfer',
+    icon: '🔬',
+    title: 'Green Technology Transfer',
+    prompt: 'Developing nations are requesting clean energy technology sharing. What do you offer?',
+    explanation: 'Sharing renewable technology with developing nations accelerates global decarbonisation and builds diplomatic capital. Full transfer costs more but dramatically boosts cooperation. Licensing preserves IP revenue but builds less goodwill.',
+    contextFn: (s) => ({
+      label: 'Global Cooperation',
+      value: `${s.intl.cooperation}`,
+      note: `R&D purchased: ${techTree._purchased.size}/${RESEARCH_UPGRADES.length}`,
+    }),
+    optA: {
+      label: '🎁 Full technology transfer programme',
+      consequence: '+12 Cooperation · Costs £7bn · global warming rate reduced',
+      effect: (s) => { s.intl.cooperation = Math.min(100, s.intl.cooperation + 12); s.nextTurnBudgetPenalty += 7; },
+    },
+    optB: {
+      label: '💼 Licensed technology sharing',
+      consequence: '+4 Cooperation · +5 Trade (licence revenue) · no budget cost',
+      effect: (s) => { s.intl.cooperation = Math.min(100, s.intl.cooperation + 4); s.intl.tradeOpenness = Math.min(100, s.intl.tradeOpenness + 5); },
+    },
+    condition: (s) => techTree._purchased.size >= 1,
+  },
+  {
+    id: 'trade_bloc',
+    icon: '🤝',
+    title: 'Green Trade Alliance',
+    prompt: 'An emerging bloc of climate-aligned nations invites the UK to join.',
+    explanation: 'Green trade blocs reduce tariffs between members with strong climate policy. Joining opens markets and reduces import costs for renewables equipment. Staying independent preserves trade flexibility but foregoes the bloc discount.',
+    contextFn: (s) => ({
+      label: 'Trade Openness',
+      value: `${s.intl.tradeOpenness}`,
+      note: s.intl.tradeOpenness > 60 ? 'well connected' : 'could benefit',
+    }),
+    optA: {
+      label: '🌐 Join the Green Trade Alliance',
+      consequence: '+12 Trade · +8 Cooperation · renewable equipment costs drop',
+      effect: (s) => { s.intl.tradeOpenness = Math.min(100, s.intl.tradeOpenness + 12); s.intl.cooperation = Math.min(100, s.intl.cooperation + 8); },
+    },
+    optB: {
+      label: '🏴 Maintain independent trade policy',
+      consequence: 'No change · preserve bilateral flexibility',
+      effect: () => {},
+    },
+    condition: (s) => s.intl.cooperation >= 40,
+  },
+  {
+    id: 'fossil_lobby',
+    icon: '🛢️',
+    title: 'OPEC Pressure Campaign',
+    prompt: 'Oil-producing nations are lobbying against your transition. How do you respond?',
+    explanation: 'Major fossil fuel exporters are pressuring the UK to slow its transition, threatening trade sanctions on other goods. Resistance costs diplomatically but preserves transition momentum. Accommodation eases trade pressure but slows decarbonisation.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Trade: ${s.intl.tradeOpenness}`,
+    }),
+    optA: {
+      label: '✊ Reject fossil lobby pressure',
+      consequence: '−5 Trade · +5 Cooperation (climate allies impressed) · +3 NZ Progress',
+      effect: (s) => { s.intl.tradeOpenness = Math.max(0, s.intl.tradeOpenness - 5); s.intl.cooperation = Math.min(100, s.intl.cooperation + 5); s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    },
+    optB: {
+      label: '🤷 Make trade concessions',
+      consequence: '+5 Trade · −8 Cooperation · −2 NZ Progress (signal weakness)',
+      effect: (s) => { s.intl.tradeOpenness = Math.min(100, s.intl.tradeOpenness + 5); s.intl.cooperation = Math.max(0, s.intl.cooperation - 8); s.netZeroProgress = Math.max(0, s.netZeroProgress - 2); },
+    },
+    condition: (s) => s.netZeroProgress > 30,
+  },
+];
+
+/* ============================================================
+   NEWSPAPER HEADLINES
+============================================================ */
+
+const NEWSPAPER_HEADLINES = {
+  highGrid:     { source: 'Financial Times', headline: 'UK Grid Named Most Reliable in Europe', standfirst: 'Investment in storage and smart grid technology pays off as reliability hits record highs.' },
+  lowGrid:      { source: 'The Guardian', headline: 'Rolling Blackouts Hit Northern England', standfirst: 'Grid reliability has fallen to dangerous levels. Emergency gas generators deployed.' },
+  netZeroClose: { source: 'BBC News', headline: 'Net Zero Within Reach — Final Push Needed', standfirst: 'UK climate progress exceeds 80%. Scientists say the last 20% is the hardest.' },
+  netZeroDone:  { source: 'The Times', headline: 'Historic: UK Reaches Net Zero Emissions', standfirst: 'After 25 years of investment, the UK has met its legal climate commitment.' },
+  socialCrisis: { source: 'Daily Mirror', headline: '"We Can\'t Afford to Eat and Heat"', standfirst: 'Social stability plummets as energy transition costs hit poorest households hardest.' },
+  finCrisis:    { source: 'Financial Times', headline: 'Bank of England Warns of Systemic Risk', standfirst: 'Stranded fossil assets threaten pension fund solvency. Treasury intervention expected.' },
+  tempDanger:   { source: 'The Guardian', headline: `Tipping Point Crossed: UK Warming Past 2°C`, standfirst: 'Scientists warn of irreversible feedback loops as temperature threshold breached.' },
+  coopHigh:     { source: 'BBC News', headline: 'UK Hailed as Global Climate Leader', standfirst: 'International cooperation at record levels. Green trade deals boosting economy.' },
+  tradeGrow:    { source: 'Financial Times', headline: 'Green Exports Surge as Trade Opens', standfirst: 'UK renewable technology exports triple as trade agreements unlock new markets.' },
+  balanced:     { source: 'The Economist', headline: 'UK Finds the Middle Path on Climate', standfirst: 'Balancing growth, stability and emissions — the pragmatist approach is working, for now.' },
+};
+
+/* ============================================================
+   TUTORIAL SYSTEM
+============================================================ */
+
+const TUTORIAL_STEPS = [
+  {
+    title: 'Your Mission',
+    text: 'You are the UK\'s climate strategy minister. Over 5 terms (2025–2050), you\'ll invest in infrastructure, manage crises, and try to reach Net Zero — while keeping society, the economy, and the grid stable.',
+    highlight: null,
+    position: 'center',
+  },
+  {
+    title: 'National Indicators',
+    text: 'These metrics show the health of the nation. Temperature, grid reliability, financial stability, social stability, and Net Zero progress are all interconnected. If any drops to zero, society collapses.',
+    highlight: 'metrics-panel',
+    position: 'right',
+  },
+  {
+    title: 'Investment Decisions',
+    text: 'Each turn, allocate investment blocks across 6 areas. Each block costs budget and has specific effects. You can assign up to 2 blocks per category — but you can\'t do everything.',
+    highlight: 'investment-cards',
+    position: 'left',
+  },
+  {
+    title: 'Global Standing',
+    text: 'Your international cooperation and trade scores affect warming rates and budget. High cooperation slows global warming; strong trade reduces equipment costs. Both are shaped by diplomatic events during simulation.',
+    highlight: 'intl-section',
+    position: 'right',
+  },
+  {
+    title: 'Ready to Lead',
+    text: 'Press + to add blocks, − to remove. Watch how projected values change as you allocate. When ready, click "Advance" to simulate 5 years of consequences. Good luck, Minister.',
+    highlight: 'end-turn-btn',
+    position: 'top',
+  },
+];
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done_v2';
+    this.step = 0;
+    this.active = false;
+    this.overlay = document.getElementById('tutorial-overlay');
+    this.card = document.getElementById('tutorial-card');
+    this.stepNum = document.getElementById('tutorial-step-num');
+    this.titleEl = document.getElementById('tutorial-title');
+    this.textEl = document.getElementById('tutorial-text');
+    this.nextBtn = document.getElementById('tutorial-next-btn');
+    this.skipBtn = document.getElementById('tutorial-skip-btn');
+    this._prevHighlight = null;
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return false; }
+  }
+
+  markDone() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  start() {
+    if (!this.overlay) return;
+    this.step = 0;
+    this.active = true;
+    this.overlay.classList.remove('hidden');
+    this._renderStep();
+
+    this.nextBtn.onclick = () => {
+      this.step++;
+      if (this.step >= TUTORIAL_STEPS.length) {
+        this.end();
+      } else {
+        this._renderStep();
+      }
+    };
+    this.skipBtn.onclick = () => this.end();
+  }
+
+  end() {
+    this.active = false;
+    this._clearHighlight();
+    this.overlay.classList.add('hidden');
+    this.markDone();
+  }
+
+  _renderStep() {
+    const s = TUTORIAL_STEPS[this.step];
+    this.stepNum.textContent = `Step ${this.step + 1} of ${TUTORIAL_STEPS.length}`;
+    this.titleEl.textContent = s.title;
+    this.textEl.textContent = s.text;
+    this.nextBtn.textContent = this.step === TUTORIAL_STEPS.length - 1 ? 'Start Playing →' : 'Next →';
+
+    this._clearHighlight();
+    if (s.highlight) {
+      const el = document.getElementById(s.highlight);
+      if (el) {
+        el.classList.add('tutorial-highlight');
+        this._prevHighlight = el;
+        const rect = el.getBoundingClientRect();
+        this._positionCard(rect, s.position);
+      }
+    } else {
+      this.card.style.left = '50%';
+      this.card.style.top = '50%';
+      this.card.style.transform = 'translate(-50%, -50%)';
+    }
+  }
+
+  _positionCard(rect, pos) {
+    const cardW = 360;
+    const gap = 16;
+    this.card.style.transform = 'none';
+
+    if (pos === 'right') {
+      this.card.style.left = Math.min(rect.right + gap, window.innerWidth - cardW - gap) + 'px';
+      this.card.style.top = Math.max(gap, rect.top) + 'px';
+    } else if (pos === 'left') {
+      this.card.style.left = Math.max(gap, rect.left - cardW - gap) + 'px';
+      this.card.style.top = Math.max(gap, rect.top) + 'px';
+    } else if (pos === 'top') {
+      this.card.style.left = Math.max(gap, rect.left) + 'px';
+      this.card.style.top = Math.max(gap, rect.top - 200) + 'px';
+    } else {
+      this.card.style.left = '50%';
+      this.card.style.top = '50%';
+      this.card.style.transform = 'translate(-50%, -50%)';
+    }
+  }
+
+  _clearHighlight() {
+    if (this._prevHighlight) {
+      this._prevHighlight.classList.remove('tutorial-highlight');
+      this._prevHighlight = null;
+    }
+  }
+}
 
 /* ============================================================
    TURN HISTORY TRACKER
@@ -3575,6 +4140,7 @@ class GameEngine {
       currentRandomEvent: null,
       eventCount: 0,
       lastEventTurn: -1,
+      intl: { cooperation: 50, tradeOpenness: 60 },
       log: [],
       lastSnapshot: null,
     };
@@ -3586,6 +4152,7 @@ class GameEngine {
       energy: Object.assign({}, this.state.energy),
       infrastructure: Object.assign({}, this.state.infrastructure),
       currentDecisions: Object.assign({}, this.state.currentDecisions),
+      intl: Object.assign({}, this.state.intl),
     });
   }
 
@@ -3598,6 +4165,9 @@ class GameEngine {
       ? this.state._budgetOverride
       : difficultyMgr.preset.baseBudget;
     if (this.state.financialStability > 80) base += 20;
+    // Trade openness gives budget bonus (cheaper imports of green tech)
+    const tradeBonus = Math.round((this.state.intl.tradeOpenness - 50) * 0.15);
+    base += tradeBonus;
     base -= this.state.nextTurnBudgetPenalty;
     // After turn 1, budget override only applies once (first turn), then uses normal base
     if (this.state.turn > 0) {
@@ -3732,6 +4302,12 @@ class GameEngine {
 
     // Phase 6: Temperature
     this._progressTemp();
+
+    // Phase 6b: International drift
+    if (s.netZeroProgress > 50) s.intl.cooperation = Math.min(100, s.intl.cooperation + 2);
+    if (s.netZeroProgress < 30) s.intl.cooperation = Math.max(0, s.intl.cooperation - 3);
+    if (s.financialStability > 70) s.intl.tradeOpenness = Math.min(100, s.intl.tradeOpenness + 1);
+    if (s.financialStability < 40) s.intl.tradeOpenness = Math.max(0, s.intl.tradeOpenness - 2);
 
     // Phase 7: Random event
     const event = this._resolveEvent();
@@ -3898,9 +4474,12 @@ class GameEngine {
     const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
 
     let delta = difficultyMgr.preset.warmingRate + (gasShare - renewShare) * 0.22;
-    delta = Math.max(delta, 0.03); // residual warming even at Net Zero
+    delta = Math.max(delta, 0.03);
 
-    // Tipping point feedback: above 1.5°C warming compounds faster (permafrost methane, Arctic ice loss)
+    // High global cooperation slows warming (other nations acting too)
+    const coopFactor = 1 - (s.intl.cooperation - 50) * 0.003;
+    delta *= Math.max(0.8, Math.min(1.15, coopFactor));
+
     if (s.temperature > 1.5) {
       delta *= 1 + (s.temperature - 1.5) * 1.2;
     }
@@ -4512,6 +5091,9 @@ class UI {
             <div class="log-text">UK Climate Strategy simulation begins. Scenario: <strong>${STARTER_SCENARIOS[this._activeScenario]?.label || 'Standard'}</strong>. Temperature: 1.1°C above pre-industrial. Allocate investment blocks each turn — but watch the trade-offs.</div>
           </div>`;
         this.render(this.engine.getState());
+        if (tutorialMgr.shouldShow()) {
+          setTimeout(() => tutorialMgr.start(), 600);
+        }
       });
     }
 
@@ -4613,11 +5195,31 @@ class UI {
     this._renderProjection(state);
     this._renderSparklines(state);
     this._renderEnergyMix(state);
+    this._renderIntl(state);
     this._renderBudget(state);
     this._renderCards(state);
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+  }
+
+  _renderIntl(state) {
+    const coop = state.intl.cooperation;
+    const trade = state.intl.tradeOpenness;
+    const barCoop = document.getElementById('bar-coop');
+    const barTrade = document.getElementById('bar-trade');
+    const valCoop = document.getElementById('val-coop');
+    const valTrade = document.getElementById('val-trade');
+    const status = document.getElementById('intl-status');
+    if (!barCoop) return;
+    barCoop.style.width = coop + '%';
+    barTrade.style.width = trade + '%';
+    valCoop.textContent = coop;
+    valTrade.textContent = trade;
+    if (coop >= 70 && trade >= 60) status.textContent = 'UK is a respected leader in global climate action.';
+    else if (coop >= 50) status.textContent = 'UK holds moderate standing in global climate negotiations.';
+    else if (coop >= 30) status.textContent = 'UK influence is waning — other nations are sceptical.';
+    else status.textContent = 'UK is isolated. Climate diplomacy has collapsed.';
   }
 
   _renderHeader(state) {
@@ -5164,8 +5766,10 @@ class UI {
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    const comparisonHtml = this._buildComparisonTable(s, result);
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml + comparisonHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5261,6 +5865,31 @@ class UI {
       </div>`;
     }
     html += `</div></div>`;
+    return html;
+  }
+
+  _buildComparisonTable(state, result) {
+    const scenarios = [
+      { name: 'Orderly (Net Zero 2050)', temp: '1.4°C', nz: '100%', grid: '85%', soc: '70%', fin: '75%' },
+      { name: 'Disorderly', temp: '1.8°C', nz: '75%', grid: '55%', soc: '45%', fin: '50%' },
+      { name: 'Hot House World', temp: '3.0°C+', nz: '25%', grid: '30%', soc: '25%', fin: '35%' },
+    ];
+    const player = {
+      name: 'Your Strategy',
+      temp: state.temperature.toFixed(1) + '°C',
+      nz: Math.round(state.netZeroProgress) + '%',
+      grid: Math.round(state.gridReliability) + '%',
+      soc: Math.round(state.socialStability) + '%',
+      fin: Math.round(state.financialStability) + '%',
+    };
+    let html = `<div class="comparison-table-wrap"><div class="comparison-title">NGFS Scenario Comparison</div>
+      <table class="comparison-table"><thead><tr><th>Scenario</th><th>Temp</th><th>Net Zero</th><th>Grid</th><th>Social</th><th>Financial</th></tr></thead><tbody>`;
+    html += `<tr class="comparison-player"><td>${player.name}</td><td>${player.temp}</td><td>${player.nz}</td><td>${player.grid}</td><td>${player.soc}</td><td>${player.fin}</td></tr>`;
+    for (const sc of scenarios) {
+      const match = result.ngfsLabel && result.ngfsLabel.toLowerCase().includes(sc.name.split(' ')[0].toLowerCase());
+      html += `<tr class="${match ? 'comparison-match' : ''}"><td>${sc.name}</td><td>${sc.temp}</td><td>${sc.nz}</td><td>${sc.grid}</td><td>${sc.soc}</td><td>${sc.fin}</td></tr>`;
+    }
+    html += `</tbody></table></div>`;
     return html;
   }
 
@@ -5739,12 +6368,19 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
-  // Tick through years with possible mini-events
+  // Tick through years with possible mini-events and international events
   let minisFired = 0;
+  let intlFired = false;
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
     await _delay(4250);
+
+    // Show newspaper headline at year 2 of each period
+    if (offset === 2) {
+      const headline = _pickNewspaperHeadline(engine.state);
+      if (headline) await _showNewspaper(headline);
+    }
 
     if (minisFired < 2 && Math.random() < 0.50) {
       const eligible = MINI_EVENTS_POOL.filter(e => e.condition(engine.state));
@@ -5753,6 +6389,17 @@ async function runSimulationPhase(engine, ui, fxMgr) {
         fxMgr.haptic('medium');
         await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
         minisFired++;
+      }
+    }
+
+    // International diplomacy event at year 3 or 4
+    if (!intlFired && offset >= 3 && Math.random() < 0.55) {
+      const eligible = INTL_EVENTS_POOL.filter(e => e.condition(engine.state));
+      if (eligible.length > 0) {
+        const evt = eligible[Math.floor(Math.random() * eligible.length)];
+        fxMgr.haptic('medium');
+        await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
+        intlFired = true;
       }
     }
   }
@@ -5836,6 +6483,39 @@ function _setSimProgress(overlay, pct) {
 function _setSimStatus(overlay, text) {
   const el = overlay.querySelector('#sim-status');
   if (el) el.textContent = text;
+}
+
+function _pickNewspaperHeadline(state) {
+  const s = state;
+  const pool = [];
+  if (s.gridReliability >= 85) pool.push(NEWSPAPER_HEADLINES.highGrid);
+  if (s.gridReliability < 40) pool.push(NEWSPAPER_HEADLINES.lowGrid);
+  if (s.netZeroProgress >= 80 && s.netZeroProgress < 100) pool.push(NEWSPAPER_HEADLINES.netZeroClose);
+  if (s.netZeroProgress >= 100) pool.push(NEWSPAPER_HEADLINES.netZeroDone);
+  if (s.socialStability < 35) pool.push(NEWSPAPER_HEADLINES.socialCrisis);
+  if (s.financialStability < 35) pool.push(NEWSPAPER_HEADLINES.finCrisis);
+  if (s.temperature > 2.0) pool.push(NEWSPAPER_HEADLINES.tempDanger);
+  if (s.intl.cooperation >= 70) pool.push(NEWSPAPER_HEADLINES.coopHigh);
+  if (s.intl.tradeOpenness >= 75) pool.push(NEWSPAPER_HEADLINES.tradeGrow);
+  if (pool.length === 0) pool.push(NEWSPAPER_HEADLINES.balanced);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function _showNewspaper(headline) {
+  return new Promise(resolve => {
+    const el = document.getElementById('newspaper-flash');
+    if (!el) { resolve(); return; }
+    el.querySelector('.np-source').textContent = headline.source;
+    el.querySelector('.np-headline').textContent = headline.headline;
+    el.querySelector('.np-standfirst').textContent = headline.standfirst;
+    el.classList.remove('hidden');
+    el.classList.add('np-show');
+    setTimeout(() => {
+      el.classList.remove('np-show');
+      el.classList.add('hidden');
+      resolve();
+    }, 3500);
+  });
 }
 
 function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
@@ -5955,6 +6635,7 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const tutorialMgr  = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
