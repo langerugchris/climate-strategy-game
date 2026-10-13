@@ -600,6 +600,22 @@ body {
   flex-shrink: 0;
 }
 
+#reset-alloc-btn {
+  touch-action: manipulation;
+  padding: 6px 12px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+#reset-alloc-btn:hover { color: var(--text-secondary); border-color: var(--border-strong); }
+#reset-alloc-btn:disabled { opacity: 0.3; cursor: default; }
+#reset-alloc-btn:active { transform: scale(0.97); }
+
 #spend-summary {
   font-size: 12px;
   color: var(--text-secondary);
@@ -726,6 +742,12 @@ body {
   max-width: 480px;
   width: 90vw;
   animation: slideUp 0.3s ease;
+}
+#event-card.positive-event {
+  border-color: var(--status-good);
+}
+#event-card.positive-event #event-title-display {
+  color: var(--status-good);
 }
 
 @keyframes slideUp {
@@ -1604,6 +1626,55 @@ body { transition: filter 2s ease; }
   margin-bottom: 4px;
 }
 
+/* ===== NEWSPAPER HEADLINE ===== */
+.log-headline {
+  margin: 6px 0 4px;
+  padding: 6px 8px;
+  background: var(--bg-tertiary);
+  border-left: 3px solid var(--text-muted);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.log-headline-masthead {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.log-headline-text {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-editorial);
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.log-headline-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  margin-top: 2px;
+}
+.log-headline.positive { border-left-color: var(--status-good); }
+.log-headline.negative { border-left-color: var(--status-danger); }
+.log-headline.neutral  { border-left-color: var(--status-info); }
+
+/* ===== STAKEHOLDER QUOTES ===== */
+.log-stakeholder {
+  margin: 4px 0;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-style: italic;
+  border-left: 2px solid var(--border-subtle);
+}
+.log-stakeholder-name {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 10px;
+}
+
 /* ===== SETTINGS BUTTON ===== */
 #settings-btn {
   background: none;
@@ -2278,6 +2349,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg storage" id="seg-storage" style="flex-grow:5"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2367,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-storage)"></div>
+            <span>Storage</span><span class="legend-val" id="leg-storage">5</span>
           </div>
         </div>
       </div>
@@ -2900,6 +2976,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="reset-alloc-btn" disabled>Reset</button>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -3167,6 +3244,41 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'EU_CARBON_BORDER', type: 'TRADE', severity: 'MODERATE', icon: '🇪🇺',
+    title: 'EU Carbon Border Dispute',
+    description: 'The EU imposes carbon border adjustment tariffs on UK exports. Steel, cement and chemicals hit hardest. Trade talks stall.',
+    story: 'Sheffield steelmaker Forgemasters announced 800 redundancies after EU carbon tariffs made their exports uncompetitive. "We can\'t absorb a 15% cost penalty," said CEO Margaret Chen.',
+    effects: { financialStability: -10, socialStability: -6 },
+    infraDamage: false, budgetPenaltyNext: 10,
+    condition: (s) => s.netZeroProgress < 60,
+  },
+  {
+    id: 'SUPPLY_CHAIN_CRISIS', type: 'SUPPLY', severity: 'MODERATE', icon: '🚢',
+    title: 'Global Supply Chain Crisis',
+    description: 'Critical mineral shortages disrupt solar panel and battery production worldwide. Green transition costs surge as China restricts rare earth exports.',
+    story: 'Cornwall Lithium\'s processing plant sits half-finished in St Austell. Global lithium prices tripled in six months. The CEO told Parliament: "We are years from domestic supply security."',
+    effects: { financialStability: -8, socialStability: -4 },
+    infraDamage: false, budgetPenaltyNext: 15,
+  },
+  {
+    id: 'CLIMATE_SUMMIT_WIN', type: 'DIPLOMATIC', severity: 'POSITIVE', icon: '🌍',
+    title: 'International Climate Summit',
+    description: 'UK leadership at COP wins international praise and unlocks £20bn in green trade deals. Investor confidence surges.',
+    story: 'The Prime Minister\'s speech in Nairobi was met with a standing ovation. "Britain proved that growth and decarbonisation are not enemies," said the UN Secretary-General.',
+    effects: { financialStability: 8, socialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.netZeroProgress >= 60 && s.temperature < 1.8,
+  },
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'TECH', severity: 'POSITIVE', icon: '🔬',
+    title: 'Green Technology Breakthrough',
+    description: 'A British research lab achieves a breakthrough in solid-state battery technology. Commercial deployment expected within 3 years.',
+    story: 'Professor Anika Patel at Imperial College unveiled a solid-state battery with twice the energy density at half the cost. "This changes the economics of the entire grid," she said.',
+    effects: { gridReliability: 8, financialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.gridAndStorage >= 35,
+  },
 ];
 
 /* ============================================================
@@ -3299,6 +3411,120 @@ const METRIC_TOOLTIPS = {
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
   },
 };
+
+/* ============================================================
+   NEWSPAPER HEADLINE GENERATOR
+============================================================ */
+
+function generateHeadline(entry, state) {
+  const headlines = [];
+  const tempDelta = entry.afterTemp - entry.snapshot.temperature;
+  const nzDelta = entry.afterNZ - entry.snapshot.netZeroProgress;
+  const socDelta = entry.afterSoc - entry.snapshot.socialStability;
+  const finDelta = entry.afterFin - entry.snapshot.financialStability;
+  const gridDelta = entry.afterGrid - entry.snapshot.gridReliability;
+
+  const papers = ['The Guardian', 'Financial Times', 'The Times', 'The Telegraph', 'BBC News', 'The Independent'];
+  const pick = () => papers[Math.floor(Math.random() * papers.length)];
+
+  if (entry.event) {
+    const eventHeadlines = {
+      'Coastal Flooding — East Anglia': { text: 'Norfolk coast defences breached as thousands flee', sub: 'Emergency services overwhelmed as storm surge hits East Anglia', tone: 'negative' },
+      'Catastrophic Thames Flooding': { text: 'Thames Barrier fails: London under water', sub: 'National emergency declared as Central London districts flooded for the first time', tone: 'negative' },
+      'Extended Heatwave — 40°C+': { text: 'Britain swelters: 40°C for seventh consecutive day', sub: 'NHS declares critical incident as hospitals struggle to cope with heat casualties', tone: 'negative' },
+      'Extreme Heat Emergency': { text: 'Heat kills 10,000: the summer Britain couldn\'t survive', sub: 'Record excess mortality as climate crisis reaches UK doorsteps', tone: 'negative' },
+      'Severe Atlantic Storm': { text: 'Storm Idris tears across northern England', sub: 'Widespread damage as Atlantic superstorm batters infrastructure', tone: 'negative' },
+      'Fossil Asset Write-down': { text: 'Pension funds face £1.2bn fossil fuel write-off', sub: 'North Sea assets reclassified as stranded under new carbon rules', tone: 'negative' },
+      'Fuel Poverty Protests': { text: '"I\'m not a protester. I\'m just cold."', sub: 'Fuel poverty protests spread across northern cities as energy costs bite', tone: 'negative' },
+      'National Grid Blackout': { text: 'Lights out: national grid suffers cascading failure', sub: 'Hospitals on generators as backup capacity proves insufficient', tone: 'negative' },
+      'EU Carbon Border Dispute': { text: 'Brussels slaps carbon tariffs on UK exports', sub: 'Trade tensions rise as EU enforces border adjustment mechanism', tone: 'negative' },
+      'Global Supply Chain Crisis': { text: 'Critical mineral shortage stalls green transition', sub: 'Solar panel and battery costs surge as supply chains buckle', tone: 'negative' },
+      'International Climate Summit': { text: 'UK hailed as climate leader at COP summit', sub: 'Prime Minister\'s Net Zero pledge wins international backing', tone: 'positive' },
+      'Green Technology Breakthrough': { text: 'British lab cracks solid-state battery puzzle', sub: 'Commercial-scale breakthrough could halve grid storage costs within five years', tone: 'positive' },
+    };
+    const match = eventHeadlines[entry.event];
+    if (match) return { masthead: pick(), ...match };
+  }
+
+  if (entry.afterNZ >= 100 && entry.snapshot.netZeroProgress < 100) {
+    headlines.push({ text: 'Britain reaches Net Zero: historic milestone achieved', sub: `A generation of investment delivers the UK\'s legally binding climate target`, tone: 'positive' });
+  }
+  if (tempDelta > 0.3) {
+    headlines.push({ text: `UK warming accelerates: ${entry.afterTemp.toFixed(1)}°C and rising`, sub: 'Scientists warn tipping points may now be unavoidable without immediate action', tone: 'negative' });
+  }
+  if (entry.afterTemp >= 2.0 && entry.snapshot.temperature < 2.0) {
+    headlines.push({ text: 'Britain breaches 2°C: Paris Agreement threshold crossed', sub: 'Climate scientists say warming has entered dangerous territory', tone: 'negative' });
+  }
+  if (nzDelta >= 15) {
+    headlines.push({ text: 'Green investment blitz drives record emissions cuts', sub: `Net Zero progress surges to ${Math.round(entry.afterNZ)}% as renewable buildout accelerates`, tone: 'positive' });
+  }
+  if (socDelta < -10) {
+    headlines.push({ text: 'Social unrest deepens as transition costs bite', sub: 'Trust in government falls to historic low amid energy bill anger', tone: 'negative' });
+  }
+  if (socDelta > 8) {
+    headlines.push({ text: 'Public backs green transition as communities see benefits', sub: 'Just Transition investment lifts public confidence in climate policy', tone: 'positive' });
+  }
+  if (finDelta < -10) {
+    headlines.push({ text: 'Financial markets rocked by stranded asset losses', sub: 'Pension funds and banks absorb heavy write-downs as fossil era ends', tone: 'negative' });
+  }
+  if (gridDelta < -10) {
+    headlines.push({ text: 'Grid under strain: reliability falls to critical levels', sub: `Engineers warn blackout risk is rising as backup capacity thins`, tone: 'negative' });
+  }
+  if (entry.afterGrid >= 80 && entry.afterFin >= 70 && entry.afterSoc >= 70) {
+    headlines.push({ text: 'Steady hand: UK navigates climate transition without crisis', sub: 'Balanced investment strategy keeps lights on and public trust intact', tone: 'positive' });
+  }
+
+  if (headlines.length === 0) {
+    const neutralPool = [
+      { text: `UK climate policy enters year ${entry.year + 5}: the road ahead`, sub: `Temperature at ${entry.afterTemp.toFixed(1)}°C. Net Zero progress: ${Math.round(entry.afterNZ)}%`, tone: 'neutral' },
+      { text: 'Whitehall weighs next steps in five-year climate plan', sub: `Grid at ${Math.round(entry.afterGrid)}%, social stability at ${Math.round(entry.afterSoc)}%`, tone: 'neutral' },
+      { text: 'UK climate strategy: progress but no room for complacency', sub: `Financial stability holds at ${Math.round(entry.afterFin)}% as transition continues`, tone: 'neutral' },
+    ];
+    headlines.push(neutralPool[Math.floor(Math.random() * neutralPool.length)]);
+  }
+
+  const chosen = headlines[Math.floor(Math.random() * headlines.length)];
+  return { masthead: pick(), ...chosen };
+}
+
+/* ============================================================
+   STAKEHOLDER COMMENTARY
+============================================================ */
+
+function generateStakeholderQuote(entry, state) {
+  const quotes = [];
+
+  if (entry.afterSoc < 50) {
+    quotes.push({ name: 'TUC General Secretary', text: 'Working families are bearing the cost of this transition while boardrooms profit. We need a genuine Just Transition, not slogans.' });
+  }
+  if (entry.afterFin < 50) {
+    quotes.push({ name: 'Bank of England Governor', text: 'The financial system is absorbing shocks it was not designed for. We need urgent action on stranded asset exposure.' });
+  }
+  if (entry.afterGrid < 50) {
+    quotes.push({ name: 'National Grid CEO', text: 'We cannot decarbonise faster than we can build backup. Grid reliability must not be sacrificed for political timelines.' });
+  }
+  if (entry.afterTemp > 1.8) {
+    quotes.push({ name: 'Climate Change Committee Chair', text: 'Every fraction of a degree matters. At this trajectory, we are condemning future generations to irreversible damage.' });
+  }
+  if (entry.afterNZ >= 80 && entry.afterNZ < 100) {
+    quotes.push({ name: 'Greenpeace UK Director', text: 'We are tantalisingly close to Net Zero. Now is not the time to ease off — the final stretch is the hardest.' });
+  }
+  if (entry.afterNZ < 40 && state.turn >= 3) {
+    quotes.push({ name: 'UN Climate Envoy', text: 'The UK is falling behind its own targets. The world is watching — and the world is not impressed.' });
+  }
+  if (state.energy.gas > 30 && state.turn >= 2) {
+    quotes.push({ name: 'Energy UK Chair', text: 'Gas remains essential for energy security. A rushed phase-out risks the lights going out — literally.' });
+  }
+  if (state.infrastructure.socialSupport > 60) {
+    quotes.push({ name: 'Joseph Rowntree Foundation', text: 'Investment in social support is paying dividends. Communities that feared being left behind are starting to see a future.' });
+  }
+  if (state.strandedAssets > 40) {
+    quotes.push({ name: 'Pension Trustee Association', text: 'Our members\' retirement savings are at risk. The government must act before more funds face insolvency.' });
+  }
+
+  if (quotes.length === 0) return null;
+  return quotes[Math.floor(Math.random() * quotes.length)];
+}
 
 /* ============================================================
    HIGH SCORE MANAGER
@@ -3737,8 +3963,8 @@ class GameEngine {
     const event = this._resolveEvent();
     s.currentRandomEvent = event;
     if (event) {
-      s.eventCount++;
-      // Recalc formulas again after event damage
+      if (event.severity !== 'POSITIVE') s.eventCount++;
+      // Recalc formulas again after event effects
       this._recalcGrid();
       this._recalcFinancial();
       this._recalcSocial();
@@ -3923,29 +4149,40 @@ class GameEngine {
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
+        { e: RANDOM_EVENTS[5], w: 25 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
+        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
         { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[6], w: 8 },   // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[8], w: 8 },   // EU_CARBON_BORDER
+        { e: RANDOM_EVENTS[9], w: 7 },   // SUPPLY_CHAIN_CRISIS
+        { e: RANDOM_EVENTS[10], w: 10 }, // CLIMATE_SUMMIT_WIN
+        { e: RANDOM_EVENTS[11], w: 7 },  // TECH_BREAKTHROUGH
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
+        { e: RANDOM_EVENTS[0], w: 16 },  // FLOOD_MINOR
         { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[2], w: 16 },  // HEATWAVE_MOD
+        { e: RANDOM_EVENTS[4], w: 16 },  // STORM
+        { e: RANDOM_EVENTS[6], w: 12 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 6 },   // EU_CARBON_BORDER
+        { e: RANDOM_EVENTS[9], w: 6 },   // SUPPLY_CHAIN_CRISIS
+        { e: RANDOM_EVENTS[10], w: 5 },  // CLIMATE_SUMMIT_WIN
+        { e: RANDOM_EVENTS[11], w: 5 },  // TECH_BREAKTHROUGH
       ];
     } else {
       pool = [
         { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
         { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[4], w: 15 },  // STORM
+        { e: RANDOM_EVENTS[7], w: 12 },  // GRID_FAILURE
+        { e: RANDOM_EVENTS[6], w: 12 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[5], w: 10 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 5 },   // EU_CARBON_BORDER
+        { e: RANDOM_EVENTS[9], w: 5 },   // SUPPLY_CHAIN_CRISIS
+        { e: RANDOM_EVENTS[11], w: 3 },  // TECH_BREAKTHROUGH
       ];
     }
 
@@ -3962,8 +4199,8 @@ class GameEngine {
       if (roll <= 0) { selectedEvent = item.e; break; }
     }
 
-    // Mitigation factor from adaptation
-    const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+    // Mitigation factor from adaptation (only applies to harmful events)
+    const mitigate = selectedEvent.severity === 'POSITIVE' ? 0 : Math.min(s.infrastructure.adaptation / 200, 0.5);
 
     // Apply effects
     const applied = {};
@@ -4265,10 +4502,12 @@ class UI {
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
     this.elSegGas     = document.getElementById('seg-gas');
+    this.elSegStorage = document.getElementById('seg-storage');
     this.elLegWind    = document.getElementById('leg-wind');
     this.elLegSolar   = document.getElementById('leg-solar');
     this.elLegNuclear = document.getElementById('leg-nuclear');
     this.elLegGas     = document.getElementById('leg-gas');
+    this.elLegStorage = document.getElementById('leg-storage');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4316,6 +4555,23 @@ class UI {
         this.render(this.engine.getState());
       });
     });
+
+    // Reset allocations button
+    const resetAllocBtn = document.getElementById('reset-alloc-btn');
+    if (resetAllocBtn) {
+      resetAllocBtn.addEventListener('click', () => {
+        const s = this.engine.state;
+        if (s.isResolvingTurn || s.gameOver) return;
+        for (const cat of this.categories) {
+          s.currentDecisions[cat] = 0;
+        }
+        s.spentThisTurn = 0;
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        effectsMgr.haptic('light');
+        this.render(this.engine.getState());
+      });
+    }
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
     const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
@@ -4801,10 +5057,12 @@ class UI {
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
     this.elSegGas.style.flexGrow     = e.gas;
+    this.elSegStorage.style.flexGrow = e.storage;
     this.elLegWind.textContent    = Math.round(e.wind);
     this.elLegSolar.textContent   = Math.round(e.solar);
     this.elLegNuclear.textContent = Math.round(e.nuclear);
     this.elLegGas.textContent     = Math.round(e.gas);
+    this.elLegStorage.textContent = Math.round(e.storage);
   }
 
   _renderBudget(state) {
@@ -4845,6 +5103,8 @@ class UI {
       card.classList.toggle('unaffordable',   count === 0 && !canAdd);
     }
     this._renderResearchCard();
+    const resetBtn = document.getElementById('reset-alloc-btn');
+    if (resetBtn) resetBtn.disabled = state.spentThisTurn === 0;
   }
 
   _renderResearchCard() {
@@ -4995,12 +5255,24 @@ class UI {
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
 
-    // Decisions
+    // Narrative summary of decisions
+    const narrative = this._buildTurnNarrative(entry);
+    html += `<div class="log-narrative">${narrative}</div>`;
     html += `<div class="log-text">${entry.decisions.join('; ')}</div>`;
 
     // Event notice
     if (entry.event) {
       html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+    }
+
+    // Newspaper headline
+    const headline = generateHeadline(entry, this.engine.state);
+    if (headline) {
+      html += `<div class="log-headline ${headline.tone}">
+        <div class="log-headline-masthead">${headline.masthead}</div>
+        <div class="log-headline-text">${headline.text}</div>
+        ${headline.sub ? `<div class="log-headline-sub">${headline.sub}</div>` : ''}
+      </div>`;
     }
 
     // Metric chips
@@ -5011,6 +5283,14 @@ class UI {
     html += this._chip('Soc',  Math.round(entry.snapshot.socialStability), Math.round(entry.afterSoc), false, '%');
     html += this._chip('NZ',   Math.round(entry.snapshot.netZeroProgress), Math.round(entry.afterNZ), false, '%');
     html += '</div>';
+
+    // Stakeholder commentary
+    const quote = generateStakeholderQuote(entry, this.engine.state);
+    if (quote) {
+      html += `<div class="log-stakeholder">
+        <span class="log-stakeholder-name">${quote.name}:</span> "${quote.text}"
+      </div>`;
+    }
 
     div.innerHTML = html;
     this.elLogScroll.appendChild(div);
@@ -5032,6 +5312,8 @@ class UI {
   }
 
   showEventModal(event) {
+    const card = document.getElementById('event-card');
+    if (card) card.classList.toggle('positive-event', event.severity === 'POSITIVE');
     this.elEventIcon.textContent  = event.icon;
     this.elEventTitle.textContent = event.title;
     this.elEventDesc.textContent  = event.description;
@@ -5723,6 +6005,52 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_trade_deal',
+    icon: '🌍',
+    title: 'Green Trade Offer',
+    prompt: 'The EU offers a carbon-aligned trade deal, but it requires accelerating fossil phase-out.',
+    explanation: 'A carbon-aligned trade deal opens lucrative European markets for UK clean energy exports and unlocks green investment. But the EU demands faster fossil fuel reduction — which will strand more assets and raise short-term energy costs. Rejecting the deal avoids disruption but leaves the UK more isolated.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Gas: ${Math.round(s.energy.gas)} · Stranded: ${Math.round(s.strandedAssets)}`,
+    }),
+    optA: {
+      label: '🤝 Accept the deal',
+      consequence: '+8 Financial · +5% Net Zero · Gas −6 · +10 Stranded Assets (faster fossil exit)',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 8); s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.energy.gas = Math.max(0, s.energy.gas - 6); s.strandedAssets = Math.min(100, s.strandedAssets + 10); },
+    },
+    optB: {
+      label: '🚫 Decline the offer',
+      consequence: 'No disruption · −4 Financial (trade isolation) · UK misses green export opportunity',
+      effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    condition: (s) => s.energy.gas > 15 && s.netZeroProgress >= 30,
+  },
+  {
+    id: 'mini_carbon_capture',
+    icon: '🏭',
+    title: 'Carbon Capture Opportunity',
+    prompt: 'A carbon capture and storage pilot plant is ready for approval. How do you proceed?',
+    explanation: 'Carbon capture can remove CO₂ from industrial processes and even directly from the air. A full-scale deployment is expensive but delivers significant Net Zero progress. A smaller research-only programme costs less but delays practical results by years.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🏗️ Full-scale deployment',
+      consequence: 'Costs £12bn next turn · +8% Net Zero · +5 Grid (industrial flexibility)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.gridReliability = Math.min(100, s.gridReliability + 5); },
+    },
+    optB: {
+      label: '🔬 Research programme only',
+      consequence: 'Costs £3bn next turn · +2% Net Zero · knowledge for future (no immediate grid benefit)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); },
+    },
+    condition: (s) => s.turn >= 1 && s.netZeroProgress < 90,
   },
 ];
 
