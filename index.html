@@ -3363,8 +3363,8 @@ const METRIC_TOOLTIPS = {
   },
   grid: {
     title: '⚡ Grid Reliability',
-    desc: 'A measure of whether the electricity grid can meet demand reliably. It reflects the ratio of backup capacity (nuclear, storage, gas) to intermittent renewable output.',
-    drivers: '↑ Raised by: Grid & Storage investment, nuclear capacity\n↓ Lowered by: rapid wind/solar growth without backup, heatwave demand spikes, storm damage',
+    desc: 'A measure of whether the electricity grid can meet demand reliably. It reflects the ratio of backup capacity (nuclear, storage, gas, hydrogen) to intermittent renewable output.',
+    drivers: '↑ Raised by: Grid & Storage investment, nuclear capacity, hydrogen\n↓ Lowered by: rapid wind/solar growth without backup, heatwave demand spikes, storm damage',
     threshold: 'Below 40%: cascade risk threshold — grid instability compounds and triggers blackouts. Below 50% triggers a social stability penalty.',
     thresholdGood: false,
     source: 'Based on National Grid ESO Future Energy Scenarios',
@@ -3767,6 +3767,7 @@ class GameEngine {
       e.wind    = clamp(e.wind    + et * 8,  0, 120);
       e.solar   = clamp(e.solar   + et * 6,  0, 100);
       e.gas     = clamp(e.gas     - et * 7,  0, 100);
+      e.hydrogen = clamp(e.hydrogen + et * 4 * techTree.multipliers.hydrogenGain, 0, 80);
       netZeroProgress = clamp(netZeroProgress + et * 10 * techTree.multipliers.energyNZ, 0, 100);
       strandedAssets  = clamp(strandedAssets  + et * 12, 0, 100);
       infra.energyTransition += et * 30;
@@ -3775,6 +3776,7 @@ class GameEngine {
     if (gs > 0) {
       e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
       e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
+      e.hydrogen = clamp(e.hydrogen + gs * 3 * techTree.multipliers.hydrogenGain, 0, 80);
       infra.gridAndStorage += gs * 35;
     }
     const ad = d.adaptation;
@@ -3799,7 +3801,7 @@ class GameEngine {
 
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
-    const backup          = e.nuclear + e.storage + (e.gas * 0.5);
+    const backup          = e.nuclear + e.storage + (e.gas * 0.5) + (e.hydrogen * 0.7);
     const renew           = Math.max(e.wind + e.solar, 1);
     const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
 
@@ -3985,7 +3987,7 @@ class GameEngine {
     const s = this.state;
     const e = s.energy;
     const gridFactor = 1 + (s.infrastructure.gridAndStorage / 300);
-    const backup  = e.nuclear + e.storage + (e.gas * 0.5);
+    const backup  = e.nuclear + e.storage + (e.gas * 0.5) + (e.hydrogen * 0.7);
     const renew   = Math.max(e.wind + e.solar, 1);
     const raw     = (backup / renew) * gridFactor * 50;
     s.gridReliability = this._clamp(Math.round(raw), 0, 100);
@@ -4025,9 +4027,9 @@ class GameEngine {
       e.gas = this._clamp(e.gas + 6, 0, 100);
     }
 
-    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
+    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage + e.hydrogen;
     const gasShare   = total > 0 ? e.gas / total : 0;
-    const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
+    const renewShare = total > 0 ? (e.wind + e.solar + e.hydrogen) / total : 0;
 
     let delta = difficultyMgr.preset.warmingRate + (gasShare - renewShare) * 0.22;
     delta = Math.max(delta, 0.03); // residual warming even at Net Zero
@@ -4396,11 +4398,13 @@ class UI {
     this.elSegWind    = document.getElementById('seg-wind');
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
-    this.elSegGas     = document.getElementById('seg-gas');
-    this.elLegWind    = document.getElementById('leg-wind');
-    this.elLegSolar   = document.getElementById('leg-solar');
-    this.elLegNuclear = document.getElementById('leg-nuclear');
-    this.elLegGas     = document.getElementById('leg-gas');
+    this.elSegGas      = document.getElementById('seg-gas');
+    this.elSegHydrogen = document.getElementById('seg-hydrogen');
+    this.elLegWind     = document.getElementById('leg-wind');
+    this.elLegSolar    = document.getElementById('leg-solar');
+    this.elLegNuclear  = document.getElementById('leg-nuclear');
+    this.elLegGas      = document.getElementById('leg-gas');
+    this.elLegHydrogen = document.getElementById('leg-hydrogen');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4475,6 +4479,7 @@ class UI {
         if (!payload) return;
         // Restore engine state
         Object.assign(engine.state, payload.engineState);
+        if (engine.state.energy.hydrogen === undefined) engine.state.energy.hydrogen = 0;
         // Restore tech tree
         techTree.reset();
         for (const id of payload.techPurchased) {
@@ -4932,11 +4937,13 @@ class UI {
     this.elSegWind.style.flexGrow    = e.wind;
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
-    this.elSegGas.style.flexGrow     = e.gas;
-    this.elLegWind.textContent    = Math.round(e.wind);
-    this.elLegSolar.textContent   = Math.round(e.solar);
-    this.elLegNuclear.textContent = Math.round(e.nuclear);
-    this.elLegGas.textContent     = Math.round(e.gas);
+    this.elSegGas.style.flexGrow      = e.gas;
+    this.elSegHydrogen.style.flexGrow = e.hydrogen;
+    this.elLegWind.textContent     = Math.round(e.wind);
+    this.elLegSolar.textContent    = Math.round(e.solar);
+    this.elLegNuclear.textContent  = Math.round(e.nuclear);
+    this.elLegGas.textContent      = Math.round(e.gas);
+    this.elLegHydrogen.textContent = Math.round(e.hydrogen);
   }
 
   _renderBudget(state) {
@@ -5100,7 +5107,7 @@ class UI {
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
-      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1);
+      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + state.energy.hydrogen + 1);
       const smokeOpacity = Math.max(0, (gasShare - 0.15) / 0.4);
       smokeGroup.style.opacity = smokeOpacity;
     }
@@ -5678,6 +5685,12 @@ const RESEARCH_UPGRADES = [
     desc: 'Adaptation blocks give 1.6× event damage mitigation',
     apply(m) { m.adaptMitigate = 1.6; },
   },
+  {
+    id:   'green_hydrogen',
+    name: 'Green Hydrogen Scale-up',
+    desc: 'Energy and Grid blocks give 1.5× Hydrogen output',
+    apply(m) { m.hydrogenGain = 1.5; },
+  },
 ];
 
 class TechTreeManager {
@@ -5688,6 +5701,7 @@ class TechTreeManager {
       socialGain:    1.0,
       finGain:       1.0,
       adaptMitigate: 1.0,
+      hydrogenGain:  1.0,
     };
     this._purchased = new Set();
   }
@@ -5709,7 +5723,7 @@ class TechTreeManager {
   }
 
   reset() {
-    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0, hydrogenGain:1.0 };
     this._purchased.clear();
   }
 }
