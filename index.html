@@ -36,6 +36,7 @@
   --energy-nuclear: #b39ddb;
   --energy-gas:     #ff7043;
   --energy-storage: #448aff;
+  --energy-hydrogen: #26c6da;
   --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'Courier New', Courier, monospace;
   --font-editorial: Georgia, 'Times New Roman', serif;
@@ -343,6 +344,7 @@ body {
 .energy-seg.nuclear { background: var(--energy-nuclear); }
 .energy-seg.gas     { background: var(--energy-gas); }
 .energy-seg.storage { background: var(--energy-storage); }
+.energy-seg.hydrogen { background: var(--energy-hydrogen); }
 
 #energy-mix-legend {
   display: grid;
@@ -609,6 +611,28 @@ body {
 #total-spend {
   font-weight: 700;
   color: var(--text-primary);
+}
+
+#reset-turn-btn {
+  touch-action: manipulation;
+  padding: 8px 16px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+#reset-turn-btn:hover {
+  background: var(--border-strong);
+  color: var(--text-primary);
+}
+#reset-turn-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 #end-turn-btn {
@@ -2075,6 +2099,56 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== ENDGAME TRAJECTORY CHART ===== */
+#endgame-trajectory {
+  margin: var(--gap-lg) 0;
+}
+#endgame-trajectory-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: var(--gap-md);
+  text-align: center;
+}
+#trajectory-svg {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: block;
+}
+.traj-label {
+  font-size: 9px;
+  font-family: var(--font-system);
+  fill: var(--text-muted);
+}
+.traj-axis-label {
+  font-size: 10px;
+  font-family: var(--font-system);
+  fill: var(--text-secondary);
+}
+.traj-legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-md);
+  flex-wrap: wrap;
+  margin-top: var(--gap-sm);
+}
+.traj-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.traj-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2278,6 +2352,7 @@ body { transition: filter 2s ease; }
           <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
           <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
           <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg hydrogen" id="seg-hydrogen" style="flex-grow:0"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2295,6 +2370,10 @@ body { transition: filter 2s ease; }
           <div class="legend-item">
             <div class="legend-dot" style="background:var(--energy-gas)"></div>
             <span>Gas</span><span class="legend-val" id="leg-gas">28</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--energy-hydrogen)"></div>
+            <span>H₂</span><span class="legend-val" id="leg-hydrogen">0</span>
           </div>
         </div>
       </div>
@@ -2359,9 +2438,9 @@ body { transition: filter 2s ease; }
             </div>
           </div>
         </div>
-        <div class="card-rationale">Intermittent renewables need firm backup. Batteries, pumped hydro, and smart-grid upgrades provide dispatchable capacity — allowing you to run high wind and solar shares without blackouts. Enables nuclear to function as reliable low-carbon baseload.</div>
+        <div class="card-rationale">Intermittent renewables need firm backup. Batteries, pumped hydro, smart-grid upgrades, and green hydrogen electrolysers provide dispatchable capacity — allowing you to run high wind and solar shares without blackouts.</div>
         <div class="card-effects">
-          <span class="effect-tag pos">Storage +10, Nuclear +5</span>
+          <span class="effect-tag pos">Storage +10, Nuclear +5, H₂ +3</span>
           <span class="effect-tag pos">Grid Reliability ↑</span>
           <span class="effect-tag pos">Enables high renewables</span>
         </div>
@@ -2900,6 +2979,7 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
+      <button id="reset-turn-btn" title="Reset all allocations this turn">Reset</button>
       <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
@@ -2963,6 +3043,28 @@ body { transition: filter 2s ease; }
           <div class="scenario-stat">Budget: <span>£65bn/turn</span></div>
           <div class="scenario-stat">Social Capital: <span>+20 bonus</span></div>
           <div class="scenario-stat">Financial: <span>50% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="energy_security">
+        <span class="scenario-card-icon">🛢️</span>
+        <div class="scenario-card-name">Energy Security Crisis</div>
+        <div class="scenario-card-desc">An international energy shock has spiked gas prices. The grid is under strain and public anger is rising — but the case for renewables has never been stronger.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Grid: <span>45% (critical)</span></div>
+          <div class="scenario-stat">Gas dependence: <span>+12 higher</span></div>
+          <div class="scenario-stat">Social: <span>60% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="tech_boom">
+        <span class="scenario-card-icon">🔬</span>
+        <div class="scenario-card-name">Tech Boom</div>
+        <div class="scenario-card-desc">A breakthrough in battery technology has arrived. Storage costs have plummeted — but the financial system has bet heavily on fossil futures that are now at risk.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Storage: <span>+15 head start</span></div>
+          <div class="scenario-stat">Hydrogen: <span>+8 head start</span></div>
+          <div class="scenario-stat">Stranded Assets: <span>25 (high)</span></div>
         </div>
       </div>
 
@@ -3372,6 +3474,25 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  energy_security: {
+    label: 'Energy Security Crisis',
+    apply(state) {
+      state.gridReliability = 45;
+      state.energy.gas = 40;
+      state.socialStability = 60;
+      state.socialCapital = 8;
+      state.nextTurnBudgetPenalty = 10;
+    },
+  },
+  tech_boom: {
+    label: 'Tech Boom',
+    apply(state) {
+      state.energy.storage  = Math.min(100, state.energy.storage + 15);
+      state.energy.hydrogen = Math.min(60,  state.energy.hydrogen + 8);
+      state.strandedAssets  = 25;
+      state.financialStability = 58;
+    },
+  },
 };
 
 /* ============================================================
@@ -3550,7 +3671,7 @@ class GameEngine {
       socialStability: 75,
       budget: 100,
       nextTurnBudgetPenalty: 0,
-      energy: { wind: 29, solar: 6, nuclear: 13, gas: 28, storage: 5 },
+      energy: { wind: 29, solar: 6, nuclear: 13, gas: 28, storage: 5, hydrogen: 0 },
       infrastructure: {
         energyTransition: 0,
         gridAndStorage: 0,
@@ -3653,8 +3774,9 @@ class GameEngine {
     }
     const gs = d.gridAndStorage;
     if (gs > 0) {
-      e.storage = clamp(e.storage + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
-      e.nuclear = clamp(e.nuclear + gs * 5,  0, 80);
+      e.storage  = clamp(e.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
+      e.nuclear  = clamp(e.nuclear  + gs * 5,  0, 80);
+      e.hydrogen = clamp(e.hydrogen + gs * 3,  0, 60);
       infra.gridAndStorage += gs * 35;
     }
     const ad = d.adaptation;
@@ -3679,7 +3801,7 @@ class GameEngine {
 
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
-    const backup          = e.nuclear + e.storage + (e.gas * 0.5);
+    const backup          = e.nuclear + e.storage + (e.gas * 0.5) + (e.hydrogen * 0.8);
     const renew           = Math.max(e.wind + e.solar, 1);
     const gridReliability = clamp(Math.round((backup / renew) * gridFactor * 50), 0, 100);
 
@@ -3814,6 +3936,7 @@ class GameEngine {
     if (gs > 0) {
       s.energy.storage  = this._clamp(s.energy.storage  + gs * 10 * techTree.multipliers.gridStorage, 0, 100);
       s.energy.nuclear  = this._clamp(s.energy.nuclear  + gs * 5,  0, 80);
+      s.energy.hydrogen = this._clamp(s.energy.hydrogen + gs * 3,  0, 60);
       s.infrastructure.gridAndStorage += gs * 35;
     }
 
@@ -3853,7 +3976,7 @@ class GameEngine {
     const s = this.state;
     const e = s.energy;
     const gridFactor = 1 + (s.infrastructure.gridAndStorage / 300);
-    const backup  = e.nuclear + e.storage + (e.gas * 0.5);
+    const backup  = e.nuclear + e.storage + (e.gas * 0.5) + (e.hydrogen * 0.8);
     const renew   = Math.max(e.wind + e.solar, 1);
     const raw     = (backup / renew) * gridFactor * 50;
     s.gridReliability = this._clamp(Math.round(raw), 0, 100);
@@ -3893,9 +4016,9 @@ class GameEngine {
       e.gas = this._clamp(e.gas + 6, 0, 100);
     }
 
-    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
+    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage + e.hydrogen;
     const gasShare   = total > 0 ? e.gas / total : 0;
-    const renewShare = total > 0 ? (e.wind + e.solar) / total : 0;
+    const renewShare = total > 0 ? (e.wind + e.solar + e.hydrogen) / total : 0;
 
     let delta = difficultyMgr.preset.warmingRate + (gasShare - renewShare) * 0.22;
     delta = Math.max(delta, 0.03); // residual warming even at Net Zero
@@ -4264,11 +4387,13 @@ class UI {
     this.elSegWind    = document.getElementById('seg-wind');
     this.elSegSolar   = document.getElementById('seg-solar');
     this.elSegNuclear = document.getElementById('seg-nuclear');
-    this.elSegGas     = document.getElementById('seg-gas');
-    this.elLegWind    = document.getElementById('leg-wind');
-    this.elLegSolar   = document.getElementById('leg-solar');
-    this.elLegNuclear = document.getElementById('leg-nuclear');
-    this.elLegGas     = document.getElementById('leg-gas');
+    this.elSegGas      = document.getElementById('seg-gas');
+    this.elSegHydrogen = document.getElementById('seg-hydrogen');
+    this.elLegWind     = document.getElementById('leg-wind');
+    this.elLegSolar    = document.getElementById('leg-solar');
+    this.elLegNuclear  = document.getElementById('leg-nuclear');
+    this.elLegGas      = document.getElementById('leg-gas');
+    this.elLegHydrogen = document.getElementById('leg-hydrogen');
 
     this.elBudStatus  = document.getElementById('budget-status');
     this.elBudDisplay = document.getElementById('budget-remaining-display');
@@ -4389,6 +4514,22 @@ class UI {
     if (advisorDismissBtn) {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
+      });
+    }
+
+    // Reset turn button
+    const resetBtn = document.getElementById('reset-turn-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (this.engine.state.isResolvingTurn) return;
+        const s = this.engine.state;
+        for (const cat of Object.keys(s.currentDecisions)) {
+          s.currentDecisions[cat] = 0;
+        }
+        s.spentThisTurn = 0;
+        if (this.elNoSpendWarning) this.elNoSpendWarning.classList.add('hidden');
+        this._noSpendWarned = false;
+        this.render(this.engine.getState());
       });
     }
 
@@ -4535,6 +4676,7 @@ class UI {
     this.elRestartBtn.addEventListener('click', () => {
       this.elEndgame.classList.add('hidden');
       document.getElementById('endgame-score-section')?.remove();
+      document.getElementById('endgame-trajectory')?.remove();
       document.getElementById('endgame-timeline')?.remove();
       document.getElementById('achievements-section')?.remove();
       document.getElementById('endgame-radar')?.remove();
@@ -4800,11 +4942,13 @@ class UI {
     this.elSegWind.style.flexGrow    = e.wind;
     this.elSegSolar.style.flexGrow   = e.solar;
     this.elSegNuclear.style.flexGrow = e.nuclear;
-    this.elSegGas.style.flexGrow     = e.gas;
-    this.elLegWind.textContent    = Math.round(e.wind);
-    this.elLegSolar.textContent   = Math.round(e.solar);
-    this.elLegNuclear.textContent = Math.round(e.nuclear);
-    this.elLegGas.textContent     = Math.round(e.gas);
+    this.elSegGas.style.flexGrow      = e.gas;
+    this.elSegHydrogen.style.flexGrow = e.hydrogen;
+    this.elLegWind.textContent     = Math.round(e.wind);
+    this.elLegSolar.textContent    = Math.round(e.solar);
+    this.elLegNuclear.textContent  = Math.round(e.nuclear);
+    this.elLegGas.textContent      = Math.round(e.gas);
+    this.elLegHydrogen.textContent = Math.round(e.hydrogen);
   }
 
   _renderBudget(state) {
@@ -4949,7 +5093,7 @@ class UI {
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
-      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + 1);
+      const gasShare = state.energy.gas / (state.energy.wind + state.energy.solar + state.energy.nuclear + state.energy.gas + state.energy.hydrogen + 1);
       const smokeOpacity = Math.max(0, (gasShare - 0.15) / 0.4);
       smokeGroup.style.opacity = smokeOpacity;
     }
@@ -5146,6 +5290,9 @@ class UI {
     // Build policy timeline
     const timelineHtml = this._buildPolicyTimeline(s);
 
+    // Build trajectory chart
+    const trajectoryHtml = this._buildTrajectoryChart(s);
+
     // Check achievements
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
@@ -5165,7 +5312,7 @@ class UI {
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', trajectoryHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5245,6 +5392,86 @@ class UI {
     }
     html += `</div></div>`;
     return html;
+  }
+
+  _buildTrajectoryChart(state) {
+    const data = turnHistory.data;
+    if (data.length < 2) return '';
+
+    const series = [
+      { key: 'gridReliability',    label: 'Grid',      color: '#4caf81' },
+      { key: 'financialStability', label: 'Financial',  color: '#5390d9' },
+      { key: 'socialStability',    label: 'Social',     color: '#ffd600' },
+      { key: 'netZeroProgress',    label: 'Net Zero',   color: '#448aff' },
+    ];
+
+    const w = 560, h = 200, padL = 36, padR = 16, padT = 12, padB = 28;
+    const plotW = w - padL - padR;
+    const plotH = h - padT - padB;
+    const n = data.length;
+
+    const xScale = (i) => padL + (i / (n - 1)) * plotW;
+    const yScale = (v) => padT + (1 - v / 100) * plotH;
+
+    let svg = `<svg id="trajectory-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`;
+
+    // Grid lines
+    for (const pct of [0, 25, 50, 75, 100]) {
+      const y = yScale(pct);
+      svg += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border-subtle)" stroke-width="0.5"/>`;
+      svg += `<text x="${padL - 4}" y="${y + 3}" text-anchor="end" class="traj-label">${pct}%</text>`;
+    }
+
+    // X-axis labels (years)
+    data.forEach((d, i) => {
+      const x = xScale(i);
+      svg += `<text x="${x}" y="${h - 4}" text-anchor="middle" class="traj-label">${d.year}</text>`;
+    });
+
+    // Temperature as separate scale on right (secondary axis)
+    const tempData = data.map(d => d.temperature);
+    const tempMin = 1.0, tempMax = 3.0;
+    const tempYScale = (v) => padT + (1 - (v - tempMin) / (tempMax - tempMin)) * plotH;
+
+    // Temperature line (dashed, red)
+    const tempPath = tempData.map((v, i) => `${i === 0 ? 'M' : 'L'}${xScale(i).toFixed(1)},${tempYScale(v).toFixed(1)}`).join(' ');
+    svg += `<path d="${tempPath}" fill="none" stroke="#ff7043" stroke-width="2" stroke-dasharray="6,3" opacity="0.8"/>`;
+    tempData.forEach((v, i) => {
+      svg += `<circle cx="${xScale(i).toFixed(1)}" cy="${tempYScale(v).toFixed(1)}" r="3" fill="#ff7043"/>`;
+    });
+
+    // Right-side temperature scale
+    for (const t of [1.0, 1.5, 2.0, 2.5, 3.0]) {
+      const y = tempYScale(t);
+      svg += `<text x="${w - padR + 4}" y="${y + 3}" text-anchor="start" class="traj-label" fill="#ff7043">${t.toFixed(1)}°</text>`;
+    }
+
+    // Main series lines
+    for (const s of series) {
+      const vals = data.map(d => d[s.key]);
+      const path = vals.map((v, i) => `${i === 0 ? 'M' : 'L'}${xScale(i).toFixed(1)},${yScale(v).toFixed(1)}`).join(' ');
+      svg += `<path d="${path}" fill="none" stroke="${s.color}" stroke-width="2"/>`;
+      vals.forEach((v, i) => {
+        svg += `<circle cx="${xScale(i).toFixed(1)}" cy="${yScale(v).toFixed(1)}" r="3" fill="${s.color}"/>`;
+      });
+    }
+
+    // Paris threshold line at 2.0°C
+    const parisY = tempYScale(2.0);
+    svg += `<line x1="${padL}" y1="${parisY}" x2="${w - padR}" y2="${parisY}" stroke="#ff3d00" stroke-width="1" stroke-dasharray="4,4" opacity="0.5"/>`;
+    svg += `<text x="${padL + 4}" y="${parisY - 4}" class="traj-label" fill="#ff3d00">2.0°C Paris limit</text>`;
+
+    svg += `</svg>`;
+
+    // Legend
+    let legend = `<div class="traj-legend">`;
+    for (const s of series) {
+      legend += `<div class="traj-legend-item"><div class="traj-legend-dot" style="background:${s.color}"></div>${s.label}</div>`;
+    }
+    legend += `<div class="traj-legend-item"><div class="traj-legend-dot" style="background:#ff7043"></div>Temp °C</div>`;
+    legend += `</div>`;
+
+    return `<div id="endgame-trajectory"><div id="endgame-trajectory-title">Metric Trajectory 2025–2050</div>${svg}${legend}</div>`;
   }
 
   _buildAchievementsDisplay(newlyEarned) {
@@ -5723,6 +5950,75 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_cyberattack',
+    icon: '🖥️',
+    title: 'Grid Cyber Attack',
+    prompt: 'A state-sponsored cyber attack targets the national grid control systems. How do you respond?',
+    explanation: 'As grids become more digitised and interconnected, they become vulnerable to hostile state actors. Immediate isolation protects the grid but causes managed blackouts. A full countermeasure programme costs more but hardens the grid permanently.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Storage capacity: ${Math.round(s.energy.storage)}`,
+    }),
+    optA: {
+      label: '🔌 Emergency grid isolation protocol',
+      consequence: 'No cost · −8 Grid Reliability (managed outages) · −4 Social',
+      effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 8); s.socialStability = Math.max(0, s.socialStability - 4); },
+    },
+    optB: {
+      label: '🛡️ Commission grid cyber resilience programme',
+      consequence: 'Costs £7bn next turn · −3 Grid short-term · +grid infrastructure (permanent defence)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.gridReliability = Math.max(0, s.gridReliability - 3); s.infrastructure.gridAndStorage += 15; },
+    },
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
+  {
+    id: 'mini_tech_breakthrough',
+    icon: '⚗️',
+    title: 'Green Hydrogen Breakthrough',
+    prompt: 'A UK university has achieved a major electrolyser efficiency breakthrough. How do you capitalise?',
+    explanation: 'Green hydrogen could replace gas for heating, heavy industry, and grid backup. Scaling fast costs a lot but could accelerate decarbonisation dramatically. Licensing the IP generates revenue but hands the advantage to competitors.',
+    contextFn: (s) => ({
+      label: 'Hydrogen Capacity',
+      value: `${Math.round(s.energy.hydrogen)}`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🏭 Rapid domestic scale-up',
+      consequence: 'Costs £10bn next turn · +8 Hydrogen · +5% Net Zero progress',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.energy.hydrogen = Math.min(60, s.energy.hydrogen + 8); s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); },
+    },
+    optB: {
+      label: '💰 License IP internationally',
+      consequence: '+£8bn next turn budget · +3 Hydrogen · +3 Financial Stability',
+      effect: (s) => { s.nextTurnBudgetPenalty -= 8; s.energy.hydrogen = Math.min(60, s.energy.hydrogen + 3); s.financialStability = Math.min(100, s.financialStability + 3); },
+    },
+    condition: (s) => s.energy.hydrogen > 0 || s.infrastructure.gridAndStorage > 50,
+  },
+  {
+    id: 'mini_insurance_retreat',
+    icon: '🏠',
+    title: 'Insurance Market Retreat',
+    prompt: 'Major insurers are withdrawing flood cover from coastal and low-lying areas. How do you respond?',
+    explanation: 'As climate risk increases, private insurers are repricing or withdrawing from high-risk areas entirely. This leaves millions of homeowners unprotected. A state insurance scheme costs money but prevents a property market crash. Doing nothing is free but risks financial contagion.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Property value: ${Math.round(s.propertyValue)}`,
+    }),
+    optA: {
+      label: '🏛️ Create state flood insurance scheme',
+      consequence: 'Costs £8bn next turn · protects property values · +3 Social (homeowner relief)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optB: {
+      label: '📊 Let the market reprice risk',
+      consequence: 'No cost · −12 Property Value · −5 Financial · accelerates adaptation pressure',
+      effect: (s) => { s.propertyValue = Math.max(0, s.propertyValue - 12); s.financialStability = Math.max(0, s.financialStability - 5); s.infrastructure.adaptation += 8; },
+    },
+    condition: (s) => s.temperature > 1.4 && s.infrastructure.adaptation < 80,
   },
 ];
 
