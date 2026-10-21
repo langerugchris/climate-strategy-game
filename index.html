@@ -547,6 +547,45 @@ body {
 .effect-tag.pos  { background: #0c2a1a; color: var(--status-good); }
 .effect-tag.neg  { background: #2a0e08; color: #ff7043; }
 .effect-tag.warn { background: #2a2000; color: var(--status-warn); }
+.effect-tag.info { background: #0a1a2a; color: var(--status-info); }
+
+/* ===== SYNERGY DISPLAY ===== */
+#synergy-display {
+  margin-top: var(--gap-sm);
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(76, 175, 129, 0.08), rgba(68, 138, 255, 0.08));
+  border: 1px solid var(--accent-green);
+  border-radius: var(--radius-md);
+  animation: synergy-glow 2s ease-in-out infinite alternate;
+}
+#synergy-display.hidden { display: none; }
+@keyframes synergy-glow {
+  from { border-color: var(--accent-green); }
+  to   { border-color: var(--accent-green-lt); }
+}
+#synergy-header { margin-bottom: 6px; }
+.synergy-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-green-lt);
+}
+.synergy-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.synergy-item-icon { font-size: 16px; }
+.synergy-item-name { font-weight: 600; color: var(--text-primary); }
+.synergy-item-effect {
+  font-size: 11px;
+  color: var(--accent-green-lt);
+  margin-left: auto;
+}
 
 /* ===== CARD RATIONALE ===== */
 .card-rationale {
@@ -2311,7 +2350,7 @@ body { transition: filter 2s ease; }
           <span id="budget-remaining-display">£100bn</span> remaining
         </div>
       </div>
-      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
+      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>7</kbd> to add, <kbd>Shift+1</kbd>–<kbd>7</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
     </div>
 
     <div id="investment-cards">
@@ -2469,6 +2508,39 @@ body { transition: filter 2s ease; }
         <div class="card-citation">Based on UKRI Net Zero Innovation portfolio</div>
       </div>
 
+      <!-- Transport & Land Use -->
+      <div class="investment-card" id="card-transportAndLandUse">
+        <div class="card-top">
+          <div class="card-icon">🚆</div>
+          <div class="card-info">
+            <div class="card-name">Transport &amp; Land Use</div>
+            <div class="card-sub">EVs, Public Transit, Land Management</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£25bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-transportAndLandUse" data-cat="transportAndLandUse">−</button>
+              <span class="block-count" id="count-transportAndLandUse">0</span>
+              <button class="block-btn" id="plus-transportAndLandUse" data-cat="transportAndLandUse">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">Transport is responsible for 35% of UK emissions. EV charging infrastructure, electrified rail, active travel networks, and sustainable land management — peatland restoration, afforestation — cut emissions while improving air quality and public health. Benefits build over time as networks scale.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">NZ +7/block, Social +3</span>
+          <span class="effect-tag pos">Reduces warming rate at scale</span>
+          <span class="effect-tag info">Builds transport infrastructure</span>
+        </div>
+        <div class="card-citation">Based on DfT Transport Decarbonisation Plan 2021</div>
+      </div>
+
+    </div>
+
+    <div id="synergy-display" class="hidden">
+      <div id="synergy-header">
+        <span class="synergy-label">Active Synergies</span>
+      </div>
+      <div id="synergy-list"></div>
     </div>
 
     <!-- SCENE VISUALISATION -->
@@ -3096,10 +3168,62 @@ const BLOCK_COSTS = {
   adaptation:          25,
   socialSupport:       20,
   financialResilience: 30,
+  transportAndLandUse: 25,
   research:            15,
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
+
+const POLICY_SYNERGIES = [
+  {
+    id: 'green_grid',
+    name: 'Green Grid',
+    icon: '⚡',
+    requires: { energyTransition: 1, gridAndStorage: 1 },
+    description: 'Coordinated energy + storage investment unlocks efficient grid integration',
+    effects: { gridReliability: 5, netZeroProgress: 3 },
+  },
+  {
+    id: 'just_transition',
+    name: 'Just Transition',
+    icon: '🤝',
+    requires: { energyTransition: 1, socialSupport: 1 },
+    description: 'Pairing decarbonisation with social support reduces political backlash',
+    effects: { socialStability: 6, socialCapital: 3 },
+  },
+  {
+    id: 'green_finance',
+    name: 'Green Finance Package',
+    icon: '💚',
+    requires: { financialResilience: 1, research: 1 },
+    description: 'R&D-backed green finance attracts private capital and innovation',
+    effects: { financialStability: 5, netZeroProgress: 2 },
+  },
+  {
+    id: 'resilient_communities',
+    name: 'Resilient Communities',
+    icon: '🏘️',
+    requires: { adaptation: 1, socialSupport: 1 },
+    description: 'Community-led adaptation builds both physical and social resilience',
+    effects: { socialStability: 4, socialCapital: 5 },
+  },
+  {
+    id: 'integrated_transport',
+    name: 'Integrated Transport',
+    icon: '🚄',
+    requires: { transportAndLandUse: 1, gridAndStorage: 1 },
+    description: 'Electrified transport requires grid storage — combining them maximises impact',
+    effects: { netZeroProgress: 5, gridReliability: 3 },
+  },
+  {
+    id: 'full_spectrum',
+    name: 'Full Spectrum Response',
+    icon: '🌟',
+    requires: { energyTransition: 1, adaptation: 1, transportAndLandUse: 1 },
+    description: 'A comprehensive approach covering energy, transport, and adaptation',
+    effects: { netZeroProgress: 4, socialStability: 3, temperature: -0.02 },
+  },
+];
 
 const RANDOM_EVENTS = [
   {
@@ -3557,6 +3681,7 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        transportAndLandUse: 0,
       },
       strandedAssets: 0,
       propertyValue: 100,
@@ -3567,6 +3692,7 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        transportAndLandUse: 0,
         research: 0,
       },
       spentThisTurn: 0,
@@ -3676,6 +3802,12 @@ class GameEngine {
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
     }
+    const tl = d.transportAndLandUse;
+    if (tl > 0) {
+      netZeroProgress = clamp(netZeroProgress + tl * 7, 0, 100);
+      socialStability = clamp(socialStability + tl * 3, 0, 100);
+      infra.transportAndLandUse = (infra.transportAndLandUse || 0) + tl * 25;
+    }
 
     // Mirror _recalcGrid
     const gridFactor      = 1 + (infra.gridAndStorage / 300);
@@ -3698,7 +3830,17 @@ class GameEngine {
     const tempDrag     = Math.max(0, (s.temperature - 1.3) * 8);
     socialStability    = clamp(Math.round(62 + capBonus + supBonus - gridPenalty - finPenalty - energyBurden - tempDrag), 0, 100);
 
-    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress) };
+    // Check synergies
+    const activeSynergies = [];
+    for (const syn of POLICY_SYNERGIES) {
+      let met = true;
+      for (const [cat, minBlocks] of Object.entries(syn.requires)) {
+        if ((d[cat] || 0) < minBlocks) { met = false; break; }
+      }
+      if (met) activeSynergies.push(syn);
+    }
+
+    return { gridReliability, financialStability, socialStability, netZeroProgress: Math.round(netZeroProgress), activeSynergies };
   }
 
   resolveTurn() {
@@ -3779,7 +3921,7 @@ class GameEngine {
     // Phase 12: Advance turn
     s.turn++;
     s.year += 5;
-    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, transportAndLandUse:0, research:0 };
     s.spentThisTurn = 0;
 
     // Recalculate budget for next turn
@@ -3842,11 +3984,43 @@ class GameEngine {
       s.infrastructure.financialResilience += fr * 30;
     }
 
+    // Transport & Land Use
+    const tl = d.transportAndLandUse;
+    if (tl > 0) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + tl * 7, 0, 100);
+      s.socialStability = this._clamp(s.socialStability + tl * 3, 0, 100);
+      s.infrastructure.transportAndLandUse += tl * 25;
+    }
+
     // Research — purchases next TechTree upgrade per block allocated
     const rs = d.research;
     for (let i = 0; i < rs; i++) {
       techTree.purchase();
     }
+
+    // Apply synergy bonuses
+    const activeSynergies = [];
+    for (const syn of POLICY_SYNERGIES) {
+      let met = true;
+      for (const [cat, minBlocks] of Object.entries(syn.requires)) {
+        if ((d[cat] || 0) < minBlocks) { met = false; break; }
+      }
+      if (met) {
+        activeSynergies.push(syn);
+        for (const [key, val] of Object.entries(syn.effects)) {
+          if (key === 'temperature') {
+            s.temperature = Math.round((s.temperature + val) * 100) / 100;
+          } else if (key === 'socialCapital') {
+            s.socialCapital = this._clamp(s.socialCapital + val, 0, 60);
+          } else if (key === 'netZeroProgress') {
+            s.netZeroProgress = this._clamp(s.netZeroProgress + val, 0, 100);
+          } else if (s[key] !== undefined) {
+            s[key] = this._clamp(s[key] + val, 0, 100);
+          }
+        }
+      }
+    }
+    s._activeSynergies = activeSynergies;
   }
 
   _recalcGrid() {
@@ -3906,6 +4080,7 @@ class GameEngine {
     }
 
     if (s.netZeroAchieved) delta *= 0.45;
+    if (s.infrastructure.transportAndLandUse > 40) delta *= 0.9;
     s.temperature = Math.round((s.temperature + delta) * 100) / 100;
   }
 
@@ -4002,6 +4177,7 @@ class GameEngine {
     if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)`);
     if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
     if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
+    if (d.transportAndLandUse > 0) out.push(`Transport & Land Use ×${d.transportAndLandUse} (£${d.transportAndLandUse * 25}bn)`);
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
@@ -4143,6 +4319,9 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
+  if (s.infrastructure.transportAndLandUse > 40) {
+    parts.push(`The electrification of transport — from comprehensive EV charging networks to high-speed rail — cut a third of the UK's emissions while improving air quality in cities and connecting rural communities. Peatland restoration and urban green spaces provided natural carbon sinks.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4169,6 +4348,9 @@ function buildHotHouseNarrative(s) {
 
   if (s.energy.gas > 30) {
     parts.push(`Gas remained a dominant part of the energy mix throughout the period. Each year of inaction allowed fossil infrastructure to entrench further, making the eventual transition both more expensive and more disruptive.`);
+  }
+  if (s.infrastructure.transportAndLandUse < 20) {
+    parts.push(`Transport decarbonisation was largely neglected. Diesel and petrol vehicles continued to dominate roads, accounting for a growing share of total emissions as other sectors partially decarbonised.`);
   }
   parts.push(`Insurance markets are contracting as flood and heat risk becomes uninsurable across large areas of the UK. Property values in coastal and low-lying areas have collapsed. The NHS faces unprecedented pressure from heat-related illness and infectious disease spread.`);
 
@@ -4318,7 +4500,7 @@ class UI {
     });
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
-    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
+    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research', '7':'transportAndLandUse' };
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
@@ -4615,9 +4797,29 @@ class UI {
     this._renderEnergyMix(state);
     this._renderBudget(state);
     this._renderCards(state);
+    this._renderSynergies(state);
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+  }
+
+  _renderSynergies(state) {
+    const proj = this.engine.getProjection();
+    const synergyDisplay = document.getElementById('synergy-display');
+    const synergyList = document.getElementById('synergy-list');
+    if (!synergyDisplay || !synergyList) return;
+    if (proj.activeSynergies && proj.activeSynergies.length > 0) {
+      synergyDisplay.classList.remove('hidden');
+      synergyList.innerHTML = proj.activeSynergies.map(syn => {
+        const effectStr = Object.entries(syn.effects).map(([k,v]) => {
+          const labels = { gridReliability:'Grid', netZeroProgress:'NZ', socialStability:'Social', financialStability:'Financial', socialCapital:'Trust', temperature:'Temp' };
+          return `${labels[k]||k} ${v>0?'+':''}${v}`;
+        }).join(', ');
+        return `<div class="synergy-item"><span class="synergy-item-icon">${syn.icon}</span><span class="synergy-item-name">${syn.name}</span><span class="synergy-item-effect">${effectStr}</span></div>`;
+      }).join('');
+    } else {
+      synergyDisplay.classList.add('hidden');
+    }
   }
 
   _renderHeader(state) {
@@ -5723,6 +5925,75 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_carbon_border',
+    icon: '🌐',
+    title: 'EU Carbon Border Tax',
+    prompt: 'The EU has imposed a carbon border adjustment. UK exports face tariffs unless you act.',
+    explanation: 'The EU\'s Carbon Border Adjustment Mechanism (CBAM) taxes imports from countries with weaker carbon pricing. The UK can mirror the policy — accelerating domestic decarbonisation but raising costs for businesses — or negotiate an exemption by aligning carbon markets, which takes time and diplomatic capital.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '🏭 Mirror EU carbon border tax',
+      consequence: 'No budget cost · +6% Net Zero (stronger carbon pricing) · −4 Financial (transition costs)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    optB: {
+      label: '🤝 Negotiate carbon market alignment',
+      consequence: 'Costs £4bn next turn · +3 Financial (trade preserved) · +2% Net Zero (gradual alignment)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.financialStability = Math.min(100, s.financialStability + 3); s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); },
+    },
+    condition: (s) => s.netZeroProgress > 20 && s.netZeroProgress < 80,
+  },
+  {
+    id: 'mini_cop_summit',
+    icon: '🏛️',
+    title: 'COP Climate Summit',
+    prompt: 'The UK is under pressure at COP to make ambitious new commitments.',
+    explanation: 'International climate summits create diplomatic pressure. Ambitious pledges boost global cooperation and accelerate domestic action — but over-promising risks credibility if targets aren\'t met. A cautious approach preserves flexibility but weakens the UK\'s climate leadership position and international standing.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(2)}°C`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '🎯 Announce ambitious new targets',
+      consequence: '+8% Net Zero progress · −5 Financial (accelerated investment needed) · global cooperation boost',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.financialStability = Math.max(0, s.financialStability - 5); s.socialCapital = Math.min(60, s.socialCapital + 2); },
+    },
+    optB: {
+      label: '📋 Reaffirm existing commitments only',
+      consequence: 'No immediate cost · −2 Social Capital (perceived as lagging) · steady course maintained',
+      effect: (s) => { s.socialCapital = Math.max(0, s.socialCapital - 2); },
+    },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'mini_supply_chain',
+    icon: '🔗',
+    title: 'Critical Minerals Shortage',
+    prompt: 'Global supply chain disruption threatens battery and solar panel production.',
+    explanation: 'The green transition depends on lithium, cobalt, and rare earth minerals concentrated in a few countries. A shortage slows renewable deployment. You can stockpile at high cost to maintain momentum, or diversify supply chains which is cheaper but slows deployment this period while building resilience for the future.',
+    contextFn: (s) => ({
+      label: 'Energy Storage',
+      value: `${Math.round(s.energy.storage)}`,
+      note: `Grid Reliability: ${Math.round(s.gridReliability)}%`,
+    }),
+    optA: {
+      label: '📦 Emergency mineral stockpiling',
+      consequence: 'Costs £12bn next turn · maintains deployment pace · no long-term supply fix',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; },
+    },
+    optB: {
+      label: '🔄 Diversify supply chains & invest in recycling',
+      consequence: 'Costs £5bn next turn · −4 Storage short-term · +adaptation infrastructure (supply resilience)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.energy.storage = Math.max(0, s.energy.storage - 4); s.infrastructure.adaptation += 10; },
+    },
+    condition: (s) => s.energy.storage > 10 || s.infrastructure.energyTransition > 30,
   },
 ];
 
