@@ -5230,6 +5230,7 @@ class UI {
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
+    effectsMgr.updateWeatherParticles(state.temperature);
   }
 
   _renderHeader(state) {
@@ -5603,7 +5604,7 @@ class UI {
     const tempDelta = entry.afterTemp - entry.snapshot.temperature;
     const socDelta  = entry.afterSoc  - entry.snapshot.socialStability;
     const overallGood = socDelta > 0 && tempDelta < 0.15;
-    const evtClass = entry.event ? (entry.eventPositive ? 'good' : 'event') : (overallGood ? 'good' : 'warn');
+    const evtClass = entry.event ? (entry.eventPositive ? 'positive' : 'event') : (overallGood ? 'good' : 'warn');
     div.className = 'log-entry ' + evtClass;
 
     let html = `<div class="log-year">${entry.year}–${entry.year + 5}</div>`;
@@ -6116,6 +6117,243 @@ class EffectsManager {
       const patterns = { light: [15], medium: [35], heavy: [55, 25, 55] };
       navigator.vibrate(patterns[style] || [35]);
     }
+  }
+
+  updateWeatherParticles(temperature) {
+    const svg = document.getElementById('scene-svg');
+    if (!svg) return;
+    let group = document.getElementById('weather-particles');
+    if (!group) {
+      group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      group.id = 'weather-particles';
+      svg.appendChild(group);
+    }
+    while (group.firstChild) group.removeChild(group.firstChild);
+
+    if (temperature < 1.5) {
+      for (let i = 0; i < 18; i++) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        const x = Math.random() * 800;
+        const y = Math.random() * 140;
+        line.setAttribute('x1', x);
+        line.setAttribute('y1', y);
+        line.setAttribute('x2', x - 2);
+        line.setAttribute('y2', y + 12);
+        line.setAttribute('stroke', '#7ec8e3');
+        line.setAttribute('stroke-width', '1');
+        line.setAttribute('opacity', '0');
+        const style = `animation: rain-fall ${1.2 + Math.random() * 0.8}s linear ${Math.random() * 2}s infinite`;
+        line.setAttribute('style', style);
+        group.appendChild(line);
+      }
+    } else if (temperature >= 2.0) {
+      for (let i = 0; i < 6; i++) {
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', 80 + i * 120);
+        rect.setAttribute('y', '140');
+        rect.setAttribute('width', '80');
+        rect.setAttribute('height', '6');
+        rect.setAttribute('rx', '3');
+        rect.setAttribute('fill', '#ff6b35');
+        rect.setAttribute('opacity', '0');
+        const style = `animation: haze-pulse ${3 + Math.random() * 2}s ease-in-out ${Math.random() * 2}s infinite`;
+        rect.setAttribute('style', style);
+        group.appendChild(rect);
+      }
+      for (let i = 0; i < 10; i++) {
+        const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        ellipse.setAttribute('cx', Math.random() * 800);
+        ellipse.setAttribute('cy', 120 + Math.random() * 40);
+        ellipse.setAttribute('rx', 30 + Math.random() * 20);
+        ellipse.setAttribute('ry', '3');
+        ellipse.setAttribute('fill', '#ff8c42');
+        ellipse.setAttribute('opacity', '0');
+        const style = `animation: heat-shimmer ${2.5 + Math.random() * 1.5}s ease-in-out ${Math.random() * 2}s infinite`;
+        ellipse.setAttribute('style', style);
+        group.appendChild(ellipse);
+      }
+    } else {
+      for (let i = 0; i < 8; i++) {
+        const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        ellipse.setAttribute('cx', Math.random() * 800);
+        ellipse.setAttribute('cy', 130 + Math.random() * 30);
+        ellipse.setAttribute('rx', 25 + Math.random() * 15);
+        ellipse.setAttribute('ry', '2');
+        ellipse.setAttribute('fill', '#ffb347');
+        ellipse.setAttribute('opacity', '0');
+        const style = `animation: heat-shimmer ${3 + Math.random() * 2}s ease-in-out ${Math.random() * 2}s infinite`;
+        ellipse.setAttribute('style', style);
+        group.appendChild(ellipse);
+      }
+    }
+  }
+}
+
+/* ============================================================
+   MODULE: TUTORIAL SYSTEM
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._steps = [
+      {
+        target: '#metrics-panel',
+        text: 'These are your key metrics. Keep temperature low while maintaining grid reliability, financial stability, and social cohesion. Falling below critical thresholds triggers cascading crises.',
+        arrow: 'right',
+      },
+      {
+        target: '#card-energyTransition',
+        text: 'Allocate investment blocks to shape the UK\'s energy transition. Each block costs budget — hover cards to see effects. You can assign up to 2 blocks per category.',
+        arrow: 'left',
+      },
+      {
+        target: '#budget-remaining-display',
+        text: 'Your budget is limited each term. Spend wisely — unspent funds don\'t carry over, but overspending leaves you exposed to crises.',
+        arrow: 'top',
+      },
+      {
+        target: '#end-turn-btn',
+        text: 'When you\'re ready, end the turn to advance 5 years. Random events may occur, and your decisions will shape the UK\'s climate trajectory through 2050.',
+        arrow: 'top',
+      },
+      {
+        target: '#scene-section',
+        text: 'The landscape reflects your choices — watch it change as the climate warms or cools. Good luck, Prime Minister!',
+        arrow: 'top',
+      },
+    ];
+    this._currentStep = 0;
+    this._overlay = null;
+    this._tooltip = null;
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem('uk_climate_tutorial_seen'); }
+    catch { return false; }
+  }
+
+  start() {
+    if (!this.shouldShow()) return;
+    this._currentStep = 0;
+    this._createOverlay();
+    this._showStep();
+  }
+
+  _createOverlay() {
+    this._overlay = document.createElement('div');
+    this._overlay.className = 'tutorial-overlay';
+    this._overlay.addEventListener('click', (e) => {
+      if (e.target === this._overlay) this._next();
+    });
+    document.body.appendChild(this._overlay);
+
+    this._tooltip = document.createElement('div');
+    this._tooltip.className = 'tutorial-tooltip';
+    document.body.appendChild(this._tooltip);
+  }
+
+  _showStep() {
+    const step = this._steps[this._currentStep];
+    if (!step) { this._complete(); return; }
+
+    const target = document.querySelector(step.target);
+    if (!target) { this._next(); return; }
+
+    target.style.position = target.style.position || 'relative';
+    target.style.zIndex = '1501';
+    target.style.pointerEvents = 'none';
+
+    this._tooltip.innerHTML = `
+      <div class="tutorial-step-counter">Step ${this._currentStep + 1} of ${this._steps.length}</div>
+      <div class="tutorial-text">${step.text}</div>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" id="tutorial-skip">Skip tutorial</button>
+        <button class="tutorial-next-btn" id="tutorial-next">${this._currentStep < this._steps.length - 1 ? 'Next' : 'Got it!'}</button>
+      </div>
+      <div class="tutorial-arrow arrow-${step.arrow}"></div>
+    `;
+
+    const rect = target.getBoundingClientRect();
+    const tipRect = this._tooltip.getBoundingClientRect();
+
+    let top, left;
+    if (step.arrow === 'right') {
+      top = rect.top + rect.height / 2 - tipRect.height / 2;
+      left = rect.right + 16;
+    } else if (step.arrow === 'left') {
+      top = rect.top + rect.height / 2 - tipRect.height / 2;
+      left = rect.left - tipRect.width - 16;
+    } else if (step.arrow === 'top') {
+      top = rect.bottom + 16;
+      left = rect.left + rect.width / 2 - tipRect.width / 2;
+    } else {
+      top = rect.top - tipRect.height - 16;
+      left = rect.left + rect.width / 2 - tipRect.width / 2;
+    }
+
+    left = Math.max(16, Math.min(left, window.innerWidth - tipRect.width - 16));
+    top = Math.max(16, Math.min(top, window.innerHeight - tipRect.height - 16));
+
+    this._tooltip.style.left = left + 'px';
+    this._tooltip.style.top = top + 'px';
+
+    const arrowEl = this._tooltip.querySelector('.tutorial-arrow');
+    if (arrowEl) {
+      if (step.arrow === 'right') {
+        arrowEl.style.left = '-7px';
+        arrowEl.style.top = '50%';
+        arrowEl.style.borderRight = 'none';
+        arrowEl.style.borderTop = 'none';
+      } else if (step.arrow === 'left') {
+        arrowEl.style.right = '-7px';
+        arrowEl.style.top = '50%';
+        arrowEl.style.borderLeft = 'none';
+        arrowEl.style.borderBottom = 'none';
+      } else if (step.arrow === 'top') {
+        arrowEl.style.top = '-7px';
+        arrowEl.style.left = '50%';
+        arrowEl.style.borderBottom = 'none';
+        arrowEl.style.borderRight = 'none';
+      } else {
+        arrowEl.style.bottom = '-7px';
+        arrowEl.style.left = '50%';
+        arrowEl.style.borderTop = 'none';
+        arrowEl.style.borderLeft = 'none';
+      }
+    }
+
+    document.getElementById('tutorial-next').addEventListener('click', () => this._next());
+    document.getElementById('tutorial-skip').addEventListener('click', () => this._complete());
+  }
+
+  _clearHighlight() {
+    const step = this._steps[this._currentStep];
+    if (!step) return;
+    const target = document.querySelector(step.target);
+    if (target) {
+      target.style.zIndex = '';
+      target.style.pointerEvents = '';
+    }
+  }
+
+  _next() {
+    this._clearHighlight();
+    this._currentStep++;
+    if (this._currentStep >= this._steps.length) {
+      this._complete();
+    } else {
+      this._showStep();
+    }
+  }
+
+  _complete() {
+    this._clearHighlight();
+    if (this._overlay && this._overlay.parentNode) this._overlay.remove();
+    if (this._tooltip && this._tooltip.parentNode) this._tooltip.remove();
+    this._overlay = null;
+    this._tooltip = null;
+    try { localStorage.setItem('uk_climate_tutorial_seen', '1'); }
+    catch {}
   }
 }
 
@@ -6778,8 +7016,12 @@ const sceneSection = document.getElementById('scene-section');
 const gameMain     = document.getElementById('game-main');
 if (sceneSection && gameMain) gameMain.after(sceneSection);
 
+const tutorialMgr = new TutorialManager();
+
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+tutorialMgr.start();
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
