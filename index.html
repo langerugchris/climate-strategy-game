@@ -1785,7 +1785,7 @@ body { transition: filter 2s ease; }
 }
 
 /* ===== WEATHER PARTICLES ===== */
-@keyframes rain-fall {
+@keyframes svg-rain-fall {
   0%   { transform: translateY(-20px); opacity: 0; }
   10%  { opacity: 0.6; }
   90%  { opacity: 0.6; }
@@ -3970,146 +3970,6 @@ class TurnHistory {
 
 const turnHistory = new TurnHistory();
 
-/* ============================================================
-   TUTORIAL SYSTEM
-============================================================ */
-
-class TutorialManager {
-  constructor() {
-    this._KEY = 'uk_climate_tutorial_seen';
-    this._currentStep = 0;
-    this._overlay = null;
-    this._tooltip = null;
-    this._highlightedEl = null;
-    this._steps = [
-      {
-        target: '#metrics-panel',
-        text: 'These are your <strong>national indicators</strong> — temperature, grid reliability, financial and social stability. Keep them balanced to avoid a crisis. Hover any metric name for a detailed explanation.',
-        position: 'right',
-      },
-      {
-        target: '#card-energyTransition',
-        text: 'This is an <strong>investment card</strong>. Use the + and − buttons to allocate blocks of spending. Energy Transition builds wind and solar — but beware, it creates stranded fossil assets.',
-        position: 'left',
-      },
-      {
-        target: '#card-gridAndStorage',
-        text: '<strong>Grid & Storage</strong> keeps the lights on. Without storage and nuclear backup, a grid dominated by wind and solar becomes unreliable. Balance is key.',
-        position: 'left',
-      },
-      {
-        target: '#budget-status',
-        text: 'Your <strong>budget</strong> is limited each turn. Spend wisely — you can\'t invest in everything. Prioritise based on your most urgent risks.',
-        position: 'below',
-      },
-      {
-        target: '#end-turn-btn',
-        text: 'When you\'re ready, press <strong>End Turn</strong> to advance 5 years. You\'ll see a simulation of what happens — including possible climate events and tough decisions. Good luck, Minister.',
-        position: 'above',
-      },
-    ];
-  }
-
-  hasSeen() {
-    try { return localStorage.getItem(this._KEY) === '1'; } catch { return false; }
-  }
-
-  _markSeen() {
-    try { localStorage.setItem(this._KEY, '1'); } catch {}
-  }
-
-  start() {
-    if (this.hasSeen()) return;
-    this._currentStep = 0;
-    this._createOverlay();
-    this._showStep();
-  }
-
-  _createOverlay() {
-    this._overlay = document.createElement('div');
-    this._overlay.id = 'tutorial-overlay';
-    this._overlay.className = 'active';
-    document.body.appendChild(this._overlay);
-  }
-
-  _showStep() {
-    const step = this._steps[this._currentStep];
-    if (!step) { this._finish(); return; }
-
-    // Remove previous highlight
-    if (this._highlightedEl) this._highlightedEl.classList.remove('tutorial-highlight');
-    if (this._tooltip) this._tooltip.remove();
-
-    // Highlight target
-    const target = document.querySelector(step.target);
-    if (target) {
-      target.classList.add('tutorial-highlight');
-      this._highlightedEl = target;
-    }
-
-    // Create tooltip
-    this._tooltip = document.createElement('div');
-    this._tooltip.className = 'tutorial-tooltip';
-    this._tooltip.innerHTML = `
-      <div class="tutorial-step-counter">Step ${this._currentStep + 1} of ${this._steps.length}</div>
-      <div class="tutorial-text">${step.text}</div>
-      <div class="tutorial-actions">
-        <button class="tutorial-skip-btn">Skip tutorial</button>
-        <button class="tutorial-next-btn">${this._currentStep < this._steps.length - 1 ? 'Next' : 'Start Playing'}</button>
-      </div>
-    `;
-    document.body.appendChild(this._tooltip);
-
-    // Position tooltip near target
-    if (target) {
-      const rect = target.getBoundingClientRect();
-      const tipW = 320;
-      const tipH = this._tooltip.offsetHeight;
-
-      if (step.position === 'right') {
-        this._tooltip.style.left = Math.min(rect.right + 12, window.innerWidth - tipW - 16) + 'px';
-        this._tooltip.style.top = Math.max(rect.top, 16) + 'px';
-      } else if (step.position === 'left') {
-        this._tooltip.style.left = Math.max(rect.left - tipW - 12, 16) + 'px';
-        this._tooltip.style.top = Math.max(rect.top, 16) + 'px';
-      } else if (step.position === 'below') {
-        this._tooltip.style.left = Math.max(rect.left, 16) + 'px';
-        this._tooltip.style.top = (rect.bottom + 12) + 'px';
-      } else {
-        this._tooltip.style.left = Math.max(rect.left, 16) + 'px';
-        this._tooltip.style.top = Math.max(rect.top - tipH - 12, 16) + 'px';
-      }
-
-      // Mobile fallback: if tooltip goes off screen, center it
-      const tipRect = this._tooltip.getBoundingClientRect();
-      if (tipRect.right > window.innerWidth || tipRect.left < 0) {
-        this._tooltip.style.left = '50%';
-        this._tooltip.style.transform = 'translateX(-50%)';
-      }
-    }
-
-    // Wire buttons
-    this._tooltip.querySelector('.tutorial-next-btn').addEventListener('click', () => {
-      this._currentStep++;
-      this._showStep();
-    });
-    this._tooltip.querySelector('.tutorial-skip-btn').addEventListener('click', () => {
-      this._finish();
-    });
-  }
-
-  _finish() {
-    this._markSeen();
-    if (this._highlightedEl) this._highlightedEl.classList.remove('tutorial-highlight');
-    if (this._tooltip) this._tooltip.remove();
-    if (this._overlay) this._overlay.remove();
-    this._overlay = null;
-    this._tooltip = null;
-    this._highlightedEl = null;
-  }
-}
-
-const tutorialMgr = new TutorialManager();
 
 /* ============================================================
    GAME ENGINE
@@ -6142,7 +6002,7 @@ class EffectsManager {
         line.setAttribute('stroke', '#7ec8e3');
         line.setAttribute('stroke-width', '1');
         line.setAttribute('opacity', '0');
-        const style = `animation: rain-fall ${1.2 + Math.random() * 0.8}s linear ${Math.random() * 2}s infinite`;
+        const style = `animation: svg-rain-fall ${1.2 + Math.random() * 0.8}s linear ${Math.random() * 2}s infinite`;
         line.setAttribute('style', style);
         group.appendChild(line);
       }
@@ -7021,7 +6881,14 @@ const tutorialMgr = new TutorialManager();
 const ui = new UI(engine);
 ui.render(engine.getState());
 
-tutorialMgr.start();
+setTimeout(() => {
+  const hookScreen = document.getElementById('hook-screen');
+  const scenarioScreen = document.getElementById('scenario-screen');
+  if ((!hookScreen || hookScreen.classList.contains('hidden')) &&
+      (!scenarioScreen || scenarioScreen.classList.contains('hidden'))) {
+    tutorialMgr.start();
+  }
+}, 600);
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
