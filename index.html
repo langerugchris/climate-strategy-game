@@ -792,6 +792,14 @@ body {
 
 #event-dismiss-btn:hover { background: var(--accent-blue-lt); }
 
+/* ===== POSITIVE EVENT VARIANT ===== */
+#event-card.event-positive {
+  border-color: var(--status-good);
+}
+#event-card.event-positive #event-title-display {
+  color: var(--status-good);
+}
+
 /* ===== END GAME OVERLAY ===== */
 #endgame-overlay {
   position: fixed;
@@ -1604,6 +1612,51 @@ body { transition: filter 2s ease; }
   margin-bottom: 4px;
 }
 
+/* ===== NEWSPAPER HEADLINE ===== */
+.log-headline {
+  background: linear-gradient(135deg, #1a1d2e 0%, #0f1220 100%);
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+.log-headline-masthead {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 4px;
+}
+.log-headline-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-editorial);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+.log-headline-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-editorial);
+  line-height: 1.5;
+  font-style: italic;
+}
+.log-headline.positive {
+  border-left-color: var(--status-good);
+}
+.log-headline.negative {
+  border-left-color: var(--status-danger);
+}
+.log-headline.neutral {
+  border-left-color: var(--status-info);
+}
+
 /* ===== SETTINGS BUTTON ===== */
 #settings-btn {
   background: none;
@@ -1868,7 +1921,7 @@ body { transition: filter 2s ease; }
 }
 #scenario-screen.hidden { display: none; }
 #scenario-content {
-  max-width: 640px;
+  max-width: 780px;
   width: 100%;
   text-align: center;
 }
@@ -2966,6 +3019,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_island">
+        <span class="scenario-card-icon">🏭</span>
+        <div class="scenario-card-name">Energy Island</div>
+        <div class="scenario-card-desc">The UK doubled down on North Sea gas for energy independence. The grid is stable — but the transition hasn't started and stranded asset risk is enormous.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Gas: <span>45 (dominant)</span></div>
+          <div class="scenario-stat">Net Zero: <span>15%</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="climate_emergency">
+        <span class="scenario-card-icon">🚨</span>
+        <div class="scenario-card-name">Climate Emergency</div>
+        <div class="scenario-card-desc">Parliament declared a climate emergency. The public mandate is strong and early progress has been made — but financial markets are nervous about the pace of change.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£90bn/turn</span></div>
+          <div class="scenario-stat">Net Zero: <span>45%</span></div>
+          <div class="scenario-stat">Financial: <span>58% (strained)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3166,6 +3241,67 @@ const RANDOM_EVENTS = [
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
+  },
+];
+
+const POSITIVE_EVENTS = [
+  {
+    id: 'SOLAR_BREAKTHROUGH', type: 'TECH', severity: 'POSITIVE', icon: '🔬',
+    title: 'Perovskite Solar Breakthrough',
+    description: 'UK-funded research produces a commercially viable perovskite solar cell with 40% efficiency. Manufacturing costs halve overnight.',
+    story: 'Professor Amara Osei at Imperial College unveiled the prototype to stunned silence from the audience. "We expected 30% efficiency," she told journalists. "The physics surprised us." Within six months, three UK factories had retooled.',
+    effects: { netZeroProgress: 8 },
+    energyBonus: { solar: 10 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.energyTransition > 30,
+  },
+  {
+    id: 'GREEN_BOND_BOOM', type: 'FINANCIAL', severity: 'POSITIVE', icon: '📈',
+    title: 'Global Green Bond Boom',
+    description: 'International investors flood UK green bonds after strong climate policy signals. Sovereign borrowing costs fall.',
+    story: 'The Bank of England\'s quarterly review noted a "remarkable inversion" — UK green gilts now traded at a premium to conventional government debt. "Markets are pricing climate credibility," said the Governor.',
+    effects: { financialStability: 10 },
+    infraDamage: false, budgetPenaltyNext: -15,
+    condition: (s) => s.netZeroProgress > 40 && s.financialStability > 50,
+  },
+  {
+    id: 'COMMUNITY_ENERGY', type: 'SOCIAL', severity: 'POSITIVE', icon: '🏘️',
+    title: 'Community Energy Revolution',
+    description: 'Local energy cooperatives surge across the UK. Communities generate their own power and share the revenue.',
+    story: 'In Todmorden, West Yorkshire, the "Incredible Energy" cooperative installed 400 rooftop solar panels in six weeks. Monthly dividends now exceed the old electricity bills. "It\'s ours," said founder Lin Okonkwo. "That\'s the difference."',
+    effects: { socialStability: 8 },
+    energyBonus: { solar: 4, wind: 3 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.socialCapital > 8 && s.energy.solar > 10,
+  },
+  {
+    id: 'BATTERY_LEAP', type: 'TECH', severity: 'POSITIVE', icon: '🔋',
+    title: 'Solid-State Battery Mass Production',
+    description: 'A Sunderland gigafactory begins mass-producing solid-state batteries at half the cost of lithium-ion. Grid storage economics transformed.',
+    story: 'The former Nissan supply chain pivoted to battery production in 18 months. "Same workforce, same precision, different product," said plant manager David Obi. Two thousand jobs preserved; grid storage capacity doubled in a year.',
+    effects: { gridReliability: 12 },
+    energyBonus: { storage: 12 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
+  {
+    id: 'INTL_CLIMATE_DEAL', type: 'DIPLOMATIC', severity: 'POSITIVE', icon: '🌍',
+    title: 'Historic International Climate Deal',
+    description: 'Major economies sign a binding agreement to phase out fossil fuel subsidies. Carbon border adjustment mechanisms level the playing field for UK industry.',
+    story: 'After 72 hours of negotiations in Geneva, the UK\'s chief negotiator emerged at 3am. "This changes the economics of every coal plant and gas field on Earth," she said quietly. Markets opened green.',
+    effects: { financialStability: 6, netZeroProgress: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.netZeroProgress > 30,
+  },
+  {
+    id: 'HEAT_PUMP_ADOPTION', type: 'SOCIAL', severity: 'POSITIVE', icon: '🏠',
+    title: 'Heat Pump Tipping Point',
+    description: 'Heat pump installations surge past the tipping point. Costs plummet as the supply chain scales. Gas boiler replacements accelerate.',
+    story: 'British Gas reported installing its millionth heat pump in March. "Three years ago, each one cost £12,000 and took a week," said engineer Fatima Begum. "Now it\'s £4,000 and two days. The learning curve is extraordinary."',
+    effects: { netZeroProgress: 6, socialStability: 4 },
+    energyBonus: { gas: -5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.socialSupport > 20 && s.energy.gas > 10,
   },
 ];
 
@@ -3372,6 +3508,34 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  energy_island: {
+    label: 'Energy Island',
+    apply(state) {
+      state.energy.gas = 45;
+      state.energy.wind = 15;
+      state.energy.solar = 3;
+      state.energy.nuclear = 18;
+      state.energy.storage = 2;
+      state.gridReliability = 78;
+      state.strandedAssets = 25;
+      state.netZeroProgress = 15;
+      state._budgetOverride = 110;
+    },
+  },
+  climate_emergency: {
+    label: 'Climate Emergency',
+    apply(state) {
+      state.socialCapital = 15;
+      state.socialStability = 82;
+      state.financialStability = 58;
+      state.netZeroProgress = 45;
+      state.energy.wind = 38;
+      state.energy.solar = 12;
+      state.energy.gas = 18;
+      state.strandedAssets = 20;
+      state._budgetOverride = 90;
+    },
+  },
 };
 
 /* ============================================================
@@ -3499,6 +3663,137 @@ class AnalyticsTracker {
 }
 
 const analyticsMgr = new AnalyticsTracker();
+
+/* ============================================================
+   NEWSPAPER HEADLINE GENERATOR
+============================================================ */
+
+const HEADLINE_TEMPLATES = {
+  tempCritical: [
+    { title: 'UK Warming Passes {temp}°C — Scientists Warn of "Irreversible Tipping Points"', sub: 'Met Office data shows fastest five-year temperature rise since records began. Climate committee urges emergency response.', tone: 'negative' },
+    { title: '"We Are Running Out of Time" — UK Hits {temp}°C Warming Milestone', sub: 'The government faces growing pressure as the warming pathway accelerates past Paris Agreement thresholds.', tone: 'negative' },
+  ],
+  tempGood: [
+    { title: 'UK Warming Held to {temp}°C — "A Model for the World"', sub: 'International observers praise Britain\'s climate strategy as temperature trajectory stays below danger thresholds.', tone: 'positive' },
+    { title: 'Climate Pathway Stabilises at {temp}°C as Investments Pay Off', sub: 'Five-year review shows sustained policy commitment is bending the emissions curve.', tone: 'positive' },
+  ],
+  nzHigh: [
+    { title: 'Net Zero Within Reach — UK Progress Hits {nz}%', sub: 'The transition is ahead of schedule. Industry groups call for "final push" on remaining emissions.', tone: 'positive' },
+    { title: '"Historic Progress": UK Net Zero Tracker Passes {nz}%', sub: 'Climate Change Committee praises sustained investment. "The hard part is keeping going," chair warns.', tone: 'positive' },
+  ],
+  nzLow: [
+    { title: 'Net Zero Progress Stalls at {nz}% — "A Generation Behind Schedule"', sub: 'Critics say insufficient investment in energy transition has left the UK\'s 2050 target in jeopardy.', tone: 'negative' },
+    { title: 'UK Falling Behind on Net Zero — Progress at Just {nz}%', sub: 'At the current rate, 2050 targets will be missed by a decade. Industry warns of growing cost of delay.', tone: 'negative' },
+  ],
+  gridCrisis: [
+    { title: 'Blackout Fears as Grid Reliability Falls to {grid}%', sub: 'National Grid warns of "significant risk" of rolling power cuts this winter. Emergency gas plants on standby.', tone: 'negative' },
+    { title: '"Keep the Lights On" — Grid Emergency as Reliability Hits {grid}%', sub: 'Hospitals prepare generator backup plans. Public urged to reduce peak-time electricity use.', tone: 'negative' },
+  ],
+  gridStrong: [
+    { title: 'UK Grid "Strongest in a Decade" at {grid}% Reliability', sub: 'Smart storage and nuclear investment have transformed energy security. Winter blackout fears recede.', tone: 'positive' },
+  ],
+  socialCrisis: [
+    { title: 'Fuel Poverty Deepens — Social Stability Falls to {soc}%', sub: 'Food bank demand surges as energy costs outpace wage growth. Opposition demands emergency support package.', tone: 'negative' },
+    { title: '"People Cannot Take Any More" — Social Stability at {soc}%', sub: 'Polling shows public trust in the climate programme at record lows. Community groups warn of rising anger.', tone: 'negative' },
+  ],
+  financialStress: [
+    { title: 'Markets Shaken as Financial Stability Falls to {fin}%', sub: 'Bank of England activates emergency lending facilities. Pension funds under pressure from stranded asset exposure.', tone: 'negative' },
+  ],
+  bigSpender: [
+    { title: 'Government Announces £{spent}bn Climate Investment Package', sub: 'The largest single-term climate allocation in UK history. Treasury says "investment now saves multiples later."', tone: 'neutral' },
+  ],
+  noSpend: [
+    { title: '"Alarming Inaction" — Government Makes No Climate Investment This Term', sub: 'Environmental groups and industry leaders unite in condemning a "lost five years" for the transition.', tone: 'negative' },
+  ],
+  eventFlood: [
+    { title: 'Aftermath of Devastation — UK Counts the Cost of Flooding', sub: 'Recovery efforts continue as communities demand stronger flood defences and adaptation investment.', tone: 'negative' },
+  ],
+  eventHeatwave: [
+    { title: 'Heatwave Death Toll Confirmed — Calls for National Cooling Strategy', sub: 'NHS data reveals the full impact. "This is what climate change looks like in Britain," says health secretary.', tone: 'negative' },
+  ],
+  eventPositive: [
+    { title: 'Breakthrough Boost — {eventTitle}', sub: 'Good news for the climate programme as investment begins to generate returns.', tone: 'positive' },
+  ],
+  balanced: [
+    { title: 'Mid-Term Review: UK Climate Strategy "On Track but Fragile"', sub: 'Independent assessment finds progress on multiple fronts, but warns against complacency.', tone: 'neutral' },
+    { title: 'Five-Year Assessment Shows Steady Progress Across All Indicators', sub: 'No single metric is in crisis — but none is comfortable either. The next term will be decisive.', tone: 'neutral' },
+  ],
+};
+
+function generateHeadline(logEntry, state, event) {
+  const s = state;
+  const le = logEntry;
+  const candidates = [];
+
+  // Extract total spend from decisions text (e.g. "Energy Transition ×2 (£60bn)")
+  let totalSpent = 0;
+  for (const dec of le.decisions) {
+    const m = dec.match(/£(\d+)bn/);
+    if (m) totalSpent += parseInt(m[1]);
+  }
+
+  const fill = (tpl) => {
+    let t = tpl.title
+      .replace('{temp}', s.temperature.toFixed(1))
+      .replace('{nz}', Math.round(s.netZeroProgress))
+      .replace('{grid}', Math.round(s.gridReliability))
+      .replace('{soc}', Math.round(s.socialStability))
+      .replace('{fin}', Math.round(s.financialStability))
+      .replace('{spent}', String(totalSpent));
+    let sub = tpl.sub;
+    if (event) {
+      t = t.replace('{eventTitle}', event.title);
+      sub = sub.replace('{eventTitle}', event.title);
+    }
+    return { title: t, sub, tone: tpl.tone };
+  };
+
+  if (s.temperature >= 2.0) {
+    candidates.push(...HEADLINE_TEMPLATES.tempCritical.map(fill));
+  } else if (s.temperature <= 1.35) {
+    candidates.push(...HEADLINE_TEMPLATES.tempGood.map(fill));
+  }
+
+  if (s.netZeroProgress >= 70) {
+    candidates.push(...HEADLINE_TEMPLATES.nzHigh.map(fill));
+  } else if (s.netZeroProgress < 30 && s.turn >= 2) {
+    candidates.push(...HEADLINE_TEMPLATES.nzLow.map(fill));
+  }
+
+  if (s.gridReliability < 45) {
+    candidates.push(...HEADLINE_TEMPLATES.gridCrisis.map(fill));
+  } else if (s.gridReliability >= 85) {
+    candidates.push(...HEADLINE_TEMPLATES.gridStrong.map(fill));
+  }
+
+  if (s.socialStability < 45) {
+    candidates.push(...HEADLINE_TEMPLATES.socialCrisis.map(fill));
+  }
+
+  if (s.financialStability < 40) {
+    candidates.push(...HEADLINE_TEMPLATES.financialStress.map(fill));
+  }
+
+  if (event && event.isPositive) {
+    candidates.push(...HEADLINE_TEMPLATES.eventPositive.map(fill));
+  } else if (event && (event.type === 'FLOOD')) {
+    candidates.push(...HEADLINE_TEMPLATES.eventFlood.map(fill));
+  } else if (event && (event.type === 'HEATWAVE')) {
+    candidates.push(...HEADLINE_TEMPLATES.eventHeatwave.map(fill));
+  }
+
+  if (le.decisions.some(d => d.includes('No investment'))) {
+    candidates.push(...HEADLINE_TEMPLATES.noSpend.map(fill));
+  } else if (totalSpent >= 80) {
+    candidates.push(...HEADLINE_TEMPLATES.bigSpender.map(fill));
+  }
+
+  if (candidates.length === 0) {
+    candidates.push(...HEADLINE_TEMPLATES.balanced.map(fill));
+  }
+
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
 
 /* ============================================================
    TURN HISTORY TRACKER
@@ -3960,6 +4255,37 @@ class GameEngine {
     for (const item of pool) {
       roll -= item.w;
       if (roll <= 0) { selectedEvent = item.e; break; }
+    }
+
+    // Check for positive event instead (30% chance if eligible, based on good policy)
+    const posEligible = POSITIVE_EVENTS.filter(e => e.condition(s));
+    const positiveChance = Math.min(0.30, posEligible.length * 0.08);
+    if (posEligible.length > 0 && Math.random() < positiveChance) {
+      const posEvent = posEligible[Math.floor(Math.random() * posEligible.length)];
+      const applied = {};
+      for (const [key, val] of Object.entries(posEvent.effects)) {
+        applied[key] = val;
+        if (key === 'temperature') {
+          s.temperature = Math.round((s.temperature + val) * 100) / 100;
+        } else if (key === 'strandedAssets') {
+          s.strandedAssets = this._clamp(s.strandedAssets + val, 0, 100);
+        } else if (s[key] !== undefined) {
+          s[key] = this._clamp(s[key] + val, 0, 100);
+        }
+      }
+      if (posEvent.energyBonus) {
+        for (const [key, val] of Object.entries(posEvent.energyBonus)) {
+          if (s.energy[key] !== undefined) {
+            const max = key === 'wind' ? 120 : 100;
+            s.energy[key] = this._clamp(s.energy[key] + val, 0, max);
+          }
+        }
+      }
+      if (posEvent.budgetPenaltyNext < 0) {
+        s.nextTurnBudgetPenalty += posEvent.budgetPenaltyNext;
+      }
+      s.lastEventTurn = s.turn;
+      return { ...posEvent, appliedEffects: applied, isPositive: true };
     }
 
     // Mitigation factor from adaptation
@@ -4984,7 +5310,7 @@ class UI {
     return `This term, government ${parts.join(', ')} and ${last}.`;
   }
 
-  _addLogEntry(entry) {
+  _addLogEntry(entry, eventObj) {
     const div = document.createElement('div');
 
     // Colour-code by outcome
@@ -5000,7 +5326,9 @@ class UI {
 
     // Event notice
     if (entry.event) {
-      html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+      const evtColor = (eventObj && eventObj.isPositive) ? 'var(--status-good)' : 'var(--status-danger)';
+      const evtIcon = (eventObj && eventObj.isPositive) ? '✦' : '⚠';
+      html += `<div class="log-text" style="color:${evtColor};margin-top:4px;">${evtIcon} ${entry.event}</div>`;
     }
 
     // Metric chips
@@ -5014,6 +5342,21 @@ class UI {
 
     div.innerHTML = html;
     this.elLogScroll.appendChild(div);
+
+    // Generate and display newspaper headline
+    const headline = generateHeadline(entry, this.engine.state, eventObj || null);
+    if (headline) {
+      const hdDiv = document.createElement('div');
+      hdDiv.className = `log-headline ${headline.tone}`;
+      hdDiv.innerHTML = `
+        <div class="log-headline-masthead">
+          <span>The Climate Times</span>
+          <span>${entry.year + 5}</span>
+        </div>
+        <div class="log-headline-title">${headline.title}</div>
+        <div class="log-headline-sub">${headline.sub}</div>`;
+      this.elLogScroll.appendChild(hdDiv);
+    }
 
     // Inject advisor briefing for next turn (based on post-turn state)
     this._injectAdvisorBriefing(this.engine.state);
@@ -5079,14 +5422,39 @@ class UI {
           <span class="event-effect-label">Next Turn Budget</span>
           <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
         </div>`;
+    } else if (event.budgetPenaltyNext < 0) {
+      effectsHtml += `
+        <div class="event-effect-row">
+          <span class="event-effect-label">Next Turn Budget</span>
+          <span class="event-effect-val pos">+£${Math.abs(event.budgetPenaltyNext)}bn</span>
+        </div>`;
+    }
+    if (event.energyBonus) {
+      for (const [key, val] of Object.entries(event.energyBonus)) {
+        const name = key.charAt(0).toUpperCase() + key.slice(1);
+        const sign = val > 0 ? '+' : '';
+        const cls = key === 'gas' ? (val < 0 ? 'pos' : 'neg') : (val > 0 ? 'pos' : 'neg');
+        effectsHtml += `
+          <div class="event-effect-row">
+            <span class="event-effect-label">${name} Capacity</span>
+            <span class="event-effect-val ${cls}">${sign}${val}</span>
+          </div>`;
+      }
     }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
+
+    const card = document.getElementById('event-card');
+    if (card) {
+      card.classList.toggle('event-positive', !!event.isPositive);
+    }
 
     this.elEventModal.classList.remove('hidden');
   }
 
   hideEventModal() {
     this.elEventModal.classList.add('hidden');
+    const card = document.getElementById('event-card');
+    if (card) card.classList.remove('event-positive');
   }
 
   showEndgame(result) {
@@ -5776,7 +6144,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   engine.state.isResolvingTurn = false;
 
   // Hand off to normal UI flow
-  ui._addLogEntry(result.logEntry);
+  ui._addLogEntry(result.logEntry, result.event || null);
 
   if (result.endgame) {
     // Game over — clear save, record analytics
