@@ -6452,6 +6452,11 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
 
+  // Show newspaper narrative (skip on endgame to avoid double summary)
+  if (!result.endgame) {
+    await _showNewspaper(result.logEntry, engine.state);
+  }
+
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
 
@@ -6562,6 +6567,131 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ============================================================
+   MODULE: NEWSPAPER NARRATIVE
+============================================================ */
+
+function _generateNewspaper(logEntry, state) {
+  const snap = logEntry.snapshot;
+  const tempDelta = logEntry.afterTemp - snap.temperature;
+  const gridDelta = logEntry.afterGrid - snap.gridReliability;
+  const finDelta  = logEntry.afterFin  - snap.financialStability;
+  const socDelta  = logEntry.afterSoc  - snap.socialStability;
+  const nzDelta   = logEntry.afterNZ   - snap.netZeroProgress;
+
+  let headline = '';
+  let lead = '';
+  let side1Title = '', side1Body = '';
+  let side2Title = '', side2Body = '';
+  let editorial = '';
+
+  const year = logEntry.year + 5;
+  const period = `${logEntry.year}–${year}`;
+
+  if (logEntry.afterNZ >= 100 && snap.netZeroProgress < 100) {
+    headline = 'HISTORIC: United Kingdom Achieves Net Zero Target';
+    lead = 'In a landmark moment for British climate policy, the UK has officially reached its Net Zero emissions target. After years of sustained investment in renewable energy and industrial transformation, the country has delivered on its legal commitment under the Climate Change Act. Analysts say the achievement positions Britain as a global leader in the green transition.';
+  } else if (logEntry.event) {
+    headline = logEntry.event + ' Shakes UK Climate Programme';
+    lead = 'A ' + logEntry.event.toLowerCase() + ' has disrupted the government’s climate strategy this term. Officials scrambled to contain the fallout as multiple indicators shifted. The event underscores the fragility of the UK’s transition pathway and the importance of resilience planning.';
+  } else if (tempDelta > 0.2) {
+    headline = 'UK Temperatures Surge Past ' + logEntry.afterTemp.toFixed(1) + '°C — Scientists Warn of Tipping Points';
+    lead = 'The UK’s domestic warming pathway has accelerated sharply, with temperatures rising by ' + tempDelta.toFixed(1) + '°C this term to reach ' + logEntry.afterTemp.toFixed(1) + '°C above pre-industrial levels. Climate scientists at the Met Office warn that continued warming at this rate risks triggering irreversible tipping points, including permafrost methane release and accelerated ice sheet loss.';
+  } else if (logEntry.afterGrid < 40) {
+    headline = 'Grid Crisis: Blackout Warnings Issued Across England';
+    lead = 'Grid reliability has fallen to a critical ' + Math.round(logEntry.afterGrid) + '%, prompting the National Grid ESO to issue emergency blackout warnings. Insufficient backup capacity and rapid renewable expansion without adequate storage have left the system exposed. Industry experts are calling for immediate investment in battery storage and grid modernisation.';
+  } else if (logEntry.afterSoc < 50) {
+    headline = 'Public Trust Crumbles as Transition Costs Bite';
+    lead = 'Social stability has dropped to ' + Math.round(logEntry.afterSoc) + '% as rising energy bills and job losses in traditional industries erode public support for the climate transition. Protests have spread to several cities, with community leaders warning that without stronger social safety nets, the political mandate for decarbonisation will collapse entirely.';
+  } else if (logEntry.afterFin < 40) {
+    headline = 'Financial Sector in Crisis: Pension Funds Exposed';
+    lead = 'Financial stability has plunged to ' + Math.round(logEntry.afterFin) + '%, driven by cascading losses from stranded fossil fuel assets. The Bank of England has convened an emergency stress test as pension funds face write-downs on North Sea investments. Analysts warn of systemic contagion if intervention is not swift.';
+  } else if (logEntry.afterNZ >= 80 && snap.netZeroProgress < 80) {
+    headline = 'Net Zero Within Reach as Green Investment Pays Off';
+    lead = 'The UK’s Net Zero progress has surged to ' + Math.round(logEntry.afterNZ) + '%, putting the 2050 target within reach for the first time. Years of consistent investment in wind, solar, and energy storage are delivering returns, with renewable capacity now exceeding fossil fuels across the national grid. The Climate Change Committee has praised the trajectory.';
+  } else if (nzDelta >= 15) {
+    headline = 'Renewable Energy Surge Accelerates UK Decarbonisation';
+    lead = 'A ' + Math.round(nzDelta) + ' percentage-point leap in Net Zero progress marks the most productive term yet for UK climate policy. New wind and solar installations across Scotland, East Anglia, and the Severn Estuary have driven a significant reduction in fossil fuel dependency. Energy analysts say the pace of change now exceeds even optimistic projections.';
+  } else if (gridDelta > 10 && finDelta > 5) {
+    headline = 'Stability Strengthens as Balanced Investment Strategy Delivers';
+    lead = 'A measured approach to climate investment has paid dividends this term, with grid reliability rising to ' + Math.round(logEntry.afterGrid) + '% and financial stability improving to ' + Math.round(logEntry.afterFin) + '%. The government’s dual focus on infrastructure resilience and fiscal prudence has reassured both energy markets and household consumers.';
+  } else {
+    headline = 'Government Presses Ahead with Climate Strategy';
+    lead = 'The government has completed another five-year term of its climate transition programme, maintaining momentum across key indicators. Temperature stands at ' + logEntry.afterTemp.toFixed(1) + '°C, with Net Zero progress at ' + Math.round(logEntry.afterNZ) + '%. While challenges remain, officials express cautious optimism about the trajectory.';
+  }
+
+  if (gridDelta < -10) {
+    side1Title = 'Grid Reliability Falls';
+    side1Body = 'Grid reliability dropped ' + Math.abs(Math.round(gridDelta)) + ' points to ' + Math.round(logEntry.afterGrid) + '%, raising concerns about winter blackout risk as backup capacity fails to keep pace with renewable expansion.';
+  } else if (gridDelta > 8) {
+    side1Title = 'Grid Stability Improves';
+    side1Body = 'Investment in storage and nuclear capacity has lifted grid reliability by ' + Math.round(gridDelta) + ' points to ' + Math.round(logEntry.afterGrid) + '%, easing pressure on the National Grid during peak demand periods.';
+  } else if (nzDelta > 0) {
+    side1Title = 'Clean Energy Expansion';
+    side1Body = 'Net Zero progress advanced ' + Math.round(nzDelta) + ' points to ' + Math.round(logEntry.afterNZ) + '% as the UK continues its transition away from fossil fuels toward a renewables-led energy system.';
+  } else {
+    side1Title = 'Energy Mix Holds Steady';
+    side1Body = 'The national energy mix remained broadly stable this term, with gas providing ' + Math.round(state.energy.gas) + ' GW against a combined ' + Math.round(state.energy.wind + state.energy.solar) + ' GW from wind and solar.';
+  }
+
+  if (logEntry.synergies && logEntry.synergies.length > 0) {
+    side2Title = 'Policy Synergy Unlocked';
+    side2Body = 'Cross-departmental coordination triggered the “' + logEntry.synergies[0] + '” synergy bonus, amplifying policy impact across multiple indicators — a vindication of the government’s integrated strategy.';
+  } else if (socDelta < -8) {
+    side2Title = 'Social Tensions Rise';
+    side2Body = 'Social stability fell ' + Math.abs(Math.round(socDelta)) + ' points to ' + Math.round(logEntry.afterSoc) + '%. Community groups warn that without targeted support for affected workers and families, opposition to the transition will harden.';
+  } else if (finDelta < -8) {
+    side2Title = 'Markets Under Pressure';
+    side2Body = 'Financial stability declined ' + Math.abs(Math.round(finDelta)) + ' points to ' + Math.round(logEntry.afterFin) + '% amid continued write-downs in fossil fuel assets and rising transition costs across the banking sector.';
+  } else if (socDelta > 5) {
+    side2Title = 'Public Support Grows';
+    side2Body = 'Social stability rose ' + Math.round(socDelta) + ' points to ' + Math.round(logEntry.afterSoc) + '%, buoyed by government investment in retraining programmes, community energy schemes, and fuel poverty relief.';
+  } else {
+    side2Title = 'Economic Outlook';
+    side2Body = 'Financial stability stands at ' + Math.round(logEntry.afterFin) + '% with stranded asset exposure ' + (state.strandedAssets > 30 ? 'remaining a concern for institutional investors' : 'contained within manageable levels for now') + '.';
+  }
+
+  if (logEntry.afterTemp > 2.0) {
+    editorial = 'We have crossed the 2°C Paris threshold. History will record whether this generation chose to act or to delay. The time for incremental steps has passed.';
+  } else if (logEntry.afterNZ >= 100) {
+    editorial = 'Net Zero is not the finish line — it is the baseline. The task now is to sustain it, export the model, and ensure the transition’s benefits reach every community.';
+  } else if (logEntry.afterSoc < 45) {
+    editorial = 'A transition that leaves its people behind is no transition at all. The government must urgently reconnect its climate ambition with the lived reality of working families.';
+  } else if (logEntry.afterGrid < 40) {
+    editorial = 'Green energy means nothing if the lights go out. Grid reliability must be treated as a national security priority, not an afterthought of renewable expansion.';
+  } else if (tempDelta < 0) {
+    editorial = 'For the first time, the numbers are moving in the right direction. Cautious optimism is warranted — but complacency remains the greatest risk of all.';
+  } else {
+    editorial = 'The path to 2050 is neither smooth nor certain. What matters is whether the direction of travel is sustained, and whether the costs are shared fairly.';
+  }
+
+  return { headline, lead, side1Title, side1Body, side2Title, side2Body, editorial, year, period };
+}
+
+function _showNewspaper(logEntry, state) {
+  return new Promise(function(resolve) {
+    var data = _generateNewspaper(logEntry, state);
+    var overlay = document.getElementById('newspaper-overlay');
+
+    document.getElementById('newspaper-date').textContent = data.period + ' · Special Edition';
+    document.getElementById('newspaper-edition').textContent = 'Turn ' + (logEntry.turn + 1) + ' of 5 · Policy Review';
+    document.getElementById('newspaper-headline').textContent = data.headline;
+    document.getElementById('newspaper-lead').textContent = data.lead;
+    document.getElementById('newspaper-side1').innerHTML =
+      '<div class="newspaper-side-title">' + data.side1Title + '</div><div class="newspaper-side-body">' + data.side1Body + '</div>';
+    document.getElementById('newspaper-side2').innerHTML =
+      '<div class="newspaper-side-title">' + data.side2Title + '</div><div class="newspaper-side-body">' + data.side2Body + '</div>';
+    document.getElementById('newspaper-editorial').textContent = data.editorial;
+
+    overlay.classList.remove('hidden');
+
+    document.getElementById('newspaper-dismiss').addEventListener('click', function() {
+      overlay.classList.add('hidden');
+      resolve();
+    }, { once: true });
+  });
+}
 
 /* ============================================================
    MODULE: LEGACY SYSTEM
