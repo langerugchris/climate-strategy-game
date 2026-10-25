@@ -1273,6 +1273,130 @@ body { transition: filter 2s ease; }
 .opt-a:hover { background: rgba(29,112,184,0.30); }
 .opt-b:hover { background: rgba(255,214,0,0.20); }
 
+/* ===== NEWSPAPER OVERLAY ===== */
+#newspaper-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(0,0,0,0.75);
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--gap-md);
+  opacity: 0; animation: newspaperFadeIn 0.6s ease forwards;
+}
+#newspaper-overlay.hidden { display: none; }
+@keyframes newspaperFadeIn { to { opacity: 1; } }
+
+#newspaper-card {
+  background: #f5f0e8;
+  color: #1a1a1a;
+  max-width: 560px; width: 100%;
+  border-radius: var(--radius-md);
+  padding: var(--gap-lg) var(--gap-lg) var(--gap-md);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 0 60px rgba(0,0,0,0.03);
+  font-family: var(--font-editorial);
+  position: relative;
+  border: 1px solid #d6ccb8;
+  transform: translateY(20px); animation: newspaperSlideUp 0.5s 0.15s ease forwards;
+  opacity: 0;
+}
+@keyframes newspaperSlideUp { to { opacity: 1; transform: translateY(0); } }
+
+#newspaper-masthead {
+  text-align: center;
+  border-bottom: 3px double #1a1a1a;
+  padding-bottom: var(--gap-sm);
+  margin-bottom: var(--gap-md);
+}
+#newspaper-name {
+  font-family: var(--font-editorial);
+  font-size: 28px; font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #1a1a1a;
+  text-transform: uppercase;
+}
+#newspaper-date {
+  font-size: 11px; color: #666;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+#newspaper-edition {
+  font-size: 10px; color: #888;
+  letter-spacing: 0.06em;
+}
+
+#newspaper-headline {
+  font-family: var(--font-editorial);
+  font-size: 22px; font-weight: 700;
+  line-height: 1.2;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: var(--gap-sm);
+  padding: 0 var(--gap-sm);
+}
+#newspaper-lead {
+  font-family: var(--font-editorial);
+  font-size: 13px; line-height: 1.6;
+  color: #333;
+  text-align: justify;
+  margin-bottom: var(--gap-md);
+  padding: 0 var(--gap-xs);
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding-top: var(--gap-sm);
+  padding-bottom: var(--gap-sm);
+}
+
+#newspaper-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-md);
+}
+.newspaper-side {
+  font-size: 12px; line-height: 1.5;
+  color: #444;
+  padding: var(--gap-sm);
+  border-left: 2px solid #8b0000;
+}
+.newspaper-side-title {
+  font-family: var(--font-editorial);
+  font-weight: 700; font-size: 13px;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+.newspaper-side-body {
+  font-family: var(--font-editorial);
+  font-size: 11px; line-height: 1.5;
+  color: #555;
+}
+
+#newspaper-editorial {
+  font-family: var(--font-editorial);
+  font-size: 11px; font-style: italic;
+  color: #666;
+  text-align: center;
+  padding: var(--gap-sm) var(--gap-md);
+  border-top: 1px solid #ccc;
+  margin-bottom: var(--gap-md);
+}
+#newspaper-editorial::before { content: 'EDITORIAL — '; font-style: normal; font-weight: 700; color: #8b0000; font-size: 10px; letter-spacing: 0.05em; }
+
+#newspaper-dismiss {
+  display: block; width: 100%;
+  background: #1a1a1a; color: #f5f0e8;
+  border: none; border-radius: var(--radius-sm);
+  padding: 10px; font-size: 13px;
+  font-family: var(--font-system);
+  cursor: pointer; transition: background 0.2s;
+}
+#newspaper-dismiss:hover { background: #333; }
+
+@media (max-width: 500px) {
+  #newspaper-card { padding: var(--gap-md); }
+  #newspaper-name { font-size: 22px; }
+  #newspaper-headline { font-size: 18px; }
+  #newspaper-columns { grid-template-columns: 1fr; }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   /* Release the viewport-lock so the whole page scrolls naturally */
@@ -2098,6 +2222,47 @@ body { transition: filter 2s ease; }
   max-width: 220px;
   width: 100%;
 }
+
+/* ===== TUTORIAL OVERLAY ===== */
+#tutorial-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  transition: opacity 0.3s ease;
+}
+.tutorial-spotlight {
+  position: absolute; border-radius: 8px;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.75);
+  z-index: 10001; pointer-events: none;
+  transition: all 0.35s cubic-bezier(.4,0,.2,1);
+}
+#tutorial-tooltip {
+  position: absolute; z-index: 10002;
+  background: var(--bg-elevated); border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-md); padding: 16px; max-width: 320px;
+  color: var(--text-primary);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  transition: all 0.35s cubic-bezier(.4,0,.2,1);
+}
+.tutorial-step-counter { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.tutorial-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+.tutorial-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; }
+.tutorial-actions { display: flex; gap: 8px; justify-content: space-between; }
+.tutorial-btn {
+  padding: 6px 14px; border-radius: var(--radius-sm); border: none;
+  cursor: pointer; font-size: 12px; font-family: var(--font-system);
+}
+.tutorial-btn-next { background: var(--accent-blue); color: white; }
+.tutorial-btn-next:hover { background: var(--accent-blue-lt); }
+.tutorial-btn-skip { background: transparent; color: var(--text-muted); border: 1px solid var(--border-subtle); }
+.tutorial-btn-skip:hover { color: var(--text-primary); border-color: var(--border-strong); }
+.tutorial-fade-out { opacity: 0; pointer-events: none; }
+#replay-tutorial-btn {
+  display: block; width: 100%; padding: 10px;
+  margin-top: var(--gap-md); background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+  color: var(--text-secondary); font-size: 13px; cursor: pointer;
+  font-family: var(--font-system);
+}
+#replay-tutorial-btn:hover { background: var(--bg-elevated); color: var(--text-primary); border-color: var(--border-strong); }
 
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
@@ -3054,6 +3219,25 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- NEWSPAPER OVERLAY -->
+<div id="newspaper-overlay" class="hidden">
+  <div id="newspaper-card">
+    <div id="newspaper-masthead">
+      <div id="newspaper-name">The Climate Times</div>
+      <div id="newspaper-date"></div>
+      <div id="newspaper-edition"></div>
+    </div>
+    <div id="newspaper-headline"></div>
+    <div id="newspaper-lead"></div>
+    <div id="newspaper-columns">
+      <div id="newspaper-side1" class="newspaper-side"></div>
+      <div id="newspaper-side2" class="newspaper-side"></div>
+    </div>
+    <div id="newspaper-editorial"></div>
+    <button id="newspaper-dismiss">Continue &rarr;</button>
+  </div>
+</div>
+
 <!-- EVENT MODAL -->
 <div id="event-modal" class="hidden">
   <div id="event-card">
@@ -3129,6 +3313,7 @@ body { transition: filter 2s ease; }
       </div>
     </div>
     <!-- High scores injected here by JS -->
+    <button id="replay-tutorial-btn">📖 How to Play</button>
     <button id="settings-close-btn">Done</button>
   </div>
 </div>
@@ -3590,6 +3775,146 @@ class SaveManager {
 }
 
 const saveMgr = new SaveManager();
+
+/* ============================================================
+   TUTORIAL MANAGER
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_seen_v1';
+    this._steps = [
+      {
+        target: '#metrics-panel',
+        title: 'National Indicators',
+        desc: 'These metrics track the UK\'s climate trajectory. Temperature, grid reliability, financial stability, social stability, and net zero progress — all respond to your decisions. Watch the sparklines for trends.',
+      },
+      {
+        target: '#val-temp',
+        title: 'Temperature Pathway',
+        desc: 'This is the UK\'s warming pathway. If every nation followed your strategy, this is what global temperature would reach. Stay below 2.0°C to meet the Paris Agreement — below 1.5°C earns you an achievement.',
+      },
+      {
+        target: '#investment-cards',
+        title: 'Investment Decisions',
+        desc: 'Each turn, allocate your budget across six investment areas. Click + to add a block (max 2 per area). Every choice has trade-offs — energy transition reduces emissions but increases stranded asset risk.',
+      },
+      {
+        target: '#card-research',
+        title: 'Research & Development',
+        desc: 'R&D unlocks powerful tech tree upgrades that multiply the effect of other investments. Early research compounds over the game — but it costs budget you could spend on immediate needs.',
+      },
+      {
+        target: '#end-turn-btn',
+        title: 'Advance the Timeline',
+        desc: 'When you\'re ready, click here to simulate the next 5 years. Events may occur during the simulation — you\'ll face dilemmas that test your priorities. There are 5 turns total (2025–2050).',
+      },
+    ];
+    this._currentStep = 0;
+    this._overlay = null;
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return false; }
+  }
+
+  markSeen() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  start() {
+    if (this._overlay) return;
+    this._currentStep = 0;
+    this._buildOverlay();
+    this._showStep(0);
+  }
+
+  _buildOverlay() {
+    this._overlay = document.createElement('div');
+    this._overlay.id = 'tutorial-overlay';
+
+    this._spotlight = document.createElement('div');
+    this._spotlight.className = 'tutorial-spotlight';
+
+    this._tooltip = document.createElement('div');
+    this._tooltip.id = 'tutorial-tooltip';
+
+    this._overlay.appendChild(this._spotlight);
+    this._overlay.appendChild(this._tooltip);
+    document.body.appendChild(this._overlay);
+
+    this._overlay.addEventListener('click', (e) => {
+      if (e.target === this._overlay) this._advance();
+    });
+  }
+
+  _showStep(idx) {
+    const step = this._steps[idx];
+    if (!step) { this.dismiss(); return; }
+
+    const target = document.querySelector(step.target);
+    if (!target) { this._advance(); return; }
+
+    const rect = target.getBoundingClientRect();
+    const pad = 8;
+
+    this._spotlight.style.left = (rect.left - pad) + 'px';
+    this._spotlight.style.top = (rect.top - pad) + 'px';
+    this._spotlight.style.width = (rect.width + pad * 2) + 'px';
+    this._spotlight.style.height = (rect.height + pad * 2) + 'px';
+
+    this._tooltip.innerHTML = `
+      <div class="tutorial-step-counter">Step ${idx + 1} of ${this._steps.length}</div>
+      <div class="tutorial-title">${step.title}</div>
+      <div class="tutorial-desc">${step.desc}</div>
+      <div class="tutorial-actions">
+        <button class="tutorial-btn tutorial-btn-skip" id="tutorial-skip">Skip Tutorial</button>
+        <button class="tutorial-btn tutorial-btn-next" id="tutorial-next">${idx < this._steps.length - 1 ? 'Next →' : 'Start Playing →'}</button>
+      </div>`;
+
+    const tooltipW = 320;
+    let left = rect.left;
+    let top = rect.bottom + pad + 12;
+
+    if (top + 200 > window.innerHeight) {
+      top = rect.top - pad - 200;
+    }
+    if (left + tooltipW > window.innerWidth - 16) {
+      left = window.innerWidth - tooltipW - 16;
+    }
+    if (left < 16) left = 16;
+
+    this._tooltip.style.left = left + 'px';
+    this._tooltip.style.top = top + 'px';
+    this._tooltip.style.width = tooltipW + 'px';
+
+    document.getElementById('tutorial-next').addEventListener('click', () => this._advance(), { once: true });
+    document.getElementById('tutorial-skip').addEventListener('click', () => this.dismiss(), { once: true });
+  }
+
+  _advance() {
+    this._currentStep++;
+    if (this._currentStep >= this._steps.length) {
+      this.dismiss();
+    } else {
+      this._showStep(this._currentStep);
+    }
+  }
+
+  dismiss() {
+    this.markSeen();
+    if (this._overlay) {
+      this._overlay.classList.add('tutorial-fade-out');
+      setTimeout(() => { if (this._overlay) { this._overlay.remove(); this._overlay = null; } }, 300);
+    }
+  }
+
+  reset() {
+    try { localStorage.removeItem(this._KEY); } catch {}
+  }
+}
+
+const tutorialMgr = new TutorialManager();
 
 /* ============================================================
    ANALYTICS TRACKER
@@ -4683,6 +5008,14 @@ class UI {
     }
     if (settingsCloseBtn) {
       settingsCloseBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+    }
+    const replayTutBtn = document.getElementById('replay-tutorial-btn');
+    if (replayTutBtn) {
+      replayTutBtn.addEventListener('click', () => {
+        settingsModal.classList.add('hidden');
+        tutorialMgr.reset();
+        tutorialMgr.start();
+      });
     }
     document.querySelectorAll('.diff-option').forEach(opt => {
       opt.addEventListener('click', () => {
@@ -6325,6 +6658,11 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// First-time tutorial
+if (tutorialMgr.shouldShow()) {
+  setTimeout(() => tutorialMgr.start(), 500);
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
