@@ -4087,12 +4087,7 @@ class GameEngine {
 
   _calcEmissions() {
     const s = this.state;
-    const e = s.energy;
-    const total = e.wind + e.solar + e.nuclear + e.gas + e.storage;
-    const gasShare = total > 0 ? e.gas / total : 0;
-    const nzFactor = 1 - (s.netZeroProgress / 100) * 0.8;
-    const turnEmissions = Math.round(400 * gasShare * nzFactor + 150 * (1 - s.netZeroProgress / 100));
-    s.cumulativeEmissions = Math.max(0, s.cumulativeEmissions + turnEmissions);
+    s.cumulativeEmissions = (s.cumulativeEmissions || 0) + (s.carbonEmissions || 0) * 5;
   }
 
   _resolveEvent() {
@@ -5404,6 +5399,10 @@ class UI {
       <div class="endgame-metric-tile">
         <div class="endgame-metric-label">Carbon Emissions</div>
         <div class="endgame-metric-val ${(s.carbonEmissions || 0) <= 150 ? 'good' : (s.carbonEmissions || 0) <= 300 ? 'warn' : 'danger'}">${s.carbonEmissions || 0} MtCO₂e/yr</div>
+      </div>
+      <div class="endgame-metric-tile">
+        <div class="endgame-metric-label">Total Emissions</div>
+        <div class="endgame-metric-val ${(s.cumulativeEmissions || 0) > 3760 ? 'danger' : (s.cumulativeEmissions || 0) > 2350 ? 'warn' : 'good'}">${s.cumulativeEmissions || 0} MtCO₂e</div>
       </div>`;
 
     this.elEndgameNarr.innerHTML = result.narrative;
