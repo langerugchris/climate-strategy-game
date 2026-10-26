@@ -2300,6 +2300,288 @@ body { transition: filter 2s ease; }
   background: rgba(255, 214, 0, 0.16);
 }
 
+/* ===== CARBON BUDGET TRACKER ===== */
+.carbon-budget-container {
+  margin-top: var(--gap-md);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--border-subtle);
+}
+.carbon-budget-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+.carbon-budget-label .cb-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+.carbon-budget-label .cb-value {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+.carbon-budget-bar {
+  height: 12px;
+  background: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+.carbon-budget-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.7s cubic-bezier(0.4,0,0.2,1), background 0.5s ease;
+  min-width: 2px;
+}
+.carbon-budget-fill.cb-green  { background: var(--status-good); }
+.carbon-budget-fill.cb-amber  { background: var(--status-warn); }
+.carbon-budget-fill.cb-red    { background: var(--status-danger); }
+.carbon-budget-fill.cb-critical {
+  background: var(--status-danger);
+  animation: cbPulse 0.8s ease-in-out infinite;
+}
+.carbon-budget-exhausted {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--status-danger);
+  text-align: center;
+  margin-top: 4px;
+  animation: cbPulse 0.8s ease-in-out infinite;
+}
+@keyframes cbPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ===== TUTORIAL OVERLAY ===== */
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  pointer-events: auto;
+}
+.tutorial-spotlight {
+  position: absolute;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.75);
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  z-index: 2501;
+  pointer-events: none;
+}
+.tutorial-card {
+  position: absolute;
+  z-index: 2502;
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-blue-lt);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg);
+  max-width: 340px;
+  width: 90vw;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  animation: slideUp 0.3s ease;
+}
+.tutorial-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: var(--gap-sm);
+}
+.tutorial-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--gap-md);
+  font-family: var(--font-editorial);
+}
+.tutorial-step-counter {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--gap-sm);
+}
+.tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tutorial-next-btn {
+  padding: 10px 24px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+.tutorial-next-btn:hover { background: var(--accent-blue-lt); }
+.tutorial-skip {
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  transition: color 0.15s;
+}
+.tutorial-skip:hover { color: var(--text-secondary); }
+.tutorial-help-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+.tutorial-help-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+
+/* ===== TIMELINE PANEL (IN-GAME) ===== */
+#timeline-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 340px;
+  max-width: 85vw;
+  background: var(--bg-secondary);
+  border-left: 2px solid var(--accent-blue);
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
+}
+#timeline-panel.open {
+  transform: translateX(0);
+}
+#timeline-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--gap-md);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+#timeline-panel-header h3 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+#timeline-panel-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+}
+#timeline-panel-close:hover { color: var(--text-primary); }
+#timeline-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--gap-md);
+}
+.tl-turn-card {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  margin-bottom: var(--gap-sm);
+}
+.tl-turn-header {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-blue-lt);
+  margin-bottom: 4px;
+}
+.tl-investments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.tl-invest-chip {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(29,112,184,0.15);
+  color: var(--accent-blue-lt);
+  font-weight: 600;
+}
+.tl-deltas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.tl-delta-chip {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.tl-delta-chip.up   { background: #0c2a1a; color: var(--status-good); }
+.tl-delta-chip.down { background: #2a0e08; color: #ff7043; }
+.tl-delta-chip.same { background: var(--border-subtle); color: var(--text-muted); }
+.tl-event-line {
+  font-size: 10px;
+  color: var(--status-danger);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.tl-synergy-line {
+  font-size: 10px;
+  color: var(--accent-green-lt);
+  margin-top: 2px;
+}
+.tl-empty {
+  text-align: center;
+  padding: var(--gap-xl);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+}
+.timeline-toggle-btn {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+.timeline-toggle-btn:hover { background: var(--bg-elevated); border-color: var(--border-strong); }
+
 /* Synergy log entries */
 .log-synergy {
   font-size: 10px;
@@ -2330,6 +2612,8 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
+    <button class="tutorial-help-btn" id="tutorial-help-btn" title="Tutorial">?</button>
+    <button class="timeline-toggle-btn" id="timeline-toggle-btn" title="Policy Timeline">📋</button>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2442,6 +2726,18 @@ body { transition: filter 2s ease; }
           <div class="bar-ghost" id="ghost-nz"></div>
         </div>
         <div class="sparkline-container" id="spark-nz"></div>
+      </div>
+
+      <!-- Carbon Budget -->
+      <div class="carbon-budget-container" id="carbon-budget-section">
+        <div class="carbon-budget-label">
+          <span class="cb-title">🏭 UK Carbon Budget</span>
+          <span class="cb-value"><span id="val-carbon-budget">100</span>%</span>
+        </div>
+        <div class="carbon-budget-bar">
+          <div class="carbon-budget-fill cb-green" id="bar-carbon-budget" style="width:100%"></div>
+        </div>
+        <div class="carbon-budget-exhausted" id="carbon-budget-exhausted" style="display:none">⚠ BUDGET EXHAUSTED</div>
       </div>
 
       <!-- Energy Mix -->
@@ -3258,6 +3554,17 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- ===== TIMELINE PANEL ===== -->
+<div id="timeline-panel">
+  <div id="timeline-panel-header">
+    <h3>📋 Your Journey</h3>
+    <button id="timeline-panel-close">✕</button>
+  </div>
+  <div id="timeline-panel-body">
+    <div class="tl-empty">Complete your first turn to see your policy timeline.</div>
+  </div>
+</div>
+
 <script>
 'use strict';
 
@@ -3316,6 +3623,10 @@ const HEADLINES = [
   { condition: s => s.turn >= 4, text: () => `Final term begins — legacy of climate policy now being determined` },
   { condition: s => s.infrastructure.energyTransition > 80, text: () => `Renewable energy infrastructure rated <span class="ticker-highlight">world-class</span> by International Energy Agency` },
   { condition: s => s.budget < 40, text: s => `Treasury under pressure — just <span class="ticker-highlight">£${s.budget}bn</span> remaining for climate investment this term` },
+  { condition: s => s.carbonBudget > 70, text: s => `UK carbon budget remains healthy at <span class="ticker-highlight">${Math.round(s.carbonBudget)}%</span> — room for manoeuvre` },
+  { condition: s => s.carbonBudget <= 50 && s.carbonBudget > 20, text: s => `Carbon budget halfway depleted — <span class="ticker-highlight">${Math.round(s.carbonBudget)}%</span> remaining before overshoot` },
+  { condition: s => s.carbonBudget <= 20 && s.carbonBudget > 0, text: () => `CRITICAL: UK carbon budget nearly <span class="ticker-highlight">exhausted</span> — drastic action needed to avoid overshoot` },
+  { condition: s => s.carbonBudgetExhausted, text: () => `<span class="ticker-highlight">CARBON BUDGET EXHAUSTED</span> — UK locked into accelerated warming pathway` },
 ];
 
 /* ============================================================
@@ -3631,6 +3942,7 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'carbon_miser', icon: '🏭', name: 'Carbon Miser', desc: 'Finish with Carbon Budget above 50%', check: (s) => s.carbonBudget > 50 },
 ];
 
 class AchievementManager {
@@ -3927,6 +4239,7 @@ class TurnHistory {
       financialStability: state.financialStability,
       socialStability: state.socialStability,
       netZeroProgress: state.netZeroProgress,
+      carbonBudget: state.carbonBudget,
     });
   }
   reset() { this.data = []; }
@@ -3968,6 +4281,8 @@ class GameEngine {
         socialSupport: 0,
         financialResilience: 0,
       },
+      carbonBudget: 100,
+      carbonBudgetExhausted: false,
       strandedAssets: 0,
       propertyValue: 100,
       socialCapital: 0,
@@ -4122,6 +4437,7 @@ class GameEngine {
       gridReliability: s.gridReliability,
       financialStability: s.financialStability,
       socialStability: s.socialStability,
+      carbonBudget: s.carbonBudget,
       energy: Object.assign({}, s.energy),
     };
 
@@ -4133,6 +4449,9 @@ class GameEngine {
 
     // Phase 2b: Apply synergy bonuses
     const firedSynergies = this._checkSynergies();
+
+    // Phase 2c: Carbon budget decrement
+    this._depleteCarbon();
 
     // Phase 3: Grid formula
     this._recalcGrid();
@@ -4183,6 +4502,7 @@ class GameEngine {
       afterGrid:     s.gridReliability,
       afterFin:      s.financialStability,
       afterSoc:      s.socialStability,
+      afterCB:       s.carbonBudget,
     };
     s.log.push(logEntry);
     s.lastSnapshot = snapshot;
@@ -4452,6 +4772,20 @@ class GameEngine {
       }
     }
     return active;
+  }
+
+  _depleteCarbon() {
+    const s = this.state;
+    if (s.carbonBudgetExhausted) return;
+    const gasLevel = s.energy.gas;
+    let decrement = gasLevel > 30 ? 15 : gasLevel > 15 ? 10 : 5;
+    decrement -= s.currentDecisions.energyTransition * 2;
+    decrement = Math.max(decrement, 1);
+    s.carbonBudget = this._clamp(s.carbonBudget - decrement, 0, 100);
+    if (s.carbonBudget <= 0) {
+      s.carbonBudgetExhausted = true;
+      s.temperature = Math.round((s.temperature + 0.3) * 100) / 100;
+    }
   }
 
   reset(scenarioKey) {
@@ -5064,6 +5398,8 @@ class UI {
     this._renderCards(state);
     this._renderSynergies(state);
     this._renderNewsTicker(state);
+    this._renderCarbonBudget(state);
+    this._renderTimeline(state);
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
@@ -5315,6 +5651,74 @@ class UI {
     const shuffled = eligible.sort(() => Math.random() - 0.5).slice(0, 8);
     const items = shuffled.map(h => `<span class="ticker-item">${h.text(state)}</span><span class="ticker-sep">◆</span>`).join('');
     track.innerHTML = items + items;
+  }
+
+  _renderCarbonBudget(state) {
+    const valEl = document.getElementById('val-carbon-budget');
+    const barEl = document.getElementById('bar-carbon-budget');
+    const exhaustedEl = document.getElementById('carbon-budget-exhausted');
+    if (!valEl || !barEl) return;
+    const cb = Math.round(state.carbonBudget);
+    valEl.textContent = cb;
+    barEl.style.width = cb + '%';
+    barEl.className = 'carbon-budget-fill ' + (
+      cb <= 0 ? 'cb-critical' :
+      cb < 30 ? 'cb-red' :
+      cb < 60 ? 'cb-amber' : 'cb-green'
+    );
+    if (exhaustedEl) {
+      exhaustedEl.style.display = state.carbonBudgetExhausted ? '' : 'none';
+    }
+  }
+
+  _renderTimeline(state) {
+    const body = document.getElementById('timeline-panel-body');
+    if (!body) return;
+    if (!state.log || state.log.length === 0) {
+      body.innerHTML = '<div class="tl-empty">Complete your first turn to see your policy timeline.</div>';
+      return;
+    }
+    let html = '';
+    for (const entry of state.log) {
+      html += '<div class="tl-turn-card">';
+      html += `<div class="tl-turn-header">Turn ${entry.turn + 1}: ${entry.year}–${entry.year + 5}</div>`;
+      html += '<div class="tl-investments">';
+      for (const d of entry.decisions) {
+        html += `<span class="tl-invest-chip">${d}</span>`;
+      }
+      html += '</div>';
+      html += '<div class="tl-deltas">';
+      const deltas = [
+        { label: 'Temp', before: entry.snapshot.temperature, after: entry.afterTemp, unit: '°C', invert: true, dp: 1 },
+        { label: 'Grid', before: Math.round(entry.snapshot.gridReliability), after: Math.round(entry.afterGrid), unit: '%', invert: false, dp: 0 },
+        { label: 'Fin', before: Math.round(entry.snapshot.financialStability), after: Math.round(entry.afterFin), unit: '%', invert: false, dp: 0 },
+        { label: 'Soc', before: Math.round(entry.snapshot.socialStability), after: Math.round(entry.afterSoc), unit: '%', invert: false, dp: 0 },
+        { label: 'NZ', before: Math.round(entry.snapshot.netZeroProgress), after: Math.round(entry.afterNZ), unit: '%', invert: false, dp: 0 },
+      ];
+      if (entry.snapshot.carbonBudget !== undefined) {
+        deltas.push({ label: 'CO₂', before: Math.round(entry.snapshot.carbonBudget), after: Math.round(entry.afterCB), unit: '%', invert: false, dp: 0 });
+      }
+      for (const d of deltas) {
+        const diff = d.after - d.before;
+        const significant = Math.abs(diff) >= (d.unit === '°C' ? 0.05 : 1);
+        if (!significant) {
+          html += `<span class="tl-delta-chip same">${d.label}: ${d.after.toFixed(d.dp)}${d.unit}</span>`;
+        } else {
+          const sign = diff > 0 ? '+' : '';
+          const isGood = d.invert ? diff < 0 : diff > 0;
+          html += `<span class="tl-delta-chip ${isGood ? 'up' : 'down'}">${d.label}: ${sign}${diff.toFixed(d.dp)}${d.unit}</span>`;
+        }
+      }
+      html += '</div>';
+      if (entry.event) {
+        html += `<div class="tl-event-line">⚠ ${entry.event}</div>`;
+      }
+      if (entry.synergies && entry.synergies.length > 0) {
+        html += `<div class="tl-synergy-line">✦ ${entry.synergies.join(' · ')}</div>`;
+      }
+      html += '</div>';
+    }
+    body.innerHTML = html;
   }
 
   _renderResearchCard() {
@@ -6422,6 +6826,131 @@ function _showIntlEvent(overlay, evt, engine, fxMgr, year) {
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /* ============================================================
+   TUTORIAL MANAGER
+============================================================ */
+
+class TutorialManager {
+  constructor() {
+    this._KEY = 'uk_climate_tutorial_done_v1';
+    this._steps = [
+      { title: 'Welcome', desc: 'Welcome to UK Climate Strategy! You\'ll guide Britain\'s climate policy from 2025 to 2050.', target: null },
+      { title: 'Your Budget', desc: 'This is your budget. Each turn you get funds to invest in climate action. Spend wisely — unspent funds don\'t carry over.', target: '#budget-status' },
+      { title: 'Investment Cards', desc: 'Choose where to invest. Each category has different effects on your metrics. You can allocate up to 2 blocks per category.', target: '#investment-cards' },
+      { title: 'National Indicators', desc: 'Watch these key indicators. Balance temperature control with grid reliability, economic and social stability.', target: '#metrics-inner' },
+      { title: 'Carbon Budget', desc: 'Your carbon budget is finite. Heavy fossil fuel use depletes it faster. If it runs out, warming accelerates sharply.', target: '#carbon-budget-section' },
+      { title: 'Research & Development', desc: 'Invest in R&D to unlock permanent technology upgrades that multiply the effectiveness of future spending.', target: '#card-research' },
+      { title: 'Ready to Begin', desc: 'Ready to begin? Allocate your investment blocks, then click "Advance" when you\'ve made your choices. Good luck, Minister!', target: '#end-turn-btn' },
+    ];
+    this._current = 0;
+    this._overlay = null;
+  }
+
+  shouldShow() {
+    try { return !localStorage.getItem(this._KEY); } catch { return true; }
+  }
+
+  markDone() {
+    try { localStorage.setItem(this._KEY, '1'); } catch {}
+  }
+
+  start() {
+    this._current = 0;
+    this._buildOverlay();
+    this._showStep();
+  }
+
+  _buildOverlay() {
+    if (this._overlay) this._overlay.remove();
+    const ov = document.createElement('div');
+    ov.className = 'tutorial-overlay';
+    ov.innerHTML = `
+      <div class="tutorial-spotlight" id="tutorial-spot"></div>
+      <div class="tutorial-card" id="tutorial-card">
+        <div class="tutorial-step-counter" id="tutorial-counter"></div>
+        <h3 id="tutorial-title"></h3>
+        <p id="tutorial-desc"></p>
+        <div class="tutorial-actions">
+          <button class="tutorial-skip" id="tutorial-skip-btn">Skip Tutorial</button>
+          <button class="tutorial-next-btn" id="tutorial-next-btn">Next</button>
+        </div>
+      </div>`;
+    document.body.appendChild(ov);
+    this._overlay = ov;
+
+    ov.querySelector('#tutorial-next-btn').addEventListener('click', () => this._advance());
+    ov.querySelector('#tutorial-skip-btn').addEventListener('click', () => this._finish());
+  }
+
+  _showStep() {
+    const step = this._steps[this._current];
+    const counter = this._overlay.querySelector('#tutorial-counter');
+    const title = this._overlay.querySelector('#tutorial-title');
+    const desc = this._overlay.querySelector('#tutorial-desc');
+    const nextBtn = this._overlay.querySelector('#tutorial-next-btn');
+    const spot = this._overlay.querySelector('#tutorial-spot');
+    const card = this._overlay.querySelector('#tutorial-card');
+
+    counter.textContent = `Step ${this._current + 1} of ${this._steps.length}`;
+    title.textContent = step.title;
+    desc.textContent = step.desc;
+    nextBtn.textContent = this._current === this._steps.length - 1 ? 'Start Playing' : 'Next';
+
+    if (step.target) {
+      const el = document.querySelector(step.target);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const pad = 8;
+        spot.style.left = (rect.left - pad) + 'px';
+        spot.style.top = (rect.top - pad) + 'px';
+        spot.style.width = (rect.width + pad * 2) + 'px';
+        spot.style.height = (rect.height + pad * 2) + 'px';
+        spot.style.display = '';
+
+        const cardW = 340;
+        let cardLeft = rect.left + rect.width / 2 - cardW / 2;
+        cardLeft = Math.max(16, Math.min(window.innerWidth - cardW - 16, cardLeft));
+        let cardTop = rect.bottom + pad + 12;
+        if (cardTop + 200 > window.innerHeight) {
+          cardTop = rect.top - pad - 220;
+        }
+        cardTop = Math.max(16, cardTop);
+        card.style.left = cardLeft + 'px';
+        card.style.top = cardTop + 'px';
+        card.style.transform = 'none';
+      } else {
+        this._centerCard(spot, card);
+      }
+    } else {
+      this._centerCard(spot, card);
+    }
+  }
+
+  _centerCard(spot, card) {
+    spot.style.display = 'none';
+    card.style.left = '50%';
+    card.style.top = '50%';
+    card.style.transform = 'translate(-50%, -50%)';
+  }
+
+  _advance() {
+    this._current++;
+    if (this._current >= this._steps.length) {
+      this._finish();
+    } else {
+      this._showStep();
+    }
+  }
+
+  _finish() {
+    this.markDone();
+    if (this._overlay) {
+      this._overlay.remove();
+      this._overlay = null;
+    }
+  }
+}
+
+/* ============================================================
    MODULE: LEGACY SYSTEM
 ============================================================ */
 
@@ -6490,6 +7019,7 @@ const engine       = new GameEngine();
 const techTree     = new TechTreeManager();
 const effectsMgr   = new EffectsManager();
 const legacySystem = new LegacySystem();
+const tutorialMgr  = new TutorialManager();
 
 // Activate difficulty for initial game and apply default scenario
 difficultyMgr.activateForNewGame();
@@ -6516,6 +7046,40 @@ if (sceneSection && gameMain) gameMain.after(sceneSection);
 
 const ui = new UI(engine);
 ui.render(engine.getState());
+
+// Timeline panel toggle
+const _tlToggle = document.getElementById('timeline-toggle-btn');
+const _tlPanel  = document.getElementById('timeline-panel');
+const _tlClose  = document.getElementById('timeline-panel-close');
+if (_tlToggle && _tlPanel) {
+  _tlToggle.addEventListener('click', () => _tlPanel.classList.toggle('open'));
+}
+if (_tlClose && _tlPanel) {
+  _tlClose.addEventListener('click', () => _tlPanel.classList.remove('open'));
+}
+
+// Tutorial: help button replays tutorial
+const _tutorialBtn = document.getElementById('tutorial-help-btn');
+if (_tutorialBtn) {
+  _tutorialBtn.addEventListener('click', () => tutorialMgr.start());
+}
+
+// Auto-show tutorial on first visit (after hook screen is dismissed)
+if (tutorialMgr.shouldShow()) {
+  const _hookCheck = setInterval(() => {
+    const hookScreen = document.getElementById('hook-screen');
+    const advisorOv = document.getElementById('advisor-overlay');
+    const scenarioScr = document.getElementById('scenario-screen');
+    const allHidden = (!hookScreen || hookScreen.classList.contains('hidden'))
+      && (!advisorOv || advisorOv.classList.contains('hidden'))
+      && (!scenarioScr || scenarioScr.classList.contains('hidden'));
+    if (allHidden) {
+      clearInterval(_hookCheck);
+      setTimeout(() => tutorialMgr.start(), 500);
+    }
+  }, 500);
+  setTimeout(() => clearInterval(_hookCheck), 30000);
+}
 
 // Register service worker for PWA offline support
 if ('serviceWorker' in navigator) {
