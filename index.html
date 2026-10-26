@@ -2142,6 +2142,174 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== NEWS TICKER ===== */
+#news-ticker {
+  background: linear-gradient(90deg, #0a0e1a, #101528, #0a0e1a);
+  border-bottom: 1px solid var(--border-subtle);
+  height: 28px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+#ticker-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ff3d00;
+  background: linear-gradient(90deg, #0a0e1a 80%, transparent);
+  z-index: 2;
+}
+#ticker-label::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #ff3d00;
+  border-radius: 50%;
+  margin-left: 6px;
+  animation: tickerPulse 1.4s ease-in-out infinite;
+}
+@keyframes tickerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+#ticker-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 70px;
+  animation: tickerScroll 35s linear infinite;
+  white-space: nowrap;
+}
+#ticker-track:hover {
+  animation-play-state: paused;
+}
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-item {
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 0 24px;
+  font-family: var(--font-system);
+  letter-spacing: 0.01em;
+}
+.ticker-item .ticker-highlight {
+  color: var(--accent-blue-lt);
+  font-weight: 600;
+}
+.ticker-sep {
+  color: var(--border-strong);
+  padding: 0 8px;
+  font-size: 8px;
+}
+
+/* ===== SYNERGY BADGES ===== */
+#synergy-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 var(--gap-md) var(--gap-sm);
+  min-height: 0;
+}
+#synergy-display:empty {
+  display: none;
+}
+.synergy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  animation: synergyPop 0.25s ease-out;
+  border: 1px solid;
+}
+.synergy-badge.active {
+  background: rgba(76, 175, 129, 0.12);
+  border-color: rgba(76, 175, 129, 0.35);
+  color: var(--accent-green-lt);
+}
+.synergy-badge.preview {
+  background: rgba(83, 144, 217, 0.10);
+  border-color: rgba(83, 144, 217, 0.25);
+  color: var(--accent-blue-lt);
+}
+.synergy-badge .synergy-icon {
+  font-size: 12px;
+}
+.synergy-badge .synergy-desc {
+  font-weight: 400;
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+@keyframes synergyPop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ===== INTERNATIONAL EVENT STYLING ===== */
+#mini-event-panel.intl-event {
+  border-color: #b39ddb;
+  background: linear-gradient(135deg, var(--bg-tertiary), rgba(179, 157, 219, 0.06));
+}
+#mini-event-panel.intl-event .mini-event-title {
+  color: #b39ddb;
+}
+#mini-event-panel.intl-event .mini-event-explain {
+  border-left-color: #b39ddb;
+}
+.intl-label {
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #b39ddb;
+  background: rgba(179, 157, 219, 0.12);
+  border: 1px solid rgba(179, 157, 219, 0.25);
+  border-radius: 999px;
+  padding: 1px 7px;
+  margin-bottom: 4px;
+}
+#mini-event-panel.intl-event .opt-a {
+  background: rgba(179, 157, 219, 0.14);
+  border-color: rgba(179, 157, 219, 0.4);
+}
+#mini-event-panel.intl-event .opt-a:hover {
+  background: rgba(179, 157, 219, 0.25);
+}
+#mini-event-panel.intl-event .opt-b {
+  background: rgba(255, 214, 0, 0.08);
+  border-color: rgba(255, 214, 0, 0.3);
+}
+#mini-event-panel.intl-event .opt-b:hover {
+  background: rgba(255, 214, 0, 0.16);
+}
+
+/* Synergy log entries */
+.log-synergy {
+  font-size: 10px;
+  color: var(--accent-green-lt);
+  margin-top: 3px;
+  padding: 2px 6px;
+  background: rgba(76,175,129,0.06);
+  border-left: 2px solid var(--accent-green-lt);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
 </style>
 </head>
 <body>
@@ -2176,6 +2344,12 @@ body { transition: filter 2s ease; }
     </div>
   </div>
 </header>
+
+<!-- ===== NEWS TICKER ===== -->
+<div id="news-ticker">
+  <div id="ticker-label">LIVE</div>
+  <div id="ticker-track"></div>
+</div>
 
 <!-- ===== MAIN LAYOUT ===== -->
 <main id="game-main">
@@ -2897,6 +3071,7 @@ body { transition: filter 2s ease; }
       </svg>
     </div>
 
+    <div id="synergy-display"></div>
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
@@ -3100,6 +3275,241 @@ const BLOCK_COSTS = {
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
+
+/* ============================================================
+   NEWS TICKER HEADLINES
+============================================================ */
+
+const HEADLINES = [
+  { condition: s => true, text: s => `UK emissions pathway tracking at <span class="ticker-highlight">${s.temperature.toFixed(1)}°C</span> above pre-industrial baseline` },
+  { condition: s => true, text: s => `National Grid reliability index: <span class="ticker-highlight">${Math.round(s.gridReliability)}%</span>` },
+  { condition: s => true, text: s => `Net Zero progress stands at <span class="ticker-highlight">${Math.round(s.netZeroProgress)}%</span> of 2050 target` },
+  { condition: s => s.temperature > 1.5, text: s => `Climate scientists warn: <span class="ticker-highlight">${s.temperature.toFixed(1)}°C</span> warming now exceeds safe threshold — tipping points activated` },
+  { condition: s => s.temperature > 2.0, text: s => `EMERGENCY: UK warming reaches <span class="ticker-highlight">${s.temperature.toFixed(1)}°C</span> — Paris Agreement targets breached` },
+  { condition: s => s.temperature < 1.4, text: s => `UK on track for manageable warming — current pathway <span class="ticker-highlight">${s.temperature.toFixed(1)}°C</span>` },
+  { condition: s => s.gridReliability < 40, text: () => `National Grid issues <span class="ticker-highlight">RED WARNING</span> — rolling blackouts possible this winter` },
+  { condition: s => s.gridReliability < 55, text: s => `Grid reliability drops below safe margin — <span class="ticker-highlight">${Math.round(s.gridReliability)}%</span> raises concerns` },
+  { condition: s => s.gridReliability > 80, text: () => `Grid stability rated <span class="ticker-highlight">EXCELLENT</span> — backup capacity meets demand with margin` },
+  { condition: s => s.socialStability < 40, text: () => `Widespread protests across northern England over energy costs and job losses` },
+  { condition: s => s.socialStability < 55, text: s => `Public trust falling — social stability index at <span class="ticker-highlight">${Math.round(s.socialStability)}%</span>` },
+  { condition: s => s.socialStability > 80, text: () => `Public broadly supportive of climate transition — trust in government policy remains high` },
+  { condition: s => s.financialStability < 40, text: () => `Bank of England issues <span class="ticker-highlight">STABILITY WARNING</span> — pension fund exposure to stranded assets critical` },
+  { condition: s => s.financialStability < 55, text: () => `Financial markets rattled by transition uncertainty — pension funds under pressure` },
+  { condition: s => s.financialStability > 80, text: () => `UK financial sector rated resilient — green bond market thriving` },
+  { condition: s => s.netZeroProgress >= 100, text: () => `<span class="ticker-highlight">NET ZERO ACHIEVED</span> — UK becomes one of the first G7 nations to meet its climate commitment` },
+  { condition: s => s.netZeroProgress > 80 && s.netZeroProgress < 100, text: s => `Net Zero within reach — <span class="ticker-highlight">${Math.round(s.netZeroProgress)}%</span> complete, final push needed` },
+  { condition: s => s.netZeroProgress < 30, text: () => `Climate campaigners slam "glacial" pace of Net Zero transition — <span class="ticker-highlight">targets at risk</span>` },
+  { condition: s => s.energy.wind > 60, text: s => `Offshore wind capacity surges to <span class="ticker-highlight">${Math.round(s.energy.wind)} GW</span> — UK now Europe\'s wind leader` },
+  { condition: s => s.energy.solar > 50, text: s => `Solar farms now generating <span class="ticker-highlight">${Math.round(s.energy.solar)} GW</span> — record deployment across southern England` },
+  { condition: s => s.energy.gas > 40, text: () => `Gas remains dominant in UK energy mix — critics warn of <span class="ticker-highlight">fossil lock-in</span>` },
+  { condition: s => s.energy.gas < 10, text: () => `UK gas generation falls to historic low — <span class="ticker-highlight">fossil fuel era ending</span>` },
+  { condition: s => s.energy.nuclear > 30, text: s => `New nuclear fleet online — <span class="ticker-highlight">${Math.round(s.energy.nuclear)} GW</span> providing baseload stability` },
+  { condition: s => s.energy.storage > 40, text: s => `Battery storage capacity hits <span class="ticker-highlight">${Math.round(s.energy.storage)} GW</span> — grid intermittency solved` },
+  { condition: s => s.strandedAssets > 50, text: () => `North Sea asset write-downs <span class="ticker-highlight">exceed £50bn</span> — pension funds scramble to diversify` },
+  { condition: s => s.strandedAssets > 30, text: () => `Fossil fuel assets increasingly stranded — investors demand managed wind-down` },
+  { condition: s => s.propertyValue < 70, text: () => `Property values under pressure as flood and heat risk repricing accelerates` },
+  { condition: s => s.infrastructure.adaptation > 60, text: () => `UK flood defences rated <span class="ticker-highlight">substantially improved</span> following sustained adaptation investment` },
+  { condition: s => s.eventCount > 2, text: s => `UK has weathered <span class="ticker-highlight">${s.eventCount} major climate events</span> — resilience tested repeatedly` },
+  { condition: s => s.turn >= 3 && s.netZeroProgress < 50, text: () => `UN Climate Committee expresses <span class="ticker-highlight">"deep concern"</span> over UK\'s slow progress toward Net Zero` },
+  { condition: s => s.socialCapital > 30, text: () => `Community resilience networks rated among strongest in Europe` },
+  { condition: s => s.turn === 0, text: () => `New government begins 25-year climate strategy — first investment decisions imminent` },
+  { condition: s => s.turn >= 4, text: () => `Final term begins — legacy of climate policy now being determined` },
+  { condition: s => s.infrastructure.energyTransition > 80, text: () => `Renewable energy infrastructure rated <span class="ticker-highlight">world-class</span> by International Energy Agency` },
+  { condition: s => s.budget < 40, text: s => `Treasury under pressure — just <span class="ticker-highlight">£${s.budget}bn</span> remaining for climate investment this term` },
+];
+
+/* ============================================================
+   POLICY SYNERGY SYSTEM
+============================================================ */
+
+const SYNERGIES = [
+  {
+    id: 'green_grid',
+    requires: ['energyTransition', 'gridAndStorage'],
+    name: 'Green Grid',
+    icon: '⚡',
+    desc: '+5% Net Zero, +3 Grid',
+    apply(s) {
+      s.netZeroProgress = Math.min(100, s.netZeroProgress + 5);
+      s.gridReliability = Math.min(100, s.gridReliability + 3);
+    },
+  },
+  {
+    id: 'just_transition',
+    requires: ['energyTransition', 'socialSupport'],
+    name: 'Just Transition',
+    icon: '🤝',
+    desc: '−5 Stranded, +3 Social Capital',
+    apply(s) {
+      s.strandedAssets = Math.max(0, s.strandedAssets - 5);
+      s.socialCapital = Math.min(60, s.socialCapital + 3);
+    },
+  },
+  {
+    id: 'fortress_britain',
+    requires: ['adaptation', 'gridAndStorage'],
+    name: 'Fortress Britain',
+    icon: '🛡️',
+    desc: '+10 Adapt Infra, +5 Grid',
+    apply(s) {
+      s.infrastructure.adaptation += 10;
+      s.gridReliability = Math.min(100, s.gridReliability + 5);
+    },
+  },
+  {
+    id: 'economic_shield',
+    requires: ['financialResilience', 'socialSupport'],
+    name: 'Economic Shield',
+    icon: '🏦',
+    desc: '+5 Fin Stability, +5 Property',
+    apply(s) {
+      s.financialStability = Math.min(100, s.financialStability + 5);
+      s.propertyValue = Math.min(100, s.propertyValue + 5);
+    },
+  },
+  {
+    id: 'innovation_corridor',
+    requires: ['research', 'energyTransition'],
+    name: 'Innovation Corridor',
+    icon: '🔬',
+    desc: '+8% Net Zero',
+    apply(s) {
+      s.netZeroProgress = Math.min(100, s.netZeroProgress + 8);
+    },
+  },
+  {
+    id: 'full_spectrum',
+    requires: '_three_plus',
+    name: 'Full Spectrum',
+    icon: '🌈',
+    desc: '+£10bn next turn',
+    apply(s) {
+      s._synergyBudgetBonus = (s._synergyBudgetBonus || 0) + 10;
+    },
+  },
+];
+
+/* ============================================================
+   INTERNATIONAL EVENTS
+============================================================ */
+
+const INTERNATIONAL_EVENTS = [
+  {
+    id: 'intl_cop_summit',
+    icon: '🌍',
+    title: 'COP Climate Summit',
+    prompt: 'The world is watching. What position does the UK take at this year\'s COP?',
+    explanation: 'International climate summits set the pace for global action. An ambitious pledge costs the UK money and political capital — but strengthens the global framework. A cautious approach avoids domestic disruption but slows collective progress.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Temperature: ${s.temperature.toFixed(1)}°C`,
+    }),
+    optA: {
+      label: '🏛️ Lead with ambitious binding pledge',
+      consequence: 'Costs £10bn next turn · +8% Net Zero · +4 Social Capital (global leadership)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.socialCapital = Math.min(60, s.socialCapital + 4); },
+    },
+    optB: {
+      label: '📋 Cautious "monitor and review" stance',
+      consequence: 'No cost · +2% Net Zero · −3 Social Capital (seen as foot-dragging)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); s.socialCapital = Math.max(0, s.socialCapital - 3); },
+    },
+    condition: (s) => s.turn >= 1 && s.turn <= 3,
+  },
+  {
+    id: 'intl_carbon_border',
+    icon: '🇪🇺',
+    title: 'EU Carbon Border Tax',
+    prompt: 'The EU imposes a carbon border adjustment on UK exports. How do you respond?',
+    explanation: 'The EU\'s Carbon Border Adjustment Mechanism penalises high-emission imports. UK exporters face tariffs unless the UK matches EU carbon pricing. Matching the price accelerates decarbonisation but raises domestic costs. A trade deal eases the pain but requires concessions.',
+    contextFn: (s) => ({
+      label: 'Gas in Mix',
+      value: `${Math.round(s.energy.gas)} GW`,
+      note: `Financial Stability: ${Math.round(s.financialStability)}%`,
+    }),
+    optA: {
+      label: '💰 Match EU carbon price domestically',
+      consequence: 'Costs £7bn next turn · −5% Gas · +6% Net Zero · −3 Social (bills rise)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.energy.gas = Math.max(0, s.energy.gas - 5); s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    optB: {
+      label: '🤝 Negotiate bilateral trade exemption',
+      consequence: 'Costs £4bn next turn · preserves trade · +3 Financial Stability · slower decarbonisation',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.financialStability = Math.min(100, s.financialStability + 3); },
+    },
+    condition: (s) => s.turn >= 1 && s.energy.gas > 20,
+  },
+  {
+    id: 'intl_rare_earth',
+    icon: '⛏️',
+    title: 'Rare Earth Supply Crisis',
+    prompt: 'China restricts rare earth exports critical to wind turbines and batteries. What\'s your strategy?',
+    explanation: 'The UK\'s renewable energy supply chain depends heavily on Chinese rare earth minerals. Export restrictions threaten wind turbine and battery production. Stockpiling buys time but is expensive. Investing in domestic recycling and alternative minerals is cheaper long-term but causes a short-term slowdown.',
+    contextFn: (s) => ({
+      label: 'Wind Capacity',
+      value: `${Math.round(s.energy.wind)} GW`,
+      note: `Storage: ${Math.round(s.energy.storage)} GW`,
+    }),
+    optA: {
+      label: '🏗️ Emergency strategic stockpile',
+      consequence: 'Costs £12bn next turn · protects wind/solar capacity · no long-term fix',
+      effect: (s) => { s.nextTurnBudgetPenalty += 12; },
+    },
+    optB: {
+      label: '♻️ Invest in domestic recycling & alternatives',
+      consequence: 'Costs £5bn next turn · Wind −4 GW this term · +15 R&D infrastructure (long-term)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.energy.wind = Math.max(0, s.energy.wind - 4); s.infrastructure.adaptation += 15; },
+    },
+    condition: (s) => s.turn >= 2 && s.infrastructure.energyTransition > 40,
+  },
+  {
+    id: 'intl_green_bonds',
+    icon: '📈',
+    title: 'Global Green Bond Boom',
+    prompt: 'International investors are flooding into green bonds. Does the UK capitalise?',
+    explanation: 'A surge in global green finance demand means the UK can issue sovereign green bonds at favourable rates. A large issuance raises significant capital for the transition — but increases national debt. A smaller, targeted approach is fiscally safer but captures less of the opportunity.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Budget: £${Math.round(s.budget)}bn`,
+    }),
+    optA: {
+      label: '💷 Major sovereign green bond issuance',
+      consequence: '+£18bn budget bonus next turn · −4 Financial Stability (debt increase)',
+      effect: (s) => { s._synergyBudgetBonus = (s._synergyBudgetBonus || 0) + 18; s.financialStability = Math.max(0, s.financialStability - 4); },
+    },
+    optB: {
+      label: '📊 Targeted green gilts programme',
+      consequence: '+£8bn budget bonus next turn · +2 Financial Stability (measured approach)',
+      effect: (s) => { s._synergyBudgetBonus = (s._synergyBudgetBonus || 0) + 8; s.financialStability = Math.min(100, s.financialStability + 2); },
+    },
+    condition: (s) => s.turn >= 1 && s.financialStability > 55,
+  },
+  {
+    id: 'intl_us_withdrawal',
+    icon: '🇺🇸',
+    title: 'US Climate Withdrawal',
+    prompt: 'The United States has withdrawn from international climate agreements. How does the UK respond?',
+    explanation: 'America pulling out weakens the global framework and emboldens fossil fuel interests worldwide. The UK can double down on climate leadership — expensive but influential — or pivot to bilateral deals that protect UK interests without the global ambition.',
+    contextFn: (s) => ({
+      label: 'Temperature',
+      value: `${s.temperature.toFixed(1)}°C`,
+      note: `Social Stability: ${Math.round(s.socialStability)}%`,
+    }),
+    optA: {
+      label: '🌍 Double down on UK climate leadership',
+      consequence: 'Costs £8bn next turn · +6% Net Zero · +5 Social Capital · Temperature pressure eased',
+      effect: (s) => { s.nextTurnBudgetPenalty += 8; s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.socialCapital = Math.min(60, s.socialCapital + 5); },
+    },
+    optB: {
+      label: '🤝 Pivot to bilateral clean energy deals',
+      consequence: 'Costs £3bn next turn · +3% Net Zero · +4 Financial Stability',
+      effect: (s) => { s.nextTurnBudgetPenalty += 3; s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); s.financialStability = Math.min(100, s.financialStability + 4); },
+    },
+    condition: (s) => s.turn >= 2 && Math.random() < 0.5,
+  },
+];
 
 const RANDOM_EVENTS = [
   {
@@ -3721,6 +4131,9 @@ class GameEngine {
     // Phase 2: Apply investments
     this._applyInvestments();
 
+    // Phase 2b: Apply synergy bonuses
+    const firedSynergies = this._checkSynergies();
+
     // Phase 3: Grid formula
     this._recalcGrid();
 
@@ -3763,6 +4176,7 @@ class GameEngine {
       year: prevYear,
       decisions,
       event: event ? event.title : null,
+      synergies: firedSynergies.map(syn => `${syn.icon} ${syn.name}`),
       snapshot,
       afterTemp:     s.temperature,
       afterNZ:       s.netZeroProgress,
@@ -3784,6 +4198,10 @@ class GameEngine {
 
     // Recalculate budget for next turn
     s.budget = this.getEffectiveBudget();
+    if (s._synergyBudgetBonus) {
+      s.budget += s._synergyBudgetBonus;
+      delete s._synergyBudgetBonus;
+    }
 
     // Check end game — 5 turns total (2025→2030→2035→2040→2045→2050)
     let endgame = null;
@@ -4005,6 +4423,35 @@ class GameEngine {
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
+  }
+
+  _checkSynergies() {
+    const s = this.state;
+    const d = s.currentDecisions;
+    const fired = [];
+    const allocatedCats = Object.keys(d).filter(k => d[k] > 0);
+    for (const syn of SYNERGIES) {
+      if (syn.requires === '_three_plus') {
+        if (allocatedCats.length >= 3) { syn.apply(s); fired.push(syn); }
+      } else {
+        if (syn.requires.every(cat => d[cat] > 0)) { syn.apply(s); fired.push(syn); }
+      }
+    }
+    return fired;
+  }
+
+  getActiveSynergies() {
+    const d = this.state.currentDecisions;
+    const allocatedCats = Object.keys(d).filter(k => d[k] > 0);
+    const active = [];
+    for (const syn of SYNERGIES) {
+      if (syn.requires === '_three_plus') {
+        if (allocatedCats.length >= 3) active.push(syn);
+      } else {
+        if (syn.requires.every(cat => d[cat] > 0)) active.push(syn);
+      }
+    }
+    return active;
   }
 
   reset(scenarioKey) {
@@ -4615,6 +5062,8 @@ class UI {
     this._renderEnergyMix(state);
     this._renderBudget(state);
     this._renderCards(state);
+    this._renderSynergies(state);
+    this._renderNewsTicker(state);
     this._renderScene(state);
     effectsMgr.applyHeat(state.temperature);
     effectsMgr.updateSky(state.temperature);
@@ -4847,6 +5296,27 @@ class UI {
     this._renderResearchCard();
   }
 
+  _renderSynergies(state) {
+    const display = document.getElementById('synergy-display');
+    if (!display) return;
+    const active = this.engine.getActiveSynergies();
+    if (active.length === 0) { display.innerHTML = ''; return; }
+    display.innerHTML = active.map(syn =>
+      `<span class="synergy-badge preview"><span class="synergy-icon">${syn.icon}</span>${syn.name}<span class="synergy-desc">${syn.desc}</span></span>`
+    ).join('');
+  }
+
+  _renderNewsTicker(state) {
+    const track = document.getElementById('ticker-track');
+    if (!track) return;
+    const eligible = HEADLINES.filter(h => h.condition(state));
+    if (eligible.length === 0) return;
+    // Pick 6–8 headlines, shuffled
+    const shuffled = eligible.sort(() => Math.random() - 0.5).slice(0, 8);
+    const items = shuffled.map(h => `<span class="ticker-item">${h.text(state)}</span><span class="ticker-sep">◆</span>`).join('');
+    track.innerHTML = items + items;
+  }
+
   _renderResearchCard() {
     const nextUpgrade = techTree.nextUpgrade();
     const plusBtn = document.getElementById('plus-research');
@@ -5001,6 +5471,11 @@ class UI {
     // Event notice
     if (entry.event) {
       html += `<div class="log-text" style="color:var(--status-danger);margin-top:4px;">⚠ ${entry.event}</div>`;
+    }
+
+    // Synergy bonuses
+    if (entry.synergies && entry.synergies.length > 0) {
+      html += `<div class="log-synergy">Synergies: ${entry.synergies.join(' · ')}</div>`;
     }
 
     // Metric chips
@@ -5757,6 +6232,14 @@ async function runSimulationPhase(engine, ui, fxMgr) {
     }
   }
 
+  // International event (one per simulation, after domestic mini-events)
+  const eligibleIntl = INTERNATIONAL_EVENTS.filter(e => e.condition(engine.state));
+  if (eligibleIntl.length > 0 && Math.random() < 0.55) {
+    const intlEvt = eligibleIntl[Math.floor(Math.random() * eligibleIntl.length)];
+    fxMgr.haptic('medium');
+    await _showIntlEvent(overlay, intlEvt, engine, fxMgr, startYear + 4);
+  }
+
   // Complete progress bar
   _setSimYear(overlay, startYear + 5);
   _setSimProgress(overlay, 100);
@@ -5768,9 +6251,13 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   await _delay(500);
   overlay.remove();
 
-  // Recalculate next-turn budget to include any mini-event penalties
+  // Recalculate next-turn budget to include any mini-event/intl-event penalties
   // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
   engine.state.budget = engine.getEffectiveBudget();
+  if (engine.state._synergyBudgetBonus) {
+    engine.state.budget += engine.state._synergyBudgetBonus;
+    delete engine.state._synergyBudgetBonus;
+  }
 
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
@@ -5853,6 +6340,54 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
     })() : '';
 
     panel.innerHTML = `
+      <div class="mini-event-icon">${evt.icon}</div>
+      <div class="mini-event-year">${year}</div>
+      <div class="mini-event-title">${evt.title}</div>
+      <div class="mini-event-prompt">${evt.prompt}</div>
+      ${evt.explanation ? `<div class="mini-event-explain">${evt.explanation}</div>` : ''}
+      ${contextHTML}
+      <div class="mini-event-actions">
+        <button class="mini-btn opt-a">
+          <span class="mini-btn-label">${evt.optA.label}</span>
+          <span class="mini-btn-consequence">${evt.optA.consequence}</span>
+        </button>
+        <button class="mini-btn opt-b">
+          <span class="mini-btn-label">${evt.optB.label}</span>
+          <span class="mini-btn-consequence">${evt.optB.consequence}</span>
+        </button>
+      </div>`;
+
+    overlay.querySelector('#sim-card').appendChild(panel);
+
+    const cleanup = (handler) => {
+      handler(engine.state);
+      fxMgr.haptic('light');
+      panel.classList.add('sim-fade-out');
+      setTimeout(() => { panel.remove(); resolve(); }, 300);
+    };
+
+    panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
+    panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
+  });
+}
+
+function _showIntlEvent(overlay, evt, engine, fxMgr, year) {
+  return new Promise(resolve => {
+    const panel = document.createElement('div');
+    panel.id = 'mini-event-panel';
+    panel.classList.add('intl-event');
+
+    const contextHTML = evt.contextFn ? (() => {
+      const ctx = evt.contextFn(engine.state);
+      return `<div class="mini-event-context">
+        <span class="mini-event-context-label">${ctx.label}:</span>
+        <span class="mini-event-context-value">${ctx.value}</span>
+        <span class="mini-event-context-label" style="margin-left:auto">${ctx.note || ''}</span>
+      </div>`;
+    })() : '';
+
+    panel.innerHTML = `
+      <div style="text-align:center"><span class="intl-label">International</span></div>
       <div class="mini-event-icon">${evt.icon}</div>
       <div class="mini-event-year">${year}</div>
       <div class="mini-event-title">${evt.title}</div>
