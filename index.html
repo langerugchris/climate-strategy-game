@@ -2142,12 +2142,312 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== GLOBAL CONTEXT EVENT (News Broadcast) ===== */
+#global-event-panel {
+  margin-top: var(--gap-md);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  animation: slideUp 0.3s ease;
+}
+.global-event-source {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent-blue-lt);
+  text-align: center;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+.global-event-icon {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.global-event-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.global-event-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.55;
+  margin-bottom: 8px;
+  font-family: var(--font-editorial);
+}
+.global-event-effect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  width: fit-content;
+  margin: 0 auto var(--gap-sm);
+}
+.global-event-effect.pos { background: #0c2a1a; color: var(--status-good); }
+.global-event-effect.neg { background: #2a0e08; color: #ff7043; }
+.global-event-effect.neutral { background: var(--bg-elevated); color: var(--text-secondary); }
+.global-event-dismiss {
+  width: 100%;
+  padding: 10px;
+  background: var(--accent-blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+.global-event-dismiss:hover { background: var(--accent-blue-lt); }
+
+/* ===== POLICY MILESTONE LOG ENTRY ===== */
+.log-milestone {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--status-good);
+  padding: var(--gap-sm) var(--gap-md);
+  border-left: 3px solid var(--status-good);
+  background: rgba(0,200,83,0.06);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 6px 0;
+  animation: slideIn 0.3s ease-out;
+}
+.log-milestone-icon { font-size: 16px; margin-right: 4px; }
+.log-milestone-title { font-weight: 700; }
+.log-milestone-effect {
+  font-size: 10px;
+  color: var(--accent-green-lt);
+  margin-top: 3px;
+  display: block;
+}
+
+/* ===== ACHIEVEMENT TOAST ===== */
+#toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2500;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--gap-sm);
+  pointer-events: none;
+}
+.achievement-toast {
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-blue-lt);
+  border-radius: var(--radius-md);
+  padding: var(--gap-sm) var(--gap-md);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  pointer-events: auto;
+  animation: toastIn 0.4s ease forwards;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  max-width: 280px;
+}
+.achievement-toast.toast-out {
+  animation: toastOut 0.3s ease forwards;
+}
+.toast-icon { font-size: 24px; flex-shrink: 0; }
+.toast-body { min-width: 0; }
+.toast-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--status-good);
+  font-weight: 700;
+}
+.toast-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.toast-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(40px); }
+}
+
+/* ===== RED BOX BRIEFING ===== */
+#redbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 850;
+  animation: fadeIn 0.35s ease;
+}
+#redbox-overlay.hidden { display: none; }
+
+#redbox-card {
+  background: var(--bg-secondary);
+  border: 2px solid #8b1a1a;
+  border-radius: var(--radius-lg);
+  padding: var(--gap-xl);
+  max-width: 500px;
+  width: 92vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.4s ease;
+}
+.redbox-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-md);
+  padding-bottom: var(--gap-sm);
+  border-bottom: 2px solid #8b1a1a;
+}
+.redbox-crest { font-size: 28px; }
+.redbox-title-block { flex: 1; }
+.redbox-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #c0392b;
+  font-weight: 700;
+}
+.redbox-period {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.redbox-section {
+  margin-bottom: var(--gap-md);
+}
+.redbox-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: var(--gap-xs);
+}
+.redbox-changes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.redbox-change {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+}
+.redbox-change-label { color: var(--text-secondary); }
+.redbox-change-val { font-weight: 700; font-variant-numeric: tabular-nums; }
+.redbox-change-val.pos { color: var(--status-good); }
+.redbox-change-val.neg { color: var(--status-danger); }
+.redbox-risks {
+  font-size: 12px;
+  color: var(--status-warn);
+  line-height: 1.55;
+  padding: var(--gap-sm);
+  background: rgba(255,214,0,0.06);
+  border-left: 3px solid var(--status-warn);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.redbox-risks.clear {
+  color: var(--status-good);
+  background: rgba(0,200,83,0.06);
+  border-left-color: var(--status-good);
+}
+.redbox-recommendation {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-family: var(--font-editorial);
+  font-style: italic;
+}
+#redbox-dismiss-btn {
+  width: 100%;
+  padding: 12px;
+  background: #8b1a1a;
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: var(--gap-md);
+  touch-action: manipulation;
+}
+#redbox-dismiss-btn:hover { background: #a52a2a; }
+
+/* ===== ACCESSIBILITY ===== */
+:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+}
+
+.block-btn:focus-visible,
+#end-turn-btn:focus-visible,
+.mini-btn:focus-visible,
+#event-dismiss-btn:focus-visible,
+#advisor-dismiss-btn:focus-visible,
+#redbox-dismiss-btn:focus-visible,
+.scenario-card:focus-visible,
+.diff-option:focus-visible {
+  outline: 2px solid var(--accent-blue-lt);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(83,144,217,0.25);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .fx-shake { animation: none !important; }
+  .fx-pulse { animation: none !important; }
+  .scene-preview { animation: none !important; opacity: 0.6 !important; }
+  body { transition: none !important; }
+}
 </style>
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
-<header id="game-header">
+<header id="game-header" role="banner">
   <div id="header-left">
     <svg id="gov-crown" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="30" cy="30" r="29" fill="#1d70b8" opacity="0.15" stroke="#1d70b8" stroke-width="1.5"/>
@@ -2162,7 +2462,7 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
-    <button id="settings-btn" title="Settings">⚙</button>
+    <button id="settings-btn" title="Settings" aria-label="Open settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
         <div class="pip" id="pip-0"></div>
@@ -2178,10 +2478,10 @@ body { transition: filter 2s ease; }
 </header>
 
 <!-- ===== MAIN LAYOUT ===== -->
-<main id="game-main">
+<main id="game-main" role="main">
 
   <!-- LEFT: METRICS PANEL -->
-  <aside class="panel" id="metrics-panel">
+  <aside class="panel" id="metrics-panel" role="complementary" aria-label="National indicators">
     <div class="panel-title">National Indicators</div>
     <div id="metrics-inner">
 
@@ -2274,10 +2574,10 @@ body { transition: filter 2s ease; }
       <div id="energy-mix-section">
         <div id="energy-mix-title">Live Energy Mix</div>
         <div id="energy-mix-bar">
-          <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:29"></div>
-          <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6"></div>
-          <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13"></div>
-          <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28"></div>
+          <div class="energy-seg wind"    id="seg-wind"    style="flex-grow:29" role="meter" aria-label="Wind energy share"></div>
+          <div class="energy-seg solar"   id="seg-solar"   style="flex-grow:6" role="meter" aria-label="Solar energy share"></div>
+          <div class="energy-seg nuclear" id="seg-nuclear" style="flex-grow:13" role="meter" aria-label="Nuclear energy share"></div>
+          <div class="energy-seg gas"     id="seg-gas"     style="flex-grow:28" role="meter" aria-label="Gas energy share"></div>
         </div>
         <div id="energy-mix-legend">
           <div class="legend-item">
@@ -2303,7 +2603,7 @@ body { transition: filter 2s ease; }
   </aside>
 
   <!-- CENTRE: DECISIONS PANEL -->
-  <section class="panel" id="decisions-panel">
+  <section class="panel" id="decisions-panel" aria-label="Investment decisions">
     <div id="decision-header">
       <div id="decision-header-top">
         <span class="decision-title">Investment Decisions — <span id="decision-period">2025–2030</span></span>
@@ -2327,9 +2627,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition">−</button>
+              <button class="block-btn" id="minus-energyTransition" data-cat="energyTransition" aria-label="Remove Energy Transition block">−</button>
               <span class="block-count" id="count-energyTransition">0</span>
-              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition">+</button>
+              <button class="block-btn" id="plus-energyTransition" data-cat="energyTransition" aria-label="Add Energy Transition block">+</button>
             </div>
           </div>
         </div>
@@ -2353,9 +2653,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£35bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage">−</button>
+              <button class="block-btn" id="minus-gridAndStorage" data-cat="gridAndStorage" aria-label="Remove Grid and Storage block">−</button>
               <span class="block-count" id="count-gridAndStorage">0</span>
-              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage">+</button>
+              <button class="block-btn" id="plus-gridAndStorage" data-cat="gridAndStorage" aria-label="Add Grid and Storage block">+</button>
             </div>
           </div>
         </div>
@@ -2379,9 +2679,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£25bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-adaptation" data-cat="adaptation">−</button>
+              <button class="block-btn" id="minus-adaptation" data-cat="adaptation" aria-label="Remove Adaptation block">−</button>
               <span class="block-count" id="count-adaptation">0</span>
-              <button class="block-btn" id="plus-adaptation" data-cat="adaptation">+</button>
+              <button class="block-btn" id="plus-adaptation" data-cat="adaptation" aria-label="Add Adaptation block">+</button>
             </div>
           </div>
         </div>
@@ -2405,9 +2705,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£20bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport">−</button>
+              <button class="block-btn" id="minus-socialSupport" data-cat="socialSupport" aria-label="Remove Social Support block">−</button>
               <span class="block-count" id="count-socialSupport">0</span>
-              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport">+</button>
+              <button class="block-btn" id="plus-socialSupport" data-cat="socialSupport" aria-label="Add Social Support block">+</button>
             </div>
           </div>
         </div>
@@ -2430,9 +2730,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£30bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience">−</button>
+              <button class="block-btn" id="minus-financialResilience" data-cat="financialResilience" aria-label="Remove Financial Resilience block">−</button>
               <span class="block-count" id="count-financialResilience">0</span>
-              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience">+</button>
+              <button class="block-btn" id="plus-financialResilience" data-cat="financialResilience" aria-label="Add Financial Resilience block">+</button>
             </div>
           </div>
         </div>
@@ -2455,9 +2755,9 @@ body { transition: filter 2s ease; }
           <div class="card-cost-controls">
             <div class="card-cost">£15bn/block</div>
             <div class="block-controls">
-              <button class="block-btn" id="minus-research" data-cat="research">−</button>
+              <button class="block-btn" id="minus-research" data-cat="research" aria-label="Remove Research block">−</button>
               <span class="block-count" id="count-research">0</span>
-              <button class="block-btn" id="plus-research" data-cat="research">+</button>
+              <button class="block-btn" id="plus-research" data-cat="research" aria-label="Add Research block">+</button>
             </div>
           </div>
         </div>
@@ -2900,14 +3200,14 @@ body { transition: filter 2s ease; }
     <div id="no-spend-warning" class="hidden">⚠ No investment this turn — click Advance again to confirm.</div>
     <div id="action-bar">
       <div id="spend-summary">Total spend: <span id="total-spend">£0bn</span></div>
-      <button id="end-turn-btn">Advance to <span id="next-year-label">2030</span> →</button>
+      <button id="end-turn-btn" aria-label="Advance to next turn">Advance to <span id="next-year-label">2030</span> →</button>
     </div>
   </section>
 
   <!-- RIGHT: LOG PANEL -->
-  <aside class="panel" id="log-panel">
+  <aside class="panel" id="log-panel" role="complementary" aria-label="Policy record">
     <div class="panel-title">Policy Record</div>
-    <div id="log-scroll">
+    <div id="log-scroll" aria-live="polite" aria-label="Turn-by-turn policy log">
       <div class="log-entry welcome">
         <div class="log-year">2025 — Briefing</div>
         <div class="log-text">UK Climate Strategy simulation begins. Warming pathway: 1.1°C above pre-industrial. UK has already cut emissions 50% since 1990 — Net Zero Progress starts at 35%. You have 5 five-year terms to shape the nation's response. Allocate investment blocks each turn — but watch the trade-offs.</div>
@@ -3068,6 +3368,35 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- RED BOX BRIEFING -->
+<div id="redbox-overlay" class="hidden" role="dialog" aria-label="Ministerial briefing">
+  <div id="redbox-card">
+    <div class="redbox-header">
+      <span class="redbox-crest">📮</span>
+      <div class="redbox-title-block">
+        <div class="redbox-label">Ministerial Red Box — Classified Briefing</div>
+        <div class="redbox-period" id="redbox-period"></div>
+      </div>
+    </div>
+    <div class="redbox-section">
+      <div class="redbox-section-label">Key Changes</div>
+      <div class="redbox-changes" id="redbox-changes"></div>
+    </div>
+    <div class="redbox-section">
+      <div class="redbox-section-label">Risk Assessment</div>
+      <div id="redbox-risks"></div>
+    </div>
+    <div class="redbox-section">
+      <div class="redbox-section-label">Strategic Recommendation</div>
+      <div class="redbox-recommendation" id="redbox-recommendation"></div>
+    </div>
+    <button id="redbox-dismiss-btn" aria-label="Dismiss briefing">Proceed to Next Term →</button>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT TOASTS -->
+<div id="toast-container" aria-live="assertive" aria-label="Achievement notifications"></div>
+
 <!-- MOBILE TAB BAR -->
 <div id="mobile-tabs">
   <div class="mobile-tab-bar">
@@ -3100,6 +3429,101 @@ const BLOCK_COSTS = {
 };
 
 const MAX_BLOCKS_PER_CAT = 2;
+
+/* ============================================================
+   GLOBAL CONTEXT EVENTS — shown once per turn during simulation
+============================================================ */
+const GLOBAL_CONTEXT_EVENTS = [
+  null, // Turn 0 — no global event at start
+  {
+    icon: '🌐', title: 'COP35 Agreement Reached',
+    desc: 'In a landmark agreement, 196 nations commit to accelerated emissions targets. The UK\'s early investment in renewables is praised internationally. Momentum for the transition strengthens.',
+    effectLabel: '+5% Net Zero Progress',
+    effectClass: 'pos',
+    apply: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); },
+  },
+  {
+    icon: '🚗', title: 'Chinese EV Revolution',
+    desc: 'China floods global markets with affordable electric vehicles, accelerating transport decarbonisation worldwide. Petrol demand drops sharply, easing the fossil fuel phase-out.',
+    effectLabel: 'Gas demand −3 (transport shift)',
+    effectClass: 'pos',
+    apply: (s) => { s.energy.gas = Math.max(0, s.energy.gas - 3); },
+  },
+  {
+    icon: '🧊', title: 'Arctic Summer Ice-Free',
+    desc: 'Satellite data confirms the first ice-free Arctic summer on record. The tipping point scientists warned about has arrived. Public alarm surges globally.',
+    effectLabel: '+0.05°C warming · −3 Social Stability',
+    effectClass: 'neg',
+    apply: (s) => {
+      s.temperature = Math.round((s.temperature + 0.05) * 100) / 100;
+      s.socialStability = Math.max(0, s.socialStability - 3);
+    },
+  },
+  {
+    icon: '💰', title: 'Global Carbon Price Enacted',
+    desc: 'The G20 agrees an international carbon border tax. Economies that have transitioned early benefit from preferential trade terms and green bond access.',
+    effectLabel: '+5 Financial Stability (if NZ > 60%)',
+    effectClass: 'neutral',
+    apply: (s) => {
+      if (s.netZeroProgress > 60) {
+        s.financialStability = Math.min(100, s.financialStability + 5);
+      }
+    },
+  },
+];
+
+/* ============================================================
+   POLICY MILESTONES — one-time unlocks at key thresholds
+============================================================ */
+const POLICY_MILESTONES = [
+  {
+    id: 'nz_50', icon: '🚨', title: 'Climate Emergency Declaration',
+    desc: 'Parliament formally declares a Climate Emergency. Public mandate surges.',
+    effectLabel: '+5 Social · +3 Net Zero momentum',
+    check: (s) => s.netZeroProgress >= 50,
+    apply: (s) => {
+      s.socialStability = Math.min(100, s.socialStability + 5);
+      s.netZeroProgress = Math.min(100, s.netZeroProgress + 3);
+    },
+  },
+  {
+    id: 'nz_75', icon: '🏭', title: 'Green Industrial Strategy',
+    desc: 'UK launches a formal Green Industrial Strategy. Manufacturing pivots to clean technology.',
+    effectLabel: '+5 Financial · +5 Grid Storage',
+    check: (s) => s.netZeroProgress >= 75,
+    apply: (s) => {
+      s.financialStability = Math.min(100, s.financialStability + 5);
+      s.energy.storage = Math.min(100, s.energy.storage + 5);
+    },
+  },
+  {
+    id: 'temp_low', icon: '🌿', title: 'Paris-Compliant Pathway',
+    desc: 'UK is confirmed on a Paris-compliant warming pathway. International green bonds unlocked.',
+    effectLabel: '+£10bn budget next turn',
+    check: (s) => s.temperature < 1.4 && s.turn >= 3,
+    apply: (s) => { s.nextTurnBudgetPenalty -= 10; },
+  },
+  {
+    id: 'grid_90', icon: '⚡', title: 'Energy Security Achieved',
+    desc: 'Grid reliability exceeds 90% — the UK\'s energy supply is among the most secure in Europe.',
+    effectLabel: '+3 Social · +5 Property Value',
+    check: (s) => s.gridReliability >= 90,
+    apply: (s) => {
+      s.socialStability = Math.min(100, s.socialStability + 3);
+      s.propertyValue = Math.min(100, s.propertyValue + 5);
+    },
+  },
+  {
+    id: 'fossil_free', icon: '♻️', title: 'Fossil Phase-Out Complete',
+    desc: 'The last gas-fired power station closes. The UK is fossil-free on the grid.',
+    effectLabel: '+8 Net Zero · −10 Stranded Assets',
+    check: (s) => s.energy.gas <= 5,
+    apply: (s) => {
+      s.netZeroProgress = Math.min(100, s.netZeroProgress + 8);
+      s.strandedAssets = Math.max(0, s.strandedAssets - 10);
+    },
+  },
+];
 
 const RANDOM_EVENTS = [
   {
@@ -3389,10 +3813,12 @@ class SaveManager {
 
   save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
     try {
+      const stateCopy = JSON.parse(JSON.stringify(engineState));
+      stateCopy.firedMilestones = [...(engineState.firedMilestones || [])];
       const payload = {
         version: 2,
         savedAt: Date.now(),
-        engineState: JSON.parse(JSON.stringify(engineState)),
+        engineState: stateCopy,
         historyData: JSON.parse(JSON.stringify(historyData)),
         techPurchased: [...techPurchased],
         activeScenario,
@@ -3577,6 +4003,7 @@ class GameEngine {
       lastEventTurn: -1,
       log: [],
       lastSnapshot: null,
+      firedMilestones: new Set(),
     };
   }
 
@@ -3756,6 +4183,9 @@ class GameEngine {
       s.netZeroAchieved = true;
     }
 
+    // Phase 9b: Policy Milestones
+    const milestones = this._checkMilestones();
+
     // Phase 10: Build log entry
     const decisions = this._describeDecisions(s.currentDecisions);
     const logEntry = {
@@ -3791,7 +4221,21 @@ class GameEngine {
       endgame = evaluateEndgame(s);
     }
 
-    return { logEntry, event, endgame };
+    return { logEntry, event, endgame, milestones };
+  }
+
+  _checkMilestones() {
+    const s = this.state;
+    const fired = [];
+    for (const m of POLICY_MILESTONES) {
+      if (s.firedMilestones.has(m.id)) continue;
+      if (m.check(s)) {
+        s.firedMilestones.add(m.id);
+        m.apply(s);
+        fired.push(m);
+      }
+    }
+    return fired;
   }
 
   _applyInvestments() {
@@ -4343,6 +4787,7 @@ class UI {
         if (!payload) return;
         // Restore engine state
         Object.assign(engine.state, payload.engineState);
+        engine.state.firedMilestones = new Set(payload.engineState.firedMilestones || []);
         // Restore tech tree
         techTree.reset();
         for (const id of payload.techPurchased) {
@@ -5401,6 +5846,93 @@ class UI {
     html += `</tbody></table>`;
     return html;
   }
+
+  showAchievementToast(ach) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'achievement-toast';
+    toast.innerHTML = `<span class="toast-icon">${ach.icon}</span><div class="toast-body"><div class="toast-label">Achievement Unlocked</div><div class="toast-name">${ach.name}</div><div class="toast-desc">${ach.desc}</div></div>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-out');
+      setTimeout(() => toast.remove(), 400);
+    }, 4000);
+  }
+
+  showRedBox(logEntry, state) {
+    return new Promise(resolve => {
+      const overlay = document.getElementById('redbox-overlay');
+      if (!overlay) { resolve(); return; }
+
+      const snap = logEntry.snapshot;
+      const changes = [];
+      const risks = [];
+
+      const tempDelta = state.temperature - snap.temperature;
+      const gridDelta = state.gridReliability - snap.gridReliability;
+      const finDelta  = state.financialStability - snap.financialStability;
+      const socDelta  = state.socialStability - snap.socialStability;
+      const nzDelta   = state.netZeroProgress - snap.netZeroProgress;
+
+      const fmtVal = (v, inv) => {
+        const sign = v > 0 ? '+' : '';
+        const cls = inv ? (v < 0 ? 'pos' : v > 0 ? 'neg' : '') : (v > 0 ? 'pos' : v < 0 ? 'neg' : '');
+        return `<span class="redbox-change-val ${cls}">${sign}${v.toFixed(1)}</span>`;
+      };
+      const change = (label, delta, inv, unit, now) => {
+        changes.push(`<div class="redbox-change"><span class="redbox-change-label">${label}</span>${fmtVal(delta, inv)}${unit} (${now}${unit})</div>`);
+      };
+
+      if (Math.abs(tempDelta) >= 0.01) change('Temperature', tempDelta, true, '°C', state.temperature.toFixed(2));
+      if (Math.abs(gridDelta) >= 1) change('Grid Reliability', gridDelta, false, '%', Math.round(state.gridReliability));
+      if (Math.abs(finDelta) >= 1)  change('Financial Stability', finDelta, false, '%', Math.round(state.financialStability));
+      if (Math.abs(socDelta) >= 1)  change('Social Stability', socDelta, false, '%', Math.round(state.socialStability));
+      if (Math.abs(nzDelta) >= 1)   change('Net Zero Progress', nzDelta, false, '%', Math.round(state.netZeroProgress));
+
+      if (state.temperature >= 1.8) risks.push('Temperature approaching dangerous threshold');
+      if (state.gridReliability < 40) risks.push('Grid reliability critically low — blackout risk');
+      if (state.socialStability < 30) risks.push('Social unrest intensifying — mandate at risk');
+      if (state.financialStability < 30) risks.push('Financial reserves depleted — austerity imminent');
+      if (state.netZeroProgress < 25 && state.turn >= 3) risks.push('Net Zero progress behind schedule');
+      if (state.energy.gas > 30) risks.push('Heavy gas dependency — stranded asset exposure');
+
+      let rec = 'Maintain current strategic direction.';
+      if (state.temperature >= 1.8 && state.netZeroProgress < 60) rec = 'Pivot urgently to renewables and storage to avert temperature breach.';
+      else if (state.socialStability < 40) rec = 'Invest in Social Support to prevent public mandate collapse.';
+      else if (state.gridReliability < 50) rec = 'Prioritise Grid & Storage to safeguard energy security.';
+      else if (state.financialStability < 40) rec = 'Shore up Financial Resilience before the next spending round.';
+
+      const risksEl = document.getElementById('redbox-risks');
+      document.getElementById('redbox-period').textContent = `${logEntry.year}–${logEntry.year + 5}`;
+      document.getElementById('redbox-changes').innerHTML = changes.length ? changes.join('') : '<div class="redbox-change"><span class="redbox-change-label">No significant changes</span></div>';
+      risksEl.innerHTML = risks.length ? risks.join('<br>') : 'No immediate risks identified';
+      risksEl.className = risks.length ? 'redbox-risks' : 'redbox-risks clear';
+      document.getElementById('redbox-recommendation').textContent = rec;
+
+      overlay.classList.remove('hidden');
+
+      const dismissBtn = document.getElementById('redbox-dismiss-btn');
+      const handler = () => {
+        overlay.classList.add('hidden');
+        dismissBtn.removeEventListener('click', handler);
+        resolve();
+      };
+      dismissBtn.addEventListener('click', handler);
+    });
+  }
+
+  _addMilestoneLogEntry(milestone) {
+    const div = document.createElement('div');
+    div.className = 'log-entry log-milestone';
+    div.innerHTML = `
+      <div class="log-year">${milestone.icon} Milestone</div>
+      <div class="log-text"><strong>${milestone.title}</strong></div>
+      <div class="log-text">${milestone.desc}</div>
+      <div class="log-text log-milestone-effect">${milestone.effectLabel}</div>`;
+    this.elLogScroll.appendChild(div);
+    this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
+  }
 }
 
 /* ============================================================
@@ -5728,6 +6260,7 @@ const MINI_EVENTS_POOL = [
 
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
+  const turnIndex = engine.state.turn;
 
   // Lock inputs during simulation
   engine.state.isResolvingTurn = true;
@@ -5738,6 +6271,13 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Build and mount overlay
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
+
+  // Show global context event for this turn (if any)
+  const gEvt = GLOBAL_CONTEXT_EVENTS[turnIndex];
+  if (gEvt) {
+    await _delay(1200);
+    await _showGlobalEvent(overlay, gEvt, engine);
+  }
 
   // Tick through years with possible mini-events
   let minisFired = 0;
@@ -5771,6 +6311,27 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   // Recalculate next-turn budget to include any mini-event penalties
   // (resolveTurn() set s.budget before mini-events fired, so we must redo it)
   engine.state.budget = engine.getEffectiveBudget();
+
+  // Check achievements mid-game and show toasts
+  const prevUnlocked = new Set(achievementMgr.unlocked);
+  achievementMgr.checkAll(engine.state, techTree);
+  for (const ach of ACHIEVEMENTS) {
+    if (achievementMgr.isUnlocked(ach.id) && !prevUnlocked.has(ach.id)) {
+      ui.showAchievementToast(ach);
+    }
+  }
+
+  // Show milestone log entries
+  if (result.milestones && result.milestones.length > 0) {
+    for (const m of result.milestones) {
+      ui._addMilestoneLogEntry(m);
+    }
+  }
+
+  // Show Red Box briefing (non-endgame turns only)
+  if (!result.endgame) {
+    await ui.showRedBox(result.logEntry, engine.state);
+  }
 
   // Unlock inputs — simulation complete
   engine.state.isResolvingTurn = false;
@@ -5885,6 +6446,26 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 }
 
 function _delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function _showGlobalEvent(overlay, gEvt, engine) {
+  return new Promise(resolve => {
+    const panel = document.createElement('div');
+    panel.id = 'global-event-panel';
+    panel.innerHTML = `
+      <div class="global-event-icon">${gEvt.icon}</div>
+      <div class="global-event-source">WORLD NEWS</div>
+      <div class="global-event-title">${gEvt.title}</div>
+      <div class="global-event-desc">${gEvt.desc}</div>
+      <div class="global-event-effect ${gEvt.effectClass}">${gEvt.effectLabel}</div>
+      <button class="global-event-dismiss">Continue</button>`;
+    overlay.querySelector('#sim-card').appendChild(panel);
+    gEvt.apply(engine.state);
+    panel.querySelector('.global-event-dismiss').addEventListener('click', () => {
+      panel.classList.add('sim-fade-out');
+      setTimeout(() => { panel.remove(); resolve(); }, 300);
+    }, { once: true });
+  });
+}
 
 /* ============================================================
    MODULE: LEGACY SYSTEM
