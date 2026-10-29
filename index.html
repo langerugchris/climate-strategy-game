@@ -1632,6 +1632,7 @@ body { transition: filter 2s ease; }
   padding: var(--gap-lg);
 }
 #settings-modal.hidden { display: none; }
+#help-modal.hidden { display: none; }
 #settings-card {
   background: var(--bg-secondary);
   border: 1px solid var(--border-strong);
@@ -2162,6 +2163,7 @@ body { transition: filter 2s ease; }
     <span id="difficulty-indicator"></span>
   </div>
   <div id="header-right">
+    <button id="help-btn" title="How to play" style="background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:50%;width:32px;height:32px;color:var(--text-secondary);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">?</button>
     <button id="settings-btn" title="Settings">⚙</button>
     <div id="turn-info">
       <div id="turn-pips">
@@ -2966,6 +2968,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="late_start">
+        <span class="scenario-card-icon">⏰</span>
+        <div class="scenario-card-name">Late Start</div>
+        <div class="scenario-card-desc">It's 2030 and the previous government wasted five years. You have only 4 turns to reach Net Zero, starting behind on progress with rising temperatures and gas dependency.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Starts at: <span>2030 (4 turns)</span></div>
+          <div class="scenario-stat">Temperature: <span>1.35°C</span></div>
+          <div class="scenario-stat">Net Zero: <span>25% (behind)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="global_pressure">
+        <span class="scenario-card-icon">🌍</span>
+        <div class="scenario-card-name">Global Pressure</div>
+        <div class="scenario-card-desc">International markets are demanding rapid decarbonisation. You have a generous budget but social and financial stability are already shaky from global trade disruptions.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£120bn/turn</span></div>
+          <div class="scenario-stat">Social: <span>60% (fragile)</span></div>
+          <div class="scenario-stat">Financial: <span>55% (strained)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3068,6 +3092,40 @@ body { transition: filter 2s ease; }
   </div>
 </div>
 
+<!-- HELP MODAL -->
+<div id="help-modal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:600;">
+  <div style="background:var(--bg-secondary);border:2px solid var(--accent-blue);border-radius:var(--radius-lg);padding:var(--gap-xl);max-width:560px;width:92vw;max-height:85vh;overflow-y:auto;">
+    <h2 style="font-size:18px;color:var(--accent-blue-lt);margin-bottom:var(--gap-md);">How to Play</h2>
+    <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
+      <p style="margin-bottom:var(--gap-md)"><strong style="color:var(--text-primary)">You are the UK Prime Minister from 2025 to 2050.</strong> Each turn spans 5 years. Allocate your budget across investment categories to navigate the climate transition — but every choice has trade-offs.</p>
+      <h3 style="font-size:14px;color:var(--text-primary);margin:var(--gap-md) 0 var(--gap-sm)">Investment Categories</h3>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><strong style="color:var(--energy-wind)">Energy Transition</strong> — Build wind and solar, phase out gas. Drives Net Zero but creates stranded assets.</li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><strong style="color:var(--energy-storage)">Grid &amp; Storage</strong> — Batteries, nuclear, grid modernisation. Prevents blackouts as renewables grow.</li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><strong style="color:var(--status-good)">Adaptation</strong> — Flood defences, heat resilience. Reduces damage from climate events.</li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><strong style="color:var(--status-warn)">Social Support</strong> — Just transition funding, retraining, community investment. Keeps public consent.</li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><strong style="color:var(--accent-blue-lt)">Financial Resilience</strong> — Manages stranded fossil assets, protects pension funds and property values.</li>
+        <li style="padding:6px 0"><strong style="color:var(--energy-nuclear)">R&amp;D</strong> — Unlocks technology upgrades that boost other investments.</li>
+      </ul>
+      <h3 style="font-size:14px;color:var(--text-primary);margin:var(--gap-md) 0 var(--gap-sm)">Key Strategies</h3>
+      <ul style="list-style:disc;padding-left:18px;">
+        <li style="padding:3px 0">Balance energy transition with social support — rapid decarbonisation without public investment breeds unrest.</li>
+        <li style="padding:3px 0">Grid storage is essential — renewables without backup causes blackouts.</li>
+        <li style="padding:3px 0">Financial resilience offsets stranded asset damage from energy transition.</li>
+        <li style="padding:3px 0">Adaptation reduces damage from climate events — invest early.</li>
+        <li style="padding:3px 0">R&amp;D is cheap and multiplies later investments.</li>
+      </ul>
+      <h3 style="font-size:14px;color:var(--text-primary);margin:var(--gap-md) 0 var(--gap-sm)">Keyboard Shortcuts</h3>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12px;">
+        <kbd style="background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:3px;padding:1px 5px;font-family:var(--font-mono);font-size:11px">1–6</kbd><span>Add investment block</span>
+        <kbd style="background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:3px;padding:1px 5px;font-family:var(--font-mono);font-size:11px">Shift+1–6</kbd><span>Remove investment block</span>
+        <kbd style="background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:3px;padding:1px 5px;font-family:var(--font-mono);font-size:11px">Enter</kbd><span>Advance to next turn</span>
+      </div>
+    </div>
+    <button id="help-close-btn" style="display:block;width:100%;padding:12px;background:var(--accent-blue);color:white;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;margin-top:var(--gap-lg);">Got it</button>
+  </div>
+</div>
+
 <!-- MOBILE TAB BAR -->
 <div id="mobile-tabs">
   <div class="mobile-tab-bar">
@@ -3166,6 +3224,39 @@ const RANDOM_EVENTS = [
     effects: { gridReliability: -20, socialStability: -15, financialStability: -10 },
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
+  },
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'TECH', severity: 'POSITIVE', icon: '🔬',
+    title: 'Clean Energy Breakthrough',
+    description: 'UK university researchers achieve a major advance in solid-state battery technology, dramatically reducing storage costs.',
+    story: 'Professor Amara Chen at Imperial College announced that her team\'s solid-state sodium battery can store three times the energy at a third of the cost. Manufacturers are already licensing the technology.',
+    effects: { gridReliability: 8, financialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+  },
+  {
+    id: 'INTL_COOPERATION', type: 'DIPLOMATIC', severity: 'POSITIVE', icon: '🤝',
+    title: 'International Climate Accord',
+    description: 'A landmark agreement at COP commits major economies to accelerated emissions cuts, boosting UK green exports and investor confidence.',
+    story: 'The new accord, signed by 87 nations, aligns carbon pricing globally for the first time. UK clean energy firms saw share prices rise 12% in a single day.',
+    effects: { financialStability: 8, socialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+  },
+  {
+    id: 'GREEN_INVESTMENT', type: 'FINANCIAL', severity: 'POSITIVE', icon: '💚',
+    title: 'Green Investment Surge',
+    description: 'Global institutional investors pivot to UK green infrastructure, providing billions in private capital for the transition.',
+    story: 'Blackrock\'s UK Green Infrastructure Fund allocated £4.2bn to offshore wind and hydrogen projects in the North Sea, creating an estimated 15,000 jobs in Scotland and north-east England.',
+    effects: { financialStability: 6, socialStability: 4 },
+    infraDamage: false, budgetPenaltyNext: -10,
+  },
+  {
+    id: 'COMMUNITY_SUCCESS', type: 'SOCIAL', severity: 'POSITIVE', icon: '🏘️',
+    title: 'Community Energy Success',
+    description: 'Local energy cooperatives across the UK demonstrate that community-owned renewables can cut bills and boost local employment simultaneously.',
+    story: 'The Swansea Bay Tidal Cooperative delivered its first year of dividends to 12,000 local shareholders, while cutting average household energy bills by £340. Councils from Manchester to Edinburgh are replicating the model.',
+    effects: { socialStability: 10 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.socialSupport > 20,
   },
 ];
 
@@ -3370,6 +3461,30 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  late_start: {
+    label: 'Late Start',
+    apply(state) {
+      state.year = 2030;
+      state.turn = 1;
+      state.temperature = 1.35;
+      state.netZeroProgress = 25;
+      state.energy.gas = 35;
+      state.strandedAssets = 15;
+      state.socialCapital = 5;
+    },
+  },
+  global_pressure: {
+    label: 'Global Pressure',
+    apply(state) {
+      state.socialStability = 60;
+      state.financialStability = 55;
+      state.strandedAssets = 25;
+      state.temperature = 1.25;
+      state.energy.wind = 35;
+      state.energy.solar = 12;
+      state._budgetOverride = 120;
     },
   },
 };
@@ -3928,6 +4043,10 @@ class GameEngine {
         { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
         { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
         { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: RANDOM_EVENTS[8], w: 8 },   // TECH_BREAKTHROUGH
+        { e: RANDOM_EVENTS[9], w: 8 },   // INTL_COOPERATION
+        { e: RANDOM_EVENTS[10], w: 6 },  // GREEN_INVESTMENT
+        { e: RANDOM_EVENTS[11], w: 5 },  // COMMUNITY_SUCCESS
       ];
     } else if (s.temperature < 2.0) {
       pool = [
@@ -3937,6 +4056,8 @@ class GameEngine {
         { e: RANDOM_EVENTS[4], w: 20 },  // STORM
         { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
         { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 5 },   // TECH_BREAKTHROUGH
+        { e: RANDOM_EVENTS[10], w: 4 },  // GREEN_INVESTMENT
       ];
     } else {
       pool = [
@@ -3946,6 +4067,7 @@ class GameEngine {
         { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
         { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
         { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: RANDOM_EVENTS[8], w: 3 },   // TECH_BREAKTHROUGH
       ];
     }
 
@@ -4390,6 +4512,17 @@ class UI {
       advisorDismissBtn.addEventListener('click', () => {
         document.getElementById('advisor-overlay').classList.add('hidden');
       });
+    }
+
+    // Help modal
+    const helpBtn = document.getElementById('help-btn');
+    const helpModal = document.getElementById('help-modal');
+    const helpCloseBtn = document.getElementById('help-close-btn');
+    if (helpBtn) {
+      helpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
+    }
+    if (helpCloseBtn) {
+      helpCloseBtn.addEventListener('click', () => helpModal.classList.add('hidden'));
     }
 
     // No-spend warning element
@@ -5033,6 +5166,9 @@ class UI {
 
   showEventModal(event) {
     this.elEventIcon.textContent  = event.icon;
+    const isPositive = event.severity === 'POSITIVE';
+    document.getElementById('event-card').style.borderColor = isPositive ? 'var(--status-good)' : 'var(--status-danger)';
+    this.elEventTitle.style.color = isPositive ? 'var(--status-good)' : 'var(--status-danger)';
     this.elEventTitle.textContent = event.title;
     this.elEventDesc.textContent  = event.description;
     const storyEl = document.getElementById('event-story-display');
@@ -5723,6 +5859,98 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_trade_war',
+    icon: '🌐',
+    title: 'Green Trade Dispute',
+    prompt: 'The EU is imposing carbon border tariffs. How does the UK respond?',
+    explanation: 'The EU Carbon Border Adjustment Mechanism (CBAM) will tax imports based on their carbon footprint. The UK can align its own carbon pricing to match — gaining EU market access but raising domestic costs — or negotiate an exemption that preserves cheap imports but slows decarbonisation incentives.',
+    contextFn: (s) => ({
+      label: 'Financial Stability',
+      value: `${Math.round(s.financialStability)}%`,
+      note: `Net Zero: ${Math.round(s.netZeroProgress)}%`,
+    }),
+    optA: {
+      label: '📊 Align UK carbon pricing with EU',
+      consequence: 'Costs £4bn next turn · +5% Net Zero progress · −3 Social (higher costs)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    optB: {
+      label: '🤝 Negotiate bilateral exemption',
+      consequence: 'No cost · +3 Financial · −3% Net Zero (weaker carbon incentive)',
+      effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 3); s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); },
+    },
+    condition: (s) => s.netZeroProgress > 20,
+  },
+  {
+    id: 'mini_rare_earth',
+    icon: '⛏️',
+    title: 'Critical Minerals Shortage',
+    prompt: 'China has restricted exports of rare earth minerals essential for batteries and turbines.',
+    explanation: 'Renewable energy hardware depends on minerals concentrated in a few countries. Investing in domestic recycling and alternatives secures supply but costs more. Diplomatic negotiation is cheaper but leaves the dependency in place.',
+    contextFn: (s) => ({
+      label: 'Grid Reliability',
+      value: `${Math.round(s.gridReliability)}%`,
+      note: `Storage capacity: ${Math.round(s.energy.storage)}`,
+    }),
+    optA: {
+      label: '♻️ Fund domestic mineral recycling',
+      consequence: 'Costs £7bn next turn · secures supply chain · +5 Grid Reliability',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.gridReliability = Math.min(100, s.gridReliability + 5); },
+    },
+    optB: {
+      label: '🕊️ Diplomatic trade negotiation',
+      consequence: 'No cost · −4 Grid Reliability (supply disruption) · +2 Financial (saved money)',
+      effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 4); s.financialStability = Math.min(100, s.financialStability + 2); },
+    },
+    condition: (s) => s.energy.storage > 10 || s.energy.wind > 40,
+  },
+  {
+    id: 'mini_climate_refugee',
+    icon: '🚢',
+    title: 'Climate Migration Pressure',
+    prompt: 'Rising sea levels and crop failures in South Asia are driving unprecedented migration to Europe.',
+    explanation: 'Climate migration is both a humanitarian crisis and a political challenge. Proactive resettlement with job placement costs money but builds goodwill and fills labour shortages in green industries. Restricting entry is cheaper politically but damages international relationships and leaves the crisis unaddressed.',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: s.socialStability < 60 ? '⚠ already fragile' : 'stable',
+    }),
+    optA: {
+      label: '🏠 Managed resettlement programme',
+      consequence: 'Costs £5bn next turn · −4 Social short-term · +3 Social Capital (long-term cohesion)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 5; s.socialStability = Math.max(0, s.socialStability - 4); s.socialCapital = Math.min(60, s.socialCapital + 3); },
+    },
+    optB: {
+      label: '🚫 Restrict entry and bolster borders',
+      consequence: 'Costs £2bn next turn · +3 Social short-term · −2 Social Capital (international isolation)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 2; s.socialStability = Math.min(100, s.socialStability + 3); s.socialCapital = Math.max(0, s.socialCapital - 2); },
+    },
+    condition: (s) => s.temperature > 1.4,
+  },
+  {
+    id: 'mini_hydrogen',
+    icon: '💨',
+    title: 'Hydrogen Economy Decision',
+    prompt: 'Green hydrogen production costs have dropped 60%. How do you capitalise?',
+    explanation: 'Hydrogen can decarbonise heavy industry and heating — sectors hard to electrify. A massive buildout would accelerate Net Zero but strain the grid during production. A targeted approach in heavy industry costs less and avoids grid stress, but misses the chance to decarbonise home heating.',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Grid: ${Math.round(s.gridReliability)}%`,
+    }),
+    optA: {
+      label: '🏭 Massive hydrogen buildout',
+      consequence: 'Costs £10bn next turn · +8% Net Zero · −5 Grid Reliability (electrolyser load)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.netZeroProgress = Math.min(100, s.netZeroProgress + 8); s.gridReliability = Math.max(0, s.gridReliability - 5); },
+    },
+    optB: {
+      label: '🎯 Targeted industrial hydrogen',
+      consequence: 'Costs £4bn next turn · +4% Net Zero · Grid unaffected',
+      effect: (s) => { s.nextTurnBudgetPenalty += 4; s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); },
+    },
+    condition: (s) => s.turn >= 1,
   },
 ];
 
