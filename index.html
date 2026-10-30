@@ -2311,7 +2311,7 @@ body { transition: filter 2s ease; }
           <span id="budget-remaining-display">£100bn</span> remaining
         </div>
       </div>
-      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>6</kbd> to add, <kbd>Shift+1</kbd>–<kbd>6</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
+      <div id="decision-header-hint">Allocate up to 2 blocks per area. Effects are cumulative — infrastructure built this term carries forward permanently. Keyboard: <kbd>1</kbd>–<kbd>8</kbd> to add, <kbd>Shift+1</kbd>–<kbd>8</kbd> to remove, <kbd>Enter</kbd> to advance.</div>
     </div>
 
     <div id="investment-cards">
@@ -2444,7 +2444,58 @@ body { transition: filter 2s ease; }
         <div class="card-citation">Based on Bank of England Climate Stress Testing 2022</div>
       </div>
 
-      <!-- Research & Development (6th card) -->
+      <!-- Transport Decarbonisation -->
+      <div class="investment-card" id="card-transport">
+        <div class="card-top">
+          <div class="card-icon">🚆</div>
+          <div class="card-info">
+            <div class="card-name">Transport Decarbonisation</div>
+            <div class="card-sub">EV Infrastructure, Rail &amp; Active Travel</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£25bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-transport" data-cat="transport">−</button>
+              <span class="block-count" id="count-transport">0</span>
+              <button class="block-btn" id="plus-transport" data-cat="transport">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">Transport is the UK's largest emitting sector. Investment in EV charging networks, electrified rail, and cycling infrastructure cuts emissions while improving air quality and reducing energy bills for commuters.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">NZ +7, Social +3</span>
+          <span class="effect-tag neg">Gas −3</span>
+          <span class="effect-tag info">Largest UK emission sector</span>
+        </div>
+        <div class="card-citation">Based on DfT Transport Decarbonisation Plan 2021</div>
+      </div>
+
+      <!-- Green Buildings -->
+      <div class="investment-card" id="card-buildings">
+        <div class="card-top">
+          <div class="card-icon">🏠</div>
+          <div class="card-info">
+            <div class="card-name">Green Buildings</div>
+            <div class="card-sub">Heat Pumps, Insulation &amp; Retrofit</div>
+          </div>
+          <div class="card-cost-controls">
+            <div class="card-cost">£20bn/block</div>
+            <div class="block-controls">
+              <button class="block-btn" id="minus-buildings" data-cat="buildings">−</button>
+              <span class="block-count" id="count-buildings">0</span>
+              <button class="block-btn" id="plus-buildings" data-cat="buildings">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-rationale">UK homes are among the worst-insulated in Europe. Heat pump installation and deep retrofit programmes cut heating emissions — which account for 14% of UK total — while reducing fuel poverty and raising property values.</div>
+        <div class="card-effects">
+          <span class="effect-tag pos">NZ +5, Social +4, Fin +2</span>
+          <span class="effect-tag info">14% of UK emissions</span>
+        </div>
+        <div class="card-citation">Based on UK Heat and Buildings Strategy 2021</div>
+      </div>
+
+      <!-- Research & Development (8th card) -->
       <div class="investment-card" id="card-research">
         <div class="card-top">
           <div class="card-icon">🔬</div>
@@ -2889,6 +2940,41 @@ body { transition: filter 2s ease; }
           <rect x="617" y="154" width="12" height="8" fill="#050d1a"/>
         </g>
 
+        <!-- EV CHARGING STATION (transport investment) -->
+        <g id="ev-charger" transform="translate(190,135)" visibility="hidden">
+          <rect x="-4" y="-20" width="8" height="20" rx="2" fill="#4caf81"/>
+          <rect x="-6" y="-22" width="12" height="4" rx="1" fill="#388e3c"/>
+          <circle cx="0" cy="-12" r="2" fill="#69f0ae"/>
+          <rect x="4" y="-15" width="10" height="3" rx="1" fill="#4caf81" transform="rotate(30 4 -15)"/>
+        </g>
+
+        <!-- ELECTRIC BUS (transport investment level 2) -->
+        <g id="ev-bus" transform="translate(160,152)" visibility="hidden">
+          <rect x="-16" y="-12" width="32" height="14" rx="3" fill="#2e7d32"/>
+          <rect x="-14" y="-10" width="8" height="6" fill="#69f0ae" opacity="0.5"/>
+          <rect x="-3" y="-10" width="8" height="6" fill="#69f0ae" opacity="0.5"/>
+          <circle cx="-10" cy="3" r="2.5" fill="#263238"/>
+          <circle cx="10" cy="3" r="2.5" fill="#263238"/>
+          <rect x="12" y="-8" width="3" height="2" rx="1" fill="#ffd600"/>
+        </g>
+
+        <!-- RETROFITTED HOUSE (buildings investment) -->
+        <g id="green-house" transform="translate(480,130)" visibility="hidden">
+          <rect x="-15" y="-20" width="30" height="25" rx="2" fill="#37474f"/>
+          <polygon points="-18,-20 0,-35 18,-20" fill="#2e7d32"/>
+          <rect x="-5" y="-10" width="10" height="15" fill="#1a237e" opacity="0.6"/>
+          <rect x="-13" y="-18" width="8" height="5" fill="#69f0ae" opacity="0.4"/>
+          <rect x="5" y="-18" width="8" height="5" fill="#69f0ae" opacity="0.4"/>
+        </g>
+
+        <!-- HEAT PUMP UNIT (buildings investment level 2) -->
+        <g id="heat-pump" transform="translate(505,148)" visibility="hidden">
+          <rect x="-8" y="-10" width="16" height="12" rx="2" fill="#455a64"/>
+          <rect x="-6" y="-8" width="5" height="5" rx="1" fill="#69f0ae" opacity="0.5"/>
+          <rect x="1" y="-8" width="5" height="5" rx="1" fill="#69f0ae" opacity="0.5"/>
+          <rect x="-4" y="-1" width="8" height="3" fill="#37474f"/>
+        </g>
+
         <!-- FLOOD WATER OVERLAY — shown when adaptation fails -->
         <rect id="flood-water" x="0" y="200" width="800" height="80" fill="#1565c0" opacity="0.55" rx="0">
           <animate id="flood-anim" attributeName="y" from="200" to="148" dur="2s" fill="freeze" begin="indefinite"/>
@@ -3096,8 +3182,18 @@ const BLOCK_COSTS = {
   adaptation:          25,
   socialSupport:       20,
   financialResilience: 30,
+  transport:           25,
+  buildings:           20,
   research:            15,
 };
+
+function getCostForCategory(cat, state) {
+  const base = BLOCK_COSTS[cat];
+  const infraLevel = state.infrastructure[cat] || 0;
+  if (infraLevel >= 60) return Math.round(base * 0.85);
+  if (infraLevel >= 30) return Math.round(base * 0.90);
+  return base;
+}
 
 const MAX_BLOCKS_PER_CAT = 2;
 
@@ -3167,6 +3263,23 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'TRANSPORT_STRIKE', type: 'TRANSPORT', severity: 'MODERATE', icon: '🚂',
+    title: 'National Transport Strike',
+    description: 'Rail and bus workers strike over transition redundancies. Public transport halted for two weeks.',
+    story: 'Marcus Chen, a bus driver of 22 years in Sheffield, stood on the picket line outside the depot. "They\'re replacing our routes with self-driving electric buses. Where does that leave us?"',
+    effects: { socialStability: -10, financialStability: -4 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'HOUSING_CRISIS', type: 'HOUSING', severity: 'MODERATE', icon: '🏚️',
+    title: 'Cold Homes Emergency',
+    description: 'Thousands of unretrofitted homes become uninhabitable during a prolonged cold snap. NHS admissions surge.',
+    story: 'Jean Whitaker, 78, was found hypothermic in her terraced house in Burnley. Her gas boiler had been removed under the phase-out programme, but the heat pump installation was delayed by six months.',
+    effects: { socialStability: -12, financialStability: -5 },
+    infraDamage: false, budgetPenaltyNext: 8,
+    condition: (s) => (s.infrastructure.buildings || 0) < 30,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3334,9 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'green_commuter', icon: '🚆', name: 'Green Commuter', desc: 'Invest 3+ blocks in Transport across the game', check: (s) => (s.infrastructure.transport || 0) >= 75 },
+  { id: 'warm_homes', icon: '🏠', name: 'Warm Homes', desc: 'Invest 3+ blocks in Buildings across the game', check: (s) => (s.infrastructure.buildings || 0) >= 60 },
+  { id: 'complete_strategy', icon: '🎯', name: 'Complete Strategy', desc: 'Invest in all 8 categories in a single game', check: (s) => s.infrastructure.energyTransition > 0 && s.infrastructure.gridAndStorage > 0 && s.infrastructure.adaptation > 0 && s.infrastructure.socialSupport > 0 && s.infrastructure.financialResilience > 0 && (s.infrastructure.transport || 0) > 0 && (s.infrastructure.buildings || 0) > 0 },
 ];
 
 class AchievementManager {
@@ -3285,7 +3401,7 @@ const METRIC_TOOLTIPS = {
   soc: {
     title: '🏘️ Social Stability',
     desc: 'Public trust, social cohesion, and political mandate for the transition. Reflects energy affordability, employment impacts of fossil phase-out, and quality of public services.',
-    drivers: '↑ Raised by: Social Support investment, adaptation, accumulated social capital\n↓ Lowered by: rising energy bills, grid failures, job losses without support, high temperatures',
+    drivers: '↑ Raised by: Social Support investment, adaptation, Green Buildings, Transport, accumulated social capital\n↓ Lowered by: rising energy bills, grid failures, job losses without support, high temperatures',
     threshold: 'Below 40%: political mandate collapses — the transition programme becomes undeliverable without emergency intervention.',
     thresholdGood: false,
     source: 'Composite indicator — illustrative figures for educational simulation',
@@ -3293,7 +3409,7 @@ const METRIC_TOOLTIPS = {
   nz: {
     title: '🌱 Net Zero Progress',
     desc: 'Cumulative progress toward the UK\'s legal Net Zero 2050 commitment. Represents the combined effect of renewable buildout, fossil fuel phase-out, and carbon removal.',
-    drivers: '↑ Raised by: Energy Transition investment (especially with R&D upgrades)\n↓ Lowered by: gas rebound when no energy investment is made; emergency gas commissioning',
+    drivers: '↑ Raised by: Energy Transition, Transport Decarbonisation, Green Buildings investment (especially with R&D upgrades)\n↓ Lowered by: gas rebound when no energy investment is made; emergency gas commissioning',
     threshold: '100% = UK legal Net Zero target. Reaching it by 2050 (Turn 5) is required for the Orderly or Turbulent Transition scenarios.',
     thresholdGood: true,
     source: 'Based on UK Climate Change Committee Sixth Carbon Budget',
@@ -3457,7 +3573,7 @@ class AnalyticsTracker {
       completedRuns: 0,
       scenarioCounts: {},
       difficultyCounts: {},
-      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0 },
+      investmentTotals: { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, transport: 0, buildings: 0, research: 0 },
       scoreTotal: 0,
       eventTotal: 0,
     };
@@ -3557,6 +3673,8 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        transport: 0,
+        buildings: 0,
       },
       strandedAssets: 0,
       propertyValue: 100,
@@ -3567,6 +3685,8 @@ class GameEngine {
         adaptation: 0,
         socialSupport: 0,
         financialResilience: 0,
+        transport: 0,
+        buildings: 0,
         research: 0,
       },
       spentThisTurn: 0,
@@ -3609,7 +3729,7 @@ class GameEngine {
   allocateBlock(category) {
     const s = this.state;
     if (s.isResolvingTurn) return { success: false, reason: 'Turn in progress' };
-    const cost = BLOCK_COSTS[category];
+    const cost = getCostForCategory(category, s);
     const current = s.currentDecisions[category];
     if (current >= MAX_BLOCKS_PER_CAT) return { success: false, reason: 'Max 2 blocks per category' };
     if (s.spentThisTurn + cost > s.budget) return { success: false, reason: 'Insufficient budget' };
@@ -3623,7 +3743,7 @@ class GameEngine {
     if (s.isResolvingTurn) return;
     if (s.currentDecisions[category] <= 0) return;
     s.currentDecisions[category]--;
-    s.spentThisTurn -= BLOCK_COSTS[category];
+    s.spentThisTurn -= getCostForCategory(category, s);
   }
 
   // Returns projected metric values after applying current decisions — pure, no state mutation
@@ -3675,6 +3795,20 @@ class GameEngine {
       strandedAssets     = clamp(strandedAssets     - fr * 8,  0, 100);
       propertyValue      = clamp(propertyValue      + fr * 5,  0, 100);
       infra.financialResilience += fr * 30;
+    }
+    const tp = d.transport;
+    if (tp > 0) {
+      netZeroProgress = clamp(netZeroProgress + tp * 7 * techTree.multipliers.transportNZ, 0, 100);
+      socialStability = clamp(socialStability + tp * 3, 0, 100);
+      e.gas           = clamp(e.gas - tp * 3, 0, 100);
+      infra.transport += tp * 25;
+    }
+    const bl = d.buildings;
+    if (bl > 0) {
+      netZeroProgress    = clamp(netZeroProgress    + bl * 5 * techTree.multipliers.buildingsNZ, 0, 100);
+      socialStability    = clamp(socialStability     + bl * 4, 0, 100);
+      financialStability = clamp(financialStability  + bl * 2, 0, 100);
+      infra.buildings += bl * 20;
     }
 
     // Mirror _recalcGrid
@@ -3779,7 +3913,7 @@ class GameEngine {
     // Phase 12: Advance turn
     s.turn++;
     s.year += 5;
-    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, research:0 };
+    s.currentDecisions = { energyTransition:0, gridAndStorage:0, adaptation:0, socialSupport:0, financialResilience:0, transport:0, buildings:0, research:0 };
     s.spentThisTurn = 0;
 
     // Recalculate budget for next turn
@@ -3840,6 +3974,24 @@ class GameEngine {
       s.strandedAssets     = this._clamp(s.strandedAssets     - fr * 8,  0, 100);
       s.propertyValue      = this._clamp(s.propertyValue      + fr * 5,  0, 100);
       s.infrastructure.financialResilience += fr * 30;
+    }
+
+    // Transport Decarbonisation
+    const tp = d.transport;
+    if (tp > 0) {
+      s.netZeroProgress = this._clamp(s.netZeroProgress + tp * 7 * techTree.multipliers.transportNZ, 0, 100);
+      s.socialStability = this._clamp(s.socialStability + tp * 3, 0, 100);
+      s.energy.gas      = this._clamp(s.energy.gas - tp * 3, 0, 100);
+      s.infrastructure.transport += tp * 25;
+    }
+
+    // Green Buildings
+    const bl = d.buildings;
+    if (bl > 0) {
+      s.netZeroProgress    = this._clamp(s.netZeroProgress    + bl * 5 * techTree.multipliers.buildingsNZ, 0, 100);
+      s.socialStability    = this._clamp(s.socialStability     + bl * 4, 0, 100);
+      s.financialStability = this._clamp(s.financialStability  + bl * 2, 0, 100);
+      s.infrastructure.buildings += bl * 20;
     }
 
     // Research — purchases next TechTree upgrade per block allocated
@@ -3920,32 +4072,39 @@ class GameEngine {
     if (Math.random() >= prob) return null;
 
     // Build weighted pool based on temperature
+    const _ev = (id) => RANDOM_EVENTS.find(e => e.id === id);
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: _ev('FINANCIAL_SHOCK'),   w: 25 },
+        { e: _ev('STORM'),             w: 22 },
+        { e: _ev('FLOOD_MINOR'),       w: 20 },
+        { e: _ev('HEATWAVE_MOD'),      w: 8 },
+        { e: _ev('SOCIAL_UNREST'),     w: 8 },
+        { e: _ev('TRANSPORT_STRIKE'),  w: 9 },
+        { e: _ev('HOUSING_CRISIS'),    w: 8 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: _ev('FLOOD_MINOR'),       w: 16 },
+        { e: _ev('FLOOD_MAJOR'),       w: 8 },
+        { e: _ev('HEATWAVE_MOD'),      w: 16 },
+        { e: _ev('STORM'),             w: 16 },
+        { e: _ev('SOCIAL_UNREST'),     w: 12 },
+        { e: _ev('FINANCIAL_SHOCK'),   w: 12 },
+        { e: _ev('TRANSPORT_STRIKE'),  w: 10 },
+        { e: _ev('HOUSING_CRISIS'),    w: 10 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: _ev('FLOOD_MAJOR'),       w: 17 },
+        { e: _ev('HEATWAVE_MAJOR'),    w: 17 },
+        { e: _ev('STORM'),             w: 15 },
+        { e: _ev('GRID_FAILURE'),      w: 13 },
+        { e: _ev('SOCIAL_UNREST'),     w: 12 },
+        { e: _ev('FINANCIAL_SHOCK'),   w: 8 },
+        { e: _ev('TRANSPORT_STRIKE'),  w: 9 },
+        { e: _ev('HOUSING_CRISIS'),    w: 9 },
       ];
     }
 
@@ -4002,6 +4161,8 @@ class GameEngine {
     if (d.adaptation > 0)         out.push(`Adaptation ×${d.adaptation} (£${d.adaptation * 25}bn)`);
     if (d.socialSupport > 0)      out.push(`Social Support ×${d.socialSupport} (£${d.socialSupport * 20}bn)`);
     if (d.financialResilience > 0) out.push(`Financial Resilience ×${d.financialResilience} (£${d.financialResilience * 30}bn)`);
+    if (d.transport > 0)           out.push(`Transport ×${d.transport} (£${d.transport * 25}bn)`);
+    if (d.buildings > 0)           out.push(`Green Buildings ×${d.buildings} (£${d.buildings * 20}bn)`);
     if (d.research > 0)            out.push(`R&D ×${d.research} (£${d.research * 15}bn)`);
     if (out.length === 0) out.push('No investment this turn');
     return out;
@@ -4042,8 +4203,15 @@ function calculateScore(state) {
   const eventPenalty = s.eventCount * 1.5;
   const resScore = Math.round(Math.max(0, 10 * adaptLevel - eventPenalty + (s.eventCount === 0 ? 5 : 0)));
 
-  const total = Math.min(100, tempScore + nzScore + stabScore + resScore);
-  return { total, tempScore, nzScore, stabScore, resScore };
+  // Sector coverage bonus (0-3): reward investing across all emission sectors
+  const sectorBonus = Math.min(3,
+    ((s.infrastructure.transport || 0) > 0 ? 1 : 0) +
+    ((s.infrastructure.buildings || 0) > 0 ? 1 : 0) +
+    (s.infrastructure.energyTransition > 0 ? 1 : 0)
+  );
+
+  const total = Math.min(100, tempScore + nzScore + stabScore + resScore + sectorBonus);
+  return { total, tempScore, nzScore, stabScore, resScore, sectorBonus };
 }
 
 /* ============================================================
@@ -4143,6 +4311,12 @@ function buildOrderlyNarrative(s) {
   if (s.infrastructure.socialSupport > 40) {
     parts.push(`The Just Transition agenda — backed by real spending on social support — kept public consent intact throughout the painful restructuring of the fossil economy.`);
   }
+  if ((s.infrastructure.transport || 0) > 40) {
+    parts.push(`Transport decarbonisation — EV infrastructure, electrified rail, and active travel networks — eliminated the UK's largest source of emissions. Cities became cleaner and quieter, and the reduced oil dependency strengthened energy security.`);
+  }
+  if ((s.infrastructure.buildings || 0) > 30) {
+    parts.push(`The national retrofit programme transformed the UK's housing stock. Heat pumps replaced gas boilers in millions of homes, fuel poverty fell sharply, and property values rose as energy performance became a market signal.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4159,6 +4333,9 @@ function buildDisorderlyNarrative(s) {
   if (s.infrastructure.adaptation < 40) {
     parts.push(`Underinvestment in climate adaptation meant that every flood and heatwave caused disproportionate damage, compounding the transition disruption with physical climate losses.`);
   }
+  if ((s.infrastructure.buildings || 0) < 20) {
+    parts.push(`The UK's housing stock remained largely unretrofitted. Millions of homes still relied on gas boilers, and cold homes emergencies became a recurring winter crisis — eroding public faith in the transition while leaving a major emissions source untouched.`);
+  }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
 
@@ -4174,6 +4351,9 @@ function buildHotHouseNarrative(s) {
 
   if (s.eventCount > 2) {
     parts.push(`${s.eventCount} major climate events struck during the simulation period, each causing damage that compounded the next. Without adequate adaptation investment, recovery time between shocks shrank until resilience collapsed entirely.`);
+  }
+  if ((s.infrastructure.transport || 0) < 20) {
+    parts.push(`Transport — the UK's largest emitting sector — was barely touched. Petrol and diesel vehicles continued to dominate, and the failure to invest in EV infrastructure or public transit locked in decades of additional emissions.`);
   }
   return parts.map(p => `<p>${p}</p>`).join('');
 }
@@ -4318,7 +4498,7 @@ class UI {
     });
 
     // Keyboard shortcuts: 1–6 to add blocks, Shift+1–6 to remove, Enter to advance
-    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'research' };
+    const keyMap = { '1':'energyTransition', '2':'gridAndStorage', '3':'adaptation', '4':'socialSupport', '5':'financialResilience', '6':'transport', '7':'buildings', '8':'research' };
     document.addEventListener('keydown', (e) => {
       if (this.engine.state.gameOver || this.engine.state.isResolvingTurn) return;
       if (keyMap[e.key]) {
@@ -4830,7 +5010,8 @@ class UI {
   _renderCards(state) {
     for (const cat of this.categories) {
       const count   = state.currentDecisions[cat];
-      const cost    = BLOCK_COSTS[cat];
+      const cost    = getCostForCategory(cat, state);
+      const baseCost = BLOCK_COSTS[cat];
       const rem     = state.budget - state.spentThisTurn;
       const canAdd  = count < MAX_BLOCKS_PER_CAT && rem >= cost;
       const canRem  = count > 0;
@@ -4838,6 +5019,15 @@ class UI {
       document.getElementById(`count-${cat}`).textContent = count;
       document.getElementById(`plus-${cat}`).disabled     = !canAdd;
       document.getElementById(`minus-${cat}`).disabled    = !canRem;
+
+      const costEl = document.querySelector(`#card-${cat} .card-cost`);
+      if (costEl) {
+        if (cost < baseCost) {
+          costEl.innerHTML = `<s style="opacity:0.5">£${baseCost}bn</s> £${cost}bn`;
+        } else {
+          costEl.textContent = `£${baseCost}bn/block`;
+        }
+      }
 
       const card = document.getElementById(`card-${cat}`);
       card.classList.toggle('allocated',      count > 0 && count < MAX_BLOCKS_PER_CAT);
@@ -4946,6 +5136,18 @@ class UI {
       show(`fin-${idx}`, lvl.finance >= threshold, preview(res.finance, lvl.finance, threshold));
     });
 
+    // TRANSPORT — EV charger at block 1, EV bus at block 2
+    const resTransport = Math.floor((infra.transport || 0) / 25);
+    const lvlTransport = resTransport + (dec.transport || 0);
+    show('ev-charger', lvlTransport >= 1, preview(resTransport, lvlTransport, 1));
+    show('ev-bus', lvlTransport >= 2, preview(resTransport, lvlTransport, 2));
+
+    // BUILDINGS — green house at block 1, heat pump at block 2
+    const resBuildings = Math.floor((infra.buildings || 0) / 20);
+    const lvlBuildings = resBuildings + (dec.buildings || 0);
+    show('green-house', lvlBuildings >= 1, preview(resBuildings, lvlBuildings, 1));
+    show('heat-pump', lvlBuildings >= 2, preview(resBuildings, lvlBuildings, 2));
+
     // Smoke: visible when gas is dominant, fades as gas reduces
     const smokeGroup = document.getElementById('smoke-group');
     if (smokeGroup) {
@@ -4958,15 +5160,17 @@ class UI {
   _buildTurnNarrative(entry) {
     const d = {
       energyTransition: 0, gridAndStorage: 0, adaptation: 0,
-      socialSupport: 0, financialResilience: 0, research: 0
+      socialSupport: 0, financialResilience: 0, transport: 0, buildings: 0, research: 0
     };
     // Parse decisions back from description strings
     entry.decisions.forEach(dec => {
       if (dec.includes('Energy Transition')) d.energyTransition = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('Grid')) d.gridAndStorage = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('Adaptation')) d.adaptation = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
-      if (dec.includes('Social')) d.socialSupport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.startsWith('Social')) d.socialSupport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('Financial')) d.financialResilience = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Transport')) d.transport = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
+      if (dec.includes('Green Buildings')) d.buildings = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
       if (dec.includes('R&D')) d.research = parseInt(dec.match(/×(\d)/)?.[1]) || 0;
     });
 
@@ -5089,6 +5293,50 @@ class UI {
     this.elEventModal.classList.add('hidden');
   }
 
+  _renderTrajectoryCharts() {
+    const data = turnHistory.data;
+    if (data.length < 2) return '';
+
+    const metrics = [
+      { key: 'temperature', label: 'Temperature', color: '#ff7043', unit: '°C', fmt: v => v.toFixed(1) + '°C', invert: true },
+      { key: 'gridReliability', label: 'Grid', color: '#448aff', unit: '%', fmt: v => Math.round(v) + '%' },
+      { key: 'financialStability', label: 'Financial', color: '#b39ddb', unit: '%', fmt: v => Math.round(v) + '%' },
+      { key: 'socialStability', label: 'Social', color: '#ffd600', unit: '%', fmt: v => Math.round(v) + '%' },
+      { key: 'netZeroProgress', label: 'Net Zero', color: '#4caf81', unit: '%', fmt: v => Math.round(v) + '%' },
+    ];
+
+    const chartW = 110, chartH = 44, pad = 4;
+    const charts = metrics.map(m => {
+      const vals = data.map(d => d[m.key]);
+      const min = Math.min(...vals);
+      const max = Math.max(...vals);
+      const range = max - min || 1;
+      const points = vals.map((v, i) => {
+        const x = pad + (i / (vals.length - 1)) * (chartW - pad * 2);
+        const y = pad + (1 - (v - min) / range) * (chartH - pad * 2);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+      const last = vals[vals.length - 1];
+      return `<div style="text-align:center;flex:1;min-width:100px;">
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">${m.label}</div>
+        <svg width="${chartW}" height="${chartH}" viewBox="0 0 ${chartW} ${chartH}">
+          <polyline points="${points}" fill="none" stroke="${m.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          ${vals.map((v, i) => {
+            const x = pad + (i / (vals.length - 1)) * (chartW - pad * 2);
+            const y = pad + (1 - (v - min) / range) * (chartH - pad * 2);
+            return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.5" fill="${m.color}"/>`;
+          }).join('')}
+        </svg>
+        <div style="font-size:11px;font-weight:600;color:${m.color};">${m.fmt(last)}</div>
+      </div>`;
+    }).join('');
+
+    return `<div style="margin:16px 0 8px;padding:12px;background:var(--bg-tertiary);border-radius:var(--radius-md);border:1px solid var(--border-subtle);">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:8px;text-align:center;">Metric Trajectories (2025–2050)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">${charts}</div>
+    </div>`;
+  }
+
   showEndgame(result) {
     const s = this.engine.state;
 
@@ -5160,12 +5408,15 @@ class UI {
           <div class="score-dim"><span class="score-dim-val">${score.nzScore}/30</span><span class="score-dim-name">Net Zero</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.stabScore}/30</span><span class="score-dim-name">Stability</span></div>
           <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
+          ${score.sectorBonus > 0 ? `<div class="score-dim"><span class="score-dim-val">+${score.sectorBonus}</span><span class="score-dim-name">Sectors</span></div>` : ''}
         </div>
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
       </div>`;
 
+    const trajectoryHtml = this._renderTrajectoryCharts();
+
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
-    this.elEndgameNgfs.insertAdjacentHTML('afterend', timelineHtml + achievementsHtml);
+    this.elEndgameNgfs.insertAdjacentHTML('afterend', trajectoryHtml + timelineHtml + achievementsHtml);
 
     this.elEndgame.classList.remove('hidden');
 
@@ -5522,6 +5773,18 @@ const RESEARCH_UPGRADES = [
     desc: 'Adaptation blocks give 1.6× event damage mitigation',
     apply(m) { m.adaptMitigate = 1.6; },
   },
+  {
+    id:   'ev_battery_range',
+    name: 'EV Battery Range',
+    desc: 'Transport blocks give 1.4× Net Zero progress',
+    apply(m) { m.transportNZ = 1.4; },
+  },
+  {
+    id:   'heat_pump_efficiency',
+    name: 'Heat Pump Efficiency',
+    desc: 'Buildings blocks give 1.5× Net Zero progress',
+    apply(m) { m.buildingsNZ = 1.5; },
+  },
 ];
 
 class TechTreeManager {
@@ -5532,6 +5795,8 @@ class TechTreeManager {
       socialGain:    1.0,
       finGain:       1.0,
       adaptMitigate: 1.0,
+      transportNZ:   1.0,
+      buildingsNZ:   1.0,
     };
     this._purchased = new Set();
   }
@@ -5553,7 +5818,7 @@ class TechTreeManager {
   }
 
   reset() {
-    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0 };
+    this.multipliers = { energyNZ:1.0, gridStorage:1.0, socialGain:1.0, finGain:1.0, adaptMitigate:1.0, transportNZ:1.0, buildingsNZ:1.0 };
     this._purchased.clear();
   }
 }
@@ -5723,6 +5988,52 @@ const MINI_EVENTS_POOL = [
       effect: (s) => { s.gridReliability = Math.max(0, s.gridReliability - 5); s.socialCapital = Math.min(60, s.socialCapital + 3); },
     },
     condition: (s) => s.energy.nuclear > 20,
+  },
+  {
+    id: 'mini_ev_charging',
+    icon: '🔌',
+    title: 'EV Charging Crisis',
+    prompt: 'Electric vehicle adoption is outpacing charging infrastructure. How do you respond?',
+    explanation: 'Rapid EV uptake is great for emissions, but without sufficient public charging points rural and lower-income drivers are left behind. You can subsidise fast chargers nationally (expensive but fair) or let the private sector build where profitable (cheap but leaves gaps).',
+    contextFn: (s) => ({
+      label: 'Net Zero Progress',
+      value: `${Math.round(s.netZeroProgress)}%`,
+      note: `Transport invested: ${Math.round(s.infrastructure.transport || 0)}`,
+    }),
+    optA: {
+      label: '⚡ National public charging network',
+      consequence: 'Costs £7bn next turn · +5 NZ progress · +3 Social (equitable access)',
+      effect: (s) => { s.nextTurnBudgetPenalty += 7; s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); s.socialStability = Math.min(100, s.socialStability + 3); },
+    },
+    optB: {
+      label: '🏢 Let private sector lead',
+      consequence: 'No cost · +2 NZ progress · −3 Social (charging deserts in rural areas)',
+      effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 2); s.socialStability = Math.max(0, s.socialStability - 3); },
+    },
+    condition: (s) => (s.infrastructure.transport || 0) > 20,
+  },
+  {
+    id: 'mini_retrofit_backlash',
+    icon: '🏠',
+    title: 'Retrofit Programme Backlash',
+    prompt: 'Homeowners are resisting mandatory EPC upgrades. What\'s your approach?',
+    explanation: 'The UK\'s building stock needs deep retrofit to cut heating emissions, but mandatory EPC requirements upset homeowners who face large bills. You can offer generous grants (costly but popular) or enforce the mandate with penalties (cheap but politically explosive).',
+    contextFn: (s) => ({
+      label: 'Social Stability',
+      value: `${Math.round(s.socialStability)}%`,
+      note: `Buildings invested: ${Math.round(s.infrastructure.buildings || 0)}`,
+    }),
+    optA: {
+      label: '💷 Generous grant scheme',
+      consequence: 'Costs £10bn next turn · +6 Social · +buildings infrastructure',
+      effect: (s) => { s.nextTurnBudgetPenalty += 10; s.socialStability = Math.min(100, s.socialStability + 6); s.infrastructure.buildings = (s.infrastructure.buildings || 0) + 15; },
+    },
+    optB: {
+      label: '📋 Enforce with fines',
+      consequence: 'No cost · −8 Social · +4 NZ progress (forces compliance)',
+      effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 8); s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); },
+    },
+    condition: (s) => (s.infrastructure.buildings || 0) > 15,
   },
 ];
 
