@@ -5048,7 +5048,11 @@ class UI {
         // Apply chosen scenario to current engine state
         this.engine.reset(this._activeScenario || 'standard');
         techTree.reset();
+        intlEventMgr.reset();
         this._lastLogLength = 0;
+        // Hide any lingering intl banner
+        const intlBanner = document.getElementById('intl-event-banner');
+        if (intlBanner) intlBanner.classList.add('hidden');
         this.elLogScroll.innerHTML = `
           <div class="log-entry welcome">
             <div class="log-year">2025 — Briefing</div>
