@@ -4886,8 +4886,9 @@ class UI {
         if (!payload) return;
         // Restore engine state
         Object.assign(engine.state, payload.engineState);
-        // Restore tech tree
+        // Restore tech tree and intl events
         techTree.reset();
+        intlEventMgr.reset();
         for (const id of payload.techPurchased) {
           const upgrade = RESEARCH_UPGRADES.find(u => u.id === id);
           if (upgrade) { upgrade.apply(techTree.multipliers); techTree._purchased.add(id); }
