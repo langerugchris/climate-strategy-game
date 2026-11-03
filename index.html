@@ -719,6 +719,7 @@ body {
 }
 
 #event-card {
+  position: relative;
   background: var(--bg-secondary);
   border: 2px solid var(--status-danger);
   border-radius: var(--radius-lg);
@@ -2142,6 +2143,92 @@ body { transition: filter 2s ease; }
   }
   .timeline-turn { min-width: unset; }
 }
+
+/* ===== POSITIVE EVENT STYLING ===== */
+#event-modal.positive-event #event-card {
+  border-color: var(--accent-green-lt);
+}
+#event-modal.positive-event #event-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-green), var(--accent-green-lt));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* ===== STRATEGY BADGE ===== */
+#endgame-strategy {
+  text-align: center;
+  margin: var(--gap-md) 0;
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+.strategy-badge {
+  display: inline-block;
+  padding: 4px 16px;
+  background: var(--accent-blue);
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: var(--gap-sm);
+}
+.strategy-narrative {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ===== CARBON BUDGET INDICATOR ===== */
+#endgame-carbon-budget {
+  margin-top: var(--gap-md);
+  padding: var(--gap-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+.carbon-budget-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--gap-sm);
+}
+.carbon-budget-bar {
+  height: 8px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: var(--gap-xs);
+}
+.carbon-budget-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.5s ease;
+}
+.carbon-budget-fill.good { background: var(--status-good); }
+.carbon-budget-fill.warn { background: var(--status-warn); }
+.carbon-budget-fill.danger { background: var(--status-danger); }
+.carbon-budget-value {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: var(--gap-xs);
+}
+.carbon-budget-value.good { color: var(--status-good); }
+.carbon-budget-value.warn { color: var(--status-warn); }
+.carbon-budget-value.danger { color: var(--status-danger); }
+.carbon-budget-note {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -2966,6 +3053,39 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="climate_emergency">
+        <span class="scenario-card-icon">🔥</span>
+        <div class="scenario-card-name">Climate Emergency</div>
+        <div class="scenario-card-desc">Temperature already elevated. Higher urgency, bigger budget, but less time to waste.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Temp: <span>1.35°C</span></div>
+          <div class="scenario-stat">Budget: <span>£110bn/turn</span></div>
+          <div class="scenario-stat">Social: <span>65%</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="energy_independence">
+        <span class="scenario-card-icon">⚛️</span>
+        <div class="scenario-card-name">Energy Independence</div>
+        <div class="scenario-card-desc">Strong nuclear base, low import dependency. Grid-focused start but financial system under pressure.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Nuclear: <span>25</span></div>
+          <div class="scenario-stat">Grid Infra: <span>35</span></div>
+          <div class="scenario-stat">Financial: <span>65%</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="austerity_britain">
+        <span class="scenario-card-icon">💷</span>
+        <div class="scenario-card-name">Austerity Britain</div>
+        <div class="scenario-card-desc">Years of underinvestment. Low budget, fragile social fabric. Every penny counts.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£60bn/turn</span></div>
+          <div class="scenario-stat">Social: <span>55%</span></div>
+          <div class="scenario-stat">Financial: <span>55%</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3167,6 +3287,50 @@ const RANDOM_EVENTS = [
     infraDamage: false, budgetPenaltyNext: 30,
     condition: (s) => s.gridReliability < 50,
   },
+  {
+    id: 'TECH_BREAKTHROUGH', type: 'TECHNOLOGY', severity: 'POSITIVE', icon: '🔬',
+    title: 'Clean Energy Breakthrough',
+    description: 'British researchers achieve a major advance in solid-state battery technology. Grid storage costs plummet by 40%.',
+    story: 'Professor Amara Osei at Imperial College published results that sent shockwaves through the energy sector. "This changes the economics of the entire grid," she told the Commons Select Committee.',
+    effects: { gridReliability: 8, netZeroProgress: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.gridAndStorage > 30,
+  },
+  {
+    id: 'INTERNATIONAL_AGREEMENT', type: 'DIPLOMATIC', severity: 'POSITIVE', icon: '🌍',
+    title: 'Global Climate Accord',
+    description: 'A landmark international agreement commits major economies to carbon border adjustments. UK green exports surge.',
+    story: 'At COP in Dubai, 140 nations signed the Climate Trade Accord. UK manufacturers — already ahead on decarbonisation — saw order books fill within weeks. Sheffield steel, green hydrogen from Teesside, and Scottish wind turbine components all found new markets.',
+    effects: { financialStability: 8, netZeroProgress: 4 },
+    infraDamage: false, budgetPenaltyNext: -15,
+    condition: (s) => s.netZeroProgress > 50,
+  },
+  {
+    id: 'PUBLIC_MANDATE', type: 'SOCIAL', severity: 'POSITIVE', icon: '🗳️',
+    title: 'Public Mandate for Action',
+    description: 'A sustained run of competent climate governance generates broad public support. Approval ratings surge across all demographics.',
+    story: 'A YouGov poll showed 72% public support for the climate transition programme — the highest since records began. In focus groups, even initially sceptical voters in Red Wall seats described the programme as "hard but fair".',
+    effects: { socialStability: 10 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.socialStability > 70 && s.financialStability > 60,
+  },
+  {
+    id: 'GLOBAL_ENERGY_SHOCK', type: 'GEOPOLITICAL', severity: 'MAJOR', icon: '🛢️',
+    title: 'Global Energy Price Shock',
+    description: 'Geopolitical conflict disrupts global gas supplies. Nations dependent on imports face crippling price spikes. The UK\'s position depends on its energy mix.',
+    story: 'The Strait of Hormuz crisis sent global gas prices to record highs within 48 hours. Countries that had diversified away from fossil fuels weathered the storm. Those that hadn\'t faced fuel rationing within weeks.',
+    effects: { financialStability: -8, socialStability: -6 },
+    infraDamage: false, budgetPenaltyNext: 10,
+  },
+  {
+    id: 'GREEN_JOBS_BOOM', type: 'ECONOMIC', severity: 'POSITIVE', icon: '💼',
+    title: 'Green Jobs Boom',
+    description: 'The clean energy sector creates 200,000 new skilled jobs across the UK, particularly in former industrial regions.',
+    story: 'Port Talbot, once synonymous with steel decline, became home to the UK\'s largest battery gigafactory. "My grandfather made steel, my father lost his job when the works closed, and now I\'m building the future," said apprentice Rhys Morgan, 19.',
+    effects: { socialStability: 7, financialStability: 5 },
+    infraDamage: false, budgetPenaltyNext: 0,
+    condition: (s) => s.infrastructure.energyTransition > 60 && s.infrastructure.socialSupport > 30,
+  },
 ];
 
 /* ============================================================
@@ -3221,6 +3385,14 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'diplomat', icon: '🌍', name: 'Global Leader', desc: 'Trigger the Global Climate Accord event', check: (s) => s._sawInternationalAgreement },
+  { id: 'tech_pioneer', icon: '🔬', name: 'Tech Pioneer', desc: 'Trigger the Clean Energy Breakthrough event', check: (s) => s._sawTechBreakthrough },
+  { id: 'no_gas', icon: '🚫', name: 'Beyond Gas', desc: 'Reach Net Zero with gas below 10', check: (s) => s.netZeroProgress >= 100 && s.energy.gas < 10 },
+  { id: 'speedrunner', icon: '⏱️', name: 'Speedrunner', desc: 'Reach Net Zero by Turn 2', check: (s) => s.netZeroProgress >= 100 && s.turn <= 2 },
+  { id: 'balanced_leader', icon: '⚖️', name: 'Balanced Leader', desc: 'Identified as Balanced Governance strategy', check: () => typeof strategyTracker !== 'undefined' && strategyTracker.identifyStrategy()?.key === 'balanced' },
+  { id: 'green_blitz_ach', icon: '🌿', name: 'Green Blitz', desc: 'Identified as Green Blitz strategy', check: () => typeof strategyTracker !== 'undefined' && strategyTracker.identifyStrategy()?.key === 'green_blitz' },
+  { id: 'extreme_winner', icon: '🏆', name: 'Ultimate Challenge', desc: 'Score 80+ on Extreme difficulty', check: (s) => difficultyMgr.active === 'extreme' && calculateScore(s).total >= 80 },
+  { id: 'low_temp', icon: '❄️', name: 'Cool Operator', desc: 'Finish with temperature below 1.4°C', check: (s) => s.temperature < 1.4 },
 ];
 
 class AchievementManager {
@@ -3372,6 +3544,38 @@ const STARTER_SCENARIOS = {
       state._budgetOverride = 65;
     },
   },
+  climate_emergency: {
+    label: 'Climate Emergency',
+    apply(state) {
+      state.temperature = 1.35;
+      state.netZeroProgress = 20;
+      state.energy.gas = 35;
+      state.socialStability = 65;
+      state._budgetOverride = 110;
+    },
+  },
+  energy_independence: {
+    label: 'Energy Independence',
+    apply(state) {
+      state.energy.nuclear = 25;
+      state.energy.wind = 22;
+      state.energy.solar = 4;
+      state.energy.gas = 20;
+      state.energy.storage = 8;
+      state.infrastructure.gridAndStorage = 35;
+      state.financialStability = 65;
+    },
+  },
+  austerity_britain: {
+    label: 'Austerity Britain',
+    apply(state) {
+      state.financialStability = 55;
+      state.socialStability = 55;
+      state.socialCapital = 5;
+      state._budgetOverride = 60;
+      state.infrastructure.socialSupport = 10;
+    },
+  },
 };
 
 /* ============================================================
@@ -3387,7 +3591,7 @@ class SaveManager {
     this._KEY = 'uk_climate_save_v2';
   }
 
-  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty) {
+  save(engineState, historyData, techPurchased, activeScenario, activeDifficulty, strategyData) {
     try {
       const payload = {
         version: 2,
@@ -3397,6 +3601,7 @@ class SaveManager {
         techPurchased: [...techPurchased],
         activeScenario,
         activeDifficulty,
+        strategyData: strategyData ? JSON.parse(JSON.stringify(strategyData)) : [],
       };
       localStorage.setItem(this._KEY, JSON.stringify(payload));
     } catch (e) { /* storage full or unavailable */ }
@@ -3526,6 +3731,110 @@ class TurnHistory {
 }
 
 const turnHistory = new TurnHistory();
+
+/* ============================================================
+   STRATEGY COHERENCE SYSTEM
+============================================================ */
+
+const STRATEGY_PROFILES = {
+  green_blitz: {
+    label: 'Green Blitz',
+    desc: 'Aggressive decarbonisation — heavy energy transition investment',
+    check: (totals) => totals.energyTransition >= 4 && totals.gridAndStorage >= 2,
+    bonus: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); },
+    penalty: null,
+    narrative: 'Your aggressive decarbonisation strategy paid dividends in Net Zero progress.',
+  },
+  balanced: {
+    label: 'Balanced Governance',
+    desc: 'Even investment across all categories',
+    check: (totals) => {
+      const vals = [totals.energyTransition, totals.gridAndStorage, totals.adaptation, totals.socialSupport, totals.financialResilience];
+      const avg = vals.reduce((a,b) => a+b, 0) / vals.length;
+      return vals.every(v => Math.abs(v - avg) <= 2) && avg >= 1;
+    },
+    bonus: (s) => { s.socialStability = Math.min(100, s.socialStability + 3); s.financialStability = Math.min(100, s.financialStability + 3); },
+    penalty: null,
+    narrative: 'Your balanced approach maintained broad-based stability throughout the transition.',
+  },
+  fortress_economy: {
+    label: 'Fortress Economy',
+    desc: 'Heavy financial and adaptation focus, slower transition',
+    check: (totals) => totals.financialResilience >= 3 && totals.adaptation >= 3 && totals.energyTransition <= 2,
+    bonus: (s) => { s.financialStability = Math.min(100, s.financialStability + 5); },
+    penalty: (s) => { s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); },
+    narrative: 'Your fortress economy approach protected financial stability but slowed the transition.',
+  },
+  peoples_transition: {
+    label: "People's Transition",
+    desc: 'Heavy social support and community investment',
+    check: (totals) => totals.socialSupport >= 4 && totals.adaptation >= 2,
+    bonus: (s) => { s.socialStability = Math.min(100, s.socialStability + 6); },
+    penalty: null,
+    narrative: 'Your focus on social support built deep public trust that sustained the transition through difficult years.',
+  },
+  technocrat: {
+    label: 'Technocratic Approach',
+    desc: 'Heavy R&D investment with grid modernisation',
+    check: (totals) => totals.research >= 3 && totals.gridAndStorage >= 3,
+    bonus: (s) => { s.gridReliability = Math.min(100, s.gridReliability + 5); },
+    penalty: null,
+    narrative: 'Your technocratic approach — investing heavily in research and grid infrastructure — built a reliable, modern energy system.',
+  },
+  neglect: {
+    label: 'Policy Neglect',
+    desc: 'Insufficient total investment',
+    check: (totals) => {
+      const total = Object.values(totals).reduce((a,b) => a+b, 0);
+      return total <= 4;
+    },
+    bonus: null,
+    penalty: (s) => { s.socialStability = Math.max(0, s.socialStability - 5); s.temperature += 0.05; },
+    narrative: 'Insufficient government investment left the UK dangerously exposed to climate risk.',
+  },
+};
+
+class StrategyTracker {
+  constructor() {
+    this.turnAllocations = [];
+  }
+
+  recordTurn(decisions) {
+    this.turnAllocations.push({ ...decisions });
+  }
+
+  getTotals() {
+    const totals = { energyTransition: 0, gridAndStorage: 0, adaptation: 0, socialSupport: 0, financialResilience: 0, research: 0 };
+    for (const turn of this.turnAllocations) {
+      for (const key of Object.keys(totals)) {
+        totals[key] += (turn[key] || 0);
+      }
+    }
+    return totals;
+  }
+
+  identifyStrategy() {
+    const totals = this.getTotals();
+    for (const [key, profile] of Object.entries(STRATEGY_PROFILES)) {
+      if (profile.check(totals)) return { key, ...profile };
+    }
+    return null;
+  }
+
+  applyEndgameEffects(state) {
+    const strategy = this.identifyStrategy();
+    if (!strategy) return null;
+    if (strategy.bonus) strategy.bonus(state);
+    if (strategy.penalty) strategy.penalty(state);
+    return strategy;
+  }
+
+  reset() {
+    this.turnAllocations = [];
+  }
+}
+
+const strategyTracker = new StrategyTracker();
 
 /* ============================================================
    GAME ENGINE
@@ -3715,6 +4024,9 @@ class GameEngine {
       energy: Object.assign({}, s.energy),
     };
 
+    // Record decisions for strategy tracking
+    strategyTracker.recordTurn(s.currentDecisions);
+
     // Phase 1: Budget (already set at turn start; reset nextTurn penalty)
     s.nextTurnBudgetPenalty = 0;
 
@@ -3785,13 +4097,24 @@ class GameEngine {
     // Recalculate budget for next turn
     s.budget = this.getEffectiveBudget();
 
+    // Apply strategy coherence effects at game end
+    let strategyResult = null;
+    if (s.turn >= 5 || s.gameOver) {
+      strategyResult = strategyTracker.applyEndgameEffects(s);
+      if (strategyResult) {
+        this._recalcGrid();
+        this._recalcFinancial();
+        this._recalcSocial();
+      }
+    }
+
     // Check end game — 5 turns total (2025→2030→2035→2040→2045→2050)
     let endgame = null;
     if (s.gameOver || s.turn >= 5) {
       endgame = evaluateEndgame(s);
     }
 
-    return { logEntry, event, endgame };
+    return { logEntry, event, endgame, strategyResult };
   }
 
   _applyInvestments() {
@@ -3919,38 +4242,48 @@ class GameEngine {
 
     if (Math.random() >= prob) return null;
 
+    const byId = (id) => RANDOM_EVENTS.find(e => e.id === id);
+
     // Build weighted pool based on temperature
     let pool = [];
     if (s.temperature < 1.5) {
       pool = [
-        { e: RANDOM_EVENTS[5], w: 30 },  // FINANCIAL_SHOCK
-        { e: RANDOM_EVENTS[4], w: 25 },  // STORM
-        { e: RANDOM_EVENTS[0], w: 25 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[2], w: 10 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[6], w: 10 },  // SOCIAL_UNREST
+        { e: byId('FINANCIAL_SHOCK'),   w: 30 },
+        { e: byId('STORM'),             w: 25 },
+        { e: byId('FLOOD_MINOR'),       w: 25 },
+        { e: byId('HEATWAVE_MOD'),      w: 10 },
+        { e: byId('SOCIAL_UNREST'),     w: 10 },
+        { e: byId('TECH_BREAKTHROUGH'), w: 5 },
+        { e: byId('INTERNATIONAL_AGREEMENT'), w: 5 },
+        { e: byId('PUBLIC_MANDATE'),    w: 5 },
       ];
     } else if (s.temperature < 2.0) {
       pool = [
-        { e: RANDOM_EVENTS[0], w: 20 },  // FLOOD_MINOR
-        { e: RANDOM_EVENTS[1], w: 10 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[2], w: 20 },  // HEATWAVE_MOD
-        { e: RANDOM_EVENTS[4], w: 20 },  // STORM
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 15 },  // FINANCIAL_SHOCK
+        { e: byId('FLOOD_MINOR'),       w: 20 },
+        { e: byId('FLOOD_MAJOR'),       w: 10 },
+        { e: byId('HEATWAVE_MOD'),      w: 20 },
+        { e: byId('STORM'),             w: 20 },
+        { e: byId('SOCIAL_UNREST'),     w: 15 },
+        { e: byId('FINANCIAL_SHOCK'),   w: 15 },
+        { e: byId('TECH_BREAKTHROUGH'), w: 8 },
+        { e: byId('GREEN_JOBS_BOOM'),   w: 5 },
+        { e: byId('GLOBAL_ENERGY_SHOCK'), w: 10 },
       ];
     } else {
       pool = [
-        { e: RANDOM_EVENTS[1], w: 20 },  // FLOOD_MAJOR
-        { e: RANDOM_EVENTS[3], w: 20 },  // HEATWAVE_MAJOR
-        { e: RANDOM_EVENTS[4], w: 18 },  // STORM
-        { e: RANDOM_EVENTS[7], w: 15 },  // GRID_FAILURE
-        { e: RANDOM_EVENTS[6], w: 15 },  // SOCIAL_UNREST
-        { e: RANDOM_EVENTS[5], w: 12 },  // FINANCIAL_SHOCK
+        { e: byId('FLOOD_MAJOR'),       w: 20 },
+        { e: byId('HEATWAVE_MAJOR'),    w: 20 },
+        { e: byId('STORM'),             w: 18 },
+        { e: byId('GRID_FAILURE'),      w: 15 },
+        { e: byId('SOCIAL_UNREST'),     w: 15 },
+        { e: byId('FINANCIAL_SHOCK'),   w: 12 },
+        { e: byId('GLOBAL_ENERGY_SHOCK'), w: 15 },
+        { e: byId('GREEN_JOBS_BOOM'),   w: 3 },
       ];
     }
 
-    // Filter conditional events
-    pool = pool.filter(item => !item.e.condition || item.e.condition(s));
+    // Filter conditional events and missing entries
+    pool = pool.filter(item => item.e && (!item.e.condition || item.e.condition(s)));
     if (pool.length === 0) return null;
 
     // Weighted random selection
@@ -3962,26 +4295,29 @@ class GameEngine {
       if (roll <= 0) { selectedEvent = item.e; break; }
     }
 
-    // Mitigation factor from adaptation
+    // Mitigation factor from adaptation (only mitigates negative effects)
     const mitigate = Math.min(s.infrastructure.adaptation / 200, 0.5);
+    const isPositive = selectedEvent.severity === 'POSITIVE';
 
     // Apply effects
     const applied = {};
     for (const [key, val] of Object.entries(selectedEvent.effects)) {
-      const mitigated = Math.round(val * (1 - mitigate));
+      const mitigated = isPositive ? val : Math.round(val * (1 - mitigate));
       applied[key] = mitigated;
       if (key === 'temperature') {
         s.temperature = Math.round((s.temperature + mitigated) * 100) / 100;
       } else if (key === 'strandedAssets') {
         s.strandedAssets = this._clamp(s.strandedAssets + mitigated, 0, 100);
+      } else if (key === 'netZeroProgress') {
+        s.netZeroProgress = this._clamp(s.netZeroProgress + mitigated, 0, 100);
       } else if (s[key] !== undefined) {
         s[key] = this._clamp(s[key] + mitigated, 0, 100);
       }
     }
 
-    // Budget penalty next turn
-    if (selectedEvent.budgetPenaltyNext > 0) {
-      const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (1 - mitigate));
+    // Budget penalty/bonus next turn
+    if (selectedEvent.budgetPenaltyNext !== 0) {
+      const penaltyMitigated = Math.round(selectedEvent.budgetPenaltyNext * (selectedEvent.budgetPenaltyNext > 0 ? (1 - mitigate) : 1));
       s.nextTurnBudgetPenalty += penaltyMitigated;
     }
 
@@ -3990,6 +4326,10 @@ class GameEngine {
       s.energy.wind  = this._clamp(s.energy.wind  - 10, 0, 120);
       s.energy.solar = this._clamp(s.energy.solar - 10, 0, 100);
     }
+
+    // Track special events for achievements
+    if (selectedEvent.id === 'INTERNATIONAL_AGREEMENT') s._sawInternationalAgreement = true;
+    if (selectedEvent.id === 'TECH_BREAKTHROUGH') s._sawTechBreakthrough = true;
 
     s.lastEventTurn = s.turn;
     return { ...selectedEvent, appliedEffects: applied };
@@ -4010,6 +4350,7 @@ class GameEngine {
   reset(scenarioKey) {
     difficultyMgr.activateForNewGame();
     turnHistory.reset();
+    strategyTracker.reset();
     this._initState();
     // Apply starter scenario mutations
     const scenario = STARTER_SCENARIOS[scenarioKey] || STARTER_SCENARIOS.standard;
@@ -5059,6 +5400,7 @@ class UI {
       gridReliability:     'Grid Reliability',
       temperature:         'Temperature',
       strandedAssets:      'Stranded Assets',
+      netZeroProgress:     'Net Zero Progress',
     };
     for (const [key, val] of Object.entries(event.appliedEffects)) {
       const label = labelMap[key] || key;
@@ -5077,16 +5419,25 @@ class UI {
       effectsHtml += `
         <div class="event-effect-row">
           <span class="event-effect-label">Next Turn Budget</span>
-          <span class="event-effect-val neg">−£${event.budgetPenaltyNext}bn</span>
+          <span class="event-effect-val neg">&minus;&pound;${event.budgetPenaltyNext}bn</span>
+        </div>`;
+    } else if (event.budgetPenaltyNext < 0) {
+      effectsHtml += `
+        <div class="event-effect-row">
+          <span class="event-effect-label">Next Turn Budget</span>
+          <span class="event-effect-val pos">+&pound;${Math.abs(event.budgetPenaltyNext)}bn</span>
         </div>`;
     }
     this.elEventEffects.innerHTML = effectsHtml || '<div class="event-effect-row"><span class="event-effect-label">No direct stat changes</span></div>';
 
     this.elEventModal.classList.remove('hidden');
+    this.elEventModal.classList.toggle('positive-event', event.severity === 'POSITIVE');
   }
 
   hideEventModal() {
     this.elEventModal.classList.add('hidden');
+    this.elEventModal.classList.remove('positive-event');
+    this.elEventModal.classList.remove('positive-event');
   }
 
   showEndgame(result) {
@@ -5150,6 +5501,19 @@ class UI {
     const newAchievements = achievementMgr.checkAll(s, techTree);
     const achievementsHtml = this._buildAchievementsDisplay(newAchievements);
 
+    // Carbon budget calculation
+    const carbonBudgetUsed = Math.round(Math.max(0, (s.temperature - 1.1) * 45 + (100 - s.netZeroProgress) * 0.3));
+    const carbonBudgetPct = Math.min(100, carbonBudgetUsed);
+    const carbonStatus = carbonBudgetPct < 30 ? 'good' : carbonBudgetPct < 60 ? 'warn' : 'danger';
+
+    // Strategy identification
+    const strategy = strategyTracker.identifyStrategy();
+    const strategyHtml = strategy ? `
+      <div id="endgame-strategy">
+        <div class="strategy-badge">${strategy.label}</div>
+        <div class="strategy-narrative">${strategy.narrative}</div>
+      </div>` : '';
+
     const scoreHtml = `
       <div id="endgame-score-section">
         <div id="endgame-score-total">${score.total}<span id="endgame-score-max">/100</span></div>
@@ -5162,6 +5526,15 @@ class UI {
           <div class="score-dim"><span class="score-dim-val">${score.resScore}/10</span><span class="score-dim-name">Resilience</span></div>
         </div>
         <div id="endgame-score-benchmark">The UN 1.5°C pathway requires a score of 72+. ${score.total >= 72 ? '✓ You achieved it.' : `You scored ${72 - score.total} points below the threshold.`}</div>
+        ${strategyHtml}
+        <div id="endgame-carbon-budget">
+          <div class="carbon-budget-label">UK Carbon Budget Consumed</div>
+          <div class="carbon-budget-bar">
+            <div class="carbon-budget-fill ${carbonStatus}" style="width:${carbonBudgetPct}%"></div>
+          </div>
+          <div class="carbon-budget-value ${carbonStatus}">${carbonBudgetPct}%</div>
+          <div class="carbon-budget-note">Based on a fair-share allocation of the remaining global carbon budget to limit warming to 1.5°C (IPCC AR6)</div>
+        </div>
       </div>`;
 
     this.elEndgameMetrics.insertAdjacentHTML('beforebegin', scoreHtml);
