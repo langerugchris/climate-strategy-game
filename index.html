@@ -2075,6 +2075,150 @@ body { transition: filter 2s ease; }
   width: 100%;
 }
 
+/* ===== NEWS TICKER ===== */
+.news-ticker {
+  background: linear-gradient(135deg, #1a1d30 0%, #0f1120 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--gap-sm);
+  padding: var(--gap-sm) var(--gap-md);
+}
+
+.news-ticker-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-bottom: 6px;
+}
+
+.news-ticker-badge {
+  background: #c41e3a;
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.news-ticker-source {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-editorial);
+  font-style: italic;
+}
+
+.news-headline {
+  font-family: var(--font-editorial);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(42,48,80,0.5);
+}
+
+.news-headline:last-child { border-bottom: none; }
+
+.news-headline .hl-tag {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-right: 5px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-family: var(--font-system);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.hl-tag.climate { background: #1b3a2f; color: #4caf81; }
+.hl-tag.energy  { background: #3a2e1b; color: #ffd600; }
+.hl-tag.finance { background: #1b2a3a; color: #5390d9; }
+.hl-tag.social  { background: #3a1b2a; color: #ff7043; }
+.hl-tag.world   { background: #2a1b3a; color: #b39ddb; }
+
+/* ===== GLOBAL EVENT FLASH ===== */
+.global-event-flash {
+  background: linear-gradient(135deg, #1e1640 0%, #151030 100%);
+  border: 1px solid #4a3580;
+  border-radius: var(--radius-md);
+  padding: var(--gap-md);
+  margin-top: var(--gap-sm);
+  animation: gef-flash-in 0.4s ease-out;
+}
+
+.global-event-flash .gef-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-bottom: 8px;
+}
+
+.global-event-flash .gef-badge {
+  background: #6c3bbf;
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.global-event-flash .gef-icon {
+  font-size: 22px;
+}
+
+.global-event-flash .gef-title {
+  font-family: var(--font-editorial);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.global-event-flash .gef-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+
+.global-event-flash .gef-effect {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(108, 59, 191, 0.15);
+  color: #b39ddb;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.global-event-flash .gef-dismiss {
+  display: block;
+  margin-top: var(--gap-sm);
+  width: 100%;
+  padding: 8px;
+  background: rgba(108, 59, 191, 0.2);
+  border: 1px solid #4a3580;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.global-event-flash .gef-dismiss:hover { background: rgba(108, 59, 191, 0.35); }
+
+@keyframes gef-flash-in {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* ===== MOBILE TAB NAVIGATION ===== */
 #mobile-tabs {
   display: none;
@@ -2966,6 +3110,28 @@ body { transition: filter 2s ease; }
         </div>
       </div>
 
+      <div class="scenario-card" data-scenario="energy_crisis">
+        <span class="scenario-card-icon">⚡</span>
+        <div class="scenario-card-name">Energy Crisis</div>
+        <div class="scenario-card-desc">A geopolitical shock has exposed UK energy dependence on gas. Grid reliability is fragile, renewables are underdeveloped, and the public is angry about bills.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Grid: <span>45% (fragile)</span></div>
+          <div class="scenario-stat">Gas: <span>40 (dominant)</span></div>
+          <div class="scenario-stat">Social: <span>60% (strained)</span></div>
+        </div>
+      </div>
+
+      <div class="scenario-card" data-scenario="international_pressure">
+        <span class="scenario-card-icon">🌍</span>
+        <div class="scenario-card-name">International Pressure</div>
+        <div class="scenario-card-desc">The UK hosts a landmark COP summit and has pledged aggressive leadership. Extra funding is available, but the world is watching — failure is not an option.</div>
+        <div class="scenario-card-stats">
+          <div class="scenario-stat">Budget: <span>£120bn/turn</span></div>
+          <div class="scenario-stat">Net Zero: <span>20% (behind)</span></div>
+          <div class="scenario-stat">Stability: <span>80% (strong)</span></div>
+        </div>
+      </div>
+
     </div>
     <button id="scenario-start-btn">Begin Simulation →</button>
     <p style="font-size:11px;color:var(--text-muted);margin-top:var(--gap-md);">Difficulty: <span id="scenario-diff-label">Normal</span> · Change in Settings</p>
@@ -3221,6 +3387,8 @@ const ACHIEVEMENTS = [
   { id: 'survivor', icon: '🔥', name: 'Crisis Survivor', desc: 'Survive 4+ climate events and still finish', check: (s) => s.eventCount >= 4 && !s.socialBreakdownOccurred },
   { id: 'gas_free', icon: '♻️', name: 'Fossil Free', desc: 'Reduce gas to zero', check: (s) => s.energy.gas <= 0 },
   { id: 'hard_mode', icon: '💀', name: 'Against the Odds', desc: 'Win on Hard or Extreme difficulty', check: (s) => (difficultyMgr.active === 'hard' || difficultyMgr.active === 'extreme') && s.netZeroProgress >= 100 },
+  { id: 'balanced_master', icon: '🎯', name: 'Balanced Master', desc: 'Finish with all metrics above 70% and Net Zero achieved', check: (s) => s.gridReliability >= 70 && s.financialStability >= 70 && s.socialStability >= 70 && s.netZeroProgress >= 100 },
+  { id: 'speed_runner', icon: '⏱️', name: 'Speed Runner', desc: 'Achieve Net Zero by Turn 2', check: (s) => s.netZeroProgress >= 100 && s.turn <= 2 },
 ];
 
 class AchievementManager {
@@ -3370,6 +3538,26 @@ const STARTER_SCENARIOS = {
       state.socialCapital = 20;
       state.strandedAssets = 12;
       state._budgetOverride = 65;
+    },
+  },
+  energy_crisis: {
+    label: 'Energy Crisis',
+    apply(state) {
+      state.gridReliability = 45;
+      state.energy.gas = 40;
+      state.energy.wind = 20;
+      state.energy.storage = 2;
+      state.socialStability = 60;
+    },
+  },
+  international_pressure: {
+    label: 'International Pressure',
+    apply(state) {
+      state.netZeroProgress = 20;
+      state.temperature = 1.25;
+      state.financialStability = 80;
+      state.socialStability = 80;
+      state._budgetOverride = 120;
     },
   },
 };
@@ -5378,6 +5566,24 @@ class UI {
     this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
   }
 
+  // ===== NEWS TICKER =====
+  _injectNewsTicker(state, logEntry) {
+    const headlines = generateHeadlines(state, logEntry);
+    if (headlines.length === 0) return;
+    const div = document.createElement('div');
+    div.className = 'news-ticker';
+    let html = `<div class="news-ticker-header">
+      <span class="news-ticker-badge">News</span>
+      <span class="news-ticker-source">Westminster Gazette · ${state.year}</span>
+    </div>`;
+    for (const h of headlines) {
+      html += `<div class="news-headline"><span class="hl-tag ${h.tag}">${h.tag}</span>${h.text}</div>`;
+    }
+    div.innerHTML = html;
+    this.elLogScroll.appendChild(div);
+    this.elLogScroll.scrollTop = this.elLogScroll.scrollHeight;
+  }
+
   // ===== HIGH SCORE TABLE =====
   _buildHighScoreHTML() {
     const scores = highScoreMgr.getTable();
@@ -5726,6 +5932,184 @@ const MINI_EVENTS_POOL = [
   },
 ];
 
+/* ============================================================
+   MODULE: GLOBAL EVENTS
+============================================================ */
+
+const GLOBAL_EVENTS_POOL = [
+  {
+    id: 'cop_breakthrough',
+    icon: '🌍',
+    title: 'COP Climate Breakthrough',
+    description: 'After marathon negotiations, 140 nations agree to binding emissions cuts and a new Loss & Damage fund. International momentum bolsters UK commitments.',
+    effectLabel: '+4 Net Zero Progress',
+    effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 4); },
+    condition: (s) => s.turn >= 1 && s.netZeroProgress < 90,
+  },
+  {
+    id: 'china_solar_surge',
+    icon: '🇨🇳',
+    title: 'China Solar Price Collapse',
+    description: 'Chinese manufacturers flood the market with ultra-cheap panels. UK solar installation costs fall 40%, transforming renewable economics overnight.',
+    effectLabel: '+6 Solar, +3 Net Zero Progress',
+    effect: (s) => { s.energy.solar = Math.min(100, s.energy.solar + 6); s.netZeroProgress = Math.min(100, s.netZeroProgress + 3); },
+    condition: (s) => s.energy.solar < 60,
+  },
+  {
+    id: 'us_policy_reversal',
+    icon: '🇺🇸',
+    title: 'US Climate Policy Reversal',
+    description: 'A new US administration withdraws from international climate agreements. Global cooperation weakens and fossil fuel lobbying intensifies across Europe.',
+    effectLabel: '-3 Net Zero, +4 Gas rebound',
+    effect: (s) => { s.netZeroProgress = Math.max(0, s.netZeroProgress - 3); s.energy.gas = Math.min(100, s.energy.gas + 4); },
+    condition: (s) => s.turn >= 1,
+  },
+  {
+    id: 'eu_carbon_border',
+    icon: '🇪🇺',
+    title: 'EU Carbon Border Adjustment',
+    description: 'The EU implements full carbon border tariffs. UK exporters face steep costs unless domestic carbon pricing aligns — pressure to accelerate the transition intensifies.',
+    effectLabel: '-4 Financial Stability, +5 Net Zero',
+    effect: (s) => { s.financialStability = Math.max(0, s.financialStability - 4); s.netZeroProgress = Math.min(100, s.netZeroProgress + 5); },
+    condition: (s) => s.turn >= 2,
+  },
+  {
+    id: 'global_gas_crisis',
+    icon: '⛽',
+    title: 'Global Gas Supply Crisis',
+    description: 'Geopolitical conflict disrupts global gas supply chains. UK gas prices double. The case for energy independence through renewables is overwhelming — but gas-dependent communities suffer now.',
+    effectLabel: '-6 Social, -5 Financial',
+    effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 6); s.financialStability = Math.max(0, s.financialStability - 5); },
+    condition: (s) => s.energy.gas > 15,
+  },
+  {
+    id: 'green_bond_boom',
+    icon: '💹',
+    title: 'Global Green Bond Boom',
+    description: 'International investors pour record capital into green infrastructure. UK green gilt issuance doubles, reducing the fiscal cost of the climate transition.',
+    effectLabel: '+5 Financial Stability',
+    effect: (s) => { s.financialStability = Math.min(100, s.financialStability + 5); },
+    condition: (s) => s.netZeroProgress > 40,
+  },
+  {
+    id: 'arctic_tipping_point',
+    icon: '🧊',
+    title: 'Arctic Tipping Point Crossed',
+    description: 'Scientists confirm irreversible Arctic ice sheet collapse. Sea level projections revised dramatically upward. Coastal nations face existential adaptation costs.',
+    effectLabel: '+0.08°C Temp, -8 Property Value',
+    effect: (s) => { s.temperature = Math.round((s.temperature + 0.08) * 100) / 100; s.propertyValue = Math.max(0, s.propertyValue - 8); },
+    condition: (s) => s.temperature > 1.6,
+  },
+  {
+    id: 'fusion_breakthrough',
+    icon: '⚛️',
+    title: 'Fusion Energy Breakthrough',
+    description: 'A UK-led international consortium achieves sustained fusion reaction. Commercial viability is still a decade away, but grid planning and investment sentiment transform overnight.',
+    effectLabel: '+8 Grid Reliability, +3 Financial',
+    effect: (s) => { s.gridReliability = Math.min(100, s.gridReliability + 8); s.financialStability = Math.min(100, s.financialStability + 3); },
+    condition: (s) => s.turn >= 3 && s.infrastructure.gridAndStorage > 40,
+  },
+  {
+    id: 'climate_refugee_crisis',
+    icon: '🏚️',
+    title: 'Global Climate Refugee Crisis',
+    description: 'Extreme weather displaces 200 million worldwide. UK faces political pressure on immigration and foreign aid budgets. Public opinion polarises.',
+    effectLabel: '-5 Social Stability',
+    effect: (s) => { s.socialStability = Math.max(0, s.socialStability - 5); },
+    condition: (s) => s.temperature > 1.5,
+  },
+  {
+    id: 'hydrogen_economy',
+    icon: '💧',
+    title: 'Green Hydrogen Economy Launches',
+    description: 'Electrolyser costs plummet, making green hydrogen viable for heavy industry and heating. UK industrial decarbonisation accelerates dramatically.',
+    effectLabel: '+6 Net Zero Progress, +3 Grid',
+    effect: (s) => { s.netZeroProgress = Math.min(100, s.netZeroProgress + 6); s.gridReliability = Math.min(100, s.gridReliability + 3); },
+    condition: (s) => s.infrastructure.energyTransition > 30 && s.turn >= 2,
+  },
+];
+
+/* ============================================================
+   MODULE: HEADLINE GENERATOR
+============================================================ */
+
+function generateHeadlines(state, lastEntry) {
+  const pool = [];
+  const s = state;
+
+  if (s.temperature >= 2.0)
+    pool.push({ tag: 'climate', text: `UK warming passes 2°C — Paris Agreement threshold breached` });
+  else if (s.temperature >= 1.8)
+    pool.push({ tag: 'climate', text: `Warning: UK on track to breach 2°C limit within a decade` });
+  else if (s.temperature <= 1.3 && s.turn >= 2)
+    pool.push({ tag: 'climate', text: `UK warming held below 1.3°C — observers praise restraint` });
+
+  if (s.netZeroProgress >= 100)
+    pool.push({ tag: 'energy', text: `Historic: UK declares Net Zero achieved ahead of 2050 deadline` });
+  else if (s.netZeroProgress >= 80)
+    pool.push({ tag: 'energy', text: `Net Zero within reach as clean energy transformation enters final phase` });
+  else if (s.netZeroProgress < 30 && s.turn >= 3)
+    pool.push({ tag: 'energy', text: `CCC warns UK Net Zero target now “virtually unachievable”` });
+
+  if (s.gridReliability < 30)
+    pool.push({ tag: 'energy', text: `Rolling blackouts enter third week as National Grid warns of strain` });
+  else if (s.gridReliability < 50)
+    pool.push({ tag: 'energy', text: `Grid operator issues winter warning: “Margins are dangerously thin”` });
+  else if (s.gridReliability >= 90)
+    pool.push({ tag: 'energy', text: `UK grid hits 90% reliability — battery storage revolution succeeds` });
+
+  if (s.financialStability < 30)
+    pool.push({ tag: 'finance', text: `Bank of England activates emergency lending as climate losses cascade` });
+  else if (s.strandedAssets > 60)
+    pool.push({ tag: 'finance', text: `Pension crisis deepens as fossil write-downs wipe billions from savings` });
+  else if (s.financialStability >= 85)
+    pool.push({ tag: 'finance', text: `UK green bonds oversubscribed 4× — investors bet on transition` });
+
+  if (s.socialStability < 30)
+    pool.push({ tag: 'social', text: `Mass protests sweep UK cities as fuel poverty reaches record levels` });
+  else if (s.socialStability < 50)
+    pool.push({ tag: 'social', text: `“The transition is leaving us behind”: coal communities demand action` });
+  else if (s.socialStability >= 85 && s.netZeroProgress >= 60)
+    pool.push({ tag: 'social', text: `Support for green transition hits all-time high as benefits reach families` });
+
+  const total = s.energy.wind + s.energy.solar + s.energy.nuclear + s.energy.gas;
+  const renewPct = total > 0 ? (s.energy.wind + s.energy.solar) / total * 100 : 0;
+  if (renewPct >= 80)
+    pool.push({ tag: 'energy', text: `Renewables now generate ${Math.round(renewPct)}% of UK electricity` });
+  else if (s.energy.gas > 40)
+    pool.push({ tag: 'energy', text: `Gas dependency remains stubbornly high despite transition pledges` });
+
+  if (lastEntry && lastEntry.event) {
+    const map = {
+      'Coastal Flooding — East Anglia': 'Norfolk flood recovery costs reach £800m',
+      'Catastrophic Thames Flooding': 'Thames Barrier review ordered after unprecedented breach',
+      'Extended Heatwave — 40°C+': 'NHS declares heat emergency as 40°C becomes normal',
+      'Extreme Heat Emergency': 'PM calls COBRA as heat death toll surpasses 10,000',
+      'Severe Atlantic Storm': 'Storm damage estimated at £2.3bn — worst in decade',
+      'Fossil Asset Write-down': 'Emergency pension guarantee after North Sea collapse',
+      'Fuel Poverty Protests': 'Energy protests threaten government majority',
+      'National Grid Blackout': 'Ofgem chief resigns after 11-hour national blackout',
+    };
+    const h = map[lastEntry.event];
+    if (h) pool.push({ tag: 'world', text: h });
+  }
+
+  if (s.turn === 1)
+    pool.push({ tag: 'world', text: `First term of Climate Strategy concludes — analysts assess early choices` });
+  else if (s.turn === 4)
+    pool.push({ tag: 'world', text: `Final term begins — everything rests on the next five years` });
+
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, 3);
+}
+
+/* ============================================================
+   MODULE: SIMULATION RUNNER
+============================================================ */
+
 async function runSimulationPhase(engine, ui, fxMgr) {
   const startYear = engine.getState().year;
 
@@ -5739,8 +6123,9 @@ async function runSimulationPhase(engine, ui, fxMgr) {
   const overlay = _buildSimOverlay(startYear);
   document.body.appendChild(overlay);
 
-  // Tick through years with possible mini-events
+  // Tick through years with possible mini-events and one global event
   let minisFired = 0;
+  let globalFired = false;
   for (const offset of [1, 2, 3, 4]) {
     _setSimYear(overlay, startYear + offset);
     _setSimProgress(overlay, (offset / 5) * 80);
@@ -5753,6 +6138,16 @@ async function runSimulationPhase(engine, ui, fxMgr) {
         fxMgr.haptic('medium');
         await _showMiniEvent(overlay, evt, engine, fxMgr, startYear + offset);
         minisFired++;
+      }
+    }
+
+    if (!globalFired && offset === 2 && Math.random() < 0.45) {
+      const eligible = GLOBAL_EVENTS_POOL.filter(e => e.condition(engine.state));
+      if (eligible.length > 0) {
+        const gEvt = eligible[Math.floor(Math.random() * eligible.length)];
+        fxMgr.haptic('medium');
+        await _showGlobalEvent(overlay, gEvt, engine, startYear + offset);
+        globalFired = true;
       }
     }
   }
@@ -5777,6 +6172,7 @@ async function runSimulationPhase(engine, ui, fxMgr) {
 
   // Hand off to normal UI flow
   ui._addLogEntry(result.logEntry);
+  ui._injectNewsTicker(engine.state, result.logEntry);
 
   if (result.endgame) {
     // Game over — clear save, record analytics
@@ -5881,6 +6277,30 @@ function _showMiniEvent(overlay, evt, engine, fxMgr, year) {
 
     panel.querySelector('.opt-a').addEventListener('click', () => cleanup(evt.optA.effect), { once: true });
     panel.querySelector('.opt-b').addEventListener('click', () => cleanup(evt.optB.effect), { once: true });
+  });
+}
+
+function _showGlobalEvent(overlay, evt, engine, year) {
+  return new Promise(resolve => {
+    const panel = document.createElement('div');
+    panel.className = 'global-event-flash';
+    panel.innerHTML = `
+      <div class="gef-header">
+        <span class="gef-badge">Global Event</span>
+        <span class="gef-icon">${evt.icon}</span>
+      </div>
+      <div class="gef-title">${evt.title}</div>
+      <div class="gef-desc">${evt.description}</div>
+      <span class="gef-effect">${evt.effectLabel}</span>
+      <button class="gef-dismiss">Acknowledge</button>`;
+
+    overlay.querySelector('#sim-card').appendChild(panel);
+
+    panel.querySelector('.gef-dismiss').addEventListener('click', () => {
+      evt.effect(engine.state);
+      panel.classList.add('sim-fade-out');
+      setTimeout(() => { panel.remove(); resolve(); }, 300);
+    }, { once: true });
   });
 }
 
